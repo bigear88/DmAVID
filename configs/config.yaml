@@ -1,0 +1,130 @@
+# Configuration for DeFi Smart Contract Vulnerability Detection
+# Author: Curtis Chang
+
+# OpenAI API Configuration
+openai:
+  model: "gpt-4.1-mini"
+  temperature: 0.1
+  max_tokens: 2048
+  # API key should be set via environment variable OPENAI_API_KEY
+
+# Groq API Configuration (alternative)
+groq:
+  model: "llama-3.3-70b-versatile"
+  # API key should be set via environment variable GROQ_API_KEY
+
+# Detection Methods Configuration
+methods:
+  # LLM-only detection
+  llm:
+    enabled: true
+    use_rag: false
+    
+  # Static analysis (Slither)
+  static:
+    enabled: true
+    solc_version: "0.8.0"
+    detectors:
+      - "reentrancy-eth"
+      - "reentrancy-no-eth"
+      - "arbitrary-send-eth"
+      - "controlled-delegatecall"
+      - "suicidal"
+      - "uninitialized-state"
+      - "tx-origin"
+      - "incorrect-equality"
+    
+  # Hybrid detection (Static + LLM)
+  hybrid:
+    enabled: true
+    use_rag: true
+    weights:
+      static: 0.3
+      llm: 0.7
+    skip_llm_if_static_clean: false
+
+# RAG Configuration
+rag:
+  knowledge_base_path: "data/knowledge_base"
+  embedding_model: "text-embedding-3-small"
+  top_k: 3
+  chunk_size: 1000
+  chunk_overlap: 200
+
+# Dataset Configuration
+dataset:
+  # SmartBugs Curated
+  smartbugs:
+    path: "data/raw/smartbugs-curated/dataset"
+    categories:
+      - "reentrancy"
+      - "access_control"
+      - "arithmetic"
+      - "unchecked_low_level_calls"
+      - "denial_of_service"
+      - "bad_randomness"
+      - "front_running"
+      - "time_manipulation"
+  
+  # DeFi Protocols
+  defi_protocols:
+    path: "data/raw/defi_protocols"
+    protocols:
+      - "uniswap"
+      - "aave"
+      - "compound"
+
+# Experiment Configuration
+experiment:
+  # Number of contracts to process (null = all)
+  max_contracts: null
+  
+  # Random seed for reproducibility
+  random_seed: 42
+  
+  # Batch size for processing
+  batch_size: 10
+  
+  # Enable progress logging
+  verbose: true
+  
+  # Save intermediate results
+  save_intermediate: true
+
+# Evaluation Configuration
+evaluation:
+  metrics:
+    - "accuracy"
+    - "precision"
+    - "recall"
+    - "f1_score"
+    - "specificity"
+    - "false_positive_rate"
+    - "false_negative_rate"
+    - "auc_roc"
+  
+  # Generate visualizations
+  generate_plots: true
+  
+  # Per-vulnerability-type analysis
+  per_type_analysis: true
+
+# Output Configuration
+output:
+  directory: "results"
+  formats:
+    - "json"
+    - "csv"
+    - "markdown"
+  
+  # Generate comparison tables
+  comparison_table: true
+  
+  # Generate detailed report
+  detailed_report: true
+
+# Logging Configuration
+logging:
+  level: "INFO"
+  file: "logs/experiment.log"
+  format: "%(asctime)s - %(levelname)s - %(message)s"
