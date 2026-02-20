@@ -1,0 +1,27 @@
+=== STEP 1: Environment Setup & Dataset Preparation ===
+Date: 2026-02-20
+
+[Tools Installed]
+- Slither v0.11.5 (Static Analysis)
+- Mythril v0.24.8 (Symbolic Execution)
+- solc v0.8.0 (Solidity Compiler)
+- GPT-4.1-mini API (OpenAI-compatible)
+- scikit-learn v1.8.0
+
+[Dataset]
+- SmartBugs Curated: 143 vulnerable contracts (10 categories)
+- SmartBugs Wild: 857 safe contracts (sampled from 32,560)
+- Total: 1,000 contracts
+- Random Seed: 42
+
+[Vulnerability Categories]
+- access_control: 18
+- arithmetic: 15
+- bad_randomness: 8
+- denial_of_service: 6
+- front_running: 4
+- other: 3
+- reentrancy: 31
+- short_addresses: 1
+- time_manipulation: 5
+- unchecked_low_level_calls: 52

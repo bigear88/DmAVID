@@ -124,10 +124,10 @@ Thumbs.db
 # Project specific
 data/raw/
 data/processed/
-results/*.json
-results/*.csv
-logs/
-*.log
+data/smartbugs_curated_repo/
+data/smartbugs_wild_repo/
+data/smartbugs_curated/
+data/smartbugs_wild/
 .env
 secrets.yaml
 

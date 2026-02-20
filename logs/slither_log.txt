@@ -1,0 +1,40 @@
+============================================================
+Experiment 1: Slither Static Analysis
+Timestamp: 2026-02-20T11:41:31.998250
+============================================================
+
+[1/2] Running Slither on SmartBugs Curated (vulnerable)...
+  Found 143 vulnerable contracts
+  [1/143] TP=1, FN=0, Recall=100.0% (last: 15 findings)
+  [20/143] TP=19, FN=1, Recall=95.0% (last: 5 findings)
+  [40/143] TP=38, FN=2, Recall=95.0% (last: 4 findings)
+  [60/143] TP=57, FN=3, Recall=95.0% (last: 23 findings)
+  [80/143] TP=75, FN=5, Recall=93.8% (last: 0 findings)
+  [100/143] TP=95, FN=5, Recall=95.0% (last: 10 findings)
+  [120/143] TP=114, FN=6, Recall=95.0% (last: 9 findings)
+  [140/143] TP=134, FN=6, Recall=95.7% (last: 24 findings)
+
+[2/2] Running Slither on SmartBugs Wild (safe sample)...
+  Sampling 100 safe contracts from 47398 total
+  [20/100] FP=18, TN=2, FPR=90.0%
+  [40/100] FP=37, TN=3, FPR=92.5%
+  [60/100] FP=53, TN=7, FPR=88.3%
+  [80/100] FP=70, TN=10, FPR=87.5%
+  [100/100] FP=87, TN=13, FPR=87.0%
+
+============================================================
+SLITHER RESULTS SUMMARY
+============================================================
+  Total contracts analyzed: 243
+  TP=136, FN=7, FP=87, TN=13
+  Accuracy:    0.6132 (61.32%)
+  Precision:   0.6099 (60.99%)
+  Recall:      0.9510 (95.10%)
+  F1 Score:    0.7432 (74.32%)
+  FPR:         0.8700 (87.00%)
+  Specificity: 0.1300 (13.00%)
+  Avg Time:    2.198s per contract
+  Success Rate: 100.0%
+
+  Results saved to: /home/ubuntu/defi-vuln-detection/experiments/slither/slither_results.json
+============================================================
