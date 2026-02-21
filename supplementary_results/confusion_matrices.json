@@ -1,0 +1,87 @@
+{
+  "slither": {
+    "confusion_matrix": {
+      "TP": 136,
+      "TN": 13,
+      "FP": 87,
+      "FN": 7
+    },
+    "metrics": {
+      "Accuracy": 0.6132,
+      "Precision": 0.6099,
+      "Recall": 0.951,
+      "F1": 0.7432,
+      "Specificity": 0.13,
+      "FPR": 0.87,
+      "Total": 243
+    }
+  },
+  "mythril": {
+    "confusion_matrix": {
+      "TP": 9,
+      "TN": 20,
+      "FP": 0,
+      "FN": 11
+    },
+    "metrics": {
+      "Accuracy": 0.725,
+      "Precision": 1.0,
+      "Recall": 0.45,
+      "F1": 0.6207,
+      "Specificity": 1.0,
+      "FPR": 0.0,
+      "Total": 40
+    }
+  },
+  "llm_base": {
+    "confusion_matrix": {
+      "TP": 142,
+      "TN": 2,
+      "FP": 98,
+      "FN": 1
+    },
+    "metrics": {
+      "Accuracy": 0.5926,
+      "Precision": 0.5917,
+      "Recall": 0.993,
+      "F1": 0.7415,
+      "Specificity": 0.02,
+      "FPR": 0.98,
+      "Total": 243
+    }
+  },
+  "llm_rag": {
+    "confusion_matrix": {
+      "TP": 140,
+      "TN": 67,
+      "FP": 33,
+      "FN": 3
+    },
+    "metrics": {
+      "Accuracy": 0.8519,
+      "Precision": 0.8092,
+      "Recall": 0.979,
+      "F1": 0.8861,
+      "Specificity": 0.67,
+      "FPR": 0.33,
+      "Total": 243
+    }
+  },
+  "hybrid": {
+    "confusion_matrix": {
+      "TP": 141,
+      "TN": 46,
+      "FP": 54,
+      "FN": 2
+    },
+    "metrics": {
+      "Accuracy": 0.7695,
+      "Precision": 0.7231,
+      "Recall": 0.986,
+      "F1": 0.8343,
+      "Specificity": 0.46,
+      "FPR": 0.54,
+      "Total": 243
+    }
+  }
+}

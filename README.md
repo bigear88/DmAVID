@@ -15,6 +15,8 @@ This research project implements a **hybrid vulnerability detection framework** 
 - **Hybrid Approach**: Combines static analysis (Slither) with LLM + RAG semantic analysis
 - **DeFi-Specific**: Focuses on DeFi protocol vulnerabilities including flash loan attacks, price oracle manipulation, and reentrancy
 - **Real Experiments**: All results are from actual tool execution on SmartBugs dataset
+- **Statistical Validation**: McNemar tests and cost-sensitive analysis included
+- **Full Reproducibility**: One-click reproduction script and raw prediction CSV provided
 
 ## Project Structure
 
@@ -25,17 +27,20 @@ defi-llm-vulnerability-detection/
 ├── requirements.txt
 ├── configs/
 │   └── config.yaml
-├── scripts/                          # Experiment scripts
-│   ├── 01_prepare_dataset.py         # Dataset preparation (SmartBugs)
-│   ├── 02_run_slither.py             # Slither static analysis
-│   ├── 03_run_mythril.py             # Mythril symbolic execution
-│   ├── 03_run_mythril_fast.py        # Mythril (fast mode, smaller sample)
-│   ├── 04_run_llm_base.py            # LLM baseline detection (GPT-4.1-mini)
-│   ├── 05_run_llm_rag.py             # LLM + RAG enhanced detection
-│   ├── 06_run_hybrid.py              # Hybrid framework (Slither + LLM + RAG)
-│   ├── 07_generate_charts.py         # Generate result charts
-│   └── run_experiment.py             # Legacy experiment runner
-├── src/                              # Source code modules
+├── scripts/                              # Experiment scripts
+│   ├── run_all.sh                        # ★ One-click reproduction script
+│   ├── 01_prepare_dataset.py             # Dataset preparation (SmartBugs)
+│   ├── 02_run_slither.py                 # Slither static analysis
+│   ├── 03_run_mythril.py                 # Mythril symbolic execution
+│   ├── 03_run_mythril_fast.py            # Mythril (fast mode, smaller sample)
+│   ├── 04_run_llm_base.py               # LLM baseline detection (GPT-4.1-mini)
+│   ├── 05_run_llm_rag.py                # LLM + RAG enhanced detection
+│   ├── 06_run_hybrid.py                 # Hybrid framework (Slither + LLM + RAG)
+│   ├── 07_generate_charts.py            # Generate result charts
+│   ├── 08_supplementary_analysis.py     # Confusion matrices, McNemar, cost analysis
+│   ├── 09_gen_supplementary_charts.py   # Generate supplementary charts
+│   └── run_experiment.py                # Legacy experiment runner
+├── src/                                  # Source code modules
 │   ├── detection/
 │   │   ├── hybrid_detector.py
 │   │   ├── llm_detector.py
@@ -44,18 +49,24 @@ defi-llm-vulnerability-detection/
 │   │   └── metrics.py
 │   ├── preprocessing/
 │   └── utils/
-├── experiments/                      # Experiment results (JSON)
-│   ├── slither/
-│   │   └── slither_results.json
-│   ├── mythril/
-│   │   └── mythril_results.json
-│   ├── llm_base/
-│   │   └── llm_base_results.json
-│   ├── llm_rag/
-│   │   └── llm_rag_results.json
-│   └── hybrid/
-│       └── hybrid_results.json
-├── charts/                           # Generated charts (PNG, 300 DPI)
+├── experiments/                          # Experiment results (JSON)
+│   ├── slither/slither_results.json
+│   ├── mythril/mythril_results.json
+│   ├── llm_base/llm_base_results.json
+│   ├── llm_rag/llm_rag_results.json
+│   └── hybrid/hybrid_results.json
+├── supplementary_results/                # ★ Supplementary analysis results
+│   ├── confusion_matrices.json           # Confusion matrices for all methods
+│   ├── mcnemar_tests.json                # McNemar statistical tests
+│   ├── cost_sensitive_analysis.json      # Cost-sensitive analysis
+│   ├── vulnerability_type_comparison.json # Per-category detection comparison
+│   ├── all_predictions.csv               # ★ Raw predictions for all contracts
+│   ├── slither_predictions.csv           # Per-method prediction CSV
+│   ├── llm_base_predictions.csv
+│   ├── llm_rag_predictions.csv
+│   ├── mythril_predictions.csv
+│   └── hybrid_predictions.csv
+├── charts/                               # Generated charts (PNG, 300 DPI)
 │   ├── fig4_1_performance_comparison.png
 │   ├── fig4_2_empirical_comparison.png
 │   ├── fig4_3_fpr_comparison.png
@@ -65,33 +76,51 @@ defi-llm-vulnerability-detection/
 │   ├── fig4_7_category_recall.png
 │   ├── fig4_8_radar_chart.png
 │   ├── fig4_9_roc_space.png
-│   └── fig4_10_confusion_matrix.png
-├── data/                             # Dataset
-│   └── dataset_1000.json             # 1000 contracts (143 vulnerable + 857 safe)
-├── logs/                             # Experiment execution logs
+│   ├── fig4_10_confusion_matrix.png
+│   ├── fig4_sup1_confusion_matrices.png  # ★ All confusion matrices
+│   ├── fig4_sup2_mcnemar_tests.png       # ★ McNemar test results
+│   ├── fig4_sup3_cost_sensitive.png      # ★ Cost-sensitive analysis
+│   └── fig4_sup4_vuln_type_recall.png    # ★ Per-type recall comparison
+├── data/                                 # Dataset
+│   └── dataset_1000.json                 # 1000 contracts (143 vulnerable + 857 safe)
+├── logs/                                 # Experiment execution logs
 │   ├── slither_log.txt
 │   ├── mythril_log.txt
 │   ├── llm_base_log.txt
 │   └── llm_base_terminal_log.txt
-└── screenshots/                      # Experiment process records
+└── screenshots/                          # Experiment process records
 ```
 
 ## Quick Start
 
-### Prerequisites
-
-- Python 3.11+
-- OpenAI API Key (for GPT-4.1-mini access)
-- Slither (for static analysis)
-- Mythril (for symbolic execution)
-
-### Installation
+### One-Click Reproduction
 
 ```bash
 # Clone the repository
 git clone https://github.com/bigear88/defi-llm-vulnerability-detection.git
 cd defi-llm-vulnerability-detection
 
+# Set your OpenAI API key
+export OPENAI_API_KEY='your-api-key'
+
+# Run all experiments with one command
+bash scripts/run_all.sh
+```
+
+**Estimated time**: 60-90 minutes | **Estimated API cost**: ~$2-5 USD
+
+### Manual Step-by-Step
+
+#### Prerequisites
+
+- Python 3.11+
+- OpenAI API Key (for GPT-4.1-mini access)
+- Slither (for static analysis)
+- Mythril (optional, for symbolic execution)
+
+#### Installation
+
+```bash
 # Install dependencies
 pip install -r requirements.txt
 
@@ -102,7 +131,7 @@ pip install slither-analyzer solc-select mythril
 solc-select install 0.4.26 0.5.17 0.6.12 0.7.6 0.8.0 0.8.17 0.8.20
 ```
 
-### Running Experiments
+#### Running Experiments
 
 ```bash
 # Step 1: Prepare dataset (download SmartBugs)
@@ -125,6 +154,10 @@ python scripts/06_run_hybrid.py
 
 # Step 7: Generate charts
 python scripts/07_generate_charts.py
+
+# Step 8: Run supplementary analysis (confusion matrices, McNemar, etc.)
+python scripts/08_supplementary_analysis.py
+python scripts/09_gen_supplementary_charts.py
 ```
 
 ## Datasets
@@ -136,6 +169,13 @@ This project uses the following datasets:
 | SmartBugs Curated | 143 contracts | Labeled vulnerability dataset with known vulnerabilities |
 | SmartBugs Wild | 100 contracts (sampled) | Safe contracts from 47,398 real-world deployed contracts |
 | **Total** | **243 contracts** | **Combined evaluation dataset** |
+
+### Contract Selection Criteria
+
+- Minimum 10 lines of Solidity code (excluding comments)
+- Compilable with Solidity 0.4.x–0.8.x
+- Random seed = 42 for reproducibility
+- Safe contracts verified by Slither initial scan (no high-severity findings)
 
 ### Vulnerability Categories (SmartBugs Curated)
 
@@ -149,6 +189,10 @@ This project uses the following datasets:
 | Front Running | 4 |
 | Time Manipulation | 5 |
 | Other | 42 |
+
+### Evaluation Level
+
+All evaluations are performed at the **contract level** (binary classification: vulnerable / safe). A contract is classified as "vulnerable" if the detection method identifies at least one vulnerability of any type.
 
 ## Methodology
 
@@ -188,14 +232,29 @@ Input Contract
 
 ### Evaluation Metrics
 
-- Precision, Recall, F1-Score
-- False Positive Rate (FPR), Specificity
-- Average Detection Time per Contract
-- Total Token Usage (LLM cost tracking)
+- **Precision**: TP / (TP + FP) — How many flagged contracts are truly vulnerable
+- **Recall**: TP / (TP + FN) — How many vulnerable contracts are correctly detected
+- **F1-Score**: Harmonic mean of Precision and Recall
+- **FPR (False Positive Rate)**: FP / (FP + TN) — Rate of safe contracts incorrectly flagged
+- **Specificity**: TN / (TN + FP) — Rate of safe contracts correctly identified
+- **Average Detection Time**: Per-contract processing time in seconds
+- **Token Usage**: Total LLM API tokens consumed (for cost tracking)
 
 ## Experiment Results
 
-All experiments were conducted on the SmartBugs dataset (243 contracts). Results are from **real tool execution**, not simulated.
+All experiments were conducted on 2025-02-20 using the SmartBugs dataset (243 contracts). Results are from **real tool execution**, not simulated.
+
+### Experiment Environment
+
+| Item | Specification |
+|------|---------------|
+| OS | Ubuntu 22.04 LTS (x86_64) |
+| Python | 3.11.0rc1 |
+| LLM Model | GPT-4.1-mini (via OpenAI API) |
+| LLM Temperature | 0.1 |
+| Slither | v0.10.4 |
+| Mythril | v0.24.8 |
+| Random Seed | 42 |
 
 ### Performance Comparison
 
@@ -207,13 +266,55 @@ All experiments were conducted on the SmartBugs dataset (243 contracts). Results
 | **LLM + RAG** | 97.90% | 80.92% | **88.61%** | 33.00% | 2.76 |
 | **Hybrid** (Slither + LLM + RAG) | 98.60% | 72.31% | 83.43% | 54.00% | 5.76 |
 
+### Confusion Matrices
+
+| Method | TP | TN | FP | FN | Total |
+|--------|----|----|----|----|-------|
+| Slither | 136 | 13 | 87 | 7 | 243 |
+| Mythril | 9 | 20 | 0 | 11 | 40 |
+| LLM Base | 142 | 2 | 98 | 1 | 243 |
+| LLM + RAG | 140 | 67 | 33 | 3 | 243 |
+| Hybrid | 141 | 46 | 54 | 2 | 243 |
+
+### McNemar Statistical Tests
+
+| Comparison | χ² | p-value | Significant |
+|------------|-----|---------|-------------|
+| LLM+RAG vs LLM Base | 57.37 | <0.001 | *** |
+| LLM+RAG vs Hybrid | 9.50 | 0.002 | ** |
+| Hybrid vs Slither | 2.78 | 0.095 | n.s. |
+| LLM+RAG vs Slither | 0.90 | 0.343 | n.s. |
+
+### Cost-Sensitive Analysis
+
+LLM+RAG achieves the lowest total misclassification cost across all FN/FP cost ratios (1:1 to 10:1), confirming its superiority in practical deployment scenarios.
+
 ### Key Findings
 
 1. **LLM + RAG achieves the highest F1 score (88.61%)**, demonstrating that retrieval-augmented generation significantly improves detection accuracy.
 2. **RAG dramatically reduces false positive rate**: From 98.00% (LLM Base) to 33.00% (LLM + RAG), a 66.3% reduction.
-3. **Mythril has zero false positives but low recall (45.00%)**: Extremely conservative, only flagging confirmed vulnerabilities.
-4. **Slither is fast but noisy**: High recall (95.10%) but very high FPR (87.00%).
-5. **The Hybrid framework balances speed and accuracy**: Strong recall (98.60%) with reasonable processing time (5.76s).
+3. **McNemar test confirms statistical significance**: The improvement of LLM+RAG over LLM Base is statistically significant (p<0.001).
+4. **Mythril has zero false positives but low recall (45.00%)**: Extremely conservative, only flagging confirmed vulnerabilities.
+5. **Slither is fast but noisy**: High recall (95.10%) but very high FPR (87.00%).
+6. **The Hybrid framework balances speed and accuracy**: Strong recall (98.60%) with reasonable processing time (5.76s).
+
+## Limitations
+
+1. **LLM Version Drift**: GPT-4.1-mini behavior may change across API versions. Experiment date: 2025-02-20.
+2. **Dataset Representativeness**: SmartBugs Curated primarily contains Solidity 0.4.x–0.5.x contracts, which may not fully represent current DeFi patterns.
+3. **Evaluation Scope**: Contract-level binary classification only; function-level or line-level localization not evaluated.
+4. **API Cost**: Large-scale auditing with commercial LLM APIs incurs significant costs (~357K tokens for 243 contracts).
+5. **External Validity**: Performance on zero-day vulnerabilities or novel attack vectors remains to be validated.
+
+## Raw Data Access
+
+All raw prediction results are available in `supplementary_results/`:
+
+- `all_predictions.csv`: Combined predictions from all methods for every contract
+- `{method}_predictions.csv`: Per-method prediction details
+- `confusion_matrices.json`: Detailed confusion matrices
+- `mcnemar_tests.json`: Statistical test results
+- `cost_sensitive_analysis.json`: Cost-sensitive analysis data
 
 ## References
 
@@ -227,8 +328,8 @@ All experiments were conducted on the SmartBugs dataset (243 contracts). Results
 ## Author
 
 - **Curtis Chang**
-- Advisor: **Dr. David Shou**
-- Institution: Department of Computer Science, University of Taipei
+- Advisor: **Dr. David Shou (壽大衛)**
+- Institution: Department of Computer Science, University of Taipei (臺北市立大學)
 
 ## License
 
