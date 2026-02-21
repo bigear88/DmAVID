@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>能力差距分析</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Noto Sans TC', 'Roboto', sans-serif; background-color: #1E293B; color: #F8FAFC; }
+        .slide-container {
+            width: 1280px;
+            min-height: 720px;
+            background: #1E293B;
+            position: relative;
+            overflow: hidden;
+            padding: 60px 80px 9px; /* reduced bottom padding to lower overall height */
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            margin-bottom: 30px;
+            border-bottom: 2px solid #334155;
+            padding-bottom: 20px;
+        }
+        .title {
+            font-size: 48px;
+            font-weight: 700;
+            color: #F8FAFC;
+            margin-bottom: 10px;
+        }
+        .content {
+            display: flex;
+            gap: 30px; /* tightened gap to save vertical space when wrapping */
+            flex: 1;
+            align-items: center;
+        }
+        .chart-container {
+            flex: 1.4;
+            background: #F8FAFC;
+            border-radius: 12px;
+            padding: 20px;
+            height: 500px; /* keep chart large but reduce other paddings instead */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .chart-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        .analysis-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px; /* slightly smaller gap between cards */
+        }
+        .analysis-card {
+            background: #0F172A;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 16px; /* reduced inner padding to save height */
+            position: relative;
+        }
+        .card-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .card-text {
+            font-size: 18px;
+            color: #CBD5E1;
+            line-height: 1.5;
+        }
+        .blue-accent { color: #2563EB; border-left: 4px solid #2563EB; }
+        .orange-accent { color: #F59E0B; border-left: 4px solid #F59E0B; }
+        .green-accent { color: #10B981; border-left: 4px solid #10B981; }
+        
+        .highlight {
+            font-weight: 700;
+            color: #F8FAFC;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <div class="header">
+            <h1 class="title">能力差距分析</h1>
+        </div>
+        
+        <div class="content">
+            <div class="chart-container">
+                <img src="/home/ubuntu/evmbench_charts/evmbench_capability_gap.png" alt="Capability Gap Chart" class="chart-img">
+            </div>
+            
+            <div class="analysis-container">
+                <div class="analysis-card blue-accent">
+                    <div class="card-title">
+                        <i class="fas fa-check-circle"></i>
+                        LLM+RAG 優勢
+                    </div>
+                    <div class="card-text">
+                        在<span class="highlight">靜態程式碼分析</span>與<span class="highlight">語義理解</span>方面表現優異 (7-8分)，能有效識別單一合約內的已知漏洞模式。
+                    </div>
+                </div>
+                
+                <div class="analysis-card orange-accent">
+                    <div class="card-title">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        關鍵落差 (Critical Gaps)
+                    </div>
+                    <div class="card-text">
+                        在<span class="highlight">跨合約追蹤</span>、<span class="highlight">動態執行模擬</span>與<span class="highlight">工具整合</span>方面存在巨大落差 (1-3分)，這是 EVMbench 偵測率低的主要原因。
+                    </div>
+                </div>
+                
+                <div class="analysis-card green-accent">
+                    <div class="card-title">
+                        <i class="fas fa-brain"></i>
+                        核心差異
+                    </div>
+                    <div class="card-text">
+                        LLM+RAG 本質上是<span class="highlight">單次推理 (Single-pass)</span>，而 Agent 具備<span class="highlight">迭代推理 (Iterative)</span> 與環境交互修正的能力。
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

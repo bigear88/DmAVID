@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>未來展望與整合潛力</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Noto Sans TC', 'Roboto', sans-serif; background-color: #1E293B; color: #F8FAFC; }
+        .slide-container {
+            width: 1280px;
+            min-height: 720px; /* keep as required */
+            background: #1E293B;
+            position: relative;
+            overflow: hidden;
+            padding: 60px 80px 30px; /* reduced bottom padding to save vertical space */
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            margin-bottom: 20px; /* reduced */
+            border-bottom: 2px solid #334155;
+            padding-bottom: 20px;
+        }
+        .title {
+            font-size: 48px;
+            font-weight: 700;
+            color: #F8FAFC;
+            margin-bottom: 10px;
+        }
+        .roadmap-container {
+            display: flex;
+            gap: 30px;
+            flex: 1;
+            margin-bottom: 20px; /* reduced */
+        }
+        .stage-card {
+            flex: 1;
+            background: #0F172A;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 22px 16px; /* slightly reduced inner padding */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+        .stage-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(37, 99, 235, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            color: #2563EB;
+            margin-bottom: 16px; /* slightly reduced */
+            border: 1px solid rgba(37, 99, 235, 0.3);
+        }
+        .stage-label {
+            font-size: 16px;
+            color: #10B981;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px; /* reduced */
+            font-weight: 700;
+        }
+        .stage-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #F8FAFC;
+            margin-bottom: 12px; /* reduced */
+        }
+        .stage-desc {
+            font-size: 18px;
+            color: #94A3B8;
+            line-height: 1.5;
+        }
+        
+        /* Connector arrows between cards */
+        .stage-card:not(:last-child)::after {
+            content: '\f061'; /* fa-arrow-right */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            right: -25px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+            color: #334155;
+            z-index: 1;
+        }
+
+        .integration-box {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid #10B981;
+            border-radius: 12px;
+            padding: 25px;
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+        .integration-icon {
+            font-size: 40px;
+            color: #10B981;
+        }
+        .integration-content {
+            flex: 1;
+        }
+        .integration-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #F8FAFC;
+            margin-bottom: 5px;
+        }
+        .integration-text {
+            font-size: 18px;
+            color: #CBD5E1;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <div class="header">
+            <h1 class="title">未來展望與整合潛力</h1>
+        </div>
+        
+        <div class="roadmap-container">
+            <!-- Short Term -->
+            <div class="stage-card">
+                <div class="stage-label">Short-term</div>
+                <div class="stage-icon"><i class="fas fa-filter"></i></div>
+                <div class="stage-title">Agent 初篩模組</div>
+                <div class="stage-desc">
+                    將 LLM+RAG 作為 Agent 的前置過濾器，快速識別已知漏洞模式，降低 Agent 的推理成本。
+                </div>
+            </div>
+            
+            <!-- Mid Term -->
+            <div class="stage-card">
+                <div class="stage-label">Mid-term</div>
+                <div class="stage-icon"><i class="fas fa-tools"></i></div>
+                <div class="stage-title">工具鏈整合</div>
+                <div class="stage-desc">
+                    整合 Slither 與 Mythril 等傳統工具，構建 Agent 可調用的工具集 (Tool Use)，增強驗證能力。
+                </div>
+            </div>
+            
+            <!-- Long Term -->
+            <div class="stage-card">
+                <div class="stage-label">Long-term</div>
+                <div class="stage-icon"><i class="fas fa-brain"></i></div>
+                <div class="stage-title">自主審計 Agent</div>
+                <div class="stage-desc">
+                    發展具備「偵測-修補-驗證」完整閉環能力的自主 Agent，挑戰 EVMbench 高難度任務。
+                </div>
+            </div>
+        </div>
+        
+        <div class="integration-box">
+            <div class="integration-icon">
+                <i class="fas fa-database"></i>
+            </div>
+            <div class="integration-content">
+                <div class="integration-title">本研究的核心價值：可遷移性 (Transferability)</div>
+                <div class="integration-text">
+                    本研究構建的 <span style="color: #10B981; font-weight: 700;">RAG 漏洞知識庫</span> 與向量索引機制，可直接遷移至未來 Agent 架構中，作為其 <span style="color: #10B981; font-weight: 700;">長期記憶 (Long-term Memory)</span>，提供持續更新的安全知識。
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

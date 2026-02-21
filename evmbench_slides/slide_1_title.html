@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EVMbench 基準測試實驗報告</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Noto Sans TC', 'Roboto', sans-serif; background-color: #1E293B; color: #F8FAFC; }
+        .slide-container {
+            width: 1280px;
+            min-height: 720px;
+            background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .decorative-shape {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.1;
+        }
+        .shape-1 {
+            width: 600px;
+            height: 600px;
+            background: #2563EB;
+            top: -200px;
+            left: -200px;
+        }
+        .shape-2 {
+            width: 400px;
+            height: 400px;
+            background: #10B981;
+            bottom: -100px;
+            right: -100px;
+        }
+        .university {
+            font-size: 24px;
+            color: #94A3B8;
+            margin-bottom: 40px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        .main-title {
+            font-size: 64px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            background: linear-gradient(90deg, #F8FAFC 0%, #94A3B8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .subtitle {
+            font-size: 32px;
+            font-weight: 400;
+            color: #CBD5E1;
+            margin-bottom: 60px;
+            max-width: 80%;
+            line-height: 1.5;
+        }
+        .date {
+            font-size: 20px;
+            color: #64748B;
+            margin-top: 40px;
+            border-top: 1px solid #334155;
+            padding-top: 20px;
+            width: 200px;
+        }
+        .accent-line {
+            width: 100px;
+            height: 4px;
+            background: #10B981;
+            margin: 0 auto 40px;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <div class="decorative-shape shape-1"></div>
+        <div class="decorative-shape shape-2"></div>
+        
+        <div class="university">臺北市立大學</div>
+        
+        <h1 class="main-title">EVMbench 基準測試實驗報告</h1>
+        <div class="accent-line"></div>
+        <h2 class="subtitle">基於大型語言模型的乙太坊 DeFi 智能合約<br>漏洞偵測機制研究</h2>
+        
+        <div class="date">2026 年 2 月</div>
+    </div>
+</body>
+</html>

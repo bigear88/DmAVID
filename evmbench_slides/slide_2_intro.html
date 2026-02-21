@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EVMbench 簡介與研究動機</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Noto Sans TC', 'Roboto', sans-serif; background-color: #1E293B; color: #F8FAFC; }
+        .slide-container {
+            width: 1280px;
+            min-height: 720px;
+            background: #1E293B;
+            position: relative;
+            overflow: hidden;
+            padding: 60px 80px;
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            margin-bottom: 36px;
+            border-bottom: 2px solid #334155;
+            padding-bottom: 20px;
+        }
+        .title {
+            font-size: 48px;
+            font-weight: 700;
+            color: #F8FAFC;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            font-size: 24px;
+            color: #94A3B8;
+        }
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            flex: 1;
+        }
+        .column {
+            background: #0F172A;
+            border-radius: 12px;
+            padding: 20px; /* reduced from 40 */
+            border: 1px solid #334155;
+        }
+        .column-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #10B981;
+            margin-bottom: 16px; /* reduced from 30 */
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .list-item {
+            font-size: 24px;
+            color: #CBD5E1;
+            margin-bottom: 10px; /* reduced from 20 */
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            line-height: 1.5;
+        }
+        .list-item i {
+            color: #2563EB;
+            margin-top: 4px;
+            font-size: 20px;
+        }
+        .highlight {
+            color: #F8FAFC;
+            font-weight: 700;
+        }
+        .task-icons {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px; /* reduced from 40 */
+            padding-top: 10px; /* reduced from 30 */
+            border-top: 1px solid #334155;
+        }
+        .task-icon {
+            text-align: center;
+            color: #94A3B8;
+        }
+        .task-icon i {
+            font-size: 40px;
+            margin-bottom: 8px;
+            color: #2563EB;
+        }
+        .task-icon span {
+            display: block;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <div class="header">
+            <h1 class="title">EVMbench 簡介與研究動機</h1>
+            <div class="subtitle">Paradigm 與 OpenAI 聯合發布的最新基準測試</div>
+        </div>
+        
+        <div class="content">
+            <div class="column">
+                <div class="column-title">
+                    <i class="fas fa-info-circle"></i>
+                    EVMbench 簡介
+                </div>
+                <div class="list-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>發布日期：<span class="highlight">2026 年 2 月 18 日</span></span>
+                </div>
+                <div class="list-item">
+                    <i class="fas fa-building"></i>
+                    <span>發布單位：Paradigm + OpenAI</span>
+                </div>
+                <div class="list-item">
+                    <i class="fas fa-database"></i>
+                    <span>漏洞來源：Code4rena 真實開放審計 + 自訂任務</span>
+                </div>
+                <div class="task-icons">
+                    <div class="task-icon">
+                        <i class="fas fa-search"></i>
+                        <span>偵測 (Detect)</span>
+                    </div>
+                    <div class="task-icon">
+                        <i class="fas fa-tools"></i>
+                        <span>修補 (Patch)</span>
+                    </div>
+                    <div class="task-icon">
+                        <i class="fas fa-bug"></i>
+                        <span>利用 (Exploit)</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="column">
+                <div class="column-title">
+                    <i class="fas fa-lightbulb"></i>
+                    研究動機
+                </div>
+                <div class="list-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>驗證本研究 <span class="highlight">LLM+RAG 方法</span> 在最新業界基準上的表現定位</span>
+                </div>
+                <div class="list-item">
+                    <i class="fas fa-balance-scale"></i>
+                    <span>對比學術基準 (SmartBugs) 與真實世界基準 (EVMbench) 的效能差異</span>
+                </div>
+                <div class="list-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span>量化 <span class="highlight">Pre-Agent Era</span> 的技術基線，為未來 Agent 系統提供參考</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

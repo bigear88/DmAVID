@@ -1,0 +1,156 @@
+{
+  "project_info": {
+    "title": "EVMbench 基準測試實驗報告",
+    "created": 1771654955.6181107,
+    "last_updated": 1771655306.8862598,
+    "total_slides": 12
+  },
+  "slides": [
+    {
+      "id": "slide_1_title",
+      "state": "edited",
+      "pageNum": 1
+    },
+    {
+      "id": "slide_2_intro",
+      "state": "edited",
+      "pageNum": 2
+    },
+    {
+      "id": "slide_3_dataset",
+      "state": "edited",
+      "pageNum": 3
+    },
+    {
+      "id": "slide_4_sampling",
+      "state": "edited",
+      "pageNum": 4
+    },
+    {
+      "id": "slide_5_process",
+      "state": "edited",
+      "pageNum": 5
+    },
+    {
+      "id": "slide_6_results",
+      "state": "edited",
+      "pageNum": 6
+    },
+    {
+      "id": "slide_7_analysis",
+      "state": "edited",
+      "pageNum": 7
+    },
+    {
+      "id": "slide_8_comparison",
+      "state": "edited",
+      "pageNum": 8
+    },
+    {
+      "id": "slide_9_capability",
+      "state": "edited",
+      "pageNum": 9
+    },
+    {
+      "id": "slide_10_positioning",
+      "state": "edited",
+      "pageNum": 10
+    },
+    {
+      "id": "slide_11_future",
+      "state": "edited",
+      "pageNum": 11
+    },
+    {
+      "id": "slide_12_conclusion",
+      "state": "edited",
+      "pageNum": 12
+    }
+  ],
+  "outline": [
+    {
+      "id": "slide_1_title",
+      "title": "EVMbench 基準測試實驗報告",
+      "summary": "EVMbench 基準測試實驗報告封面，包含標題、副標題、學校名稱與日期。",
+      "image_plan": "Use a suitable image if needed",
+      "slide_template_key": ""
+    },
+    {
+      "id": "slide_2_intro",
+      "title": "EVMbench 簡介與研究動機",
+      "summary": "介紹 EVMbench 的背景、發布單位、任務類型與本研究的動機。",
+      "image_plan": "Use a suitable image if needed",
+      "slide_template_key": ""
+    },
+    {
+      "id": "slide_3_dataset",
+      "title": "EVMbench 資料集結構",
+      "summary": "說明 EVMbench 資料集的組成、漏洞數量、檔案結構與評分機制。",
+      "image_plan": "Use a suitable image if needed",
+      "slide_template_key": ""
+    },
+    {
+      "id": "slide_4_sampling",
+      "title": "抽樣策略與實驗設計",
+      "summary": "描述從 40 個審計中抽樣 10 個的策略，以及 LLM+RAG 的實驗方法。",
+      "image_plan": "Use a suitable image if needed",
+      "slide_template_key": ""
+    },
+    {
+      "id": "slide_5_process",
+      "title": "實驗流程",
+      "summary": "詳細列出從解析 config 到計算 detect score 的 6 個步驟。",
+      "image_plan": "Use a suitable image if needed",
+      "slide_template_key": ""
+    },
+    {
+      "id": "slide_6_results",
+      "title": "逐審計偵測結果",
+      "summary": "展示 10 個審計的詳細偵測結果數據與整體 Detect Score。",
+      "image_plan": "Use a suitable image if needed",
+      "slide_template_key": ""
+    },
+    {
+      "id": "slide_7_analysis",
+      "title": "成功偵測的漏洞分析",
+      "summary": "深入分析 3 個成功偵測到的漏洞類型及其特徵。",
+      "image_plan": "Use a suitable image if needed",
+      "slide_template_key": ""
+    },
+    {
+      "id": "slide_8_comparison",
+      "title": "跨基準測試比較",
+      "summary": "比較 SmartBugs 與 EVMbench 的偵測效能，分析差距原因。",
+      "image_plan": "Use a suitable image if needed",
+      "slide_template_key": ""
+    },
+    {
+      "id": "slide_9_capability",
+      "title": "能力差距分析",
+      "summary": "對比 LLM+RAG 與 AI Agent 在各項能力維度上的優劣勢。",
+      "image_plan": "Use a suitable image if needed",
+      "slide_template_key": ""
+    },
+    {
+      "id": "slide_10_positioning",
+      "title": "Pre-Agent Era 基線定位",
+      "summary": "將本研究定位於 Pre-Agent Era，闡述其作為效能基線的價值。",
+      "image_plan": "Use a suitable image if needed",
+      "slide_template_key": ""
+    },
+    {
+      "id": "slide_11_future",
+      "title": "未來展望與整合潛力",
+      "summary": "探討 LLM+RAG 在未來 Agent 系統中的角色與整合方向。",
+      "image_plan": "Use a suitable image if needed",
+      "slide_template_key": ""
+    },
+    {
+      "id": "slide_12_conclusion",
+      "title": "結論",
+      "summary": "總結 EVMbench 實驗的主要發現與本研究的貢獻。",
+      "image_plan": "Use a suitable image if needed",
+      "slide_template_key": ""
+    }
+  ]
+}

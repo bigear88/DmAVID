@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>跨基準測試比較</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Noto Sans TC', 'Roboto', sans-serif; background-color: #1E293B; color: #F8FAFC; }
+        .slide-container {
+            width: 1280px;
+            min-height: 720px;
+            background: #1E293B;
+            position: relative;
+            overflow: hidden;
+            padding: 60px 80px 35px; /* reduced bottom padding to fit under 720px */
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            margin-bottom: 30px;
+            border-bottom: 2px solid #334155;
+            padding-bottom: 20px;
+        }
+        .title {
+            font-size: 48px;
+            font-weight: 700;
+            color: #F8FAFC;
+            margin-bottom: 10px;
+        }
+        .content {
+            display: flex;
+            gap: 60px;
+            flex: 1;
+            align-items: center;
+        }
+        .chart-container {
+            flex: 1.2;
+            background: #F8FAFC;
+            border-radius: 12px;
+            padding: 20px;
+            height: 480px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .chart-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        .analysis-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        .analysis-card {
+            background: #0F172A;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 25px;
+            position: relative;
+        }
+        .card-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .card-text {
+            font-size: 18px;
+            color: #CBD5E1;
+            line-height: 1.5;
+        }
+        .blue-accent { color: #2563EB; border-left: 4px solid #2563EB; }
+        .purple-accent { color: #7C3AED; border-left: 4px solid #7C3AED; }
+        .orange-accent { color: #F59E0B; border-left: 4px solid #F59E0B; }
+        
+        .highlight {
+            font-weight: 700;
+            color: #F8FAFC;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <div class="header">
+            <h1 class="title">跨基準測試比較</h1>
+        </div>
+        
+        <div class="content">
+            <div class="chart-container">
+                <img src="/home/ubuntu/evmbench_charts/evmbench_comparison.png" alt="Comparison Chart" class="chart-img">
+            </div>
+            
+            <div class="analysis-container">
+                <div class="analysis-card blue-accent">
+                    <div class="card-title">
+                        <i class="fas fa-graduation-cap"></i>
+                        SmartBugs (88.6%)
+                    </div>
+                    <div class="card-text">
+                        學術基準測試，針對<span class="highlight">單一合約</span>且漏洞模式已知。LLM+RAG 在此類「模式匹配」任務中表現優異。
+                    </div>
+                </div>
+                
+                <div class="analysis-card purple-accent">
+                    <div class="card-title">
+                        <i class="fas fa-search"></i>
+                        EVMbench (7.5%)
+                    </div>
+                    <div class="card-text">
+                        真實世界審計，涉及<span class="highlight">多合約交互</span>與複雜業務邏輯。單純的 RAG 檢索難以捕捉深層語義關聯。
+                    </div>
+                </div>
+                
+                <div class="analysis-card orange-accent">
+                    <div class="card-title">
+                        <i class="fas fa-robot"></i>
+                        Agent Gap
+                    </div>
+                    <div class="card-text">
+                        效能差距主要來自於 Agent 的<span class="highlight">工具使用</span>、<span class="highlight">動態執行</span>與<span class="highlight">多步驟推理</span>能力，這正是未來發展方向。
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

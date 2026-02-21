@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>成功偵測的漏洞分析</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Noto Sans TC', 'Roboto', sans-serif; background-color: #1E293B; color: #F8FAFC; }
+        .slide-container {
+            width: 1280px;
+            min-height: 720px;
+            background: #1E293B;
+            position: relative;
+            overflow: hidden;
+            padding: 60px 40px 20px; /* keep top padding 60px; reduce bottom & sides */
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            margin-bottom: 10px; /* reduced from 30px */
+            border-bottom: 2px solid #334155;
+            padding-bottom: 8px; /* reduced from 15px */
+        }
+        .title {
+            font-size: 42px;
+            font-weight: 700;
+            color: #F8FAFC;
+        }
+        .content-wrapper {
+            display: flex;
+            gap: 24px; /* reduced gap */
+            flex: 1;
+            align-items: flex-start;
+        }
+        .chart-container {
+            flex: 0 0 45%;
+            background: #0F172A;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 16px; /* reduced padding */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+        .chart-container img {
+            width: 100%;
+            height: auto;
+            max-height: 420px; /* reduced from 450px */
+            object-fit: contain;
+        }
+        .text-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px; /* tightened spacing */
+        }
+        .vuln-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px; /* reduced gap */
+        }
+        .vuln-item {
+            background: #0F172A;
+            border-left: 4px solid #2563EB;
+            padding: 12px 16px; /* reduced padding */
+            border-radius: 0 8px 8px 0;
+        }
+        .vuln-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        .vuln-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: #F8FAFC;
+        }
+        .vuln-type {
+            font-size: 16px;
+            color: #10B981;
+            background: rgba(16, 185, 129, 0.1);
+            padding: 4px 10px;
+            border-radius: 4px;
+        }
+        .vuln-desc {
+            font-size: 16px;
+            color: #CBD5E1;
+            line-height: 1.4;
+        }
+        .insight-box {
+            /* removed margin-top:auto to avoid forcing extra vertical space */
+            background: rgba(37, 99, 235, 0.1);
+            border: 1px solid #2563EB;
+            border-radius: 12px;
+            padding: 12px; /* reduced padding */
+        }
+        .insight-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2563EB;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .insight-text {
+            font-size: 18px;
+            color: #E2E8F0;
+            line-height: 1.5;
+        }
+        .highlight {
+            color: #10B981;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <div class="header">
+            <h1 class="title">成功偵測的漏洞分析</h1>
+        </div>
+        
+        <div class="content-wrapper">
+            <div class="chart-container">
+                <img src="/home/ubuntu/evmbench_charts/evmbench_detected_detail.png" alt="Detected Vulnerabilities Detail">
+            </div>
+            
+            <div class="text-content">
+                <div class="vuln-list">
+                    <div class="vuln-item">
+                        <div class="vuln-header">
+                            <span class="vuln-name">Curves H-02</span>
+                            <span class="vuln-type">存取控制缺陷</span>
+                        </div>
+                        <div class="vuln-desc">FeeSplitter 合約未正確限制費用領取函數的存取權限，導致未授權者可任意領取費用。</div>
+                    </div>
+                    
+                    <div class="vuln-item">
+                        <div class="vuln-header">
+                            <span class="vuln-name">Phi H-01</span>
+                            <span class="vuln-type">簽章驗證缺陷</span>
+                        </div>
+                        <div class="vuln-desc">簽章驗證邏輯存在漏洞，缺乏足夠的防重放機制，攻擊者可重複使用舊簽章進行攻擊。</div>
+                    </div>
+                    
+                    <div class="vuln-item">
+                        <div class="vuln-header">
+                            <span class="vuln-name">Tempo H-01</span>
+                            <span class="vuln-type">價格操縱</span>
+                        </div>
+                        <div class="vuln-desc">穩定幣 DEX 的價格計算機制存在缺陷，允許攻擊者透過操縱流動性來影響預言機價格。</div>
+                    </div>
+                </div>
+                
+                <div class="insight-box">
+                    <div class="insight-title">
+                        <i class="fas fa-lightbulb"></i>
+                        分析洞察
+                    </div>
+                    <div class="insight-text">
+                        這些成功偵測的漏洞多屬於 <span class="highlight">單一合約內的邏輯缺陷</span> 或 <span class="highlight">常見漏洞模式</span>（如存取控制、簽章問題），這是 LLM+RAG 最擅長的領域。相反，未偵測到的漏洞通常涉及複雜的 <span class="highlight">跨合約狀態追蹤</span> 或需要 <span class="highlight">動態執行模擬</span> 才能發現的深層邏輯錯誤。
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

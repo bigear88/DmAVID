@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EVMbench 資料集結構</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Noto Sans TC', 'Roboto', sans-serif; background-color: #1E293B; color: #F8FAFC; }
+        .slide-container {
+            width: 1280px;
+            min-height: 720px; /* keep as required */
+            background: #1E293B;
+            position: relative;
+            overflow: hidden;
+            padding: 60px 40px; /* keep top padding, reduce horizontal/bottom padding to save height */
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            margin-bottom: 20px; /* reduced from 40 */
+            border-bottom: 2px solid #334155;
+            padding-bottom: 10px; /* reduced from 20 */
+        }
+        .title {
+            font-size: 48px;
+            font-weight: 700;
+            color: #F8FAFC;
+            margin-bottom: 10px;
+        }
+        .stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 40px; /* reduced from 80 */
+            margin-bottom: 20px; /* reduced from 50 */
+        }
+        .stat-card {
+            background: #0F172A;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 12px 20px; /* reduced from 20 40 */
+            text-align: center;
+            width: 300px;
+        }
+        .stat-number {
+            font-size: 64px;
+            font-weight: 700;
+            color: #10B981;
+            margin-bottom: 6px; /* reduced from 10 */
+        }
+        .stat-label {
+            font-size: 20px;
+            color: #94A3B8;
+        }
+        .structure-section {
+            background: #0F172A;
+            border-radius: 12px;
+            padding: 20px; /* reduced from 30 */
+            border: 1px solid #334155;
+            /* remove flex:1 to avoid forced stretching beyond min-height */
+            display: flex;
+            flex-direction: column;
+        }
+        .section-title {
+            font-size: 24px;
+            color: #2563EB;
+            margin-bottom: 10px; /* reduced from 30 */
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .file-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px; /* reduced from 30 */
+        }
+        .file-card {
+            background: #1E293B;
+            border-radius: 8px;
+            padding: 12px; /* reduced from 20 */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            border: 1px solid #334155;
+        }
+        .file-icon {
+            font-size: 48px;
+            color: #CBD5E1;
+            margin-bottom: 10px; /* reduced from 15 */
+        }
+        .file-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: #F8FAFC;
+            margin-bottom: 8px; /* reduced from 10 */
+            font-family: 'Roboto', sans-serif;
+        }
+        .file-desc {
+            font-size: 16px;
+            color: #94A3B8;
+            line-height: 1.4;
+        }
+        .scoring-note {
+            margin-top: 12px; /* reduced from 30 */
+            background: rgba(37, 99, 235, 0.1);
+            border-left: 4px solid #2563EB;
+            padding: 10px 12px; /* reduced from 15 20 */
+            font-size: 18px;
+            color: #CBD5E1;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <div class="header">
+            <h1 class="title">EVMbench 資料集結構</h1>
+        </div>
+        
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-number">40</div>
+                <div class="stat-label">偵測任務 (Audits)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">120</div>
+                <div class="stat-label">高危漏洞 (High Severity)</div>
+            </div>
+        </div>
+        
+        <div class="structure-section">
+            <div class="section-title">
+                <i class="fas fa-folder-open"></i>
+                單一審計任務結構
+            </div>
+            <div class="file-grid">
+                <div class="file-card">
+                    <i class="fas fa-file-code file-icon" style="color: #F59E0B;"></i>
+                    <div class="file-name">config.yaml</div>
+                    <div class="file-desc">定義漏洞 ID、標題<br>與獎金權重</div>
+                </div>
+                <div class="file-card">
+                    <i class="fas fa-file-alt file-icon" style="color: #3B82F6;"></i>
+                    <div class="file-name">findings/</div>
+                    <div class="file-desc">包含詳細的漏洞描述<br>Markdown 檔案</div>
+                </div>
+                <div class="file-card">
+                    <i class="fab fa-docker file-icon" style="color: #0EA5E9;"></i>
+                    <div class="file-name">Dockerfile</div>
+                    <div class="file-desc">定義執行環境與<br>合約源碼來源 (GitHub)</div>
+                </div>
+            </div>
+            
+            <div class="scoring-note">
+                <i class="fas fa-gavel" style="color: #2563EB;"></i>
+                <span><strong>評分機制：</strong>使用 LLM Judge 自動判斷偵測報告是否有效覆蓋已知漏洞 (Ground Truth)</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
