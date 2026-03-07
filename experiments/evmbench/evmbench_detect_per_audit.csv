@@ -1,0 +1,11 @@
+audit_id,status,num_gold_vulns,num_found_by_llm,num_detected,detect_score,time_seconds,tokens_used
+2024-01-curves,completed,4,4,1,0.25,9.71,7338
+2024-03-taiko,completed,5,2,0,0.0,7.32,14819
+2024-05-olas,completed,2,0,0,0.0,4.43,15233
+2024-07-basin,completed,2,0,0,0.0,3.06,11776
+2024-01-renft,completed,6,0,0,0.0,1.14,12573
+2024-06-size,completed,4,2,0,0.0,7.01,14243
+2024-08-phi,completed,6,2,0,0.0,7.17,13984
+2024-12-secondswap,completed,3,3,1,0.3333,7.79,14711
+2025-04-forte,completed,5,0,0,0.0,7.02,15833
+2026-01-tempo-stablecoin-dex,completed,2,1,1,0.5,3.01,4302

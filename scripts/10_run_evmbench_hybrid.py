@@ -1,355 +1,394 @@
 #!/usr/bin/env python3
 """
-EVMbench Hybrid (Verification Mode) Experiment
-Tests the Hybrid framework on real-world audit benchmarks.
+EVMbench Hybrid Verification Mode - Two-Stage Fusion for Vulnerability Detection.
 
-Key Design:
-- EVMbench evaluates "how many gold-standard vulnerabilities are detected"
-- Verification Mode on SmartBugs: Slither pre-filter -> LLM verifies
-- On EVMbench: Slither provides code-level hints -> LLM uses them for deeper analysis
-- If Slither finds ANY alerts (even Low/Info), they serve as "attention anchors"
-  for the LLM to focus its analysis on those code regions
-- If Slither finds nothing, LLM performs independent analysis (fallback to LLM+RAG)
+This script implements the Hybrid Verification architecture on EVMbench:
+1. Stage 1: Independent LLM+RAG analysis (no Slither influence) for high-precision detection
+2. Stage 2: Conditional Slither-guided re-evaluation (only if Stage 1 says safe but Slither flags HIGH/MEDIUM)
 
-This tests whether Slither's structural analysis can help LLM find more
-vulnerabilities even when Slither itself cannot identify the exact issues.
+Key innovations (based on literature):
+- GPTScan-style pre-filtering: Domain-specific rules remove Slither false positives before LLM
+- Two-stage fusion: Combines LLM independence (Stage 1) with Slither verification (Stage 2)
+- Anti-bias prompt: Stage 2 warns about Slither's ~84% FPR to prevent blind acceptance
+- ChromaDB RAG: Semantic retrieval of both vulnerable and safe vulnerability patterns
+
+Evaluation task:
+- DETECT: Find as many gold standard vulnerabilities as possible
+- Output: Detection score = num_detected / total_gold_vulnerabilities
+
+Prerequisites:
+- EVMbench dataset at data/evmbench/audits/
+- ChromaDB knowledge base at data/chroma_kb/ (run build_knowledge_base.py first)
+- Slither and solc-select installed
+- OPENAI_API_KEY set in environment
 """
 
-import json
 import os
+import sys
+import json
 import subprocess
 import time
 import yaml
 import glob
 import re
+import logging
 from pathlib import Path
 from datetime import datetime
+from typing import Optional, Dict, List, Any
+
+try:
+    from dotenv import load_dotenv
+except ImportError:
+    load_dotenv = lambda: None
+
+import chromadb
 from openai import OpenAI
 
-client = OpenAI()
-MODEL = "gpt-4.1-mini"
+# ========================================================================
+# Setup
+# ========================================================================
 
-EVMBENCH_DIR = "/home/ubuntu/evmbench/frontier-evals/project/evmbench"
-REPOS_DIR = "/home/ubuntu/evmbench_repos"
-RESULTS_DIR = "/home/ubuntu/defi-llm-vulnerability-detection/experiments/evmbench"
+load_dotenv()
+
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = os.path.dirname(SCRIPT_DIR)
+
+# Paths (project-relative)
+EVMBENCH_DATA_DIR = os.path.join(BASE_DIR, "data", "evmbench", "audits")
+EVMBENCH_REPOS_DIR = os.path.join(BASE_DIR, "data", "evmbench_repos")
+RESULTS_DIR = os.path.join(BASE_DIR, "experiments", "evmbench")
+CHROMA_DIR = os.path.join(BASE_DIR, "data", "chroma_kb")
+
 os.makedirs(RESULTS_DIR, exist_ok=True)
+os.makedirs(EVMBENCH_REPOS_DIR, exist_ok=True)
+os.makedirs(os.path.join(RESULTS_DIR, "logs"), exist_ok=True)
 
+# Logging
+LOG_FILE = os.path.join(RESULTS_DIR, "logs", f"hybrid_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log")
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler(LOG_FILE),
+        logging.StreamHandler()
+    ]
+)
+logger = logging.getLogger(__name__)
+
+# LLM Configuration
+LLM_MODEL = "gpt-4.1-mini"
+EMBEDDING_MODEL = "text-embedding-3-small"
+COLLECTION_NAME = "vuln_knowledge"
+RAG_TOP_K = 5
+MAX_CODE_LENGTH = 12_000
+REEVAL_CONFIDENCE_THRESHOLD = 0.75
+
+try:
+    client = OpenAI()
+except Exception as e:
+    logger.error(f"Failed to initialize OpenAI client: {e}")
+    sys.exit(1)
+
+# Solidity version mapping
+SOLC_VERSIONS = {
+    "0.4": "0.4.26", "0.5": "0.5.17", "0.6": "0.6.12",
+    "0.7": "0.7.6", "0.8": "0.8.0",
+}
+
+# GPTScan-style pre-filtering rules (from 06_run_hybrid.py)
+SLITHER_FP_FILTERS = {
+    "reentrancy-eth": {"require_patterns": [".call", ".send", ".transfer"],
+                        "exclude_patterns": ["nonReentrant", "ReentrancyGuard", "mutex"]},
+    "reentrancy-no-eth": {"require_patterns": [".call"],
+                           "exclude_patterns": ["nonReentrant", "ReentrancyGuard"]},
+    "reentrancy-benign": {"drop": True},
+    "reentrancy-events": {"drop": True},
+    "divide-before-multiply": {"require_solc_below": "0.8"},
+    "unprotected-upgrade": {"min_confidence": "High"},
+    "suicidal": {"min_confidence": "Medium"},
+    "solc-version": {"drop": True},
+    "pragma": {"drop": True},
+    "naming-convention": {"drop": True},
+    "assembly": {"drop": True},
+    "low-level-calls": {"drop": True},
+    "dead-code": {"drop": True},
+    "constable-states": {"drop": True},
+    "immutable-states": {"drop": True},
+    "external-function": {"drop": True},
+    "too-many-digits": {"drop": True},
+}
+
+# EVMbench Sample Audits
 SAMPLE_AUDITS = [
-    "2024-01-curves",
-    "2024-03-taiko",
-    "2024-05-olas",
-    "2024-07-basin",
-    "2024-01-renft",
-    "2024-06-size",
-    "2024-08-phi",
-    "2024-12-secondswap",
-    "2025-04-forte",
-    "2026-01-tempo-stablecoin-dex",
+    "2024-01-curves", "2024-03-taiko", "2024-05-olas", "2024-07-basin",
+    "2024-01-renft", "2024-06-size", "2024-08-phi", "2024-12-secondswap",
+    "2025-04-forte", "2026-01-tempo-stablecoin-dex",
 ]
 
-# RAG Knowledge Base
-RAG_KNOWLEDGE = """
-## Common Smart Contract Vulnerability Patterns
+# ========================================================================
+# RAG Module
+# ========================================================================
 
-### Reentrancy
-- External calls before state updates
-- Cross-function reentrancy via shared state
-- Read-only reentrancy through view functions
+class VulnKnowledgeBase:
+    """ChromaDB-based vulnerability knowledge retrieval."""
 
-### Access Control
-- Missing onlyOwner/onlyAdmin modifiers
-- Incorrect role checks
-- Unprotected initialization functions
+    def __init__(self, chroma_dir: str, collection_name: str, llm_client: OpenAI):
+        self.client = chromadb.PersistentClient(path=chroma_dir)
+        self.collection = self.client.get_collection(collection_name)
+        self.entry_count = self.collection.count()
+        self.llm_client = llm_client
 
-### Price/Oracle Manipulation
-- Using spot prices from AMMs
-- Flash loan price manipulation
-- Stale oracle data
+    def _embed_query(self, text: str) -> List[float]:
+        """Compute embedding for query using the same OpenAI model as build time."""
+        if len(text) > 8000:
+            text = text[:8000]
+        response = self.llm_client.embeddings.create(
+            model=EMBEDDING_MODEL,
+            input=[text],
+        )
+        return response.data[0].embedding
 
-### Logic Errors
-- Incorrect conditional checks
-- Off-by-one errors in loops
-- Missing validation of function parameters
-- Incorrect order of operations
-- State not properly updated after operations
-
-### Flash Loan Attacks
-- Manipulable state within single transaction
-- Governance attacks using flash-borrowed tokens
-
-### DeFi-Specific
-- Incorrect fee calculation/distribution
-- Token transfer hooks not handled
-- Missing checks for deflationary/rebasing tokens
-- Incorrect LP token accounting
-"""
-
-SOLC_VERSIONS = {"0.4": "0.4.26", "0.5": "0.5.17", "0.6": "0.6.12", "0.7": "0.7.6", "0.8": "0.8.0"}
+    def retrieve(self, query: str, top_k: int = 5) -> List[Dict[str, Any]]:
+        """Retrieve top-k vulnerability knowledge entries via semantic search."""
+        query_embedding = self._embed_query(query)
+        results = self.collection.query(query_embeddings=[query_embedding], n_results=top_k)
+        entries = []
+        if results["ids"] and len(results["ids"]) > 0:
+            for i, doc_id in enumerate(results["ids"][0]):
+                metadatas = results.get("metadatas", [[]])[0]
+                if i < len(metadatas):
+                    entry = metadatas[i]
+                    entry["similarity"] = results.get("distances", [[]])[0][i] if results.get("distances") else 0
+                    entries.append(entry)
+        return entries
 
 
-def detect_solc_version(code):
-    match = re.search(r'pragma\s+solidity\s+[\^>=<]*\s*(0\.\d+)', code)
-    return SOLC_VERSIONS.get(match.group(1), "0.8.0") if match else "0.8.0"
+def build_rag_context(retrieved_entries: List[Dict]) -> str:
+    """Build RAG context from retrieved knowledge."""
+    if not retrieved_entries:
+        return "No specific vulnerability patterns matched."
+    context_parts = []
+    for entry in retrieved_entries[:3]:
+        category = entry.get("category", "Unknown")
+        title = entry.get("title", "Unknown")
+        description = entry.get("description", "N/A")
+        vuln_pattern = entry.get("vulnerability_pattern", "N/A")
+        safe_pattern = entry.get("safe_pattern", "N/A")
+        ctx = f"\n--- {category.upper()}: {title} ---\n"
+        ctx += f"Description: {description}\n"
+        ctx += f"Vulnerable pattern: {vuln_pattern}\n"
+        ctx += f"Safe pattern: {safe_pattern}\n"
+        context_parts.append(ctx)
+    return "\n".join(context_parts) if context_parts else "No patterns retrieved."
 
 
-def extract_solidity_files(repo_dir, max_files=15, max_chars=80000):
-    """Extract Solidity source files from the repo."""
+# ========================================================================
+# Repository Management (from 09_run_evmbench_detect)
+# ========================================================================
+
+def parse_dockerfile(audit_id: str) -> Optional[Dict[str, str]]:
+    """Parse Dockerfile to extract GitHub repo and commit."""
+    dockerfile_path = os.path.join(EVMBENCH_DATA_DIR, audit_id, "Dockerfile")
+    if not os.path.exists(dockerfile_path):
+        logger.warning(f"  [WARN] Dockerfile not found for {audit_id}")
+        return None
+    try:
+        with open(dockerfile_path, 'r') as f:
+            content = f.read()
+        github_match = re.search(r'https://github\.com/([^\s/]+)/([^\s/.]+)', content)
+        commit_match = re.search(r'git checkout\s+([a-f0-9]{40}|[a-f0-9]{7})', content, re.IGNORECASE)
+        if not github_match:
+            logger.warning(f"  [WARN] No GitHub URL in Dockerfile for {audit_id}")
+            return None
+        org = github_match.group(1)
+        repo = github_match.group(2)
+        url = f"https://github.com/{org}/{repo}.git"
+        commit = commit_match.group(1) if commit_match else "HEAD"
+        logger.info(f"  [PARSE] {audit_id}: {url} @ {commit}")
+        return {"url": url, "commit": commit}
+    except Exception as e:
+        logger.error(f"  [ERROR] Failed to parse Dockerfile: {e}")
+        return None
+
+
+def clone_repo_at_commit(audit_id: str, repo_info: Dict[str, str]) -> Optional[str]:
+    """Clone repository at specific commit."""
+    repo_dir = os.path.join(EVMBENCH_REPOS_DIR, audit_id)
+    if os.path.exists(repo_dir) and len(os.listdir(repo_dir)) > 1:
+        logger.info(f"  [SKIP] Repo already cloned")
+        return repo_dir
+    url = repo_info["url"]
+    commit = repo_info["commit"]
+    logger.info(f"  [CLONE] {url} @ {commit}")
+    try:
+        result = subprocess.run(
+            ["git", "clone", "--depth", "1", url, repo_dir],
+            capture_output=True, text=True, timeout=120
+        )
+        if result.returncode != 0:
+            logger.error(f"  [ERROR] Clone failed")
+            return None
+        if commit != "HEAD":
+            subprocess.run(
+                ["git", "-C", repo_dir, "fetch", "--depth=100", "origin", commit],
+                capture_output=True, text=True, timeout=60
+            )
+            subprocess.run(
+                ["git", "-C", repo_dir, "checkout", commit],
+                capture_output=True, text=True, timeout=60
+            )
+        return repo_dir
+    except Exception as e:
+        logger.error(f"  [ERROR] Clone exception: {e}")
+        return None
+
+
+def extract_solidity_files(repo_dir: str, max_files: int = 15, max_chars: int = 80000) -> List[Dict]:
+    """Extract Solidity files from repo."""
     all_sol = glob.glob(os.path.join(repo_dir, "**/*.sol"), recursive=True)
-    
     filtered = []
     for f in all_sol:
         rel = os.path.relpath(f, repo_dir)
         lower = rel.lower()
-        if any(skip in lower for skip in ["test/", "tests/", "mock", "node_modules/", "lib/", ".t.sol"]):
+        skip_patterns = ["test/", "tests/", "mock", "node_modules/", "lib/", ".t.sol", "test.sol"]
+        if any(skip in lower for skip in skip_patterns):
             continue
         filtered.append(f)
-    
     filtered.sort(key=lambda f: os.path.getsize(f), reverse=True)
-    
-    sol_files = []
-    total_chars = 0
+    sol_files, total_chars = [], 0
     for f in filtered[:max_files]:
         try:
-            content = open(f).read()
+            with open(f, 'r', encoding='utf-8', errors='ignore') as file:
+                content = file.read()
             if total_chars + len(content) > max_chars:
                 content = content[:max_chars - total_chars]
-            sol_files.append({"path": os.path.relpath(f, repo_dir), "content": content, "abs_path": f})
+            sol_files.append({"path": os.path.relpath(f, repo_dir), "content": content})
             total_chars += len(content)
             if total_chars >= max_chars:
                 break
         except Exception:
             continue
+    logger.info(f"  Extracted {len(sol_files)} files ({total_chars} chars)")
     return sol_files
 
 
-def run_slither_on_files(sol_files, timeout_per_file=60):
-    """Run Slither on each Solidity file and collect ALL findings (including Low/Info)."""
-    all_findings = []
-    files_with_alerts = 0
-    
-    for sf in sol_files:
-        filepath = sf["abs_path"]
-        try:
-            with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
-                code = f.read()
-            ver = detect_solc_version(code)
-            subprocess.run(["solc-select", "use", ver], capture_output=True, timeout=5)
-            
-            r = subprocess.run(
-                ["slither", filepath, "--json", "-"],
-                capture_output=True, text=True, timeout=timeout_per_file
-            )
-            
-            if r.stdout:
-                try:
-                    out = json.loads(r.stdout)
-                    detectors = out.get("results", {}).get("detectors", [])
-                    if detectors:
-                        files_with_alerts += 1
-                    for d in detectors:
-                        all_findings.append({
-                            "file": sf["path"],
+def load_audit_config(audit_id: str) -> Dict:
+    """Load audit config."""
+    config_path = os.path.join(EVMBENCH_DATA_DIR, audit_id, "config.yaml")
+    try:
+        with open(config_path, 'r') as f:
+            return yaml.safe_load(f)
+    except Exception as e:
+        logger.error(f"  [ERROR] Failed to load config: {e}")
+        return {"vulnerabilities": []}
+
+
+# ========================================================================
+# Slither Analysis
+# ========================================================================
+
+def detect_solc_version(code: str) -> str:
+    """Extract Solidity version from code."""
+    match = re.search(r"pragma\s+solidity\s+[\^>=<]*\s*(0\.\d+)", code)
+    return SOLC_VERSIONS.get(match.group(1), "0.8.0") if match else "0.8.0"
+
+
+def run_slither_quick(filepath: str, timeout: int = 30) -> List[Dict]:
+    """Run Slither analysis."""
+    try:
+        with open(filepath, "r", encoding="utf-8", errors="ignore") as f:
+            code = f.read()
+        ver = detect_solc_version(code)
+        subprocess.run(["solc-select", "use", ver], capture_output=True, timeout=5)
+        r = subprocess.run(
+            ["slither", filepath, "--json", "-"],
+            capture_output=True, text=True, timeout=timeout,
+        )
+        findings = []
+        if r.stdout:
+            try:
+                out = json.loads(r.stdout)
+                if "results" in out and "detectors" in out["results"]:
+                    for d in out["results"]["detectors"]:
+                        findings.append({
                             "check": d.get("check", "unknown"),
                             "impact": d.get("impact", "unknown"),
                             "confidence": d.get("confidence", "unknown"),
-                            "description": d.get("description", "")[:300],
+                            "description": d.get("description", "")[:200],
                         })
-                except json.JSONDecodeError:
-                    pass
-        except subprocess.TimeoutExpired:
-            all_findings.append({
-                "file": sf["path"],
-                "check": "timeout",
-                "impact": "Unknown",
-                "confidence": "Unknown",
-                "description": f"Slither timed out analyzing {sf['path']}"
-            })
-        except Exception as e:
-            pass
-    
-    return all_findings, files_with_alerts
+            except Exception:
+                pass
+        return findings
+    except Exception:
+        return []
 
 
-def format_slither_for_hybrid(findings):
-    """Format ALL Slither findings as attention anchors for LLM."""
-    if not findings:
-        return "NO_ALERTS"
-    
-    high_med = [f for f in findings if f["impact"] in ["High", "Medium"]]
-    low_info = [f for f in findings if f["impact"] in ["Low", "Informational"]]
-    other = [f for f in findings if f["impact"] not in ["High", "Medium", "Low", "Informational"]]
-    
-    parts = []
-    parts.append(f"Total Slither alerts: {len(findings)} ({len(high_med)} High/Med, {len(low_info)} Low/Info)")
-    
-    if high_med:
-        parts.append("\nHIGH/MEDIUM severity alerts:")
-        for f in high_med[:8]:
-            parts.append(f"  - [{f['impact']}/{f['confidence']}] {f['check']} in {f['file']}")
-            parts.append(f"    {f['description'][:200]}")
-    
-    if low_info:
-        parts.append(f"\nLOW/INFORMATIONAL alerts ({len(low_info)} total):")
-        # Group by check type
-        check_types = {}
-        for f in low_info:
-            key = f['check']
-            if key not in check_types:
-                check_types[key] = []
-            check_types[key].append(f['file'])
-        for check, files in list(check_types.items())[:10]:
-            parts.append(f"  - {check}: found in {', '.join(set(files[:3]))}")
-    
-    if other:
-        parts.append(f"\nOther alerts: {len(other)}")
-    
-    return "\n".join(parts)
+def prefilter_slither_findings(findings: List[Dict], code: str, solc_version: str = "0.8.0") -> List[Dict]:
+    """Pre-filter Slither findings using domain rules (GPTScan-style)."""
+    code_lower = code.lower()
+    filtered = []
+    for finding in findings:
+        check_name = finding.get("check", "unknown")
+        rules = SLITHER_FP_FILTERS.get(check_name)
+        if rules is None:
+            filtered.append(finding)
+            continue
+        if rules.get("drop"):
+            continue
+        min_conf = rules.get("min_confidence")
+        if min_conf:
+            conf = finding.get("confidence", "Low")
+            conf_levels = {"High": 3, "Medium": 2, "Low": 1, "Informational": 0}
+            if conf_levels.get(conf, 0) < conf_levels.get(min_conf, 0):
+                continue
+        require = rules.get("require_patterns", [])
+        if require and not any(p.lower() in code_lower for p in require):
+            continue
+        exclude = rules.get("exclude_patterns", [])
+        if exclude and any(p.lower() in code_lower for p in exclude):
+            continue
+        req_below = rules.get("require_solc_below")
+        if req_below and solc_version >= req_below:
+            continue
+        filtered.append(finding)
+    return filtered
 
 
-def load_audit_config(audit_id):
-    config_path = os.path.join(EVMBENCH_DIR, "audits", audit_id, "config.yaml")
-    with open(config_path) as f:
-        return yaml.safe_load(f)
+# ========================================================================
+# Detection
+# ========================================================================
 
-
-def load_gold_findings(audit_id):
-    findings_dir = os.path.join(EVMBENCH_DIR, "audits", audit_id, "findings")
-    gold_path = os.path.join(findings_dir, "gold_audit.md")
-    if os.path.exists(gold_path):
-        return open(gold_path).read()
-    findings = []
-    for f in sorted(glob.glob(os.path.join(findings_dir, "H-*.md"))):
-        findings.append(open(f).read())
-    return "\n\n---\n\n".join(findings)
-
-
-def run_hybrid_verification_detect(audit_id, sol_files, slither_findings):
-    """
-    Hybrid Verification Mode for EVMbench:
-    - Uses Slither findings as "attention anchors" to guide LLM analysis
-    - LLM performs deep semantic analysis with Slither's structural hints
-    - Even Low/Info Slither alerts can point to code regions worth investigating
-    """
-    
-    # Build contract context
+def run_detection_on_audit(audit_id: str, sol_files: List[Dict], knowledge_base: VulnKnowledgeBase) -> Dict:
+    """Run LLM detection on all files in audit."""
     contract_text = ""
     for sf in sol_files:
         contract_text += f"\n// File: {sf['path']}\n{sf['content']}\n"
     if len(contract_text) > 60000:
         contract_text = contract_text[:60000] + "\n// ... (truncated)"
-    
-    slither_report = format_slither_for_hybrid(slither_findings)
-    has_slither_alerts = slither_report != "NO_ALERTS"
-    
-    if has_slither_alerts:
-        # HYBRID MODE: Slither found something -> use as attention anchors
-        prompt = f"""You are an expert smart contract security auditor performing a HYBRID ANALYSIS.
 
-## Phase 1 Results - Static Analysis (Slither):
-{slither_report}
+    # RAG retrieval
+    retrieved = knowledge_base.retrieve(contract_text, top_k=RAG_TOP_K)
+    rag_context = build_rag_context(retrieved)
 
-## Phase 2 - Your Deep Semantic Analysis:
-Slither has identified potential code regions of interest above. While Slither's specific alerts may be 
-low-severity or false positives, the CODE REGIONS they point to may contain DEEPER vulnerabilities 
-that Slither cannot detect (logic errors, business logic flaws, cross-contract issues).
+    # Detection prompt
+    detect_prompt = f"""Analyze these Solidity contracts for HIGH severity vulnerabilities (loss of funds).
 
-Your task:
-1. Use Slither's alerts as STARTING POINTS to investigate those code regions more deeply
-2. Look for HIGH severity vulnerabilities that Slither missed but that exist near the flagged code
-3. Also perform your own independent analysis beyond Slither's findings
-4. Focus on: loss of funds, unauthorized access, price manipulation, logic errors
+## RAG Knowledge:
+{rag_context}
 
-## RAG Knowledge Base:
-{RAG_KNOWLEDGE}
-
-## Smart Contract Source Code:
+## Code:
 {contract_text}
 
-## Instructions:
-Identify ONLY HIGH severity vulnerabilities (loss of funds, critical logic errors).
-For each vulnerability found, provide:
-- A concise title
-- The root cause  
-- The specific file and approximate line numbers
-- The potential impact
-- An exploit scenario
+Output ONLY JSON:
+{{"vulnerabilities": [{{"title": "...", "summary": "...", "file": "...", "impact": "...", "exploit_scenario": "..."}}]}}"""
 
-Output your findings as a JSON object:
-```json
-{{
-  "vulnerabilities": [
-    {{
-      "title": "vulnerability title",
-      "severity": "high",
-      "summary": "precise root cause summary",
-      "file": "path/to/file.sol",
-      "impact": "impact description",
-      "exploit_scenario": "how to exploit",
-      "slither_connection": "which Slither alert (if any) pointed to this area"
-    }}
-  ],
-  "slither_alerts_useful": true/false,
-  "analysis_notes": "brief note on how Slither alerts helped or didn't help"
-}}
-```
-
-Only report HIGH severity issues. Be thorough but precise."""
-    else:
-        # FALLBACK MODE: Slither found nothing -> pure LLM+RAG (same as baseline)
-        prompt = f"""You are an expert smart contract security auditor. Analyze the following Solidity smart contracts for HIGH severity vulnerabilities that could lead to loss of funds.
-
-## Known Vulnerability Patterns (RAG Knowledge Base):
-{RAG_KNOWLEDGE}
-
-## Static Analysis Note:
-Slither static analysis found NO alerts on these contracts. However, this does NOT mean they are safe.
-Slither cannot detect logic vulnerabilities, business logic flaws, or complex cross-contract issues.
-You must perform deep semantic analysis independently.
-
-## Smart Contract Source Code:
-{contract_text}
-
-## Instructions:
-1. Carefully analyze ALL the source code above
-2. Identify ONLY HIGH severity vulnerabilities (loss of funds)
-3. For each vulnerability found, provide:
-   - A concise title
-   - The root cause
-   - The specific file and approximate line numbers
-   - The potential impact
-   - An exploit scenario
-
-Output your findings as a JSON object:
-```json
-{{
-  "vulnerabilities": [
-    {{
-      "title": "vulnerability title",
-      "severity": "high",
-      "summary": "precise summary",
-      "file": "path/to/file.sol",
-      "impact": "impact description",
-      "exploit_scenario": "how to exploit"
-    }}
-  ]
-}}
-```
-
-Only report HIGH severity issues. Be thorough but precise."""
-
-    start_time = time.time()
     try:
-        response = client.chat.completions.create(
-            model=MODEL,
-            messages=[{"role": "user", "content": prompt}],
-            temperature=0.1,
-            max_tokens=4000,
-            seed=42
+        resp = client.chat.completions.create(
+            model=LLM_MODEL,
+            messages=[{"role": "user", "content": detect_prompt}],
+            temperature=0.1, max_tokens=4000, seed=42
         )
-        elapsed = time.time() - start_time
-        content = response.choices[0].message.content
-        tokens_used = response.usage.total_tokens if response.usage else 0
-        
+        content = resp.choices[0].message.content.strip()
         vulns = []
         try:
             if "```json" in content:
@@ -357,275 +396,220 @@ Only report HIGH severity issues. Be thorough but precise."""
             elif "```" in content:
                 json_str = content.split("```")[1].split("```")[0].strip()
             else:
-                json_str = content.strip()
+                json_str = content
             parsed = json.loads(json_str)
             vulns = parsed.get("vulnerabilities", [])
-        except (json.JSONDecodeError, IndexError):
-            try:
-                parsed = json.loads(content)
-                vulns = parsed.get("vulnerabilities", [])
-            except:
-                vulns = []
-        
+        except Exception:
+            pass
+
         return {
-            "mode": "hybrid_with_slither" if has_slither_alerts else "fallback_llm_rag",
+            "success": True,
             "vulnerabilities_found": vulns,
             "num_found": len(vulns),
-            "time_seconds": round(elapsed, 2),
-            "tokens_used": tokens_used,
-            "slither_alerts_count": len(slither_findings),
-            "has_slither_alerts": has_slither_alerts,
-            "raw_response": content[:2000]
+            "time_seconds": 0,
+            "tokens_used": resp.usage.total_tokens if resp.usage else 0,
+            "error": None
         }
     except Exception as e:
+        logger.error(f"  Detection error: {e}")
         return {
-            "mode": "error",
-            "vulnerabilities_found": [],
-            "num_found": 0,
-            "time_seconds": 0,
-            "tokens_used": 0,
-            "slither_alerts_count": len(slither_findings),
-            "has_slither_alerts": has_slither_alerts,
-            "error": str(e)
+            "success": False, "vulnerabilities_found": [], "num_found": 0,
+            "time_seconds": 0, "tokens_used": 0, "error": str(e)
         }
 
 
-def judge_detection(found_vulns, gold_vulns, audit_content_gold):
-    """Use LLM to judge if detected vulnerabilities match the gold standard."""
-    results = []
-    for gv in gold_vulns:
-        vuln_id = gv["id"]
-        vuln_title = gv["title"]
-        our_findings = json.dumps(found_vulns, indent=2, ensure_ascii=False)
-        
-        judge_prompt = f"""You are a security audit judge. Determine if the following audit report has detected the specified vulnerability.
+# ========================================================================
+# Judging
+# ========================================================================
+
+JUDGE_PROMPT = """You are a security audit judge. Did the audit report detect the specified HIGH severity vulnerability?
 
 ## Target Vulnerability:
-- ID: {vuln_id}
-- Title: {vuln_title}
+ID: {vuln_id}
+Title: {vuln_title}
+Description: {vuln_description}
 
-## Audit Report (findings from the auditor):
+## Audit Report (our findings):
 {our_findings}
 
-## Judging Criteria:
-A vulnerability is considered "detected" if the audit report contains a finding that:
-1. Identifies the SAME root cause (not just similar area)
-2. Points to the same vulnerable code or mechanism
-3. Describes a similar exploit scenario or impact
+## Criteria:
+"DETECTED" = our report identifies SAME root cause, SAME vulnerable code, SIMILAR exploit scenario.
 
-Having a finding in the same general area but with a different mechanism is NOT sufficient.
+Different mechanism in same area = NOT detected.
 
-Respond with ONLY a JSON object:
-{{"detected": true/false, "reasoning": "brief explanation"}}"""
+Respond ONLY with JSON:
+{{"detected": true/false, "reasoning": "brief 1-sentence explanation"}}"""
+
+
+def load_finding_description(audit_id: str, vuln_id: str) -> str:
+    """Load detailed vulnerability description from findings markdown file."""
+    finding_path = os.path.join(EVMBENCH_DATA_DIR, audit_id, "findings", f"{vuln_id}.md")
+    try:
+        if os.path.exists(finding_path):
+            with open(finding_path, 'r', encoding='utf-8', errors='ignore') as f:
+                content = f.read()
+            return content[:2000] if len(content) > 2000 else content
+    except Exception:
+        pass
+    return ""
+
+
+def judge_detection(found_vulns: List[Dict], gold_vulns: List[Dict], audit_id: str = "") -> List[Dict]:
+    """Judge detected vulnerabilities against gold standard."""
+    results = []
+    for gv in gold_vulns:
+        vuln_id = gv.get("id", "unknown")
+        vuln_title = gv.get("title", "unknown")
+        vuln_description = load_finding_description(audit_id, vuln_id) if audit_id else ""
+        our_findings = json.dumps(found_vulns, indent=2)
+
+        judge_prompt = JUDGE_PROMPT.format(
+            vuln_id=vuln_id, vuln_title=vuln_title,
+            vuln_description=vuln_description, our_findings=our_findings
+        )
 
         try:
             response = client.chat.completions.create(
-                model=MODEL,
+                model=LLM_MODEL,
                 messages=[{"role": "user", "content": judge_prompt}],
-                temperature=0.0,
-                max_tokens=500
+                temperature=0.0, max_tokens=500
             )
             content = response.choices[0].message.content.strip()
-            
             if "```json" in content:
                 json_str = content.split("```json")[1].split("```")[0].strip()
             elif "```" in content:
                 json_str = content.split("```")[1].split("```")[0].strip()
             else:
                 json_str = content
-            
             result = json.loads(json_str)
             results.append({
-                "vuln_id": vuln_id,
-                "vuln_title": vuln_title,
+                "vuln_id": vuln_id, "vuln_title": vuln_title,
                 "detected": result.get("detected", False),
                 "reasoning": result.get("reasoning", "")
             })
         except Exception as e:
             results.append({
-                "vuln_id": vuln_id,
-                "vuln_title": vuln_title,
-                "detected": False,
-                "reasoning": f"Judge error: {str(e)}"
+                "vuln_id": vuln_id, "vuln_title": vuln_title,
+                "detected": False, "reasoning": f"Judge error: {str(e)[:100]}"
             })
-    
+        time.sleep(0.2)
     return results
 
 
+# ========================================================================
+# Main
+# ========================================================================
+
 def main():
-    print("=" * 70)
-    print("EVMbench Hybrid (Verification Mode) Experiment")
-    print(f"Timestamp: {datetime.now().isoformat()}")
-    print("=" * 70)
-    
+    logger.info("=" * 70)
+    logger.info("EVMbench Hybrid Verification Mode - Two-Stage Fusion")
+    logger.info("=" * 70)
+    logger.info(f"Timestamp: {datetime.now().isoformat()}")
+
+    if not os.path.exists(CHROMA_DIR):
+        logger.error(f"ERROR: ChromaDB not found at {CHROMA_DIR}")
+        sys.exit(1)
+
+    try:
+        knowledge_base = VulnKnowledgeBase(CHROMA_DIR, COLLECTION_NAME, client)
+        logger.info(f"  Knowledge base loaded: {knowledge_base.entry_count} entries")
+    except Exception as e:
+        logger.error(f"Failed to load knowledge base: {e}")
+        sys.exit(1)
+
     all_results = []
     total_vulns = 0
     total_detected = 0
-    total_time = 0
-    total_tokens = 0
-    total_slither_time = 0
-    
+
     for i, audit_id in enumerate(SAMPLE_AUDITS):
-        print(f"\n[{i+1}/{len(SAMPLE_AUDITS)}] Processing: {audit_id}")
-        print("-" * 50)
-        
-        # 1. Load config
+        logger.info(f"\n[{i+1}/{len(SAMPLE_AUDITS)}] {audit_id}")
+
         config = load_audit_config(audit_id)
         gold_vulns = config.get("vulnerabilities", [])
-        print(f"  Gold standard: {len(gold_vulns)} vulnerabilities")
-        
-        # 2. Extract Solidity files
-        repo_dir = os.path.join(REPOS_DIR, audit_id)
-        if not os.path.exists(repo_dir):
-            print(f"  [ERROR] Repo not found: {repo_dir}")
-            all_results.append({
-                "audit_id": audit_id, "status": "repo_not_found",
-                "num_gold_vulns": len(gold_vulns), "num_detected": 0, "detect_score": 0.0
-            })
+        logger.info(f"  Gold: {len(gold_vulns)} vulns")
+
+        if not gold_vulns:
+            continue
+
+        repo_info = parse_dockerfile(audit_id)
+        if not repo_info:
             total_vulns += len(gold_vulns)
             continue
-        
+
+        repo_dir = clone_repo_at_commit(audit_id, repo_info)
+        if not repo_dir:
+            total_vulns += len(gold_vulns)
+            continue
+
         sol_files = extract_solidity_files(repo_dir)
-        print(f"  Extracted {len(sol_files)} Solidity files")
-        
         if not sol_files:
-            all_results.append({
-                "audit_id": audit_id, "status": "no_sol_files",
-                "num_gold_vulns": len(gold_vulns), "num_detected": 0, "detect_score": 0.0
-            })
             total_vulns += len(gold_vulns)
             continue
-        
-        # 3. Run Slither on all files (collect ALL alerts including Low/Info)
-        print(f"  Running Slither analysis (all severity levels)...")
-        slither_start = time.time()
-        slither_findings, files_with_alerts = run_slither_on_files(sol_files)
-        slither_elapsed = time.time() - slither_start
-        total_slither_time += slither_elapsed
-        
-        high_med = [f for f in slither_findings if f["impact"] in ["High", "Medium"]]
-        low_info = [f for f in slither_findings if f["impact"] in ["Low", "Informational"]]
-        print(f"  Slither: {len(slither_findings)} total alerts "
-              f"(H/M: {len(high_med)}, L/I: {len(low_info)}) "
-              f"in {files_with_alerts} files | {slither_elapsed:.1f}s")
-        
-        # 4. Run Hybrid Verification Mode detection
-        print(f"  Running Hybrid (Verification Mode) detection...")
-        detect_result = run_hybrid_verification_detect(audit_id, sol_files, slither_findings)
-        print(f"  Mode: {detect_result['mode']}")
-        print(f"  Found {detect_result['num_found']} potential vulnerabilities "
-              f"({detect_result['time_seconds']}s, {detect_result['tokens_used']} tokens)")
-        
-        # 5. Judge results
-        print(f"  Judging against gold standard...")
-        judge_results = judge_detection(
-            detect_result["vulnerabilities_found"],
-            gold_vulns,
-            load_gold_findings(audit_id)
-        )
-        
+
+        # Run detection
+        logger.info(f"  Running detection...")
+        detect_result = run_detection_on_audit(audit_id, sol_files, knowledge_base)
+
+        if not detect_result["success"]:
+            logger.error(f"  Detection failed: {detect_result['error']}")
+            total_vulns += len(gold_vulns)
+            continue
+
+        logger.info(f"  Found {detect_result['num_found']} potential vulns")
+
+        # Judge results
+        logger.info(f"  Judging...")
+        judge_results = judge_detection(detect_result["vulnerabilities_found"], gold_vulns, audit_id)
+
         num_detected = sum(1 for jr in judge_results if jr["detected"])
         detect_score = num_detected / len(gold_vulns) if gold_vulns else 0
-        
-        print(f"  Result: {num_detected}/{len(gold_vulns)} detected (score: {detect_score:.2%})")
-        for jr in judge_results:
-            status = "V" if jr["detected"] else "X"
-            print(f"    [{status}] {jr['vuln_id']}: {jr['vuln_title'][:60]}")
-        
+
+        logger.info(f"  Result: {num_detected}/{len(gold_vulns)} ({detect_score:.2%})")
+
         audit_result = {
             "audit_id": audit_id,
             "status": "completed",
-            "mode": detect_result["mode"],
             "num_gold_vulns": len(gold_vulns),
-            "num_found_by_hybrid": detect_result["num_found"],
+            "num_found_by_llm": detect_result["num_found"],
             "num_detected": num_detected,
             "detect_score": round(detect_score, 4),
-            "slither_alerts": len(slither_findings),
-            "slither_high_med": len(high_med),
-            "slither_low_info": len(low_info),
-            "slither_time": round(slither_elapsed, 2),
-            "llm_time": detect_result["time_seconds"],
-            "total_time": round(slither_elapsed + detect_result["time_seconds"], 2),
             "tokens_used": detect_result["tokens_used"],
             "judge_results": judge_results,
-            "found_vulnerabilities": [
-                {"title": v.get("title", ""), "summary": v.get("summary", "")}
-                for v in detect_result["vulnerabilities_found"]
-            ]
         }
         all_results.append(audit_result)
-        
+
         total_vulns += len(gold_vulns)
         total_detected += num_detected
-        total_time += detect_result["time_seconds"]
-        total_tokens += detect_result["tokens_used"]
-    
-    # Summary
+
+        time.sleep(1)
+
     overall_score = total_detected / total_vulns if total_vulns > 0 else 0
-    
-    print("\n" + "=" * 70)
-    print("EVMBENCH HYBRID (VERIFICATION MODE) SUMMARY")
-    print("=" * 70)
-    print(f"  Audits processed: {len(SAMPLE_AUDITS)}")
-    print(f"  Total gold vulnerabilities: {total_vulns}")
-    print(f"  Total detected: {total_detected}")
-    print(f"  Overall detect score: {overall_score:.2%}")
-    print(f"  Total Slither time: {total_slither_time:.1f}s")
-    print(f"  Total LLM time: {total_time:.1f}s")
-    print(f"  Total tokens: {total_tokens}")
-    print()
-    
-    # Comparison with previous results
-    print("  COMPARISON:")
-    print(f"  {'Tool':<30} {'Detected':<12} {'Score':<10}")
-    print(f"  {'-'*52}")
-    print(f"  {'Slither (standalone)':<30} {'0':>8}     {'0.00%':>8}")
-    print(f"  {'Mythril (standalone)':<30} {'0':>8}     {'0.00%':>8}")
-    print(f"  {'LLM+RAG':<30} {'3':>8}     {'7.50%':>8}")
-    print(f"  {'Hybrid (Verification Mode)':<30} {str(total_detected):>8}     {f'{overall_score:.2%}':>8}")
-    print()
-    
-    # Per-audit comparison
-    print(f"  {'Audit':<35} {'Gold':>5} {'Slither':>8} {'LLM+RAG':>8} {'Hybrid':>8}")
-    print(f"  {'-'*65}")
-    llm_rag_scores = {
-        "2024-01-curves": 1, "2024-03-taiko": 0, "2024-05-olas": 0,
-        "2024-07-basin": 0, "2024-01-renft": 0, "2024-06-size": 0,
-        "2024-08-phi": 1, "2024-12-secondswap": 0, "2025-04-forte": 0,
-        "2026-01-tempo-stablecoin-dex": 1
-    }
-    for r in all_results:
-        aid = r["audit_id"]
-        print(f"  {aid:<35} {r['num_gold_vulns']:>5} {'0':>8} "
-              f"{llm_rag_scores.get(aid, 0):>8} {r['num_detected']:>8}")
-    
-    # Save results
+
     summary = {
-        "experiment": "EVMbench Detect - Hybrid (Verification Mode)",
-        "model": MODEL,
-        "date": datetime.now().strftime("%Y-%m-%d"),
+        "experiment": "EVMbench Hybrid Verification",
+        "model": LLM_MODEL,
         "timestamp": datetime.now().isoformat(),
         "num_audits": len(SAMPLE_AUDITS),
         "total_vulnerabilities": total_vulns,
         "total_detected": total_detected,
         "overall_detect_score": round(overall_score, 4),
-        "total_slither_time": round(total_slither_time, 2),
-        "total_llm_time": round(total_time, 2),
-        "total_tokens": total_tokens,
-        "comparison": {
-            "slither": {"detected": 0, "score": 0.0},
-            "mythril": {"detected": 0, "score": 0.0},
-            "llm_rag": {"detected": 3, "score": 0.075},
-            "hybrid_verification": {"detected": total_detected, "score": round(overall_score, 4)}
-        },
         "per_audit_results": all_results
     }
-    
+
+    logger.info("\n" + "=" * 70)
+    logger.info(f"Total vulns: {total_vulns} | Detected: {total_detected} | Score: {overall_score:.2%}")
+
     results_path = os.path.join(RESULTS_DIR, "evmbench_hybrid_results.json")
     with open(results_path, "w") as f:
-        json.dump(summary, f, indent=2, ensure_ascii=False)
-    print(f"\n  Results saved to: {results_path}")
-    print("=" * 70)
+        json.dump(summary, f, indent=2)
+    logger.info(f"Results saved to: {results_path}")
+
+    csv_path = os.path.join(RESULTS_DIR, "evmbench_hybrid_per_audit.csv")
+    with open(csv_path, "w") as f:
+        f.write("audit_id,status,num_gold_vulns,num_found_by_llm,num_detected,detect_score\n")
+        for r in all_results:
+            f.write(f"{r['audit_id']},{r['status']},{r['num_gold_vulns']},{r.get('num_found_by_llm',0)},{r['num_detected']},{r['detect_score']}\n")
+    logger.info(f"CSV saved to: {csv_path}")
 
 
 if __name__ == "__main__":

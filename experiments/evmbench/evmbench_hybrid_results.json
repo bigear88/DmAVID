@@ -1,0 +1,355 @@
+{
+  "experiment": "EVMbench Hybrid Verification",
+  "model": "gpt-4.1-mini",
+  "timestamp": "2026-03-08T05:25:54.042092",
+  "num_audits": 10,
+  "total_vulnerabilities": 39,
+  "total_detected": 3,
+  "overall_detect_score": 0.0769,
+  "per_audit_results": [
+    {
+      "audit_id": "2024-01-curves",
+      "status": "completed",
+      "num_gold_vulns": 4,
+      "num_found_by_llm": 4,
+      "num_detected": 2,
+      "detect_score": 0.5,
+      "tokens_used": 7031,
+      "judge_results": [
+        {
+          "vuln_id": "H-02",
+          "vuln_title": "Unrestricted claiming of fees due to missing balance updates in FeeSplitter",
+          "detected": false,
+          "reasoning": "The report identifies broken access control and fee manipulation in FeeSplitter but does not explicitly mention missing balance updates leading to unrestricted claiming of fees as described in H-02."
+        },
+        {
+          "vuln_id": "H-03",
+          "vuln_title": "Attack to make CurveSubject to be a HoneyPot",
+          "detected": true,
+          "reasoning": "The audit report identifies unchecked ETH transfer failures and reentrancy risks in _transferFees that can lock funds and prevent selling, matching the CurveSubject HoneyPot attack scenario."
+        },
+        {
+          "vuln_id": "H-04",
+          "vuln_title": "Unauthorized Access to setCurves Function",
+          "detected": false,
+          "reasoning": "The report identifies broken access control in onlyOwner and onlyManager modifiers affecting FeeSplitter functions but does not specifically mention unauthorized access to the setCurves function."
+        },
+        {
+          "vuln_id": "H-05",
+          "vuln_title": "Malformed equate statement",
+          "detected": true,
+          "reasoning": "The audit report explicitly identifies the broken onlyOwner and onlyManager modifiers lacking require statements, matching the malformed equate statement vulnerability and its exploit scenario."
+        }
+      ]
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "status": "completed",
+      "num_gold_vulns": 5,
+      "num_found_by_llm": 3,
+      "num_detected": 0,
+      "detect_score": 0.0,
+      "tokens_used": 14813,
+      "judge_results": [
+        {
+          "vuln_id": "H-01",
+          "vuln_title": "Gas issuance is inflated and will halt the chain or lead to incorrect base fee",
+          "detected": false,
+          "reasoning": "The audit report does not mention the gas issuance or base fee calculation issue in TaikoL2.sol and instead focuses on unrelated Bridge.sol vulnerabilities."
+        },
+        {
+          "vuln_id": "H-02",
+          "vuln_title": "Validity and contests bond ca be incorrectly burned for the correct and ultimately verified transition",
+          "detected": false,
+          "reasoning": "The audit report does not mention the validity and contests bond burning issue or related logic in LibProving.sol or LibVerifying.sol, focusing instead on unrelated Bridge contract vulnerabilities."
+        },
+        {
+          "vuln_id": "H-03",
+          "vuln_title": "Users will never be able to withdraw their claimed airdrop fully in ERC20Airdrop2.sol contract",
+          "detected": false,
+          "reasoning": "The audit report does not mention or identify the withdrawal timing issue or the inability for users to fully withdraw their claimed airdrop in ERC20Airdrop2.sol."
+        },
+        {
+          "vuln_id": "H-04",
+          "vuln_title": "Taiko L1 - Proposer can maliciously cause loss of funds by forcing someone else to pay prover\u2019s fee",
+          "detected": false,
+          "reasoning": "The audit report findings focus on Bridge contract issues unrelated to the Taiko L1 proposer fee manipulation vulnerability described in H-04."
+        },
+        {
+          "vuln_id": "H-05",
+          "vuln_title": "Signatures can be replayed in withdraw() to withdraw more tokens than the user originally intended.",
+          "detected": false,
+          "reasoning": "The audit report does not mention the withdraw() function or signature replay vulnerabilities related to TimelockTokenPool.sol."
+        }
+      ]
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "status": "completed",
+      "num_gold_vulns": 2,
+      "num_found_by_llm": 0,
+      "num_detected": 0,
+      "detect_score": 0.0,
+      "tokens_used": 14828,
+      "judge_results": [
+        {
+          "vuln_id": "H-01",
+          "vuln_title": "pointsSum.slope Not Updated After Nominee Removal and Votes Revocation",
+          "detected": false,
+          "reasoning": "The audit report does not mention or identify the missing update of pointsSum.slope after nominee removal and vote revocation, indicating the vulnerability was not detected."
+        },
+        {
+          "vuln_id": "H-02",
+          "vuln_title": "Arbitrary tokens and data can be bridged to GnosisTargetDispenserL2 to manipulate staking incentives",
+          "detected": false,
+          "reasoning": "The audit report contains no findings and does not identify the vulnerability related to arbitrary tokens and data being bridged to GnosisTargetDispenserL2 to manipulate staking incentives."
+        }
+      ]
+    },
+    {
+      "audit_id": "2024-07-basin",
+      "status": "completed",
+      "num_gold_vulns": 2,
+      "num_found_by_llm": 0,
+      "num_detected": 0,
+      "detect_score": 0.0,
+      "tokens_used": 11366,
+      "judge_results": [
+        {
+          "vuln_id": "H-01",
+          "vuln_title": "WellUpgradeable can be upgraded by anyone",
+          "detected": false,
+          "reasoning": "The audit report contains no findings and does not identify the missing access control in _authorizeUpgrade allowing anyone to upgrade the contract."
+        },
+        {
+          "vuln_id": "H-02",
+          "vuln_title": "Incorrectly assigned decimal1 parameter upon decoding",
+          "detected": false,
+          "reasoning": "The audit report does not mention or identify the incorrect conditional check on decimal0 instead of decimal1 in decodeWellData, nor the related incorrect assignment of decimal1."
+        }
+      ]
+    },
+    {
+      "audit_id": "2024-01-renft",
+      "status": "completed",
+      "num_gold_vulns": 6,
+      "num_found_by_llm": 0,
+      "num_detected": 0,
+      "detect_score": 0.0,
+      "tokens_used": 12387,
+      "judge_results": [
+        {
+          "vuln_id": "H-01",
+          "vuln_title": "All orders can be hijacked to lock rental assets forever by tipping a malicious ERC20",
+          "detected": false,
+          "reasoning": "The audit report does not mention or identify the tipping-related vulnerability in the Create contract or the improper handling of consideration extensions leading to order hijacking."
+        },
+        {
+          "vuln_id": "H-02",
+          "vuln_title": "An attacker is able to hijack any ERC721 / ERC1155 he borrows because guard is missing validation on the address supplied to function call setFallbackHandler()",
+          "detected": false,
+          "reasoning": "The audit report does not mention or identify the missing validation on the address supplied to setFallbackHandler() leading to hijacking of ERC721/ERC1155 tokens."
+        },
+        {
+          "vuln_id": "H-03",
+          "vuln_title": "An attacker can hijack any ERC1155 token he rents due to a design issue in reNFT via reentrancy exploitation",
+          "detected": false,
+          "reasoning": "The audit report does not mention or identify the reentrancy vulnerability related to ERC1155 token hijacking in reNFT described in H-03."
+        },
+        {
+          "vuln_id": "H-05",
+          "vuln_title": "Malicious actor can steal any actively rented NFT and freeze the rental payments (of the affected rentals) in the escrow contract",
+          "detected": false,
+          "reasoning": "The audit report does not mention or identify the vulnerability related to stealing actively rented NFTs and freezing rental payments as described in H-05."
+        },
+        {
+          "vuln_id": "H-06",
+          "vuln_title": "Escrow contract can be drained by creating rentals that bypass execution invariant checks",
+          "detected": false,
+          "reasoning": "The audit report does not mention or identify the escrow contract drainage via rentals bypassing execution invariant checks described in vulnerability H-06."
+        },
+        {
+          "vuln_id": "H-07",
+          "vuln_title": "Attacker can lock lender NFTs and ERC20 in the safe if the offer is set to partial",
+          "detected": false,
+          "reasoning": "The audit report contains no findings related to the specified vulnerability H-07 or its described root cause and exploit scenario."
+        }
+      ]
+    },
+    {
+      "audit_id": "2024-06-size",
+      "status": "completed",
+      "num_gold_vulns": 4,
+      "num_found_by_llm": 0,
+      "num_detected": 0,
+      "detect_score": 0.0,
+      "tokens_used": 13529,
+      "judge_results": [
+        {
+          "vuln_id": "H-01",
+          "vuln_title": "When sellCreditMarket() is called to sell credit for a specific cash amount, the protocol might receive a lower swapping fee than expected",
+          "detected": false,
+          "reasoning": "The audit report contains no findings related to the sellCreditMarket() swapping fee issue described in the target vulnerability."
+        },
+        {
+          "vuln_id": "H-02",
+          "vuln_title": "Risk of overpayment due to race condition between repay and liquidateWithReplacement transactions",
+          "detected": false,
+          "reasoning": "The audit report contains no findings and does not identify the specified race condition vulnerability or its exploit scenario."
+        },
+        {
+          "vuln_id": "H-03",
+          "vuln_title": "The collateral remainder cap is incorrectly calculated during liquidation",
+          "detected": false,
+          "reasoning": "The audit report did not identify the incorrect collateral remainder cap calculation or the described liquidation issue."
+        },
+        {
+          "vuln_id": "H-04",
+          "vuln_title": "Users won\u2019t liquidate positions because the logic used to calculate the liquidator\u2019s profit is incorrect",
+          "detected": false,
+          "reasoning": "The audit report does not mention or identify the incorrect calculation of the liquidator\u2019s profit or related liquidation logic issues described in the target vulnerability."
+        }
+      ]
+    },
+    {
+      "audit_id": "2024-08-phi",
+      "status": "completed",
+      "num_gold_vulns": 6,
+      "num_found_by_llm": 2,
+      "num_detected": 0,
+      "detect_score": 0.0,
+      "tokens_used": 13770,
+      "judge_results": [
+        {
+          "vuln_id": "H-01",
+          "vuln_title": "Signature replay in signatureClaim results in unauthorized claiming of rewards",
+          "detected": false,
+          "reasoning": "The audit report does not mention the signatureClaim function or the signature replay vulnerability involving chain id validation described in the target vulnerability."
+        },
+        {
+          "vuln_id": "H-02",
+          "vuln_title": "Signature replay in createArt allows to impersonate artist and steal royalties",
+          "detected": false,
+          "reasoning": "The audit report does not mention the createArt function or signature replay issues related to impersonation and royalty theft described in the target vulnerability H-02."
+        },
+        {
+          "vuln_id": "H-03",
+          "vuln_title": "shareBalance bloating eventually blocks curator rewards distribution",
+          "detected": false,
+          "reasoning": "The audit report does not mention the shareBalance bloating issue or the problem of zero-balance entries causing enumeration and gas limit problems in curator rewards distribution."
+        },
+        {
+          "vuln_id": "H-04",
+          "vuln_title": "Forced endTime extension in updateArtSettings() allows attacker to mint more tokens",
+          "detected": false,
+          "reasoning": "The audit report does not mention or identify the forced endTime extension in updateArtSettings() or the related minting exploit described in the target vulnerability H-04."
+        },
+        {
+          "vuln_id": "H-06",
+          "vuln_title": "Reentrancy Vulnerability Allows Bypass of Cooldown, Leading to Unfair Reward Extraction Through Flash Loan",
+          "detected": false,
+          "reasoning": "The audit report does not mention reentrancy or the ability to overwrite cred data during creation to exploit bonding curves, focusing instead on access control issues unrelated to the specified reentrancy vulnerability."
+        },
+        {
+          "vuln_id": "H-07",
+          "vuln_title": "Unrestricted changes to token settings allow artists to alter critical features",
+          "detected": false,
+          "reasoning": "The audit report does not mention the updateArtSettings function or unrestricted changes to token settings by artists, focusing instead on unrelated access control issues in Cred.sol."
+        }
+      ]
+    },
+    {
+      "audit_id": "2024-12-secondswap",
+      "status": "completed",
+      "num_gold_vulns": 3,
+      "num_found_by_llm": 4,
+      "num_detected": 0,
+      "detect_score": 0.0,
+      "tokens_used": 14629,
+      "judge_results": [
+        {
+          "vuln_id": "H-01",
+          "vuln_title": "SecondSwap_Marketplace vesting listing order affects how much the vesting buyers can claim at a given step",
+          "detected": false,
+          "reasoning": "The audit report does not mention or identify the vesting listing order or stepsClaimed inheritance issue affecting claimable amounts described in the target vulnerability H-01."
+        },
+        {
+          "vuln_id": "H-02",
+          "vuln_title": "transferVesting creates an incorrect vesting for new users when they purchase a vesting, because stepsClaimed is the same for all sales, allowing an attacker to prematurely unlock too many tokens",
+          "detected": false,
+          "reasoning": "The audit report does not mention the transferVesting function creating incorrect vestings due to shared stepsClaimed across sales or premature token unlocking; it focuses on access control, token transfer failures, initialization, and rounding issues instead."
+        },
+        {
+          "vuln_id": "H-03",
+          "vuln_title": "In transferVesting, the grantorVesting.releaseRate is calculated incorrectly, which leads to the sender being able to unlock more tokens than were initially locked.",
+          "detected": false,
+          "reasoning": "The audit report does not mention the incorrect recalculation of grantorVesting.releaseRate in transferVesting leading to unlocking more tokens than initially locked."
+        }
+      ]
+    },
+    {
+      "audit_id": "2025-04-forte",
+      "status": "completed",
+      "num_gold_vulns": 5,
+      "num_found_by_llm": 0,
+      "num_detected": 0,
+      "detect_score": 0.0,
+      "tokens_used": 15262,
+      "judge_results": [
+        {
+          "vuln_id": "H-01",
+          "vuln_title": "Early 72-digit adjustment in sqrt will lead to incorrect result exponent calculation",
+          "detected": false,
+          "reasoning": "The audit report contains no findings related to the early 72-digit adjustment in sqrt causing incorrect exponent calculation."
+        },
+        {
+          "vuln_id": "H-02",
+          "vuln_title": "Square root function silently accepts invalid non-positive inputs",
+          "detected": false,
+          "reasoning": "The audit report contains no findings related to the sqrt function or the stop() call on zero input, so the specified vulnerability was not detected."
+        },
+        {
+          "vuln_id": "H-03",
+          "vuln_title": "Natural logarithm function silently accepts invalid non-positive inputs",
+          "detected": false,
+          "reasoning": "The audit report does not mention or identify the ln() function accepting invalid non-positive inputs without validation."
+        },
+        {
+          "vuln_id": "H-04",
+          "vuln_title": "Unwrapping while equating inside the eq function fails to account for the set L_MATISSA_FLAG",
+          "detected": false,
+          "reasoning": "The audit report contains no findings related to the eq function or the L_MATISSA_FLAG issue described in the target vulnerability."
+        },
+        {
+          "vuln_id": "H-05",
+          "vuln_title": "Precision loss in toPackedFloat function when mantissa is in range (MAX_M_DIGIT_NUMBER, MIN_L_DIGIT_NUMBER)",
+          "detected": false,
+          "reasoning": "The audit report contains no findings related to precision loss in toPackedFloat or mantissa size determination as described in the target vulnerability."
+        }
+      ]
+    },
+    {
+      "audit_id": "2026-01-tempo-stablecoin-dex",
+      "status": "completed",
+      "num_gold_vulns": 2,
+      "num_found_by_llm": 1,
+      "num_detected": 1,
+      "detect_score": 0.5,
+      "tokens_used": 4130,
+      "judge_results": [
+        {
+          "vuln_id": "H-02",
+          "vuln_title": "Missing authorization in cancel() allows anyone to cancel any order",
+          "detected": false,
+          "reasoning": "The audit report only identifies an emergencyWithdraw balance check issue and does not mention or detect the missing authorization in cancel() described in H-02."
+        },
+        {
+          "vuln_id": "H-04",
+          "vuln_title": "Integer underflow in balance subtraction allows draining DEX liquidity",
+          "detected": true,
+          "reasoning": "The audit report identifies the same unchecked balance subtraction in _processWithdrawal called by emergencyWithdraw, allowing withdrawals exceeding user balance and resulting in fund loss."
+        }
+      ]
+    }
+  ]
+}

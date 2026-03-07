@@ -1,154 +1,165 @@
 {
   "experiment": "EVMbench Detect - LLM+RAG",
-  "model": "GPT-4.1-mini",
-  "date": "2026-02-21",
+  "model": "gpt-4.1-mini",
+  "embedding_model": "text-embedding-3-small",
+  "rag_top_k": 5,
+  "timestamp": "2026-03-08T05:23:50.609771",
   "num_audits": 10,
-  "total_vulnerabilities": 40,
+  "total_vulnerabilities": 39,
   "total_detected": 3,
-  "overall_detect_score": 0.075,
-  "total_time_seconds": 61.71,
-  "total_tokens": 125261,
-  "avg_time_per_audit": 6.17,
+  "overall_detect_score": 0.0769,
+  "total_time_seconds": 57.66,
+  "total_tokens": 124812,
+  "avg_time_per_audit": 5.77,
   "per_audit_results": [
     {
       "audit_id": "2024-01-curves",
       "status": "completed",
+      "repo_info": {
+        "url": "https://github.com/evmbench-org/2024-01-curves.git",
+        "commit": "HEAD"
+      },
       "num_gold_vulns": 4,
-      "num_found_by_llm": 5,
+      "num_found_by_llm": 4,
       "num_detected": 1,
       "detect_score": 0.25,
-      "time_seconds": 9.67,
-      "tokens_used": 7349,
+      "time_seconds": 9.71,
+      "rag_time_seconds": 0.377,
+      "tokens_used": 7338,
       "judge_results": [
         {
           "vuln_id": "H-02",
           "vuln_title": "Unrestricted claiming of fees due to missing balance updates in FeeSplitter",
-          "detected": true,
-          "reasoning": "The report identifies broken onlyManager (and onlyOwner) access control modifiers that allow unauthorized actors to call FeeSplitter.addFees and onBalanceChange functions, enabling attackers to claim fees arbitrarily. This matches the root cause of 'unrestricted claiming of fees due to missing balance updates in FeeSplitter' as described in vulnerability H-02."
+          "detected": false,
+          "reasoning": "The audit report identifies issues with access control and fee manipulation via broken onlyOwner/onlyManager modifiers and reentrancy risks, but does not specifically mention missing balance updates in FeeSplitter leading to unrestricted fee claiming as described in the target vulnerability."
         },
         {
           "vuln_id": "H-03",
           "vuln_title": "Attack to make CurveSubject to be a HoneyPot",
           "detected": false,
-          "reasoning": "The audit report identifies multiple vulnerabilities related to access control flaws, reentrancy, and unauthorized fee manipulation in Curves and related contracts, but none explicitly mention or correspond to an attack that makes CurveSubject a HoneyPot. The report focuses on reentrancy and unauthorized access risks, not the specific mechanism or exploit scenario implied by the 'Attack to make CurveSubject to be a HoneyPot' vulnerability."
+          "reasoning": "The audit report identifies high severity issues related to access control flaws and reentrancy risks in fee transfers and token minting/burning, but does not specifically address the referralFeeDestination call or the inability to sell Curve tokens caused by malicious CurveSubject creators as described in the target vulnerability."
         },
         {
           "vuln_id": "H-04",
           "vuln_title": "Unauthorized Access to setCurves Function",
           "detected": false,
-          "reasoning": "The audit report does not mention unauthorized access to the setCurves function specifically. While it finds unauthorized access issues related to onlyOwner and onlyManager modifiers affecting other functions and general fee manipulation, there is no finding describing unauthorized access to setCurves or a similar exploit scenario involving that function."
+          "reasoning": "The audit report does not mention unauthorized access specifically to the setCurves function; it focuses on broken access control in onlyOwner/onlyManager modifiers affecting other functions, but does not identify or describe unauthorized access to setCurves."
         },
         {
           "vuln_id": "H-05",
           "vuln_title": "Malformed equate statement",
-          "detected": false,
-          "reasoning": "The audit report findings do not mention any issue related to malformed equate statements. The reported vulnerabilities focus on flawed access control modifiers, reentrancy, unauthorized fee injections, and unsafe ETH transfers, but none correspond to malformed equate statements or similar syntax/logic errors."
+          "detected": true,
+          "reasoning": "The audit report explicitly identifies the incorrect onlyOwner and onlyManager modifiers lacking require statements, matching the malformed equate statement vulnerability and describing the same unauthorized access impact and exploit scenario."
         }
       ],
       "found_vulnerabilities": [
         {
-          "title": "incorrect onlyOwner and onlyManager modifiers allow unauthorized access",
-          "summary": "The onlyOwner and onlyManager modifiers in Security.sol do not enforce access control because they lack require statements, allowing anyone to call restricted functions."
+          "title": "incorrect onlyOwner and onlyManager modifiers allowing unauthorized access",
+          "summary": "The onlyOwner and onlyManager modifiers in Security.sol do not enforce access control because they lack require statements or revert on failure, allowing anyone to call functions protected by these modifiers.",
+          "severity": "high"
         },
         {
-          "title": "reentrancy via external calls before state updates in _transferFees",
-          "summary": "In Curves.sol, _transferFees makes multiple external calls (to curvesTokenSubject, referralFeeDestination, and feeRedistributor) before completing all internal state updates, enabling reentrancy attacks."
+          "title": "reentrancy risk in _transferFees due to external calls before state updates",
+          "summary": "The _transferFees function in Curves.sol makes multiple external calls (sending ETH) to arbitrary addresses before completing state changes, without reentrancy guards, enabling reentrancy attacks that can manipulate contract state or drain funds.",
+          "severity": "high"
         },
         {
-          "title": "sending ETH to untrusted external contracts without gas limit or checks",
-          "summary": "Curves.sol uses low-level call to send ETH to protocolFeeDestination, curvesTokenSubject, and referralFeeDestination without gas stipend or reentrancy guards, risking reentrancy and DoS."
+          "title": "missing reentrancy protection on external token minting and burning",
+          "summary": "Functions deposit and withdraw in Curves.sol call external CurvesERC20 mint and burn functions after transferring internal balances, without reentrancy guards, allowing reentrancy attacks that can cause double withdrawals or inconsistent state.",
+          "severity": "high"
         },
         {
-          "title": "feeRedistributor calls lack access control allowing unauthorized fee injection",
-          "summary": "Curves.sol calls feeRedistributor.onBalanceChange and feeRedistributor.addFees without restricting who can call these functions, and FeeSplitter's addFees is onlyManager protected but onBalanceChange is also onlyManager, yet Curves calls them without restricting msg.sender, allowing unauthorized fee injection or manipulation."
-        },
-        {
-          "title": "missing reentrancy guard on buyCurvesToken and sellCurvesToken functions",
-          "summary": "buyCurvesToken and sellCurvesToken functions perform external calls (fee transfers) without reentrancy protection, allowing reentrancy attacks to manipulate balances and supply."
+          "title": "feeRedistributor onBalanceChange and addFees functions callable by any manager",
+          "summary": "FeeSplitter functions onBalanceChange and addFees are protected only by onlyManager, but managers can be set by anyone due to broken onlyOwner modifier, allowing unauthorized managers to add arbitrary fees or manipulate fee accounting.",
+          "severity": "high"
         }
       ]
     },
     {
       "audit_id": "2024-03-taiko",
       "status": "completed",
+      "repo_info": {
+        "url": "https://github.com/evmbench-org/2024-03-taiko.git",
+        "commit": "HEAD"
+      },
       "num_gold_vulns": 5,
-      "num_found_by_llm": 4,
+      "num_found_by_llm": 2,
       "num_detected": 0,
       "detect_score": 0.0,
-      "time_seconds": 9.1,
-      "tokens_used": 15149,
+      "time_seconds": 7.32,
+      "rag_time_seconds": 0.228,
+      "tokens_used": 14819,
       "judge_results": [
         {
           "vuln_id": "H-01",
           "vuln_title": "Gas issuance is inflated and will halt the chain or lead to incorrect base fee",
           "detected": false,
-          "reasoning": "None of the findings describe issues specifically related to gas issuance inflation or manipulation that would halt the chain or cause incorrect base fee calculation. The report focuses on reentrancy, access control, gas limit zero causing revert, and incorrect Ether refunds, but does not address the gas issuance vulnerability specified in H-01."
+          "reasoning": "The audit report findings focus on unchecked Ether transfer return values and reentrancy issues in the Bridge contract, which are unrelated to the gas issuance inflation and base fee calculation vulnerability in the TaikoL2 contract's anchor function."
         },
         {
           "vuln_id": "H-02",
           "vuln_title": "Validity and contests bond ca be incorrectly burned for the correct and ultimately verified transition",
           "detected": false,
-          "reasoning": "The audit report identifies vulnerabilities related to reentrancy, access control, gas limit checks, and refund validation but does not mention any issue specifically about validity and contests bonds being incorrectly burned for correct or ultimately verified transitions as described in vulnerability H-02."
+          "reasoning": "The audit report findings focus on issues in the Bridge contract related to unchecked Ether transfers and reentrancy, which are unrelated to the validity and contest bond burning logic described in the target vulnerability involving transition proofs and bond slashing in LibProving.sol."
         },
         {
           "vuln_id": "H-03",
           "vuln_title": "Users will never be able to withdraw their claimed airdrop fully in ERC20Airdrop2.sol contract",
           "detected": false,
-          "reasoning": "The audit report findings address various vulnerabilities in Bridge.sol related to message processing, fund locking, and reentrancy, but there is no mention of the ERC20Airdrop2.sol contract or issues specifically preventing users from fully withdrawing claimed airdrops."
+          "reasoning": "The audit report findings focus on issues in the Bridge.sol contract related to unchecked Ether transfers and reentrancy, and do not mention or address the withdrawal timing or locking issue in ERC20Airdrop2.sol described in the target vulnerability H-03."
         },
         {
           "vuln_id": "H-04",
           "vuln_title": "Taiko L1 - Proposer can maliciously cause loss of funds by forcing someone else to pay prover’s fee",
           "detected": false,
-          "reasoning": "The audit report findings focus on reentrancy in recallMessage, access control issues on suspendMessages, gas limit checks, and refund validation, none specifically describe or identify a vulnerability where a proposer can maliciously cause loss of funds by forcing someone else to pay the prover's fee as described in vulnerability H-04."
+          "reasoning": "The audit report findings focus on issues in the Bridge contract related to unchecked Ether transfer return values and reentrancy, which differ from the Taiko L1 proposer fee manipulation vulnerability involving proposer and coinbase assignment in the proposing logic."
         },
         {
           "vuln_id": "H-05",
           "vuln_title": "Signatures can be replayed in withdraw() to withdraw more tokens than the user originally intended.",
           "detected": false,
-          "reasoning": "The audit report findings focus on reentrancy in recallMessage, access control in suspendMessages, gas limit checks, and Ether refund validation, none of which address signature replay in withdraw() leading to over-withdrawal. The specified vulnerability about replaying signatures in withdraw() is not identified or discussed."
+          "reasoning": "The audit report findings focus on unchecked Ether send return values and reentrancy in the Bridge contract, with no mention of signature replay issues or the withdraw() function in TimelockTokenPool.sol."
         }
       ],
       "found_vulnerabilities": [
         {
-          "title": "reentrancy vulnerability in recallMessage allowing potential loss of funds",
-          "summary": "The recallMessage function sends Ether to an external contract or address after updating state, but calls an external contract (IRecallableSender.onMessageRecalled) with value before resetting context and without reentrancy guards on the external call itself, potentially allowing reentrancy attacks leading to loss of funds."
+          "title": "unchecked return value from sendEther calls leading to potential loss of funds",
+          "summary": "The Bridge contract uses low-level calls to send Ether via sendEther (likely a wrapper around address.send or call) without checking the return value, which can cause silent failures and loss of funds if the transfer fails.",
+          "severity": "high"
         },
         {
-          "title": "missing access control on suspendMessages function enabling denial of service and fund lock",
-          "summary": "The suspendMessages function allows suspending or unsuspending invocation of messages by setting receivedAt timestamp to max uint64 or current timestamp. Although it has onlyFromOwnerOrNamed(\"bridge_watchdog\") modifier, if the 'bridge_watchdog' role is compromised or misconfigured, an attacker can suspend messages indefinitely, preventing their execution and locking funds."
-        },
-        {
-          "title": "incorrect gas limit check in _invokeMessageCall allows zero gas limit causing revert and potential denial of service",
-          "summary": "The _invokeMessageCall function reverts if _gasLimit is zero, but processMessage and retryMessage allow _message.gasLimit to be zero in some cases, leading to revert and blocking message processing or retrying, potentially locking funds."
-        },
-        {
-          "title": "lack of slippage or refund amount validation in processMessage can lead to incorrect Ether refunds",
-          "summary": "processMessage refunds Ether (fee + refundAmount) to refundTo or msg.sender without validating refundAmount or ensuring the contract holds sufficient Ether, potentially allowing attackers to cause incorrect Ether transfers or drain funds."
+          "title": "potential reentrancy via external calls in message recall and processing",
+          "summary": "The Bridge contract makes external calls to arbitrary addresses (e.g., _message.from.onMessageRecalled and _invokeMessageCall) while holding state changes or before fully updating state, without using reentrancy guards or checks-effects-interactions pattern properly.",
+          "severity": "high"
         }
       ]
     },
     {
       "audit_id": "2024-05-olas",
       "status": "completed",
+      "repo_info": {
+        "url": "https://github.com/evmbench-org/2024-05-olas.git",
+        "commit": "HEAD"
+      },
       "num_gold_vulns": 2,
       "num_found_by_llm": 0,
       "num_detected": 0,
       "detect_score": 0.0,
-      "time_seconds": 5.11,
-      "tokens_used": 15183,
+      "time_seconds": 4.43,
+      "rag_time_seconds": 0.469,
+      "tokens_used": 15233,
       "judge_results": [
         {
           "vuln_id": "H-01",
           "vuln_title": "pointsSum.slope Not Updated After Nominee Removal and Votes Revocation",
           "detected": false,
-          "reasoning": "The audit report contains no findings, so it does not identify or describe the specified vulnerability."
+          "reasoning": "The audit report contains no findings related to the pointsSum.slope not being updated after nominee removal and vote revocation, thus it does not identify the specified vulnerability."
         },
         {
           "vuln_id": "H-02",
           "vuln_title": "Arbitrary tokens and data can be bridged to GnosisTargetDispenserL2 to manipulate staking incentives",
           "detected": false,
-          "reasoning": "The audit report contains no findings; therefore, it does not identify the specified vulnerability related to arbitrary tokens and data being bridged to GnosisTargetDispenserL2 for manipulating staking incentives."
+          "reasoning": "The audit report contains no findings, so it does not identify the root cause, vulnerable code, or exploit scenario related to the arbitrary token bridging vulnerability in GnosisTargetDispenserL2."
         }
       ],
       "found_vulnerabilities": []
@@ -156,24 +167,29 @@
     {
       "audit_id": "2024-07-basin",
       "status": "completed",
+      "repo_info": {
+        "url": "https://github.com/evmbench-org/2024-07-basin.git",
+        "commit": "HEAD"
+      },
       "num_gold_vulns": 2,
       "num_found_by_llm": 0,
       "num_detected": 0,
       "detect_score": 0.0,
-      "time_seconds": 3.73,
-      "tokens_used": 11659,
+      "time_seconds": 3.06,
+      "rag_time_seconds": 0.188,
+      "tokens_used": 11776,
       "judge_results": [
         {
           "vuln_id": "H-01",
           "vuln_title": "WellUpgradeable can be upgraded by anyone",
           "detected": false,
-          "reasoning": "The audit report contains no findings, hence it does not identify the root cause, vulnerable code, or exploit scenario related to the 'WellUpgradeable can be upgraded by anyone' vulnerability."
+          "reasoning": "The audit report contains no findings or mentions of the upgrade authorization issue, so it does not identify the root cause, vulnerable pattern, or exploit scenario described in the target vulnerability."
         },
         {
           "vuln_id": "H-02",
           "vuln_title": "Incorrectly assigned decimal1 parameter upon decoding",
           "detected": false,
-          "reasoning": "The audit report contains no findings, so it does not identify the incorrectly assigned decimal1 parameter upon decoding or any related vulnerability."
+          "reasoning": "The audit report contains no findings or mentions related to the incorrect assignment of decimal1 or the specific conditional logic error in decodeWellData, thus it does not detect the specified vulnerability."
         }
       ],
       "found_vulnerabilities": []
@@ -181,48 +197,53 @@
     {
       "audit_id": "2024-01-renft",
       "status": "completed",
+      "repo_info": {
+        "url": "https://github.com/evmbench-org/2024-01-renft.git",
+        "commit": "HEAD"
+      },
       "num_gold_vulns": 6,
       "num_found_by_llm": 0,
       "num_detected": 0,
       "detect_score": 0.0,
-      "time_seconds": 1.69,
-      "tokens_used": 12484,
+      "time_seconds": 1.14,
+      "rag_time_seconds": 0.208,
+      "tokens_used": 12573,
       "judge_results": [
         {
           "vuln_id": "H-01",
           "vuln_title": "All orders can be hijacked to lock rental assets forever by tipping a malicious ERC20",
           "detected": false,
-          "reasoning": "The audit report contains no findings, thus no detection of the specified vulnerability related to hijacking orders via malicious ERC20 tipping."
+          "reasoning": "The audit report contains no findings or mentions related to the tipping vulnerability or the Create contract's handling of consideration extensions, so the specified HIGH severity vulnerability was not detected."
         },
         {
           "vuln_id": "H-02",
           "vuln_title": "An attacker is able to hijack any ERC721 / ERC1155 he borrows because guard is missing validation on the address supplied to function call setFallbackHandler()",
           "detected": false,
-          "reasoning": "The audit report contains no findings; therefore, it does not identify the missing validation on the address supplied to setFallbackHandler() or the related hijacking vulnerability."
+          "reasoning": "The audit report contains no findings or mentions related to the setFallbackHandler() function or missing validation on its address parameter, thus it does not detect the specified vulnerability."
         },
         {
           "vuln_id": "H-03",
           "vuln_title": "An attacker can hijack any ERC1155 token he rents due to a design issue in reNFT via reentrancy exploitation",
           "detected": false,
-          "reasoning": "The audit report contains no findings, so it does not identify the root cause, vulnerable mechanism, or exploit scenario related to the reentrancy issue in reNFT allowing hijacking of rented ERC1155 tokens."
+          "reasoning": "The audit report contains no findings or mentions related to the reentrancy exploitation or hijacking of ERC1155 tokens in reNFT, thus it does not detect the specified vulnerability."
         },
         {
           "vuln_id": "H-05",
           "vuln_title": "Malicious actor can steal any actively rented NFT and freeze the rental payments (of the affected rentals) in the escrow contract",
           "detected": false,
-          "reasoning": "The audit report contains no findings related to the vulnerability where a malicious actor can steal actively rented NFTs and freeze rental payments in the escrow contract."
+          "reasoning": "The audit report contains no findings and thus does not identify the root cause, vulnerable code, or exploit scenario related to the specified high severity vulnerability H-05."
         },
         {
           "vuln_id": "H-06",
           "vuln_title": "Escrow contract can be drained by creating rentals that bypass execution invariant checks",
           "detected": false,
-          "reasoning": "The audit report contains no findings; therefore, it does not identify the root cause, vulnerable mechanism, or exploit scenario related to the escrow contract drain vulnerability."
+          "reasoning": "The audit report contains no findings or mentions related to the escrow contract being drained via rentals that bypass execution invariant checks, so the specified vulnerability was not detected."
         },
         {
           "vuln_id": "H-07",
           "vuln_title": "Attacker can lock lender NFTs and ERC20 in the safe if the offer is set to partial",
           "detected": false,
-          "reasoning": "The audit report contains no findings, therefore it does not identify the vulnerability regarding locking lender NFTs and ERC20 in the safe when the offer is set to partial."
+          "reasoning": "The audit report contains no findings or mentions related to the partial offer locking issue described in the target vulnerability, thus it does not detect the specified vulnerability."
         }
       ],
       "found_vulnerabilities": []
@@ -230,218 +251,217 @@
     {
       "audit_id": "2024-06-size",
       "status": "completed",
+      "repo_info": {
+        "url": "https://github.com/evmbench-org/2024-06-size.git",
+        "commit": "HEAD"
+      },
       "num_gold_vulns": 4,
-      "num_found_by_llm": 4,
+      "num_found_by_llm": 2,
       "num_detected": 0,
       "detect_score": 0.0,
-      "time_seconds": 7.54,
-      "tokens_used": 14271,
+      "time_seconds": 7.01,
+      "rag_time_seconds": 0.209,
+      "tokens_used": 14243,
       "judge_results": [
         {
           "vuln_id": "H-01",
           "vuln_title": "When sellCreditMarket() is called to sell credit for a specific cash amount, the protocol might receive a lower swapping fee than expected",
           "detected": false,
-          "reasoning": "The audit report does not mention the sellCreditMarket() function or any issue related to receiving lower swapping fees than expected. The findings focus on access control issues, reentrancy protection, and initialization flaws in other functions and libraries rather than fee calculation or swapping mechanics related to sellCreditMarket()."
+          "reasoning": "The audit report findings focus on fee transfer approval and reentrancy issues in sellCreditMarket, but do not address the specific vulnerability of receiving a lower swapping fee than expected when selling credit for a specific cash amount."
         },
         {
           "vuln_id": "H-02",
           "vuln_title": "Risk of overpayment due to race condition between repay and liquidateWithReplacement transactions",
           "detected": false,
-          "reasoning": "The audit report findings do not mention any race condition or issues between repay and liquidateWithReplacement transactions that could cause overpayment. The findings focus on missing access controls and reentrancy in repayDebt and reduceCredit, but do not identify the specific race condition vulnerability described in H-02."
+          "reasoning": "The audit report findings focus on fee handling and reentrancy issues in SellCreditMarket.sol, which are unrelated to the race condition between repay and liquidateWithReplacement transactions described in vulnerability H-02."
         },
         {
           "vuln_id": "H-03",
           "vuln_title": "The collateral remainder cap is incorrectly calculated during liquidation",
           "detected": false,
-          "reasoning": "The audit report findings focus on access control issues, reentrancy vulnerabilities, and initialization flaws in debt and credit position management, but none mention incorrect calculation of the collateral remainder cap during liquidation or related logic errors. Therefore, the specified vulnerability H-03 was not detected."
+          "reasoning": "The audit report findings focus on fee transfer allowance checks and missing reentrancy protection in SellCreditMarket, which are unrelated to the incorrect collateral remainder cap calculation during liquidation described in vulnerability H-03."
         },
         {
           "vuln_id": "H-04",
           "vuln_title": "Users won’t liquidate positions because the logic used to calculate the liquidator’s profit is incorrect",
           "detected": false,
-          "reasoning": "The audit report findings focus on access control issues, reentrancy vulnerabilities, and initialization problems, but do not address or identify any incorrect logic in calculating the liquidator's profit that would cause users not to liquidate positions."
+          "reasoning": "The audit report findings focus on fee transfer handling and missing reentrancy protection in SellCreditMarket, which are unrelated to the incorrect calculation of liquidator’s profit or liquidation logic described in vulnerability H-04."
         }
       ],
       "found_vulnerabilities": [
         {
-          "title": "missing access control on createDebtAndCreditPositions allows arbitrary debt minting",
-          "summary": "The function createDebtAndCreditPositions in AccountingLibrary is external and lacks access control, allowing any caller to create debt positions and mint debt tokens arbitrarily to any borrower."
+          "title": "incorrect handling of fees in sellCreditMarket leading to potential fund loss",
+          "summary": "In SellCreditMarket.executeSellCreditMarket, the protocol transfers fees from the lender's borrowAToken balance to the fee recipient without verifying that the lender has approved or has sufficient allowance for the fee transfer. This can cause the fee transfer to fail or revert, or worse, if the transferFrom implementation is non-standard, it could lead to unexpected behavior or fund loss. Additionally, the fee transfer is done after transferring cashAmountOut to the borrower, which could cause partial state changes if the fee transfer fails.",
+          "severity": "high"
         },
         {
-          "title": "missing access control on createCreditPosition allows unauthorized credit manipulation",
-          "summary": "The function createCreditPosition in AccountingLibrary is external and lacks access control, allowing any caller to reduce and create credit positions arbitrarily."
-        },
-        {
-          "title": "lack of reentrancy protection in repayDebt and reduceCredit can cause inconsistent state",
-          "summary": "Functions repayDebt and reduceCredit perform external token burns and emit events without reentrancy guards, and calls to external tokens occur before state updates, enabling reentrancy attacks."
-        },
-        {
-          "title": "missing access control on executeInitialize allows reinitialization",
-          "summary": "The executeInitialize function in Initialize library is external and not protected by any access control, allowing anyone to reinitialize protocol parameters and overwrite critical configuration."
+          "title": "missing reentrancy protection in state-changing external calls",
+          "summary": "The Size contract and its libraries perform multiple external token transfers (e.g., borrowAToken.transferFrom) without explicit reentrancy guards. Since these calls transfer tokens to external addresses, if any of these tokens are malicious or if the recipient is a contract with fallback functions, reentrancy attacks could be possible, leading to inconsistent state or fund loss.",
+          "severity": "high"
         }
       ]
     },
     {
       "audit_id": "2024-08-phi",
       "status": "completed",
+      "repo_info": {
+        "url": "https://github.com/evmbench-org/2024-08-phi.git",
+        "commit": "HEAD"
+      },
       "num_gold_vulns": 6,
-      "num_found_by_llm": 5,
-      "num_detected": 1,
-      "detect_score": 0.1667,
-      "time_seconds": 8.55,
-      "tokens_used": 14536,
+      "num_found_by_llm": 2,
+      "num_detected": 0,
+      "detect_score": 0.0,
+      "time_seconds": 7.17,
+      "rag_time_seconds": 0.674,
+      "tokens_used": 13984,
       "judge_results": [
         {
           "vuln_id": "H-01",
           "vuln_title": "Signature replay in signatureClaim results in unauthorized claiming of rewards",
           "detected": false,
-          "reasoning": "The audit report does not mention signature replay attacks or vulnerabilities related to signatureClaim or unauthorized claiming of rewards via replay. The findings focus on reentrancy, missing nonReentrant modifiers, and access control issues, but none address signature validation or replay protection."
+          "reasoning": "The audit report findings focus on missing access control and upgrade authorization issues in Cred.sol, which are unrelated to the signature replay vulnerability in PhiFactory::signatureClaim described in the target vulnerability."
         },
         {
           "vuln_id": "H-02",
           "vuln_title": "Signature replay in createArt allows to impersonate artist and steal royalties",
           "detected": false,
-          "reasoning": "The audit report findings all describe reentrancy or access control issues unrelated to signature replay in createArt. None mention signature verification, replay of signatures, impersonation of the artist, or theft of royalties via signature reuse, which is the core of vulnerability H-02."
+          "reasoning": "The audit report findings focus on missing access control in unrelated functions and upgrade authorization, without mentioning signature replay, createArt, or manipulation of royalties as described in the target vulnerability."
         },
         {
           "vuln_id": "H-03",
           "vuln_title": "shareBalance bloating eventually blocks curator rewards distribution",
           "detected": false,
-          "reasoning": "The audit report identifies multiple reentrancy vulnerabilities related to ETH transfers, missing nonReentrant modifiers, and access control issues affecting share balances and rewards. However, it does not mention the specific issue of shareBalance bloating eventually blocking curator rewards distribution (H-03), nor does it describe a root cause or exploit scenario involving balance bloat leading to blocked rewards."
+          "reasoning": "The audit report findings focus on missing access control issues and unauthorized upgrades, but do not address the shareBalance mapping growing indefinitely due to zero-balance entries not being deleted, which is the root cause of the H-03 vulnerability."
         },
         {
           "vuln_id": "H-04",
           "vuln_title": "Forced endTime extension in updateArtSettings() allows attacker to mint more tokens",
           "detected": false,
-          "reasoning": "The audit report findings focus mainly on reentrancy vulnerabilities involving ETH transfers and missing nonReentrant modifiers in trade, batch sell, buy/sell functions, batchClaim reentrancy, and missing access control on certain functions. None of the findings mention forced endTime extension in updateArtSettings() or vulnerabilities allowing attackers to mint more tokens via that mechanism."
+          "reasoning": "The audit report findings focus on missing access control in unrelated functions and upgrade authorization, and do not mention or relate to forced endTime extension in updateArtSettings() or the minting exploit described."
         },
         {
           "vuln_id": "H-06",
           "vuln_title": "Reentrancy Vulnerability Allows Bypass of Cooldown, Leading to Unfair Reward Extraction Through Flash Loan",
-          "detected": true,
-          "reasoning": "The report clearly identifies multiple reentrancy vulnerabilities in functions handling ETH transfers before state updates, allowing attackers to reenter trading or selling functions to withdraw funds multiple times or manipulate balances. This matches the root cause, code areas, and exploit scenario of the specified reentrancy vulnerability (H-06) enabling bypass of cooldown and unfair reward extraction via flash loans."
+          "detected": false,
+          "reasoning": "The audit report findings focus on missing access control issues and unauthorized upgrades, which differ from the reentrancy vulnerability in cred creation and share trading described in H-06; no reentrancy or related exploit is identified."
         },
         {
           "vuln_id": "H-07",
           "vuln_title": "Unrestricted changes to token settings allow artists to alter critical features",
           "detected": false,
-          "reasoning": "The audit report findings primarily identify reentrancy vulnerabilities and missing access controls on share tracking functions, but do not mention unrestricted changes to token settings or artists altering critical features as described in the target vulnerability H-07."
+          "reasoning": "The audit report findings focus on missing access control in Cred.sol functions and upgrade authorization, which are unrelated to unrestricted changes to token settings in PhiFactory.sol as described in the target vulnerability."
         }
       ],
       "found_vulnerabilities": [
         {
-          "title": "reentrancy vulnerability in _handleTrade sell path",
-          "summary": "In the Cred contract's _handleTrade function, during a sell operation, the contract sends ETH to the seller (curator_) before updating the protocol fee and creator fee payments, and before updating the latestActiveTimestamp and emitting the Trade event. This external call occurs before all state updates and other ETH transfers, enabling a reentrancy attack."
-        },
-        {
-          "title": "reentrancy vulnerability in batch sell without nonReentrant protection",
-          "summary": "The batchSellShareCred function calls _executeBatchSell which calls _executeBatchTrade. Although _executeBatchTrade is protected by nonReentrant, batchSellShareCred itself is not marked nonReentrant and calls _msgSender().safeTransferETH(totalPayout) after _executeBatchSell. This external call happens after state updates but outside the nonReentrant guard, allowing potential reentrancy if _msgSender() is a contract with fallback."
-        },
-        {
-          "title": "missing nonReentrant modifier on buyShareCred and sellShareCred functions",
-          "summary": "The buyShareCred and sellShareCred functions call _handleTrade which performs external ETH transfers to users and protocolFeeDestination and calls external contracts (IPhiRewards). However, these public functions lack the nonReentrant modifier, allowing reentrancy attacks via fallback functions during ETH transfers."
-        },
-        {
-          "title": "reentrancy vulnerability in PhiFactory batchClaim function",
-          "summary": "The PhiFactory contract's batchClaim function loops over multiple claim calls, each of which can transfer ETH and mint tokens. The batchClaim function itself is not protected by a nonReentrant modifier, allowing reentrancy during the external calls to claim, which can lead to multiple claims or inconsistent state."
-        },
-        {
           "title": "missing access control on _addCredIdPerAddress and _removeCredIdPerAddress functions",
-          "summary": "The functions _addCredIdPerAddress and _removeCredIdPerAddress are declared public and modify internal mappings related to user cred IDs. They lack access control and can be called by anyone to manipulate share tracking data, potentially causing inconsistent share ownership records."
+          "summary": "The functions _addCredIdPerAddress and _removeCredIdPerAddress are declared public without any access control, allowing anyone to call them and manipulate the internal mappings and arrays that track user cred ownership and indices. This can corrupt user share tracking and potentially cause inconsistencies in share balances and ownership data.",
+          "severity": "high"
+        },
+        {
+          "title": "missing access control on _authorizeUpgrade function allowing unauthorized upgrades",
+          "summary": "The _authorizeUpgrade function in Cred.sol is overridden but left empty, effectively removing the onlyOwner modifier that should restrict upgrades to the owner. This allows anyone to upgrade the contract implementation to a malicious contract.",
+          "severity": "high"
         }
       ]
     },
     {
       "audit_id": "2024-12-secondswap",
       "status": "completed",
+      "repo_info": {
+        "url": "https://github.com/evmbench-org/2024-12-secondswap.git",
+        "commit": "HEAD"
+      },
       "num_gold_vulns": 3,
-      "num_found_by_llm": 5,
-      "num_detected": 0,
-      "detect_score": 0.0,
-      "time_seconds": 10.37,
-      "tokens_used": 14951,
+      "num_found_by_llm": 3,
+      "num_detected": 1,
+      "detect_score": 0.3333,
+      "time_seconds": 7.79,
+      "rag_time_seconds": 0.247,
+      "tokens_used": 14711,
       "judge_results": [
         {
           "vuln_id": "H-01",
           "vuln_title": "SecondSwap_Marketplace vesting listing order affects how much the vesting buyers can claim at a given step",
           "detected": false,
-          "reasoning": "The audit report does not mention any vulnerability related to the vesting listing order affecting how much vesting buyers can claim at a given step. While there are findings about vesting claim mechanics and token transfers, none address the impact of listing order on claim amounts, so the specified vulnerability (H-01) is not detected."
+          "reasoning": "The audit report findings focus on reentrancy, transferVesting amountClaimed bypass, and overselling due to insufficient checks, but none address the vesting listing order affecting claimable amounts or the inheritance of stepsClaimed in SecondSwap_Marketplace as described in the target vulnerability."
         },
         {
           "vuln_id": "H-02",
           "vuln_title": "transferVesting creates an incorrect vesting for new users when they purchase a vesting, because stepsClaimed is the same for all sales, allowing an attacker to prematurely unlock too many tokens",
           "detected": false,
-          "reasoning": "While the audit report identifies issues in transferVesting related to transferring already claimed tokens without adjusting claimed variables, it does not mention the specific root cause that stepsClaimed is shared across all sales allowing premature unlocking of tokens, which is the core of the target vulnerability H-02."
+          "reasoning": "The audit report identifies issues with transferVesting allowing transfers beyond claimed amounts, but does not mention the specific problem of stepsClaimed being shared across sales causing premature unlocking of tokens as described in H-02."
         },
         {
           "vuln_id": "H-03",
           "vuln_title": "In transferVesting, the grantorVesting.releaseRate is calculated incorrectly, which leads to the sender being able to unlock more tokens than were initially locked.",
-          "detected": false,
-          "reasoning": "The audit report does not mention incorrect calculation of grantorVesting.releaseRate in transferVesting that allows unlocking more tokens than initially locked. Although it identifies improper validation allowing transfer of already claimed tokens, this is a different root cause and mechanism than the releaseRate calculation issue in the target vulnerability."
+          "detected": true,
+          "reasoning": "The audit report's second finding describes that transferVesting allows transferring more tokens than legitimately available by ignoring claimed amounts, matching the root cause of incorrect releaseRate calculation leading to unlocking more tokens than initially locked."
         }
       ],
       "found_vulnerabilities": [
         {
-          "title": "Reentrancy in spotPurchase due to external token transfers before state update",
-          "summary": "The spotPurchase function in SecondSwap_Marketplace performs multiple external ERC20 token transfers (safeTransferFrom and safeTransfer) before updating the listing's balance and status, allowing a reentrancy attack that can cause double spending or inconsistent state."
+          "title": "missing reentrancy protection in purchase and unlisting functions",
+          "summary": "The marketplace contract functions spotPurchase and unlistVesting perform external token transfers before updating critical state variables without any reentrancy guard, allowing reentrancy attacks that can cause double spending or inconsistent state leading to loss of funds.",
+          "severity": "high"
         },
         {
-          "title": "Missing access control on addCoin allows unauthorized token addition",
-          "summary": "The addCoin function in SecondSwap_Marketplace lacks proper access control modifiers and only checks msg.sender against s2Admin via an external call, but does not use a modifier or reentrancy guard, allowing potential unauthorized calls or bypasses."
+          "title": "vesting transfer function allows bypassing claimed amount checks",
+          "summary": "The SecondSwap_StepVesting contract's transferVesting function only checks that totalAmount - amountClaimed >= _amount but does not update amountClaimed during transfer, allowing an attacker with partial claimed vesting to transfer more tokens than legitimately available, effectively creating tokens out of thin air.",
+          "severity": "high"
         },
         {
-          "title": "Unchecked rounding and precision loss in price and amount calculations leading to total drain",
-          "summary": "The marketplace and vesting contracts perform division and multiplication involving token decimals without proper rounding checks, which can cause rounding down to zero in baseAmount calculations, potentially allowing attackers to list or buy zero-value amounts or drain vesting entries."
-        },
-        {
-          "title": "Improper validation in transferVesting allows transferring already claimed tokens",
-          "summary": "In SecondSwap_StepVesting, the transferVesting function only checks that totalAmount - amountClaimed >= _amount but does not adjust amountClaimed or stepsClaimed, allowing transfer of tokens that have already been claimed, effectively duplicating vested tokens."
-        },
-        {
-          "title": "Reentrancy risk in claim function due to external token transfer before state update",
-          "summary": "The claim function in SecondSwap_StepVesting transfers tokens to the beneficiary before updating the vesting state variables (stepsClaimed and amountClaimed), enabling reentrancy attacks that can cause multiple claims of the same tokens."
+          "title": "vesting manager allows listing more tokens than allowed due to insufficient checks",
+          "summary": "SecondSwap_VestingManager's listVesting function relies on complex logic to enforce max sell percentages but does not adequately prevent race conditions or reentrancy, and the allocation.sold counter can be manipulated to list more tokens than owned, enabling overselling and loss of tokens.",
+          "severity": "high"
         }
       ]
     },
     {
       "audit_id": "2025-04-forte",
       "status": "completed",
+      "repo_info": {
+        "url": "https://github.com/evmbench-org/2025-04-forte.git",
+        "commit": "HEAD"
+      },
       "num_gold_vulns": 5,
       "num_found_by_llm": 0,
       "num_detected": 0,
       "detect_score": 0.0,
-      "time_seconds": 3.21,
-      "tokens_used": 15565,
+      "time_seconds": 7.02,
+      "rag_time_seconds": 0.157,
+      "tokens_used": 15833,
       "judge_results": [
         {
           "vuln_id": "H-01",
           "vuln_title": "Early 72-digit adjustment in sqrt will lead to incorrect result exponent calculation",
           "detected": false,
-          "reasoning": "The audit report contains no findings, so it does not identify the root cause, vulnerable code or mechanism, nor describe a similar exploit scenario related to the specified vulnerability."
+          "reasoning": "The audit report contains no findings or references to the early 72-digit adjustment in sqrt or the related exponent miscalculation, thus it does not detect the specified vulnerability."
         },
         {
           "vuln_id": "H-02",
           "vuln_title": "Square root function silently accepts invalid non-positive inputs",
           "detected": false,
-          "reasoning": "The audit report contains no findings, thus it does not identify the vulnerability related to the square root function accepting invalid non-positive inputs."
+          "reasoning": "The audit report contains no findings and thus does not identify the root cause, vulnerable code, or impact related to the sqrt function stopping execution on zero input."
         },
         {
           "vuln_id": "H-03",
           "vuln_title": "Natural logarithm function silently accepts invalid non-positive inputs",
           "detected": false,
-          "reasoning": "The audit report contains no findings; therefore, the specified vulnerability related to the natural logarithm function accepting invalid non-positive inputs was not detected."
+          "reasoning": "The audit report contains no findings, so it does not identify the root cause, vulnerable code, or impact related to the ln() function accepting invalid non-positive inputs."
         },
         {
           "vuln_id": "H-04",
           "vuln_title": "Unwrapping while equating inside the eq function fails to account for the set L_MATISSA_FLAG",
           "detected": false,
-          "reasoning": "The audit report contains no findings; therefore, it does not identify the root cause, vulnerable code, or exploit scenario related to unwrapping while equating inside the eq function failing to account for the set L_MATISSA_FLAG."
+          "reasoning": "The audit report contains no findings addressing the unwrapping comparison in the eq function or the L_MATISSA_FLAG issue, thus the specified vulnerability was not detected."
         },
         {
           "vuln_id": "H-05",
           "vuln_title": "Precision loss in toPackedFloat function when mantissa is in range (MAX_M_DIGIT_NUMBER, MIN_L_DIGIT_NUMBER)",
           "detected": false,
-          "reasoning": "The audit report contains no findings, so it does not identify the root cause, vulnerable code, or exploit scenario related to the specified precision loss vulnerability in the toPackedFloat function."
+          "reasoning": "The audit report contains no findings related to the precision loss in toPackedFloat function or its mantissa size determination, thus the specified HIGH severity vulnerability was not detected."
         }
       ],
       "found_vulnerabilities": []
@@ -449,36 +469,36 @@
     {
       "audit_id": "2026-01-tempo-stablecoin-dex",
       "status": "completed",
-      "num_gold_vulns": 3,
+      "repo_info": {
+        "url": "https://github.com/evmbench-org/2026-01-tempo-stablecoin-dex.git",
+        "commit": "HEAD"
+      },
+      "num_gold_vulns": 2,
       "num_found_by_llm": 1,
       "num_detected": 1,
-      "detect_score": 0.3333,
-      "time_seconds": 2.74,
-      "tokens_used": 4114,
+      "detect_score": 0.5,
+      "time_seconds": 3.01,
+      "rag_time_seconds": 0.18,
+      "tokens_used": 4302,
       "judge_results": [
         {
           "vuln_id": "H-02",
           "vuln_title": "Missing authorization in cancel() allows anyone to cancel any order",
           "detected": false,
-          "reasoning": "The audit report identifies a vulnerability in the emergencyWithdraw function allowing unauthorized draining of funds via unchecked balance subtraction, but it does not mention the cancel() function or missing authorization allowing anyone to cancel any order."
-        },
-        {
-          "vuln_id": "H-03",
-          "vuln_title": "Linked list corruption enables double refund via incomplete order cleanup",
-          "detected": false,
-          "reasoning": "The audit report describes an 'emergencyWithdraw' function vulnerability involving unchecked underflow and unauthorized withdrawal, which differs from the linked list corruption and double refund through incomplete order cleanup described in the target vulnerability H-03."
+          "reasoning": "The audit report only identifies an unchecked withdrawal vulnerability in emergencyWithdraw, which is unrelated to missing authorization in cancel(); it does not mention or detect the missing authorization issue in cancel()."
         },
         {
           "vuln_id": "H-04",
           "vuln_title": "Integer underflow in balance subtraction allows draining DEX liquidity",
           "detected": true,
-          "reasoning": "The audit report describes an integer underflow in balance subtraction during withdrawals from the DEX liquidity, allowing attackers to drain funds by exploiting unchecked subtraction—matching the root cause, vulnerable mechanism, and exploit scenario of the specified vulnerability H-04."
+          "reasoning": "The audit report explicitly identifies the unchecked balance subtraction in _processWithdrawal called by emergencyWithdraw without balance validation, describing the same underflow mechanism and exploit scenario leading to loss of funds and liquidity drainage."
         }
       ],
       "found_vulnerabilities": [
         {
-          "title": "unauthorized emergency withdrawal allows draining user funds",
-          "summary": "The emergencyWithdraw function allows any user to withdraw arbitrary amounts of tokens from their balance without any balance checks, enabling loss of funds."
+          "title": "emergencyWithdraw allows withdrawal without balance checks",
+          "summary": "The emergencyWithdraw function calls _processWithdrawal which uses unchecked arithmetic to subtract balances and totalDeposits without verifying if the user has sufficient balance. This allows users to withdraw arbitrary amounts of tokens they do not own, leading to loss of funds from the contract.",
+          "severity": "high"
         }
       ]
     }
