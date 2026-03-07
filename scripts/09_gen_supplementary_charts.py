@@ -2,6 +2,7 @@
 """生成補充分析圖表：混淆矩陣熱力圖、McNemar 檢驗、成本敏感分析"""
 
 import json
+import os
 import numpy as np
 import matplotlib
 matplotlib.use('Agg')
@@ -13,14 +14,16 @@ from matplotlib.colors import LinearSegmentedColormap
 plt.rcParams['font.family'] = 'DejaVu Sans'
 plt.rcParams['font.size'] = 14
 
-OUTPUT_DIR = "/home/ubuntu/defi-vuln-detection/charts"
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = os.path.dirname(SCRIPT_DIR)
+OUTPUT_DIR = os.path.join(BASE_DIR, "charts")
 
 # ============================================================
 # 1. 混淆矩陣熱力圖（所有方法並排）
 # ============================================================
 print("生成混淆矩陣熱力圖...")
 
-with open("/home/ubuntu/defi-vuln-detection/supplementary_results/confusion_matrices.json") as f:
+with open(os.path.join(BASE_DIR, "supplementary_results/confusion_matrices.json")) as f:
     cm_data = json.load(f)
 
 methods = ['slither', 'mythril', 'llm_base', 'llm_rag', 'hybrid']
@@ -48,15 +51,15 @@ for idx, (method, label) in enumerate(zip(methods, method_labels)):
             pct = val / total * 100
             color = 'white' if val > total * 0.3 else 'black'
             ax.text(j, i, f'{val}\n({pct:.1f}%)', ha='center', va='center',
-                   fontsize=13, fontweight='bold', color=color)
+                   fontsize=14, fontweight='bold', color=color)
     
     ax.set_xticks([0, 1])
     ax.set_yticks([0, 1])
-    ax.set_xticklabels(['Positive', 'Negative'], fontsize=12)
-    ax.set_yticklabels(['Positive', 'Negative'], fontsize=12)
-    ax.set_xlabel('Predicted', fontsize=13, fontweight='bold')
+    ax.set_xticklabels(['Positive', 'Negative'], fontsize=14)
+    ax.set_yticklabels(['Positive', 'Negative'], fontsize=14)
+    ax.set_xlabel('Predicted', fontsize=14, fontweight='bold')
     if idx == 0:
-        ax.set_ylabel('Actual', fontsize=13, fontweight='bold')
+        ax.set_ylabel('Actual', fontsize=14, fontweight='bold')
     
     # 標題包含 F1 分數
     f1 = cm_data[method]['metrics']['F1']
@@ -73,7 +76,7 @@ print(f"  ✓ 混淆矩陣熱力圖已保存")
 # ============================================================
 print("生成 McNemar 檢驗結果圖...")
 
-with open("/home/ubuntu/defi-vuln-detection/supplementary_results/mcnemar_tests.json") as f:
+with open(os.path.join(BASE_DIR, "supplementary_results/mcnemar_tests.json")) as f:
     mcnemar_data = json.load(f)
 
 fig, ax = plt.subplots(figsize=(14, 7))
@@ -102,17 +105,17 @@ for i, (bar, sig, pv) in enumerate(zip(bars, significances, p_values)):
     height = bar.get_height()
     ax.text(bar.get_x() + bar.get_width()/2., height + 0.5,
             f'{sig}\np={pv:.4f}' if pv > 0 else f'{sig}\np<0.001',
-            ha='center', va='bottom', fontsize=12, fontweight='bold')
+            ha='center', va='bottom', fontsize=14, fontweight='bold')
 
 # 添加顯著性閾值線
 ax.axhline(y=3.841, color='#f59e0b', linestyle='--', linewidth=2, label='α=0.05 (χ²=3.841)')
 ax.axhline(y=6.635, color='#dc2626', linestyle='--', linewidth=2, label='α=0.01 (χ²=6.635)')
 
 ax.set_xticks(x)
-ax.set_xticklabels(comparisons, fontsize=11)
+ax.set_xticklabels(comparisons, fontsize=14)
 ax.set_ylabel('McNemar χ² Statistic', fontsize=14, fontweight='bold')
 ax.set_title('McNemar Test Results: Pairwise Method Comparisons', fontsize=18, fontweight='bold', pad=15)
-ax.legend(fontsize=12, loc='upper right')
+ax.legend(fontsize=14, loc='upper right')
 ax.set_ylim(0, max(chi2_values) * 1.3)
 ax.grid(axis='y', alpha=0.3)
 
@@ -122,7 +125,7 @@ ns_patch = mpatches.Patch(color='#9ca3af', label='Not Significant')
 ax.legend(handles=[sig_patch, ns_patch, 
                    plt.Line2D([0], [0], color='#f59e0b', linestyle='--', linewidth=2, label='α=0.05'),
                    plt.Line2D([0], [0], color='#dc2626', linestyle='--', linewidth=2, label='α=0.01')],
-         fontsize=11, loc='upper right')
+         fontsize=14, loc='upper right')
 
 plt.tight_layout()
 plt.savefig(f'{OUTPUT_DIR}/fig4_sup2_mcnemar_tests.png', dpi=300, bbox_inches='tight',
@@ -135,7 +138,7 @@ print(f"  ✓ McNemar 檢驗結果圖已保存")
 # ============================================================
 print("生成成本敏感分析圖...")
 
-with open("/home/ubuntu/defi-vuln-detection/supplementary_results/cost_sensitive_analysis.json") as f:
+with open(os.path.join(BASE_DIR, "supplementary_results/cost_sensitive_analysis.json")) as f:
     cost_data = json.load(f)
 
 fig, ax = plt.subplots(figsize=(12, 7))
@@ -152,11 +155,11 @@ for method, label, color, marker in zip(methods_cost, method_labels_cost, colors
             label=label, markeredgecolor='white', markeredgewidth=1.5)
 
 ax.set_xlabel('FN/FP Cost Ratio (Higher = More Penalty for Missing Vulnerabilities)', 
-              fontsize=13, fontweight='bold')
-ax.set_ylabel('Total Misclassification Cost', fontsize=13, fontweight='bold')
+              fontsize=14, fontweight='bold')
+ax.set_ylabel('Total Misclassification Cost', fontsize=14, fontweight='bold')
 ax.set_title('Cost-Sensitive Analysis: Method Comparison\nAcross Different FN/FP Cost Ratios', 
              fontsize=16, fontweight='bold', pad=15)
-ax.legend(fontsize=13, loc='upper left', framealpha=0.9)
+ax.legend(fontsize=14, loc='upper left', framealpha=0.9)
 ax.grid(True, alpha=0.3)
 ax.set_xticks(ratios)
 
@@ -167,7 +170,7 @@ ax.fill_between(ratios,
 ax.annotate('LLM+RAG: Best across\nall cost ratios', 
             xy=(5, cost_data[2]['all_costs']['llm_rag']),
             xytext=(7, cost_data[2]['all_costs']['llm_rag'] + 30),
-            fontsize=12, fontweight='bold', color='#10b981',
+            fontsize=14, fontweight='bold', color='#10b981',
             arrowprops=dict(arrowstyle='->', color='#10b981', lw=2))
 
 plt.tight_layout()
@@ -181,7 +184,7 @@ print(f"  ✓ 成本敏感分析圖已保存")
 # ============================================================
 print("生成漏洞類型檢測比較圖...")
 
-with open("/home/ubuntu/defi-vuln-detection/supplementary_results/vulnerability_type_comparison.json") as f:
+with open(os.path.join(BASE_DIR, "supplementary_results/vulnerability_type_comparison.json")) as f:
     vuln_type_data = json.load(f)
 
 fig, ax = plt.subplots(figsize=(14, 7))
@@ -210,14 +213,14 @@ for i, (method, label, color) in enumerate(zip(methods_vt, method_labels_vt, col
     for bar, val in zip(bars, recalls):
         if val > 0:
             ax.text(bar.get_x() + bar.get_width()/2., bar.get_height() + 0.01,
-                   f'{val:.0%}', ha='center', va='bottom', fontsize=9, fontweight='bold')
+                   f'{val:.0%}', ha='center', va='bottom', fontsize=14, fontweight='bold')
 
 ax.set_xlabel('Vulnerability Type', fontsize=14, fontweight='bold')
 ax.set_ylabel('Recall', fontsize=14, fontweight='bold')
 ax.set_title('Detection Recall by Vulnerability Type', fontsize=18, fontweight='bold', pad=15)
 ax.set_xticks(x + width * 1.5)
-ax.set_xticklabels([c.replace('_', '\n') for c in categories], fontsize=11)
-ax.legend(fontsize=12, loc='lower right')
+ax.set_xticklabels([c.replace('_', '\n') for c in categories], fontsize=14)
+ax.legend(fontsize=14, loc='lower right')
 ax.set_ylim(0, 1.15)
 ax.grid(axis='y', alpha=0.3)
 

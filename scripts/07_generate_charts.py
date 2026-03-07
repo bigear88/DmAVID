@@ -14,14 +14,15 @@ plt.rcParams.update({
     'font.size': 14,
     'axes.titlesize': 18,
     'axes.labelsize': 15,
-    'xtick.labelsize': 12,
-    'ytick.labelsize': 12,
-    'legend.fontsize': 12,
+    'xtick.labelsize': 14,
+    'ytick.labelsize': 14,
+    'legend.fontsize': 14,
     'figure.dpi': 300
 })
 import numpy as np
 
-BASE = "/home/ubuntu/defi-vuln-detection"
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE = os.path.dirname(SCRIPT_DIR)
 CHART_DIR = os.path.join(BASE, "charts")
 os.makedirs(CHART_DIR, exist_ok=True)
 
@@ -56,7 +57,7 @@ bars3 = ax.bar(x + w, f1, w, label='F1 Score', color='#FF9800', edgecolor='white
 for bars in [bars1, bars2, bars3]:
     for bar in bars:
         h = bar.get_height()
-        ax.text(bar.get_x() + bar.get_width()/2., h + 0.5, f'{h:.1f}', ha='center', va='bottom', fontsize=10, fontweight='bold')
+        ax.text(bar.get_x() + bar.get_width()/2., h + 0.5, f'{h:.1f}', ha='center', va='bottom', fontsize=14, fontweight='bold')
 
 ax.set_xlabel('Detection Method')
 ax.set_ylabel('Score (%)')
@@ -86,7 +87,7 @@ bars3 = ax.bar(x + w, fpr, w, label='FPR', color='#F44336', edgecolor='white')
 for bars in [bars1, bars2, bars3]:
     for bar in bars:
         h = bar.get_height()
-        ax.text(bar.get_x() + bar.get_width()/2., h + 0.5, f'{h:.1f}', ha='center', va='bottom', fontsize=10, fontweight='bold')
+        ax.text(bar.get_x() + bar.get_width()/2., h + 0.5, f'{h:.1f}', ha='center', va='bottom', fontsize=14, fontweight='bold')
 
 ax.set_xlabel('Detection Method')
 ax.set_ylabel('Rate (%)')
@@ -108,7 +109,7 @@ fig, ax = plt.subplots(figsize=(10, 6))
 colors = ['#F44336' if f > 50 else '#FF9800' if f > 20 else '#4CAF50' for f in fpr]
 bars = ax.barh(methods, fpr, color=colors, edgecolor='white', height=0.5)
 for bar, val in zip(bars, fpr):
-    ax.text(bar.get_width() + 1, bar.get_y() + bar.get_height()/2., f'{val:.1f}%', va='center', fontsize=13, fontweight='bold')
+    ax.text(bar.get_width() + 1, bar.get_y() + bar.get_height()/2., f'{val:.1f}%', va='center', fontsize=14, fontweight='bold')
 ax.set_xlabel('False Positive Rate (%)')
 ax.set_title('False Positive Rate Comparison')
 ax.set_xlim(0, 110)
@@ -129,7 +130,7 @@ sizes = [200, 200, 200, 300, 250]
 
 for i, method in enumerate(methods):
     ax.scatter(times[i], f1_scores[i], s=sizes[i], c=colors_scatter[i], label=method, zorder=5, edgecolors='white', linewidth=2)
-    ax.annotate(method, (times[i], f1_scores[i]), textcoords="offset points", xytext=(10, 10), fontsize=12, fontweight='bold')
+    ax.annotate(method, (times[i], f1_scores[i]), textcoords="offset points", xytext=(10, 10), fontsize=14, fontweight='bold')
 
 ax.set_xlabel('Average Time per Contract (seconds)')
 ax.set_ylabel('F1 Score (%)')
@@ -159,7 +160,7 @@ bars3 = ax.bar(x_ab + w_ab, ablation_fpr, w_ab, label='FPR', color='#F44336', ed
 for bars in [bars1, bars2, bars3]:
     for bar in bars:
         h = bar.get_height()
-        ax.text(bar.get_x() + bar.get_width()/2., h + 0.5, f'{h:.1f}', ha='center', va='bottom', fontsize=11, fontweight='bold')
+        ax.text(bar.get_x() + bar.get_width()/2., h + 0.5, f'{h:.1f}', ha='center', va='bottom', fontsize=14, fontweight='bold')
 
 ax.set_ylabel('Score (%)')
 ax.set_title('Ablation Study: Component Contribution Analysis')
@@ -189,7 +190,7 @@ colors_imp = ['#4CAF50' if v > 0 else '#F44336' for v in improvements]
 bars = ax.bar(x_imp, improvements, color=colors_imp, edgecolor='white', width=0.5)
 for bar, val in zip(bars, improvements):
     h = bar.get_height()
-    ax.text(bar.get_x() + bar.get_width()/2., h + (0.5 if h > 0 else -2), f'{val:+.1f}%', ha='center', va='bottom' if h > 0 else 'top', fontsize=13, fontweight='bold')
+    ax.text(bar.get_x() + bar.get_width()/2., h + (0.5 if h > 0 else -2), f'{val:+.1f}%', ha='center', va='bottom' if h > 0 else 'top', fontsize=14, fontweight='bold')
 
 ax.set_ylabel('Improvement (%)')
 ax.set_title('RAG Enhancement: Improvement over Base LLM')
@@ -225,7 +226,7 @@ colors_heat = ['#4CAF50' if r >= 95 else '#FF9800' if r >= 80 else '#F44336' for
 bars = ax.barh(cat_names, recalls, color=colors_heat, edgecolor='white', height=0.6)
 for bar, val, total in zip(bars, recalls, totals):
     ax.text(bar.get_width() + 1, bar.get_y() + bar.get_height()/2., 
-            f'{val:.1f}% (n={total})', va='center', fontsize=12, fontweight='bold')
+            f'{val:.1f}% (n={total})', va='center', fontsize=14, fontweight='bold')
 
 ax.set_xlabel('Recall (%)')
 ax.set_title('LLM+RAG Detection Recall by Vulnerability Category')
@@ -259,7 +260,7 @@ for i, (data, method) in enumerate(zip(radar_data, methods)):
     ax.fill(angles, values, alpha=0.1, color=colors_radar[i])
 
 ax.set_xticks(angles[:-1])
-ax.set_xticklabels(radar_metrics, fontsize=13)
+ax.set_xticklabels(radar_metrics, fontsize=14)
 ax.set_ylim(0, 1.1)
 ax.set_title('Multi-dimensional Performance Radar Chart', pad=20, fontsize=16)
 ax.legend(loc='upper right', bbox_to_anchor=(1.3, 1.1))
@@ -278,7 +279,7 @@ rec_vals = [m["recall"] for m in metrics_all]
 for i, method in enumerate(methods):
     ax.scatter(fpr_vals[i], rec_vals[i], s=250, c=colors_scatter[i], label=method, zorder=5, edgecolors='white', linewidth=2)
     offset = (10, 10) if method != "LLM Base" else (10, -15)
-    ax.annotate(method, (fpr_vals[i], rec_vals[i]), textcoords="offset points", xytext=offset, fontsize=12, fontweight='bold')
+    ax.annotate(method, (fpr_vals[i], rec_vals[i]), textcoords="offset points", xytext=offset, fontsize=14, fontweight='bold')
 
 ax.plot([0, 1], [0, 1], 'k--', alpha=0.3, label='Random Classifier')
 ax.set_xlabel('False Positive Rate')
@@ -302,8 +303,8 @@ cm = np.array([[m["tp"], m["fn"]], [m["fp"], m["tn"]]])
 im = ax.imshow(cm, interpolation='nearest', cmap='Blues')
 ax.set_xticks([0, 1])
 ax.set_yticks([0, 1])
-ax.set_xticklabels(['Predicted\nVulnerable', 'Predicted\nSafe'], fontsize=13)
-ax.set_yticklabels(['Actually\nVulnerable', 'Actually\nSafe'], fontsize=13)
+ax.set_xticklabels(['Predicted\nVulnerable', 'Predicted\nSafe'], fontsize=14)
+ax.set_yticklabels(['Actually\nVulnerable', 'Actually\nSafe'], fontsize=14)
 ax.set_title('Confusion Matrix: LLM+RAG Method', fontsize=16)
 
 for i in range(2):

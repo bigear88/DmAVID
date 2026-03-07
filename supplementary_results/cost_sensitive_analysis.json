@@ -2,67 +2,67 @@
   {
     "fn_fp_cost_ratio": 1,
     "best_method": "llm_rag",
-    "best_cost": 36,
+    "best_cost": 58,
     "all_costs": {
-      "slither": 94,
-      "llm_base": 99,
-      "llm_rag": 36,
-      "hybrid": 56
+      "slither": 92,
+      "llm_base": 95,
+      "llm_rag": 58,
+      "hybrid": 59
     }
   },
   {
     "fn_fp_cost_ratio": 2,
     "best_method": "llm_rag",
-    "best_cost": 39,
+    "best_cost": 59,
     "all_costs": {
-      "slither": 101,
-      "llm_base": 100,
-      "llm_rag": 39,
-      "hybrid": 58
+      "slither": 100,
+      "llm_base": 95,
+      "llm_rag": 59,
+      "hybrid": 60
     }
   },
   {
     "fn_fp_cost_ratio": 5,
     "best_method": "llm_rag",
-    "best_cost": 48,
+    "best_cost": 62,
     "all_costs": {
-      "slither": 122,
-      "llm_base": 103,
-      "llm_rag": 48,
-      "hybrid": 64
+      "slither": 124,
+      "llm_base": 95,
+      "llm_rag": 62,
+      "hybrid": 63
     }
   },
   {
     "fn_fp_cost_ratio": 10,
     "best_method": "llm_rag",
-    "best_cost": 63,
+    "best_cost": 67,
     "all_costs": {
-      "slither": 157,
-      "llm_base": 108,
-      "llm_rag": 63,
-      "hybrid": 74
+      "slither": 164,
+      "llm_base": 95,
+      "llm_rag": 67,
+      "hybrid": 68
     }
   },
   {
     "fn_fp_cost_ratio": 20,
     "best_method": "llm_rag",
-    "best_cost": 93,
+    "best_cost": 77,
     "all_costs": {
-      "slither": 227,
-      "llm_base": 118,
-      "llm_rag": 93,
-      "hybrid": 94
+      "slither": 244,
+      "llm_base": 95,
+      "llm_rag": 77,
+      "hybrid": 78
     }
   },
   {
     "fn_fp_cost_ratio": 50,
     "best_method": "llm_base",
-    "best_cost": 148,
+    "best_cost": 95,
     "all_costs": {
-      "slither": 437,
-      "llm_base": 148,
-      "llm_rag": 183,
-      "hybrid": 154
+      "slither": 484,
+      "llm_base": 95,
+      "llm_rag": 107,
+      "hybrid": 108
     }
   }
 ]
