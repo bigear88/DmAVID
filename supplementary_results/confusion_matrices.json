@@ -70,17 +70,17 @@
   "hybrid": {
     "confusion_matrix": {
       "TP": 142,
-      "TN": 42,
-      "FP": 58,
+      "TN": 48,
+      "FP": 52,
       "FN": 1
     },
     "metrics": {
-      "Accuracy": 0.7572,
-      "Precision": 0.71,
+      "Accuracy": 0.7819,
+      "Precision": 0.732,
       "Recall": 0.993,
-      "F1": 0.828,
-      "Specificity": 0.42,
-      "FPR": 0.58,
+      "F1": 0.8427,
+      "Specificity": 0.48,
+      "FPR": 0.52,
       "Total": 243
     }
   }

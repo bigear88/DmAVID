@@ -2,23 +2,28 @@
 """
 Experiment 5: Optimized Hybrid Framework (Slither + LLM + RAG).
 
-Two-Stage Fusion Architecture for maximizing F1 score:
+Two-Stage Fusion Architecture with GPTScan-style pre-filtering for maximizing F1:
 
-  Stage 1 – Independent LLM+RAG analysis (preserves high Precision from Exp.4)
+  Stage 1 – Independent LLM+RAG analysis with dual-context retrieval
              LLM judges the contract WITHOUT seeing Slither results to avoid
-             false-positive contamination.
+             false-positive contamination. RAG retrieves BOTH vulnerable and
+             safe patterns for balanced assessment.
 
-  Stage 2 – Conditional Slither-guided re-evaluation
-             Only triggered when LLM said SAFE but Slither reported High/Medium
+  Stage 2 – Conditional Slither-guided re-evaluation with pre-filtering
+             Only triggered when LLM said SAFE but Slither reported HIGH/MEDIUM
              alerts AND the LLM confidence was below the threshold.
-             This targeted second pass rescues missed vulnerabilities (boosts Recall)
-             without flooding the model with Slither noise.
+             GPTScan-style domain rules pre-filter Slither findings to remove
+             known false-positive patterns BEFORE sending to LLM.
 
-Additional optimizations:
+Key optimizations (based on literature review):
+  - GPTScan-style pre-filtering: Domain-specific rules filter Slither false positives
+    before LLM stage [Sun et al., ICSE 2024].
+  - Dual-context RAG: Retrieves both vulnerable AND safe examples for balanced
+    assessment [RAG-SmartVuln, 2024].
   - Confidence-weighted decision: high-confidence LLM verdicts are never overridden.
   - Anti-bias prompt engineering: Stage 2 prompt explicitly warns about Slither's
-    ~87% FPR and instructs the LLM to only flip its decision when it finds
-    independently confirmable exploitable flaws.
+    ~84% FPR and instructs the LLM to only flip its decision when it finds
+    independently confirmable exploitable flaws [AdaTaint, 2025].
 
 Prerequisites:
     - Run `build_knowledge_base.py` first to populate the ChromaDB vector store.
@@ -60,9 +65,39 @@ MAX_CODE_LENGTH = 12_000
 # ── Fusion Thresholds ──────────────────────────────────────────────
 # Stage 2 is ONLY triggered when ALL three conditions are met:
 #   1) Stage 1 LLM said SAFE
-#   2) Slither has at least one High/Medium alert
+#   2) Slither has at least one High/Medium alert that PASSES pre-filtering
 #   3) Stage 1 confidence < REEVAL_CONFIDENCE_THRESHOLD
-REEVAL_CONFIDENCE_THRESHOLD = 0.7
+REEVAL_CONFIDENCE_THRESHOLD = 0.75
+
+# ── GPTScan-style Pre-filtering Rules ─────────────────────────────
+# Maps Slither check names to domain-specific validation rules.
+# A Slither finding is only kept if it passes the corresponding rule.
+# This eliminates known false-positive patterns before LLM analysis.
+SLITHER_FP_FILTERS = {
+    # Reentrancy: Only keep if function has external call + state change
+    "reentrancy-eth": {"require_patterns": [".call", ".send", ".transfer"],
+                        "exclude_patterns": ["nonReentrant", "ReentrancyGuard", "mutex"]},
+    "reentrancy-no-eth": {"require_patterns": [".call"],
+                           "exclude_patterns": ["nonReentrant", "ReentrancyGuard"]},
+    "reentrancy-benign": {"drop": True},  # Always FP
+    "reentrancy-events": {"drop": True},  # Event ordering, not exploitable
+    # Arithmetic: Only keep for Solidity < 0.8
+    "divide-before-multiply": {"require_solc_below": "0.8"},
+    # Access control: Keep high-confidence only
+    "unprotected-upgrade": {"min_confidence": "High"},
+    "suicidal": {"min_confidence": "Medium"},
+    # Known FP patterns
+    "solc-version": {"drop": True},
+    "pragma": {"drop": True},
+    "naming-convention": {"drop": True},
+    "assembly": {"drop": True},
+    "low-level-calls": {"drop": True},  # Raw low-level call alert (too noisy)
+    "dead-code": {"drop": True},
+    "constable-states": {"drop": True},
+    "immutable-states": {"drop": True},
+    "external-function": {"drop": True},
+    "too-many-digits": {"drop": True},
+}
 
 SOLC_VERSIONS = {
     "0.4": "0.4.26", "0.5": "0.5.17", "0.6": "0.6.12",
@@ -125,19 +160,91 @@ def run_slither_quick(filepath: str, timeout: int = 30) -> list[dict]:
 
 
 # ============================================================
+# GPTScan-style Pre-filtering (Sun et al., ICSE 2024)
+# ============================================================
+
+def prefilter_slither_findings(
+    findings: list[dict],
+    code: str,
+    solc_version: str = "0.8.0",
+) -> list[dict]:
+    """Pre-filter Slither findings using domain-specific rules.
+
+    Removes known false-positive patterns BEFORE they reach the LLM,
+    preventing false-positive contamination in Stage 2.
+    Based on GPTScan filtering strategy (Sun et al., ICSE 2024).
+
+    Returns:
+        Filtered list of findings that passed domain validation.
+    """
+    code_lower = code.lower()
+    filtered = []
+
+    for finding in findings:
+        check_name = finding.get("check", "unknown")
+        desc = finding.get("description", "").lower()
+
+        # Look up filter rules
+        rules = SLITHER_FP_FILTERS.get(check_name)
+
+        if rules is None:
+            # No specific rule → keep the finding as-is
+            filtered.append(finding)
+            continue
+
+        if rules.get("drop"):
+            # Explicitly drop this type (known noise)
+            continue
+
+        # Check min_confidence requirement
+        min_conf = rules.get("min_confidence")
+        if min_conf:
+            conf = finding.get("confidence", "Low")
+            conf_levels = {"High": 3, "Medium": 2, "Low": 1, "Informational": 0}
+            if conf_levels.get(conf, 0) < conf_levels.get(min_conf, 0):
+                continue
+
+        # Check require_patterns: at least one must be present in code
+        require = rules.get("require_patterns", [])
+        if require and not any(p.lower() in code_lower for p in require):
+            continue
+
+        # Check exclude_patterns: if any is present, the code has mitigations
+        exclude = rules.get("exclude_patterns", [])
+        if exclude and any(p.lower() in code_lower for p in exclude):
+            continue
+
+        # Check Solidity version requirement
+        req_below = rules.get("require_solc_below")
+        if req_below and solc_version >= req_below:
+            continue
+
+        filtered.append(finding)
+
+    return filtered
+
+
+# ============================================================
 # STAGE 1: Independent LLM+RAG Analysis (No Slither Influence)
 # ============================================================
 
 STAGE1_PROMPT = """You are an expert smart contract security auditor with access to a vulnerability knowledge base.
 You will be provided with:
 1. The Solidity source code to analyze
-2. Relevant vulnerability patterns and examples retrieved from the knowledge base (RAG context)
+2. VULNERABLE patterns retrieved from the knowledge base — code that IS vulnerable
+3. SAFE patterns retrieved from the knowledge base — code that is properly secured
 
-Use the RAG context to make more informed decisions. Compare the code against both vulnerable AND safe patterns from the knowledge base.
-If the code follows safe patterns (like ReentrancyGuard, SafeMath, onlyOwner), it is likely SAFE even if it contains some risky operations.
+ANALYSIS METHODOLOGY:
+- First, check if the code matches any VULNERABLE patterns from the knowledge base
+- Then, check if the code has MITIGATIONS matching SAFE patterns (ReentrancyGuard, SafeMath, onlyOwner, require checks)
+- A contract is VULNERABLE only if it matches vulnerable patterns AND lacks proper mitigations
+- A contract is SAFE if it either doesn't match vulnerable patterns, OR it has effective mitigations
 
-IMPORTANT: Be balanced in your assessment. Not every contract with external calls is vulnerable.
-A contract is SAFE if it properly implements security best practices.
+IMPORTANT: Be balanced. Not every contract with external calls is vulnerable.
+Rate your confidence from 0.0 to 1.0:
+- 0.9-1.0: Very clear vulnerable/safe pattern match
+- 0.7-0.8: Likely but some ambiguity
+- 0.5-0.6: Uncertain, borderline case
 
 Respond in JSON format ONLY:
 {
@@ -145,7 +252,7 @@ Respond in JSON format ONLY:
   "confidence": 0.0-1.0,
   "vulnerability_types": ["type1"],
   "severity": "High/Medium/Low/None",
-  "reasoning": "brief explanation referencing the RAG context"
+  "reasoning": "brief explanation referencing both vulnerable and safe patterns"
 }"""
 
 
@@ -255,9 +362,9 @@ However, a static analysis tool (Slither) has flagged the following alerts:
 {slither_alerts}
 
 CRITICAL CONTEXT:
-- Slither has a known FALSE POSITIVE RATE of approximately 87%
-- Most Slither alerts are informational, stylistic, or represent patterns that are
-  properly mitigated in well-written contracts
+- Slither has a known FALSE POSITIVE RATE of approximately 84%
+- The alerts below have ALREADY been pre-filtered to remove known noise patterns
+- Despite pre-filtering, many alerts may still be false positives
 - Your previous independent analysis found the contract SAFE
 
 YOUR TASK:
@@ -406,6 +513,11 @@ def hybrid_decision(
     """
     slither_high_med = [f for f in slither_findings if f["impact"] in ["High", "Medium"]]
 
+    # ── GPTScan-style Pre-filtering (before Stage 2) ──
+    solc_ver = detect_solc_version(code)
+    filtered_findings = prefilter_slither_findings(slither_findings, code, solc_ver)
+    filtered_high_med = [f for f in filtered_findings if f["impact"] in ["High", "Medium"]]
+
     # ── Stage 1: Independent LLM+RAG ──
     s1 = run_stage1(code, knowledge_base, llm_client)
 
@@ -426,10 +538,10 @@ def hybrid_decision(
         final_confidence = s1["confidence"]
         final_reasoning = s1["reasoning"]
 
-    elif len(slither_high_med) > 0:
-        # LLM says SAFE with LOW confidence AND Slither has alerts → re-evaluate
+    elif len(filtered_high_med) > 0:
+        # LLM says SAFE with LOW confidence AND pre-filtered Slither has alerts → re-evaluate
         decision_path = "stage2_reeval"
-        s2 = run_stage2(code, slither_findings, s1["confidence"], llm_client)
+        s2 = run_stage2(code, filtered_findings, s1["confidence"], llm_client)
         stage2_result = s2
 
         if s2["predicted_vulnerable"]:
@@ -470,9 +582,11 @@ def hybrid_decision(
         "stage1_reasoning": s1["reasoning"],
         "rag_retrieval_time": s1.get("rag_retrieval_time", 0),
         "rag_retrieved_categories": s1.get("rag_retrieved_categories", []),
-        # Slither details
+        # Slither details (before and after pre-filtering)
         "slither_findings_count": len(slither_findings),
         "slither_high_med": len(slither_high_med),
+        "slither_filtered_count": len(filtered_findings),
+        "slither_filtered_high_med": len(filtered_high_med),
         # Stage 2 details (if triggered)
         "stage2_triggered": stage2_result is not None,
         "stage2_vulnerable": stage2_result["predicted_vulnerable"] if stage2_result else None,
@@ -632,10 +746,18 @@ def main():
     for p, cnt in sorted(paths.items()):
         print(f"    {p}: {cnt} ({cnt/total*100:.1f}%)")
 
+    # Pre-filtering statistics
+    total_raw = sum(r["slither_findings_count"] for r in results)
+    total_filtered = sum(r["slither_filtered_count"] for r in results)
+    filter_reduction = (1 - total_filtered / total_raw) * 100 if total_raw > 0 else 0
+    print(f"\n  Pre-filtering Statistics:")
+    print(f"    Raw Slither findings: {total_raw}")
+    print(f"    After pre-filtering: {total_filtered} ({filter_reduction:.1f}% reduction)")
+
     # Comparison with LLM+RAG baseline
-    llm_rag_f1 = 0.8917
+    llm_rag_f1 = 0.8304
     improvement = ((f1 - llm_rag_f1) / llm_rag_f1) * 100
-    print(f"\n  vs LLM+RAG (F1=89.17%): {'IMPROVED' if f1 > llm_rag_f1 else 'NOT IMPROVED'} "
+    print(f"\n  vs LLM+RAG (F1={llm_rag_f1:.4f}): {'IMPROVED' if f1 > llm_rag_f1 else 'NOT IMPROVED'} "
           f"({'+' if improvement > 0 else ''}{improvement:.2f}%)")
 
     # Per-category recall
