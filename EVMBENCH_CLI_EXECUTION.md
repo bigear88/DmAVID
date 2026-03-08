@@ -1,4 +1,4 @@
-# EVMbench 延伸實驗 — Claude CLI 執行指南
+# EVMbench 延伸實驗 — CLI 執行指南
 
 ## 概述
 

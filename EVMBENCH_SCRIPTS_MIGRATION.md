@@ -487,7 +487,7 @@ Per audit and overall across all 10 audits.
 3. **Metrics Dashboard**: Real-time visualization of detection scores
 4. **Prompt Optimization**: A/B test different prompts for Stage 1/Stage 2
 5. **Extended Benchmarks**: Run on full 40-audit EVMbench dataset
-6. **Model Variants**: Test with different LLM models (GPT-4, Claude, etc.)
+6. **Model Variants**: Test with different LLM models (GPT-4, Gemini, etc.)
 7. **Ablation Studies**: Remove RAG, remove Slither pre-filtering, etc.
 
 ## References
