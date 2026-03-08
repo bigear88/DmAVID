@@ -1,0 +1,64 @@
+{
+  "reproduction_date": "2026-03-04",
+  "environment": {
+    "platform": "Windows 10 WSL2 Ubuntu",
+    "python_version": "3.12.3",
+    "working_directory": "C:\\github\\defi-llm-vulnerability-detection"
+  },
+  "setup_commands": [
+    "git clone https://github.com/bigear88/defi-llm-vulnerability-detection.git",
+    "python3 -m venv venv",
+    "source venv/bin/activate",
+    "pip install -r requirements.txt",
+    "pip install solc-select mythril",
+    "solc-select install 0.4.26 0.5.17 0.6.12 0.7.6 0.8.0 0.8.17 0.8.20",
+    "export OPENAI_API_KEY='sk-proj-...'"
+  ],
+  "results": {
+    "slither": {
+      "accuracy": 0.613,
+      "precision": 0.610,
+      "recall": 0.951,
+      "f1_score": 0.743,
+      "fpr": 0.870,
+      "avg_time_seconds": 2.20
+    },
+    "mythril": {
+      "accuracy": 0.725,
+      "precision": 1.000,
+      "recall": 0.450,
+      "f1_score": 0.621,
+      "fpr": 0.000,
+      "avg_time_seconds": 36.24
+    },
+    "llm_base": {
+      "accuracy": 0.593,
+      "precision": 0.592,
+      "recall": 0.993,
+      "f1_score": 0.742,
+      "fpr": 0.980,
+      "avg_time_seconds": 2.81
+    },
+    "llm_rag": {
+      "accuracy": 0.852,
+      "precision": 0.809,
+      "recall": 0.979,
+      "f1_score": 0.886,
+      "fpr": 0.330,
+      "avg_time_seconds": 2.76
+    },
+    "hybrid": {
+      "accuracy": 0.770,
+      "precision": 0.723,
+      "recall": 0.986,
+      "f1_score": 0.834,
+      "fpr": 0.540
+    }
+  },
+  "key_findings": [
+    "LLM+RAG achieves highest F1 score (88.6%)",
+    "RAG reduces FPR from 98% to 33% (66.3% reduction)",
+    "Mythril has zero false positives but low recall (45%)",
+    "Slither has high recall (95.1%) but high FPR (87%)"
+  ]
+}

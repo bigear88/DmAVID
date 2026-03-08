@@ -128,8 +128,13 @@ data/smartbugs_curated_repo/
 data/smartbugs_wild_repo/
 data/smartbugs_curated/
 data/smartbugs_wild/
+data/evmbench_repos/
 .env
+env.sh
 secrets.yaml
+
+# Claude Code
+.claude/
 
 # API keys
 *api_key*
