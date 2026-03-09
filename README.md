@@ -82,7 +82,7 @@ defi-llm-vulnerability-detection/
 │   ├── fig4_sup3_cost_sensitive.png      # ★ Cost-sensitive analysis
 │   └── fig4_sup4_vuln_type_recall.png    # ★ Per-type recall comparison
 ├── data/                                 # Dataset
-│   └── dataset_1000.json                 # 1000 contracts (143 vulnerable + 857 safe)
+│   └── dataset_1000.json                 # Full dataset pool; evaluation uses 243 contracts (143 vulnerable + 100 safe)
 ├── logs/                                 # Experiment execution logs
 │   ├── slither_log.txt
 │   ├── mythril_log.txt
@@ -260,43 +260,44 @@ All experiments were conducted on 2025-02-20 using the SmartBugs dataset (243 co
 
 | Method | Recall | Precision | F1 Score | FPR | Avg Time (s) |
 |--------|--------|-----------|----------|-----|---------------|
-| **Slither** (Static Analysis) | 95.10% | 60.99% | 74.32% | 87.00% | 2.20 |
-| **Mythril** (Symbolic Execution) | 45.00% | 100.00% | 62.07% | 0.00% | 36.24 |
-| **LLM Base** (GPT-4.1-mini) | 99.30% | 59.17% | 74.15% | 98.00% | 2.81 |
-| **LLM + RAG** | 97.90% | 80.92% | **88.61%** | 33.00% | 2.76 |
-| **Hybrid** (Slither + LLM + RAG) | 98.60% | 72.31% | 83.43% | 54.00% | 5.76 |
+| **Slither** (Static Analysis) | 94.41% | 61.64% | 74.59% | 84.00% | 2.20 |
+| **Mythril** (Symbolic Execution) | 75.00% | 71.43% | 73.17% | 30.00% | 36.24 |
+| **LLM Base** (GPT-4.1-mini) | 100.00% | 60.08% | 75.07% | 95.00% | 2.81 |
+| **LLM + RAG** | 99.30% | 71.36% | 83.04% | 57.00% | 2.76 |
+| **Hybrid** (Slither + LLM + RAG) | 99.30% | 73.20% | **84.27%** | 52.00% | 5.76 |
 
 ### Confusion Matrices
 
 | Method | TP | TN | FP | FN | Total |
 |--------|----|----|----|----|-------|
-| Slither | 136 | 13 | 87 | 7 | 243 |
-| Mythril | 9 | 20 | 0 | 11 | 40 |
-| LLM Base | 142 | 2 | 98 | 1 | 243 |
-| LLM + RAG | 140 | 67 | 33 | 3 | 243 |
-| Hybrid | 141 | 46 | 54 | 2 | 243 |
+| Slither | 135 | 16 | 84 | 8 | 243 |
+| Mythril | 15 | 14 | 6 | 5 | 40 |
+| LLM Base | 143 | 5 | 95 | 0 | 243 |
+| LLM + RAG | 142 | 43 | 57 | 1 | 243 |
+| Hybrid | 142 | 48 | 52 | 1 | 243 |
 
 ### McNemar Statistical Tests
 
-| Comparison | χ² | p-value | Significant |
-|------------|-----|---------|-------------|
-| LLM+RAG vs LLM Base | 57.37 | <0.001 | *** |
-| LLM+RAG vs Hybrid | 9.50 | 0.002 | ** |
-| Hybrid vs Slither | 2.78 | 0.095 | n.s. |
-| LLM+RAG vs Slither | 0.90 | 0.343 | n.s. |
+| Comparison | Shared Contracts | χ² | p-value | Significant |
+|------------|-----------------|-----|---------|-------------|
+| LLM+RAG vs LLM Base | 243 | 33.23 | <0.001 | *** |
+| LLM+RAG vs Hybrid | 243 | 1.23 | 0.267 | n.s. |
+| Hybrid vs LLM Base | 243 | 35.02 | <0.001 | *** |
+| LLM+RAG vs Slither | 143 | 4.00 | 0.046 | * |
+| Hybrid vs Slither | 143 | 4.00 | 0.046 | * |
 
 ### Cost-Sensitive Analysis
 
-LLM+RAG achieves the lowest total misclassification cost across all FN/FP cost ratios (1:1 to 10:1), confirming its superiority in practical deployment scenarios.
+Hybrid achieves the lowest total misclassification cost across most FN/FP cost ratios (1:1 to 20:1), confirming its superiority in practical deployment scenarios. Only at extreme ratios (50:1+) does LLM Base become optimal due to its perfect recall.
 
 ### Key Findings
 
-1. **LLM + RAG achieves the highest F1 score (88.61%)**, demonstrating that retrieval-augmented generation significantly improves detection accuracy.
-2. **RAG dramatically reduces false positive rate**: From 98.00% (LLM Base) to 33.00% (LLM + RAG), a 66.3% reduction.
-3. **McNemar test confirms statistical significance**: The improvement of LLM+RAG over LLM Base is statistically significant (p<0.001).
-4. **Mythril has zero false positives but low recall (45.00%)**: Extremely conservative, only flagging confirmed vulnerabilities.
-5. **Slither is fast but noisy**: High recall (95.10%) but very high FPR (87.00%).
-6. **The Hybrid framework balances speed and accuracy**: Strong recall (98.60%) with reasonable processing time (5.76s).
+1. **Hybrid framework achieves the highest F1 score (84.27%)**, demonstrating that combining static analysis with LLM + RAG significantly improves detection accuracy.
+2. **RAG dramatically reduces false positive rate**: From 95.00% (LLM Base) to 57.00% (LLM + RAG), a 40.0% reduction.
+3. **McNemar test confirms statistical significance**: The improvement of LLM+RAG over LLM Base (p<0.001) and Hybrid over LLM Base (p<0.001) are both statistically significant.
+4. **Mythril has very high precision (71.43%) with moderate recall (75.00%)**: Conservative approach with good balance on its smaller sample.
+5. **Slither is fast but noisy**: High recall (94.41%) but very high FPR (84.00%).
+6. **LLM Base achieves perfect recall (100.00%)** but at the cost of very high FPR (95.00%), making it suitable only when missing vulnerabilities is unacceptable.
 
 ## EVMbench Extended Validation (Mar 2026)
 
@@ -397,3 +398,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Slither Team for the static analysis framework
 - Mythril Team for the symbolic execution engine
 - OpenAI & Paradigm for the EVMbench benchmark
+
