@@ -14,6 +14,7 @@ This research project implements a **hybrid vulnerability detection framework** 
 - **RAG Enhancement**: Retrieval-Augmented Generation with DeFi-specific vulnerability knowledge base
 - **Hybrid Approach**: Combines static analysis (Slither) with LLM + RAG semantic analysis
 - **DeFi-Specific**: Focuses on DeFi protocol vulnerabilities including flash loan attacks, price oracle manipulation, and reentrancy
+- **AegisAgent Multi-Agent Framework**: Adversarial self-strengthening via Teacher-Student-Red Team iteration
 - **Real Experiments**: All results are from actual tool execution on SmartBugs dataset
 - **Statistical Validation**: McNemar tests and cost-sensitive analysis included
 - **Full Reproducibility**: One-click reproduction script and raw prediction CSV provided
@@ -39,6 +40,13 @@ defi-llm-vulnerability-detection/
 │   ├── 07_generate_charts.py            # Generate result charts
 │   ├── 08_supplementary_analysis.py     # Confusion matrices, McNemar, cost analysis
 │   ├── 09_gen_supplementary_charts.py   # Generate supplementary charts
+│   ├── 09_run_evmbench_detect.py        # EVMbench LLM+RAG detection
+│   ├── 10_run_evmbench_hybrid.py        # EVMbench Hybrid detection
+│   ├── 11_teacher_challenge.py          # ★ AegisAgent Teacher Agent
+│   ├── 12_red_team_generate.py          # ★ AegisAgent Red Team Agent
+│   ├── 13_foundry_validate.py           # ★ AegisAgent Foundry Validator
+│   ├── 14_adversarial_loop.py           # ★ AegisAgent Dual-layer Iteration Loop
+│   ├── 15_evmbench_reeval.py            # ★ EVMbench Post-iteration Re-evaluation
 │   └── run_experiment.py                # Legacy experiment runner
 ├── src/                                  # Source code modules
 │   ├── detection/
@@ -54,7 +62,11 @@ defi-llm-vulnerability-detection/
 │   ├── mythril/mythril_results.json
 │   ├── llm_base/llm_base_results.json
 │   ├── llm_rag/llm_rag_results.json
-│   └── hybrid/hybrid_results.json
+│   ├── hybrid/hybrid_results.json
+│   ├── evmbench/                         # EVMbench baseline results
+│   ├── evmbench_reeval/                  # ★ Post-iteration EVMbench results
+│   ├── iteration_history/                # ★ Adversarial iteration F1 progression
+│   └── red_team/                         # ★ Red Team adversarial variants
 ├── supplementary_results/                # ★ Supplementary analysis results
 │   ├── confusion_matrices.json           # Confusion matrices for all methods
 │   ├── mcnemar_tests.json                # McNemar statistical tests
@@ -352,6 +364,88 @@ python scripts/09_run_evmbench_detect.py
 
 # Run Hybrid detection on EVMbench
 python scripts/10_run_evmbench_hybrid.py
+```
+
+## AegisAgent: Adversarial Self-Strengthening Framework (Mar 2026)
+
+To address the low EVMbench detection rate (7.69%), we developed **AegisAgent**, a multi-agent adversarial iteration framework that continuously improves detection coverage through Teacher-Student-Red Team interactions.
+
+### Framework Architecture
+
+```
+┌──────────────────────────────────────────────────────────┐
+│                    OUTER LOOP                            │
+│  Teacher Agent scans SWC categories for uncovered types  │
+│                                                          │
+│  ┌────────────────────────────────────────────────────┐  │
+│  │                 INNER LOOP                         │  │
+│  │  1. Teacher generates Solidity challenges          │  │
+│  │  2. Student (LLM+RAG) detects vulnerabilities      │  │
+│  │  3. Red Team transforms false negatives            │  │
+│  │  4. Foundry validates adversarial variants          │  │
+│  │  5. Valid patterns → RAG knowledge base             │  │
+│  │  6. Check convergence (ΔF1 < 0.01)                 │  │
+│  └────────────────────────────────────────────────────┘  │
+└──────────────────────────────────────────────────────────┘
+```
+
+### Five-Agent Design
+
+| Agent | Role | Function |
+|-------|------|----------|
+| **Teacher** | Challenge Generator | Generates vulnerability challenges per SWC category (difficulty 1→5) |
+| **Student** | Detector | LLM+RAG detection on challenge contracts |
+| **Red Team** | Adversary | Transforms FN cases via variable renaming, code reordering, dead code injection |
+| **Foundry Validator** | Verifier | Compiles variants and runs PoC exploitation tests |
+| **Knowledge Updater** | Learner | Adds validated patterns to RAG knowledge base |
+
+### Adversarial Iteration Results
+
+**Configuration**: 3 outer rounds, 3 inner rounds, 10 challenges/round, budget $10 USD
+
+| Vulnerability Type | Final F1 | Inner Rounds | FN | Red Team Variants |
+|-------------------|----------|-------------|-----|-------------------|
+| integer_overflow | 1.0000 | 1 | 0 | 0 |
+| access_control | 1.0000 | 2 | 1→0 | 3 |
+| delegatecall | 0.9474 | 2 | 1→1 | 6 |
+| arithmetic | 1.0000 | 1 | 0 | 0 |
+
+- **Best F1**: 1.0000 | **Average F1**: 0.9868
+- **API Cost**: $4.03 (40.3% of budget)
+- **Teacher generated**: 40 real Solidity challenge contracts
+- **Red Team produced**: 9 adversarial variants
+
+### EVMbench Re-evaluation (Post-Iteration)
+
+After adversarial iteration, we re-evaluated on the same 10 EVMbench audits:
+
+| Metric | Baseline | Enhanced | Improvement |
+|--------|----------|----------|-------------|
+| **Detect Rate** | 7.69% (3/39) | **28.21% (11/39)** | **+266.67%** |
+
+| Audit | Gold | Baseline | Enhanced |
+|-------|------|----------|----------|
+| 2024-01-curves | 4 | 2 | 1 |
+| 2024-01-renft | 6 | 0 | **4** |
+| 2024-08-phi | 6 | 0 | **2** |
+| 2024-12-secondswap | 3 | 1 | **3 (100%)** |
+| 2026-01-tempo | 2 | 0 | **1** |
+| Others (5 audits) | 18 | 0 | 0 |
+
+### Running AegisAgent
+
+```bash
+# Install Foundry (required for validation)
+curl -L https://foundry.paradigm.xyz | bash && foundryup
+
+# Run adversarial iteration (dry-run first)
+python scripts/14_adversarial_loop.py --dry-run
+
+# Run with real API calls (3 rounds, $10 budget)
+python scripts/14_adversarial_loop.py --max-rounds 3 --budget 10.0
+
+# Re-evaluate on EVMbench
+python scripts/15_evmbench_reeval.py
 ```
 
 ## Limitations
