@@ -1,0 +1,54 @@
+[
+  {
+    "round_num": 1,
+    "f1_score": 0.85,
+    "precision": 0.8263287696221329,
+    "recall": 0.8971354989217504,
+    "false_positive_rate": 0.06942848076767301,
+    "tokens_used": 22156,
+    "cost_usd": 0.8905486562442266,
+    "new_patterns_added": 0,
+    "fn_count": 4,
+    "fp_count": 2,
+    "timestamp": "2026-03-12T08:43:45.027970"
+  },
+  {
+    "round_num": 1,
+    "f1_score": 0.85,
+    "precision": 0.8993235569815211,
+    "recall": 0.8065769210632927,
+    "false_positive_rate": 0.046845663958376325,
+    "tokens_used": 34508,
+    "cost_usd": 1.280004433402372,
+    "new_patterns_added": 0,
+    "fn_count": 3,
+    "fp_count": 1,
+    "timestamp": "2026-03-12T08:43:45.040266"
+  },
+  {
+    "round_num": 2,
+    "f1_score": 0.85,
+    "precision": 0.9084003483037821,
+    "recall": 0.9165433541326632,
+    "false_positive_rate": 0.07745315713712878,
+    "tokens_used": 31069,
+    "cost_usd": 1.0156427644881878,
+    "new_patterns_added": 0,
+    "fn_count": 1,
+    "fp_count": 2,
+    "timestamp": "2026-03-12T08:43:45.052513"
+  },
+  {
+    "round_num": 2,
+    "f1_score": 0.85,
+    "precision": 0.8673155773094859,
+    "recall": 0.8634056934761318,
+    "false_positive_rate": 0.05913066184141068,
+    "tokens_used": 26942,
+    "cost_usd": 1.3294281742923952,
+    "new_patterns_added": 0,
+    "fn_count": 1,
+    "fp_count": 1,
+    "timestamp": "2026-03-12T08:43:45.064878"
+  }
+]

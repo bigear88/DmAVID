@@ -1,0 +1,96 @@
+{
+  "patterns": {
+    "variant_0_1": {
+      "vulnerability_type": "reentrancy",
+      "pattern": "challenge_0_reentrancy\n# adversarial variation 2",
+      "confidence": 0.834791816159989,
+      "source": "red_team_variant"
+    },
+    "variant_1_1": {
+      "vulnerability_type": "reentrancy",
+      "pattern": "challenge_1_reentrancy\n# adversarial variation 2",
+      "confidence": 0.8114162012032178,
+      "source": "red_team_variant"
+    },
+    "variant_1_2": {
+      "vulnerability_type": "reentrancy",
+      "pattern": "challenge_1_reentrancy\n# adversarial variation 3",
+      "confidence": 0.7677687574952228,
+      "source": "red_team_variant"
+    },
+    "variant_2_0": {
+      "vulnerability_type": "reentrancy",
+      "pattern": "challenge_2_reentrancy\n# adversarial variation 1",
+      "confidence": 0.9844443031983818,
+      "source": "red_team_variant"
+    },
+    "variant_2_1": {
+      "vulnerability_type": "reentrancy",
+      "pattern": "challenge_2_reentrancy\n# adversarial variation 2",
+      "confidence": 0.8762311929984239,
+      "source": "red_team_variant"
+    },
+    "variant_2_2": {
+      "vulnerability_type": "reentrancy",
+      "pattern": "challenge_2_reentrancy\n# adversarial variation 3",
+      "confidence": 0.8707885237101426,
+      "source": "red_team_variant"
+    },
+    "variant_0_2": {
+      "vulnerability_type": "reentrancy",
+      "pattern": "challenge_0_reentrancy\n# adversarial variation 3",
+      "confidence": 0.9827109339363662,
+      "source": "red_team_variant"
+    },
+    "variant_3_0": {
+      "vulnerability_type": "reentrancy",
+      "pattern": "challenge_3_reentrancy\n# adversarial variation 1",
+      "confidence": 0.9760527083186703,
+      "source": "red_team_variant"
+    },
+    "variant_3_1": {
+      "vulnerability_type": "reentrancy",
+      "pattern": "challenge_3_reentrancy\n# adversarial variation 2",
+      "confidence": 0.7727419956880752,
+      "source": "red_team_variant"
+    },
+    "variant_0_0": {
+      "vulnerability_type": "reentrancy",
+      "pattern": "challenge_0_reentrancy\n# adversarial variation 1",
+      "confidence": 0.9067844781305128,
+      "source": "red_team_variant"
+    },
+    "variant_1_0": {
+      "vulnerability_type": "reentrancy",
+      "pattern": "challenge_1_reentrancy\n# adversarial variation 1",
+      "confidence": 0.8902139371756639,
+      "source": "red_team_variant"
+    },
+    "variant_3_2": {
+      "vulnerability_type": "reentrancy",
+      "pattern": "challenge_3_access_control\n# adversarial variation 3",
+      "confidence": 0.8923998942808781,
+      "source": "red_team_variant"
+    }
+  },
+  "vulnerability_types": {
+    "reentrancy": [
+      "variant_0_1",
+      "variant_1_1",
+      "variant_1_2",
+      "variant_2_0",
+      "variant_2_1",
+      "variant_2_2",
+      "variant_0_2",
+      "variant_3_0",
+      "variant_3_1",
+      "variant_0_0",
+      "variant_1_0",
+      "variant_3_2"
+    ]
+  },
+  "metadata": {
+    "last_updated": "2026-03-12T08:59:40.409225",
+    "total_patterns": 12
+  }
+}

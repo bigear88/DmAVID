@@ -1,0 +1,67 @@
+[
+  {
+    "round_num": 1,
+    "f1_score": 0.7764435803760864,
+    "precision": 0.8600303040139003,
+    "recall": 0.8819421995731425,
+    "false_positive_rate": 0.0584764320467263,
+    "tokens_used": 24169,
+    "cost_usd": 0.7343976285521915,
+    "new_patterns_added": 11,
+    "fn_count": 1,
+    "fp_count": 0,
+    "timestamp": "2026-03-12T08:43:38.251142"
+  },
+  {
+    "round_num": 1,
+    "f1_score": 0.9408238029276018,
+    "precision": 0.9032645397290312,
+    "recall": 0.8041719169781355,
+    "false_positive_rate": 0.07042436903811818,
+    "tokens_used": 26785,
+    "cost_usd": 0.8636903627694518,
+    "new_patterns_added": 0,
+    "fn_count": 3,
+    "fp_count": 0,
+    "timestamp": "2026-03-12T08:43:38.252491"
+  },
+  {
+    "round_num": 2,
+    "f1_score": 0.7635597419270547,
+    "precision": 0.8613147710570599,
+    "recall": 0.8686996853566562,
+    "false_positive_rate": 0.07253852156643303,
+    "tokens_used": 24724,
+    "cost_usd": 1.3080503436976105,
+    "new_patterns_added": 1,
+    "fn_count": 3,
+    "fp_count": 0,
+    "timestamp": "2026-03-12T08:43:38.253866"
+  },
+  {
+    "round_num": 2,
+    "f1_score": 0.9319122046404901,
+    "precision": 0.8464613735946666,
+    "recall": 0.7648362606241417,
+    "false_positive_rate": 0.04635107296732903,
+    "tokens_used": 26472,
+    "cost_usd": 1.2672579347453872,
+    "new_patterns_added": 0,
+    "fn_count": 2,
+    "fp_count": 0,
+    "timestamp": "2026-03-12T08:43:38.255446"
+  },
+  {
+    "round_num": 3,
+    "f1_score": 0.7631520414654335,
+    "precision": 0.8905207208250766,
+    "recall": 0.9115550694954944,
+    "false_positive_rate": 0.04689516680165298,
+    "tokens_used": 26584,
+    "cost_usd": 0.61794526815004,
+    "new_patterns_added": 0,
+    "fn_count": 2,
+    "fp_count": 2,
+    "timestamp": "2026-03-12T08:43:38.257079"
+  }
+]
