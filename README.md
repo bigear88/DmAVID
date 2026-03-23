@@ -47,6 +47,8 @@ defi-llm-vulnerability-detection/
 │   ├── 13_foundry_validate.py           # ★ DavidAgent Foundry Validator
 │   ├── 14_adversarial_loop.py           # ★ DavidAgent Dual-layer Iteration Loop
 │   ├── 15_evmbench_reeval.py            # ★ EVMbench Post-iteration Re-evaluation
+│   ├── 16_vuln_intel_collector.py       # ★ DavidAgent Zero-day Intel Collector
+│   ├── 17_auto_research.py             # ★ DavidAgent AutoResearch Coordinator
 │   └── run_experiment.py                # Legacy experiment runner
 ├── src/                                  # Source code modules
 │   ├── detection/
@@ -206,7 +208,23 @@ This project uses the following datasets:
 
 All evaluations are performed at the **contract level** (binary classification: vulnerable / safe). A contract is classified as "vulnerable" if the detection method identifies at least one vulnerability of any type.
 
-## Methodology
+## Research Methodology (DSR)
+
+This research follows the **Design Science Research** methodology (Hevner et al., 2004) in five phases:
+
+1. **Problem Identification**: DeFi security challenges — 410 incidents / $2.013B losses in 2024; traditional tools insufficient for DeFi-specific vulnerabilities
+2. **Solution Design**: DavidAgent five-agent adversarial self-strengthening framework with real-time zero-day intelligence
+3. **Development**: Three-stage hybrid detection pipeline + AutoResearch parameter optimization
+4. **Demonstration**: SmartBugs (243 contracts) + EVMbench (10 projects/39 vulns) + GPT-4.1-mini vs GPT-5.x comparison
+5. **Evaluation**: F1/Recall/FPR metrics, McNemar tests, cost-sensitive analysis, ablation studies
+
+### Datasets
+
+| Dataset | Size | Purpose |
+|---------|------|---------|
+| SmartBugs Curated | 143 vulnerable + 100 safe = 243 contracts | Baseline evaluation (SWC categories) |
+| EVMbench | 10 real DeFi/L2/NFT projects, 39 High-severity vulns | Real-world generalization validation |
+| Zero-day Intel | 100+ DeFi attack events (2024-2026) from DeFiHackLabs, Rekt News, SlowMist, Code4rena | Dynamic knowledge base update |
 
 ### Hybrid Detection Framework
 
