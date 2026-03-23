@@ -28,7 +28,7 @@ BASE_DIR = os.environ.get(
     "DAVID_BASE_DIR",
     "/home/curtis/defi-llm-vulnerability-detection"
 )
-MODEL = "gpt-4.1-mini"
+MODEL = os.environ.get("DAVID_MODEL", "gpt-4.1-mini")
 DEFAULT_VARIANTS_PER_CASE = 3
 TRANSFORMATION_TYPES = [
     "variable_renaming",

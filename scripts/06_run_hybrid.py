@@ -56,7 +56,7 @@ OUTPUT_FILE = os.path.join(BASE_DIR, "experiments", "hybrid", "hybrid_results.js
 CHROMA_DIR = os.path.join(BASE_DIR, "data", "chroma_kb")
 
 # ── Config ─────────────────────────────────────────────────────────
-LLM_MODEL = "gpt-4.1-mini"
+LLM_MODEL = os.environ.get("DAVID_MODEL", "gpt-4.1-mini")
 EMBEDDING_MODEL = "text-embedding-3-small"
 COLLECTION_NAME = "vuln_knowledge"
 RAG_TOP_K = 5

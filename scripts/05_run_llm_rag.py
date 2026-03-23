@@ -15,7 +15,7 @@ DATASET_FILE = os.path.join(BASE_DIR, "data/dataset_1000.json")
 OUTPUT_FILE = os.path.join(BASE_DIR, "experiments/llm_rag/llm_rag_results.json")
 
 client = OpenAI()
-MODEL = "gpt-4.1-mini"
+MODEL = os.environ.get("DAVID_MODEL", "gpt-4.1-mini")
 
 # ============================================================
 # RAG Knowledge Base: Vulnerability patterns and examples

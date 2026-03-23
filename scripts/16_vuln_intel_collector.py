@@ -50,7 +50,7 @@ SCRIPTS_DIR = os.path.join(BASE_DIR, "scripts")
 INTEL_DIR = os.path.join(BASE_DIR, "data", "vuln_intel")
 DEFIHACKLABS_DIR = os.path.join(BASE_DIR, "data", "defihacklabs")
 
-MODEL = "gpt-4.1-mini"
+MODEL = os.environ.get("DAVID_MODEL", "gpt-4.1-mini")
 
 DEFIHACKLABS_REPO = "https://github.com/SunWeb3Sec/DeFiHackLabs.git"
 REKT_RSS_URL = "https://rekt.news/rss/"

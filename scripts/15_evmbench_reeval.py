@@ -24,7 +24,7 @@ from datetime import datetime
 from openai import OpenAI
 
 client = OpenAI()
-MODEL = "gpt-4.1-mini"
+MODEL = os.environ.get("DAVID_MODEL", "gpt-4.1-mini")
 
 # Base directory for knowledge bases and results
 BASE_DIR = os.environ.get("DAVID_BASE_DIR", "/home/curtis/defi-llm-vulnerability-detection")

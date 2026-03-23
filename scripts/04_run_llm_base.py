@@ -20,7 +20,7 @@ DATASET_FILE = os.path.join(BASE_DIR, "data/dataset_1000.json")
 OUTPUT_FILE = os.path.join(BASE_DIR, "experiments/llm_base/llm_base_results.json")
 
 client = OpenAI()
-MODEL = "gpt-4.1-mini"
+MODEL = os.environ.get("DAVID_MODEL", "gpt-4.1-mini")
 
 SYSTEM_PROMPT = """You are an expert smart contract security auditor specializing in Ethereum Solidity contracts. 
 Your task is to analyze the given Solidity source code and determine if it contains security vulnerabilities.

@@ -60,7 +60,7 @@ CONFIGS_DIR = os.path.join(BASE_DIR, "configs")
 EXPERIMENTS_DIR = os.path.join(BASE_DIR, "experiments", "autoresearch")
 DATASET_FILE = os.path.join(BASE_DIR, "data", "dataset_1000.json")
 
-MODEL = "gpt-4.1-mini"
+MODEL = os.environ.get("DAVID_MODEL", "gpt-4.1-mini")
 EMBEDDING_MODEL = "text-embedding-3-small"
 
 # Approximate pricing for gpt-4.1-mini (USD per token)

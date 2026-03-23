@@ -31,7 +31,7 @@ TEACHER_CHALLENGES_DIR = os.path.join(EXPERIMENTS_DIR, "teacher_challenges")
 KNOWLEDGE_FILE = os.path.join(KNOWLEDGE_DIR, "vulnerability_knowledge.json")
 
 client = OpenAI()
-MODEL = "gpt-4.1-mini"
+MODEL = os.environ.get("DAVID_MODEL", "gpt-4.1-mini")
 
 # SWC vulnerability categories (from Smart Contract Weakness Classification Registry)
 SWC_CATEGORIES = {
