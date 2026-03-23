@@ -35,6 +35,9 @@ from typing import Any, Dict, List, Optional
 import requests
 from openai import OpenAI
 
+import sys; sys.path.insert(0, os.path.dirname(__file__))
+from _model_compat import token_param, MODEL as COMPAT_MODEL
+
 # ── Logging ────────────────────────────────────────────────────────
 logging.basicConfig(
     level=logging.INFO,
@@ -117,7 +120,7 @@ def _extract_attack_info_llm(text: str) -> Dict[str, Any]:
             model=MODEL,
             messages=[{"role": "user", "content": prompt}],
             temperature=0.0,
-            max_tokens=512,
+            **token_param(512),
         )
         content = response.choices[0].message.content.strip()
         # Strip markdown fences if present

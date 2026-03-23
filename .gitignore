@@ -150,3 +150,11 @@ secrets.yaml
 *.pth
 *.h5
 *.pkl
+test_api.py
+setup_env.sh
+debug_dataset.py
+check_dataset.py
+extract_contracts.py
+fix_paths.py
+show_results.py
+patch_for_gptoss.sh

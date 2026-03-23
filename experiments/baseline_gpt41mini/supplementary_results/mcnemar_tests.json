@@ -1,0 +1,67 @@
+[
+  {
+    "method_a": "LLM + RAG",
+    "method_b": "Slither",
+    "common_contracts": 143,
+    "both_correct": 134,
+    "a_correct_b_wrong": 8,
+    "a_wrong_b_correct": 1,
+    "both_wrong": 0,
+    "chi2_statistic": 4.0,
+    "p_value": 0.0455,
+    "significant_at_005": true,
+    "significant_at_001": false
+  },
+  {
+    "method_a": "LLM + RAG",
+    "method_b": "LLM Base (GPT-4.1-mini)",
+    "common_contracts": 243,
+    "both_correct": 147,
+    "a_correct_b_wrong": 38,
+    "a_wrong_b_correct": 1,
+    "both_wrong": 57,
+    "chi2_statistic": 33.2308,
+    "p_value": 0.0,
+    "significant_at_005": true,
+    "significant_at_001": true
+  },
+  {
+    "method_a": "Hybrid (Slither + LLM + RAG)",
+    "method_b": "Slither",
+    "common_contracts": 143,
+    "both_correct": 134,
+    "a_correct_b_wrong": 8,
+    "a_wrong_b_correct": 1,
+    "both_wrong": 0,
+    "chi2_statistic": 4.0,
+    "p_value": 0.0455,
+    "significant_at_005": true,
+    "significant_at_001": false
+  },
+  {
+    "method_a": "Hybrid (Slither + LLM + RAG)",
+    "method_b": "LLM Base (GPT-4.1-mini)",
+    "common_contracts": 243,
+    "both_correct": 145,
+    "a_correct_b_wrong": 45,
+    "a_wrong_b_correct": 3,
+    "both_wrong": 50,
+    "chi2_statistic": 35.0208,
+    "p_value": 0.0,
+    "significant_at_005": true,
+    "significant_at_001": true
+  },
+  {
+    "method_a": "LLM + RAG",
+    "method_b": "Hybrid (Slither + LLM + RAG)",
+    "common_contracts": 243,
+    "both_correct": 181,
+    "a_correct_b_wrong": 4,
+    "a_wrong_b_correct": 9,
+    "both_wrong": 49,
+    "chi2_statistic": 1.2308,
+    "p_value": 0.267257,
+    "significant_at_005": false,
+    "significant_at_001": false
+  }
+]

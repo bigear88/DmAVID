@@ -21,6 +21,9 @@ import random
 from datetime import datetime
 from openai import OpenAI
 
+import sys; sys.path.insert(0, os.path.dirname(__file__))
+from _model_compat import token_param, MODEL as COMPAT_MODEL
+
 random.seed(42)
 
 # Configuration
@@ -121,7 +124,7 @@ def generate_challenge(vuln_type, difficulty_level, knowledge_base):
                 {"role": "user", "content": prompt}
             ],
             temperature=0.7,
-            max_tokens=2048,
+            **token_param(2048),
         )
 
         content = response.choices[0].message.content.strip()

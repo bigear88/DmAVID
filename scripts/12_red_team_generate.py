@@ -16,6 +16,9 @@ import logging
 
 from openai import OpenAI
 
+import sys; sys.path.insert(0, os.path.dirname(__file__))
+from _model_compat import token_param, MODEL as COMPAT_MODEL
+
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
@@ -137,7 +140,7 @@ Transformed contract:"""
         logger.info(f"Generating variant with {transformation_type} for {vuln_type}")
         response = client.chat.completions.create(
             model=MODEL,
-            max_tokens=4096,
+            **token_param(4096),
             messages=[
                 {
                     "role": "user",
@@ -199,7 +202,7 @@ Test contract code:"""
         logger.info(f"Generating PoC template for {vuln_type}")
         response = client.chat.completions.create(
             model=MODEL,
-            max_tokens=2048,
+            **token_param(2048),
             messages=[
                 {
                     "role": "user",

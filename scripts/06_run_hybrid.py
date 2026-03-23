@@ -45,6 +45,8 @@ from datetime import datetime
 
 import chromadb
 from openai import OpenAI
+import sys as _sys; _sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _model_compat import token_param
 
 random.seed(42)
 
@@ -106,14 +108,57 @@ SOLC_VERSIONS = {
 
 
 # ============================================================
-# RAG Module: import from 05_run_llm_rag
+# RAG Module: ChromaDB Knowledge Base + Context Builder
 # ============================================================
 sys.path.insert(0, SCRIPT_DIR)
-from importlib import import_module
+import chromadb
+from typing import List
 
-_rag_module = import_module("05_run_llm_rag")
-VulnKnowledgeBase = _rag_module.VulnKnowledgeBase
-build_rag_context = _rag_module.build_rag_context
+class VulnKnowledgeBase:
+    """ChromaDB-based vulnerability knowledge retrieval for RAG."""
+
+    def __init__(self, chroma_dir: str, collection_name: str, llm_client: OpenAI):
+        self.client = chromadb.PersistentClient(path=chroma_dir)
+        self.collection = self.client.get_collection(collection_name)
+        self.entry_count = self.collection.count()
+        self.llm_client = llm_client
+
+    def _embed_query(self, text: str) -> List[float]:
+        text = text[:8000]
+        resp = self.llm_client.embeddings.create(
+            model="text-embedding-3-small", input=text
+        )
+        return resp.data[0].embedding
+
+    def retrieve(self, code: str, top_k: int = 5) -> list:
+        emb = self._embed_query(code)
+        results = self.collection.query(
+            query_embeddings=[emb], n_results=min(top_k, self.entry_count)
+        )
+        entries = []
+        if results and results["documents"]:
+            for i, doc in enumerate(results["documents"][0]):
+                meta = results["metadatas"][0][i] if results["metadatas"] else {}
+                entries.append({
+                    "content": doc,
+                    "category": meta.get("category", "unknown"),
+                    "title": meta.get("title", ""),
+                    "distance": results["distances"][0][i] if results["distances"] else 0,
+                })
+        return entries
+
+
+def build_rag_context(retrieved: list) -> str:
+    """Build RAG context string from retrieved knowledge entries."""
+    if not retrieved:
+        return "No relevant vulnerability patterns found."
+    parts = []
+    for e in retrieved:
+        cat = e.get("category", "unknown").upper()
+        title = e.get("title", "")
+        content = e.get("content", "")[:500]
+        parts.append(f"--- {cat}: {title} ---\n{content}")
+    return "\n\n".join(parts)
 
 
 # ============================================================
@@ -293,7 +338,7 @@ def run_stage1(
                     {"role": "user", "content": user_msg},
                 ],
                 temperature=0.1,
-                max_tokens=1024,
+                **token_param(1024),
                 seed=42,
             )
             llm_time = time.time() - llm_start
@@ -438,7 +483,7 @@ def run_stage2(
                     {"role": "user", "content": f"## Contract Code:\n```solidity\n{code}\n```"},
                 ],
                 temperature=0.1,
-                max_tokens=1024,
+                **token_param(1024),
                 seed=42,
             )
             llm_time = time.time() - llm_start

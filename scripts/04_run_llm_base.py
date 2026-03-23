@@ -13,9 +13,12 @@ import random
 from datetime import datetime
 from openai import OpenAI
 
+import sys; sys.path.insert(0, os.path.dirname(__file__))
+from _model_compat import token_param, MODEL as COMPAT_MODEL
+
 random.seed(42)
 
-BASE_DIR = "/home/ubuntu/defi-vuln-detection"
+BASE_DIR = "/home/curtis/defi-llm-vulnerability-detection"
 DATASET_FILE = os.path.join(BASE_DIR, "data/dataset_1000.json")
 OUTPUT_FILE = os.path.join(BASE_DIR, "experiments/llm_base/llm_base_results.json")
 
@@ -63,7 +66,7 @@ def analyze_contract_with_llm(code, max_retries=2):
                     {"role": "user", "content": f"Analyze this Solidity contract for vulnerabilities:\n\n```solidity\n{code}\n```"}
                 ],
                 temperature=0.1,
-                max_tokens=1024,
+                **token_param(1024),
                 seed=42
             )
             elapsed = time.time() - start_time

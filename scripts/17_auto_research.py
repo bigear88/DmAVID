@@ -44,6 +44,9 @@ from typing import Any, Dict, List, Optional, Tuple
 import numpy as np
 from openai import OpenAI
 
+import sys; sys.path.insert(0, os.path.dirname(__file__))
+from _model_compat import token_param, MODEL as COMPAT_MODEL
+
 # ── Logging ────────────────────────────────────────────────────────
 logging.basicConfig(
     level=logging.INFO,
@@ -431,7 +434,7 @@ def _live_evaluation(
                     {"role": "user", "content": f"```solidity\n{code}\n```"},
                 ],
                 temperature=0.1,
-                max_tokens=1024,
+                **token_param(1024),
             )
             usage = response.usage
             in_tok = usage.prompt_tokens if usage else 0

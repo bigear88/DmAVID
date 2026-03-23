@@ -23,6 +23,9 @@ from pathlib import Path
 from datetime import datetime
 from openai import OpenAI
 
+import sys; sys.path.insert(0, os.path.dirname(__file__))
+from _model_compat import token_param, MODEL as COMPAT_MODEL
+
 client = OpenAI()
 MODEL = os.environ.get("DAVID_MODEL", "gpt-4.1-mini")
 
@@ -379,7 +382,7 @@ Only report HIGH severity issues."""
             model=MODEL,
             messages=[{"role": "user", "content": prompt}],
             temperature=0.1,
-            max_tokens=4000,
+            **token_param(4000),
             seed=42
         )
         elapsed = time.time() - start_time
@@ -448,7 +451,7 @@ Respond ONLY:
                 model=MODEL,
                 messages=[{"role": "user", "content": judge_prompt}],
                 temperature=0.0,
-                max_tokens=300
+                **token_param(300),
             )
             content = response.choices[0].message.content.strip()
 
