@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-AegisAgent Teacher Agent: Generates vulnerability challenges for Student Agent.
+DavidAgent Teacher Agent: Generates vulnerability challenges for Student Agent.
 
 The Teacher Agent is responsible for:
 1. Identifying uncovered vulnerability types from the SWC Registry
@@ -24,7 +24,7 @@ from openai import OpenAI
 random.seed(42)
 
 # Configuration
-BASE_DIR = os.environ.get("AEGIS_BASE_DIR", "/home/curtis/defi-llm-vulnerability-detection")
+BASE_DIR = os.environ.get("DAVID_BASE_DIR", "/home/curtis/defi-llm-vulnerability-detection")
 KNOWLEDGE_DIR = os.path.join(BASE_DIR, "scripts/knowledge")
 EXPERIMENTS_DIR = os.path.join(BASE_DIR, "experiments")
 TEACHER_CHALLENGES_DIR = os.path.join(EXPERIMENTS_DIR, "teacher_challenges")

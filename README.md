@@ -14,7 +14,7 @@ This research project implements a **hybrid vulnerability detection framework** 
 - **RAG Enhancement**: Retrieval-Augmented Generation with DeFi-specific vulnerability knowledge base
 - **Hybrid Approach**: Combines static analysis (Slither) with LLM + RAG semantic analysis
 - **DeFi-Specific**: Focuses on DeFi protocol vulnerabilities including flash loan attacks, price oracle manipulation, and reentrancy
-- **AegisAgent Multi-Agent Framework**: Adversarial self-strengthening via Teacher-Student-Red Team iteration
+- **DavidAgent Multi-Agent Framework**: Adversarial self-strengthening via Teacher-Student-Red Team iteration
 - **Real Experiments**: All results are from actual tool execution on SmartBugs dataset
 - **Statistical Validation**: McNemar tests and cost-sensitive analysis included
 - **Full Reproducibility**: One-click reproduction script and raw prediction CSV provided
@@ -42,10 +42,10 @@ defi-llm-vulnerability-detection/
 │   ├── 09_gen_supplementary_charts.py   # Generate supplementary charts
 │   ├── 09_run_evmbench_detect.py        # EVMbench LLM+RAG detection
 │   ├── 10_run_evmbench_hybrid.py        # EVMbench Hybrid detection
-│   ├── 11_teacher_challenge.py          # ★ AegisAgent Teacher Agent
-│   ├── 12_red_team_generate.py          # ★ AegisAgent Red Team Agent
-│   ├── 13_foundry_validate.py           # ★ AegisAgent Foundry Validator
-│   ├── 14_adversarial_loop.py           # ★ AegisAgent Dual-layer Iteration Loop
+│   ├── 11_teacher_challenge.py          # ★ DavidAgent Teacher Agent
+│   ├── 12_red_team_generate.py          # ★ DavidAgent Red Team Agent
+│   ├── 13_foundry_validate.py           # ★ DavidAgent Foundry Validator
+│   ├── 14_adversarial_loop.py           # ★ DavidAgent Dual-layer Iteration Loop
 │   ├── 15_evmbench_reeval.py            # ★ EVMbench Post-iteration Re-evaluation
 │   └── run_experiment.py                # Legacy experiment runner
 ├── src/                                  # Source code modules
@@ -366,9 +366,9 @@ python scripts/09_run_evmbench_detect.py
 python scripts/10_run_evmbench_hybrid.py
 ```
 
-## AegisAgent: Adversarial Self-Strengthening Framework (Mar 2026)
+## DavidAgent: Adversarial Self-Strengthening Framework (Mar 2026)
 
-To address the low EVMbench detection rate (7.69%), we developed **AegisAgent**, a multi-agent adversarial iteration framework that continuously improves detection coverage through Teacher-Student-Red Team interactions.
+To address the low EVMbench detection rate (7.69%), we developed **DavidAgent**, a multi-agent adversarial iteration framework that continuously improves detection coverage through Teacher-Student-Red Team interactions.
 
 ### Framework Architecture
 
@@ -432,7 +432,7 @@ After adversarial iteration, we re-evaluated on the same 10 EVMbench audits:
 | 2026-01-tempo | 2 | 0 | **1** |
 | Others (5 audits) | 18 | 0 | 0 |
 
-### Running AegisAgent
+### Running DavidAgent
 
 ```bash
 # Install Foundry (required for validation)

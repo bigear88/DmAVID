@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-AegisAgent Red Team Agent: Generates adversarial contract variants from false negative cases.
+DavidAgent Red Team Agent: Generates adversarial contract variants from false negative cases.
 
 This script analyzes false negative results from the Student Agent and generates
 semantically equivalent contract variants that preserve the original vulnerabilities.
@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 
 # Constants
 BASE_DIR = os.environ.get(
-    "AEGIS_BASE_DIR",
+    "DAVID_BASE_DIR",
     "/home/curtis/defi-llm-vulnerability-detection"
 )
 MODEL = "gpt-4.1-mini"
@@ -230,7 +230,7 @@ Test contract code:"""
 def main():
     """Main execution flow for red team agent."""
     logger.info("=" * 60)
-    logger.info("AegisAgent Red Team Agent Starting")
+    logger.info("DavidAgent Red Team Agent Starting")
     logger.info("=" * 60)
 
     # Determine paths

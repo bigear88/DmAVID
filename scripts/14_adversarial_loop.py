@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-AegisAgent Adversarial Iteration Loop: Orchestrates the dual-layer iteration process.
+DavidAgent Adversarial Iteration Loop: Orchestrates the dual-layer iteration process.
 
 This script implements the core adversarial iteration mechanism:
 - Outer loop: Vulnerability type coverage (Teacher Agent)
@@ -28,7 +28,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Base directory setup
-BASE_DIR = os.environ.get("AEGIS_BASE_DIR", "/home/curtis/defi-llm-vulnerability-detection")
+BASE_DIR = os.environ.get("DAVID_BASE_DIR", "/home/curtis/defi-llm-vulnerability-detection")
 SCRIPTS_DIR = os.path.join(BASE_DIR, "scripts")
 
 
@@ -589,7 +589,7 @@ def print_summary(history: List[Dict], config: IterationConfig):
 def main():
     """Main execution flow."""
     parser = argparse.ArgumentParser(
-        description="AegisAgent Adversarial Iteration Loop Orchestrator"
+        description="DavidAgent Adversarial Iteration Loop Orchestrator"
     )
     parser.add_argument("--max-rounds", type=int, default=5,
                        help="Maximum outer iteration rounds")

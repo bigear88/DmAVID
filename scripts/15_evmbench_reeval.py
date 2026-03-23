@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-AegisAgent EVMbench Re-evaluation: Re-tests on EVMbench after adversarial enhancement
+DavidAgent EVMbench Re-evaluation: Re-tests on EVMbench after adversarial enhancement
 
 This script runs after the adversarial iteration loop (14_adversarial_iterate.py) to
 measure improvements in vulnerability detection on the EVMbench benchmark.
@@ -27,7 +27,7 @@ client = OpenAI()
 MODEL = "gpt-4.1-mini"
 
 # Base directory for knowledge bases and results
-BASE_DIR = os.environ.get("AEGIS_BASE_DIR", "/home/curtis/defi-llm-vulnerability-detection")
+BASE_DIR = os.environ.get("DAVID_BASE_DIR", "/home/curtis/defi-llm-vulnerability-detection")
 EVMBENCH_DIR = os.path.join(BASE_DIR, "data", "evmbench")
 REPOS_DIR = os.path.join(BASE_DIR, "data", "evmbench_repos")
 KB_DIR = os.path.join(BASE_DIR, "knowledge_bases")
@@ -529,7 +529,7 @@ def load_baseline_results():
 
 def main():
     print("=" * 80)
-    print("AegisAgent EVMbench Re-evaluation: Post-Adversarial Iteration")
+    print("DavidAgent EVMbench Re-evaluation: Post-Adversarial Iteration")
     print(f"Timestamp: {datetime.now().isoformat()}")
     print("=" * 80)
 
