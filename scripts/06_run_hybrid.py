@@ -301,6 +301,128 @@ Respond in JSON format ONLY:
 }"""
 
 
+SLITHER_INFORMED_PROMPT = """You are an expert smart contract security auditor with access to:
+1. A vulnerability knowledge base (RAG context)
+2. Static analysis results from Slither (pre-filtered, informational only)
+
+ANALYSIS METHODOLOGY:
+- Use the RAG knowledge base to identify known vulnerability patterns
+- Use Slither results as HINTS, not as ground truth (Slither has ~84% false positive rate)
+- If Slither flags something, investigate it carefully but make YOUR OWN independent judgment
+- If Slither finds nothing, still check for vulnerabilities that static analysis cannot detect
+- Check for mitigations: ReentrancyGuard, SafeMath, onlyOwner, require checks
+- A contract is VULNERABLE only if you find exploitable flaws WITHOUT proper mitigations
+
+IMPORTANT: Slither alerts are informational context. Many are false positives.
+Your job is to use your semantic understanding to make the FINAL determination.
+
+Rate your confidence from 0.0 to 1.0:
+- 0.9-1.0: Very clear pattern match (with or without Slither confirmation)
+- 0.7-0.8: Likely, Slither and RAG patterns both suggest it
+- 0.5-0.6: Uncertain, conflicting signals
+
+Respond in JSON format ONLY:
+{{
+  "has_vulnerability": true/false,
+  "confidence": 0.0-1.0,
+  "vulnerability_types": ["type1"],
+  "severity": "High/Medium/Low/None",
+  "reasoning": "brief explanation",
+  "slither_useful": true/false
+}}"""
+
+
+def run_slither_informed(
+    code: str,
+    knowledge_base: VulnKnowledgeBase,
+    slither_findings: list,
+    llm_client: OpenAI,
+    max_retries: int = 2,
+) -> dict:
+    """Slither-First Informed: Slither results as context for LLM+RAG.
+
+    Unlike Stage 1 (LLM-only) or Stage 2 (Slither-override), this approach
+    gives LLM ALL information upfront and lets it make the final call.
+    Reference: GPTScan (Sun et al., ICSE 2024) - static analysis + GPT confirmation.
+    """
+    if len(code) > MAX_CODE_LENGTH:
+        code = code[:MAX_CODE_LENGTH] + "\n// ... (truncated)"
+
+    # Semantic retrieval from ChromaDB
+    retrieval_start = time.time()
+    retrieved = knowledge_base.retrieve(code, top_k=RAG_TOP_K)
+    retrieval_time = time.time() - retrieval_start
+    rag_context = build_rag_context(retrieved)
+    retrieved_categories = list({e["category"] for e in retrieved})
+
+    # Format Slither findings as informational context
+    if slither_findings:
+        slither_ctx = "## Static Analysis (Slither) Results:\n"
+        for f in slither_findings[:8]:  # Limit to top 8
+            slither_ctx += f"- [{f['impact']}] {f['check']}: {f['description'][:150]}\n"
+    else:
+        slither_ctx = "## Static Analysis (Slither) Results:\nNo alerts found."
+
+    user_msg = (
+        f"## RAG Knowledge Base Context:\n{rag_context}\n\n"
+        f"{slither_ctx}\n\n"
+        f"## Contract Code:\n```solidity\n{code}\n```"
+    )
+
+    for attempt in range(max_retries + 1):
+        try:
+            llm_start = time.time()
+            resp = llm_client.chat.completions.create(
+                model=LLM_MODEL,
+                messages=[
+                    {"role": "system", "content": SLITHER_INFORMED_PROMPT},
+                    {"role": "user", "content": user_msg},
+                ],
+                temperature=0.1,
+                **token_param(1024),
+                seed=42,
+            )
+            llm_time = time.time() - llm_start
+            content_str = resp.choices[0].message.content.strip()
+            json_match = re.search(r"\{[^{}]*\}", content_str, re.DOTALL)
+            parsed = json.loads(json_match.group()) if json_match else json.loads(content_str)
+            return {
+                "success": True,
+                "predicted_vulnerable": parsed.get("has_vulnerability", False),
+                "confidence": parsed.get("confidence", 0.5),
+                "vulnerability_types": parsed.get("vulnerability_types", []),
+                "severity": parsed.get("severity", "None"),
+                "reasoning": parsed.get("reasoning", ""),
+                "slither_useful": parsed.get("slither_useful", False),
+                "rag_retrieval_time": round(retrieval_time, 3),
+                "rag_retrieved_categories": retrieved_categories,
+                "time_seconds": round(llm_time, 3),
+                "tokens_used": resp.usage.total_tokens if resp.usage else 0,
+                "error": None,
+            }
+        except json.JSONDecodeError:
+            has_vuln = any(w in content_str.lower() for w in ["true", "vulnerable"])
+            return {
+                "success": True, "predicted_vulnerable": has_vuln, "confidence": 0.5,
+                "vulnerability_types": [], "severity": "Unknown", "reasoning": content_str[:200],
+                "slither_useful": False, "rag_retrieval_time": round(retrieval_time, 3),
+                "rag_retrieved_categories": retrieved_categories,
+                "time_seconds": round(time.time() - llm_start, 3), "tokens_used": 0,
+                "error": "json_parse_error",
+            }
+        except Exception as e:
+            if attempt < max_retries:
+                time.sleep(2 ** attempt)
+                continue
+            return {
+                "success": False, "predicted_vulnerable": False, "confidence": 0,
+                "vulnerability_types": [], "severity": "None", "reasoning": "",
+                "slither_useful": False, "rag_retrieval_time": 0,
+                "rag_retrieved_categories": [],
+                "time_seconds": 0, "tokens_used": 0, "error": str(e),
+            }
+
+
 def run_stage1(
     code: str,
     knowledge_base: VulnKnowledgeBase,
@@ -730,6 +852,18 @@ def hybrid_decision(
         decision_path = "evidence_accumulation"
         final_reasoning = " | ".join(evidence_parts) + f" → score={evidence_score:.2f}"
 
+    elif strategy == "slither_first":
+        # ═══ Strategy D: Slither-First Informed (GPTScan-style) ═══
+        # Slither runs first, results passed as informational context to LLM+RAG
+        # LLM ALWAYS makes the final decision with full information
+        si = run_slither_informed(code, knowledge_base, filtered_findings, llm_client)
+        decision_path = "slither_first_informed"
+        final_vulnerable = si["predicted_vulnerable"]
+        final_confidence = si["confidence"]
+        final_reasoning = si["reasoning"]
+        # Override s1 with slither-informed results for output
+        s1 = si
+
     else:
         # Fallback to old two-stage
         decision_path = "stage1_vulnerable" if s1["predicted_vulnerable"] else "stage1_safe"
@@ -795,8 +929,8 @@ def hybrid_decision(
 def main():
     import argparse
     parser = argparse.ArgumentParser(description="DavidAgent Hybrid Framework")
-    parser.add_argument("--strategy", choices=["ensemble", "dual_role", "evidence", "all"],
-                        default="dual_role", help="Fusion strategy (default: dual_role)")
+    parser.add_argument("--strategy", choices=["ensemble", "dual_role", "evidence", "slither_first", "all"],
+                        default="slither_first", help="Fusion strategy (default: slither_first)")
     parser.add_argument("--alpha", type=float, default=0.7, help="Ensemble weight for LLM (default: 0.7)")
     args = parser.parse_args()
 
