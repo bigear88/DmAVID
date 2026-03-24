@@ -191,18 +191,20 @@ This project uses the following datasets:
 - Random seed = 42 for reproducibility
 - Safe contracts verified by Slither initial scan (no high-severity findings)
 
-### Vulnerability Categories (SmartBugs Curated)
+### Vulnerability Categories (SmartBugs Curated, 143 contracts)
 
 | Category | Count |
 |----------|-------|
+| Unchecked Low-Level Calls | 52 |
 | Reentrancy | 31 |
-| Access Control | 17 |
-| Arithmetic (Integer Overflow) | 22 |
-| Unchecked Return Values | 16 |
+| Access Control | 18 |
+| Arithmetic (Integer Overflow) | 15 |
+| Bad Randomness | 8 |
 | Denial of Service | 6 |
-| Front Running | 4 |
 | Time Manipulation | 5 |
-| Other | 42 |
+| Front Running | 4 |
+| Short Addresses | 1 |
+| Other | 3 |
 
 ### Evaluation Level
 
