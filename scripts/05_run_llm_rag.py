@@ -243,7 +243,10 @@ def analyze_with_rag(code, max_retries=2):
             elapsed = time.time() - start
             content = resp.choices[0].message.content.strip()
             
-            json_match = re.search(r'\{[^{}]*\}', content, re.DOTALL)
+            # Try nested JSON first, then simple JSON
+            json_match = re.search(r'\{[\s\S]*\}', content)
+            if not json_match:
+                json_match = re.search(r'\{[^{}]*\}', content, re.DOTALL)
             parsed = json.loads(json_match.group()) if json_match else json.loads(content)
             
             return {
@@ -260,11 +263,15 @@ def analyze_with_rag(code, max_retries=2):
             }
         except json.JSONDecodeError:
             has_vuln = any(w in content.lower() for w in ["true", "vulnerable", "yes"])
+            # Try to extract confidence from raw text
+            conf_match = re.search(r'"confidence"\s*:\s*([\d.]+)', content)
+            conf = float(conf_match.group(1)) if conf_match else 0.5
             return {
                 "success": True, "predicted_vulnerable": has_vuln,
-                "confidence": 0.5, "vulnerability_types": [], "severity": "Unknown",
-                "reasoning": content[:200], "rag_context_length": len(rag_context),
-                "time_seconds": round(time.time()-start, 3), "tokens_used": 0,
+                "confidence": conf, "vulnerability_types": [], "severity": "Unknown",
+                "reasoning": content[:500], "rag_context_length": len(rag_context),
+                "time_seconds": round(time.time()-start, 3),
+                "tokens_used": resp.usage.total_tokens if resp.usage else 0,
                 "error": "json_parse_error"
             }
         except Exception as e:

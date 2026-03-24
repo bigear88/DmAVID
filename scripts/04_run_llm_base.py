@@ -76,7 +76,7 @@ def analyze_contract_with_llm(code, max_retries=2):
             # Parse JSON response
             # Try to extract JSON from the response
             import re
-            json_match = re.search(r'\{[^{}]*\}', content, re.DOTALL)
+            json_match = re.search(r'\{[\s\S]*\}', content) or re.search(r'\{[^{}]*\}', content, re.DOTALL)
             if json_match:
                 parsed = json.loads(json_match.group())
             else:

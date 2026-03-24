@@ -508,7 +508,7 @@ def run_slither_informed(
             )
             llm_time = time.time() - llm_start
             content_str = resp.choices[0].message.content.strip()
-            json_match = re.search(r"\{[^{}]*\}", content_str, re.DOTALL)
+            json_match = re.search(r"\{[\s\S]*\}", content_str) or re.search(r"\{[^{}]*\}", content_str, re.DOTALL)
             parsed = json.loads(json_match.group()) if json_match else json.loads(content_str)
             return {
                 "success": True,
@@ -590,7 +590,7 @@ def run_stage1(
             llm_time = time.time() - llm_start
             content_str = resp.choices[0].message.content.strip()
 
-            json_match = re.search(r"\{[^{}]*\}", content_str, re.DOTALL)
+            json_match = re.search(r"\{[\s\S]*\}", content_str) or re.search(r"\{[^{}]*\}", content_str, re.DOTALL)
             parsed = json.loads(json_match.group()) if json_match else json.loads(content_str)
 
             return {
@@ -766,7 +766,7 @@ def run_stage2(
             llm_time = time.time() - llm_start
             content_str = resp.choices[0].message.content.strip()
 
-            json_match = re.search(r"\{[^{}]*\}", content_str, re.DOTALL)
+            json_match = re.search(r"\{[\s\S]*\}", content_str) or re.search(r"\{[^{}]*\}", content_str, re.DOTALL)
             parsed = json.loads(json_match.group()) if json_match else json.loads(content_str)
 
             return {
