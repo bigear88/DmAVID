@@ -1,7 +1,7 @@
 {
   "experiment": "self_verification_postprocess",
   "model": "gpt-5.4-mini",
-  "conf_threshold": 0.9,
+  "conf_threshold": 0.95,
   "baseline_metrics": {
     "total": 243,
     "tp": 141,
@@ -20,19 +20,19 @@
   },
   "hybrid_metrics": {
     "total": 243,
-    "tp": 139,
-    "fn": 4,
-    "fp": 38,
-    "tn": 62,
-    "precision": 0.7853,
-    "recall": 0.972,
-    "f1": 0.8687,
-    "fpr": 0.38,
-    "specificity": 0.62
+    "tp": 133,
+    "fn": 10,
+    "fp": 36,
+    "tn": 64,
+    "precision": 0.787,
+    "recall": 0.9301,
+    "f1": 0.8526,
+    "fpr": 0.36,
+    "specificity": 0.64
   },
-  "verified_count": 52,
-  "flipped_count": 7,
-  "total_verify_tokens": 142538,
+  "verified_count": 66,
+  "flipped_count": 15,
+  "total_verify_tokens": 183307,
   "samples": [
     {
       "contract_id": "curated_reentrancy_0x941d225236464a25eb18076df7da6a91d0f95e9e.sol",
@@ -133,9 +133,9 @@
       "stage1_conf": 0.5,
       "stage1_reason": "{\n  \"has_vulnerability\": true,\n  \"confidence\": 0.98,\n  \"vulnerability_types\": [\"time_manipulation\", \"unchecked_call\", \"denial_of_service\"],\n  \"severity\": \"High\",\n  \"reasoning\": \"The contract uses bloc",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. **Required Preconditions:**\n   - The `Governmental` contract has already been deployed successfully with at least `1 ether` sent to its constructor.\n   - The contract currently holds a balance grea",
-      "time_verify": 5.358,
-      "tokens_verify": 1408,
+      "verify_reason": "1. **Required Preconditions:**\n   - The `Governmental` contract has already been deployed successfully by the owner with at least `1 ether` sent in the constructor.\n   - The contract currently holds f",
+      "time_verify": 4.56,
+      "tokens_verify": 1320,
       "error": ""
     },
     {
@@ -145,10 +145,10 @@
       "stage1_pred_vuln": true,
       "stage1_conf": 0.78,
       "stage1_reason": "The contract uses SafeMath and onlyOwner access control, so it is protected against integer overflow and unauthorized access. However, in `release()` it calls `token_reward.transfer(beneficiary, token",
-      "hybrid_pred_vuln": false,
-      "verify_reason": "1. **Required Preconditions:**\n   - The `lockEtherPay` contract has already been deployed.\n   - The contract holds a nonzero balance of the configured ERC20 token at `0xAa1ae5e57dc05981D83eC7FcA0b3c7e",
-      "time_verify": 4.909,
-      "tokens_verify": 1945,
+      "hybrid_pred_vuln": true,
+      "verify_reason": "1. **Required Preconditions:**\n   - The contract `lockEtherPay` has already been deployed.\n   - The contract holds a nonzero balance of the hardcoded ERC20 token at `0xAa1ae5e57dc05981D83eC7FcA0b3c7ee",
+      "time_verify": 3.948,
+      "tokens_verify": 1814,
       "error": ""
     },
     {
@@ -159,9 +159,9 @@
       "stage1_conf": 0.5,
       "stage1_reason": "{\n  \"has_vulnerability\": true,\n  \"confidence\": 0.98,\n  \"vulnerability_types\": [\n    \"unchecked_low_level_call\",\n    \"reentrancy\",\n    \"logic_error\"\n  ],\n  \"severity\": \"High\",\n  \"reasoning\": \"The contr",
       "hybrid_pred_vuln": false,
-      "verify_reason": "1. **Required Preconditions:**\n   - The contract `FreeEth` has been deployed and currently holds some ETH balance.\n   - `Owner` is set to the deployer address at deployment time.\n   - The attacker con",
-      "time_verify": 5.082,
-      "tokens_verify": 1501,
+      "verify_reason": "1. **Required Preconditions:**\n   - The contract `FreeEth` has been deployed and currently holds some ETH balance, e.g. `B > 0`.\n   - The attacker does **not** need to be the owner initially.\n   - The",
+      "time_verify": 4.602,
+      "tokens_verify": 1356,
       "error": ""
     },
     {
@@ -211,9 +211,9 @@
       "stage1_conf": 0.5,
       "stage1_reason": "{\n  \"has_vulnerability\": true,\n  \"confidence\": 0.86,\n  \"vulnerability_types\": [\"Unchecked Low-Level Call\", \"Reentrancy\"],\n  \"severity\": \"Medium\",\n  \"reasoning\": \"The contract uses external token/DEX i",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. **Required Preconditions:**\n   - The DTF contract is deployed and holds some amount of **KNC** and **OMG** tokens from prior operations.\n   - The contract\u2019s `owner` is a legitimate address, but the",
-      "time_verify": 5.668,
-      "tokens_verify": 3449,
+      "verify_reason": "1. **Required Preconditions:**\n   - The DTF contract is deployed and holds some amount of **KNC** and **OMG** tokens from prior activity.\n   - The contract\u2019s `owner` is a normal externally owned accou",
+      "time_verify": 5.17,
+      "tokens_verify": 3324,
       "error": ""
     },
     {
@@ -237,9 +237,9 @@
       "stage1_conf": 0.5,
       "stage1_reason": "{\n  \"has_vulnerability\": true,\n  \"confidence\": 0.99,\n  \"vulnerability_types\": [\"ACCESS_CONTROL\", \"REENTRANCY\"],\n  \"severity\": \"High\",\n  \"reasoning\": \"The contract has a critical access-control flaw: `",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. **Required Preconditions:**\n   - The contract `Wallet` is deployed on-chain.\n   - `initWallet()` has **not yet been called**, so `creator` is still the default value `address(0)`.\n   - The contract",
-      "time_verify": 2.863,
-      "tokens_verify": 1039,
+      "verify_reason": "1. **Required Preconditions:**\n   - The contract `Wallet` is deployed on-chain.\n   - `initWallet()` has **not** been called yet, so `creator` is still the default value `address(0)`.\n   - The contract",
+      "time_verify": 2.692,
+      "tokens_verify": 1011,
       "error": ""
     },
     {
@@ -262,10 +262,10 @@
       "stage1_pred_vuln": true,
       "stage1_conf": 0.5,
       "stage1_reason": "{\n  \"has_vulnerability\": true,\n  \"confidence\": 0.99,\n  \"vulnerability_types\": [\n    \"Unchecked Low-Level Call\",\n    \"Reentrancy\",\n    \"Logic/Access Control Risk\"\n  ],\n  \"severity\": \"High\",\n  \"reasonin",
-      "hybrid_pred_vuln": true,
-      "verify_reason": "1. **Required Preconditions:**\n   - The contract `WhaleGiveaway1` has been deployed and currently holds some ETH balance, e.g. `B > 0`.\n   - `Owner` is set to the deployer address.\n   - The attacker c",
-      "time_verify": 3.248,
-      "tokens_verify": 1132,
+      "hybrid_pred_vuln": false,
+      "verify_reason": "1. **Required Preconditions:**\n   - The contract `WhaleGiveaway1` is deployed and has a nonzero ETH balance.\n   - `Owner` is initially the deployer address.\n   - The attacker controls an EOA or contra",
+      "time_verify": 4.454,
+      "tokens_verify": 1469,
       "error": ""
     },
     {
@@ -355,7 +355,7 @@
       "stage1_reason": "{\n  \"has_vulnerability\": true,\n  \"confidence\": 0.91,\n  \"vulnerability_types\": [\n    \"Unchecked Low-Level Call\",\n    \"Denial of Service\",\n    \"Reentrancy\"\n  ],\n  \"severity\": \"High\",\n  \"reasoning\": \"The",
       "hybrid_pred_vuln": true,
       "verify_reason": "",
-      "time_verify": 5.838,
+      "time_verify": 5.585,
       "tokens_verify": 1705,
       "error": ""
     },
@@ -380,9 +380,9 @@
       "stage1_conf": 0.93,
       "stage1_reason": "The contract performs external token transfers in a loop via `ERC20(_tokenAddr).transfer(dests[i], values[i]);` but never checks the return value. This matches the RAG unchecked low-level call pattern",
       "hybrid_pred_vuln": true,
-      "verify_reason": "",
-      "time_verify": 0.0,
-      "tokens_verify": 0,
+      "verify_reason": "1. **Required Preconditions:**\n   - The `Airdropper` contract holds a balance of the ERC20 token at `_tokenAddr` that is intended to be distributed.\n   - The token at `_tokenAddr` is a standard ERC20-",
+      "time_verify": 4.821,
+      "tokens_verify": 1321,
       "error": ""
     },
     {
@@ -406,9 +406,9 @@
       "stage1_conf": 0.86,
       "stage1_reason": "The contract uses SafeMath and onlyOwner access control, so it is protected against integer overflow and unauthorized access. However, in release() it calls token_reward.transfer(beneficiary, token_am",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. **Required Preconditions:**\n   - The contract `lockEtherPay` has been deployed and its constructor has set:\n     - `token_reward` to the hardcoded ERC20 token at `0xAa1ae5e57dc05981D83eC7FcA0b3c7ee",
-      "time_verify": 5.379,
-      "tokens_verify": 2041,
+      "verify_reason": "1. **Required Preconditions:**\n   - The contract `lockEtherPay` has been deployed.\n   - The contract\u2019s hardcoded `token_reward` address (`0xAa1ae5e57dc05981D83eC7FcA0b3c7ee2565B7D6`) points to an ERC2",
+      "time_verify": 4.007,
+      "tokens_verify": 1835,
       "error": ""
     },
     {
@@ -444,10 +444,10 @@
       "stage1_pred_vuln": true,
       "stage1_conf": 0.5,
       "stage1_reason": "{\n  \"has_vulnerability\": true,\n  \"confidence\": 0.98,\n  \"vulnerability_types\": [\"Unchecked Low-Level Call\", \"Access Control\", \"tx.origin Authentication\"],\n  \"severity\": \"High\",\n  \"reasoning\": \"The Prox",
-      "hybrid_pred_vuln": true,
-      "verify_reason": "",
-      "time_verify": 5.132,
-      "tokens_verify": 1578,
+      "hybrid_pred_vuln": false,
+      "verify_reason": "1. **Required Preconditions:**\n   - The contract `DepositProxy` is deployed on-chain.\n   - The contract holds enough ETH to pay out the intended withdrawal amount.\n   - The attacker can cause a victim",
+      "time_verify": 5.546,
+      "tokens_verify": 1486,
       "error": ""
     },
     {
@@ -458,9 +458,9 @@
       "stage1_conf": 0.91,
       "stage1_reason": "The contract has some safe access-control checks (e.g., require(msg.sender==questionSender) and require(msg.sender==tx.origin)), but it still contains security issues. In StopGame(), the contract send",
       "hybrid_pred_vuln": true,
-      "verify_reason": "",
-      "time_verify": 0.0,
-      "tokens_verify": 0,
+      "verify_reason": "1. **Required Preconditions:**\n   - The contract `Q_GAME` is already deployed on-chain.\n   - `StartGame()` has been called at least once, so:\n     - `responseHash != 0x0`\n     - `questionSender` is se",
+      "time_verify": 4.353,
+      "tokens_verify": 1403,
       "error": ""
     },
     {
@@ -536,9 +536,9 @@
       "stage1_conf": 0.78,
       "stage1_reason": "The token logic is generally safe against the RAG-listed integer overflow issues because it uses SafeMath throughout balance and supply updates, and there are no unchecked low-level calls or unbounded",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. **Required Preconditions:**\n   - The contract is deployed and the token is in a normal ERC20 state with balances assigned.\n   - `released == true` so transfers are enabled, or at least the relevant",
-      "time_verify": 6.402,
-      "tokens_verify": 7096,
+      "verify_reason": "",
+      "time_verify": 5.415,
+      "tokens_verify": 7164,
       "error": ""
     },
     {
@@ -549,9 +549,9 @@
       "stage1_conf": 0.5,
       "stage1_reason": "{\n  \"has_vulnerability\": true,\n  \"confidence\": 0.91,\n  \"vulnerability_types\": [\"ACCESS_CONTROL\", \"INTEGER_OVERFLOW\"],\n  \"severity\": \"Medium\",\n  \"reasoning\": \"The contract uses SafeMath in most token t",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. **Required Preconditions:**\n   - The contract is deployed with:\n     - `owner = deployer`\n     - `companyWallet = C`\n     - `backendWallet = B`\n   - Initial token state from the constructor:\n     -",
-      "time_verify": 4.257,
-      "tokens_verify": 3462,
+      "verify_reason": "1. **Required Preconditions:**\n   - The contract is deployed with:\n     - `owner` = deployer address.\n     - `companyWallet` = some funded address holding the initial `20,000,000 * UNIT` tokens.\n     ",
+      "time_verify": 3.644,
+      "tokens_verify": 3464,
       "error": ""
     },
     {
@@ -615,7 +615,7 @@
       "stage1_reason": "{\n  \"has_vulnerability\": true,\n  \"confidence\": 0.98,\n  \"vulnerability_types\": [\n    \"Reentrancy\",\n    \"Denial of Service\",\n    \"Unchecked Call\"\n  ],\n  \"severity\": \"High\",\n  \"reasoning\": \"The contract ",
       "hybrid_pred_vuln": true,
       "verify_reason": "",
-      "time_verify": 5.721,
+      "time_verify": 5.432,
       "tokens_verify": 2523,
       "error": ""
     },
@@ -678,10 +678,10 @@
       "stage1_pred_vuln": true,
       "stage1_conf": 0.5,
       "stage1_reason": "{\n  \"has_vulnerability\": true,\n  \"confidence\": 0.98,\n  \"vulnerability_types\": [\n    \"Unchecked Low-Level Call\",\n    \"Reentrancy\",\n    \"Access Control / Unauthorized Ownership Change\"\n  ],\n  \"severity\"",
-      "hybrid_pred_vuln": true,
-      "verify_reason": "1. **Required Preconditions:**\n   - The contract `Pie` is deployed on-chain.\n   - `Owner` is initially set to the deployer address.\n   - The contract holds some ETH balance, or can be funded before th",
-      "time_verify": 3.569,
-      "tokens_verify": 1274,
+      "hybrid_pred_vuln": false,
+      "verify_reason": "1. **Required Preconditions:**\n   - The contract `Pie` is deployed and has a nonzero ETH balance.\n   - `Owner` is initially the deployer\u2019s address.\n   - The attacker does **not** need to be the owner.",
+      "time_verify": 4.704,
+      "tokens_verify": 1400,
       "error": ""
     },
     {
@@ -718,9 +718,9 @@
       "stage1_conf": 0.5,
       "stage1_reason": "{\n  \"has_vulnerability\": true,\n  \"confidence\": 0.91,\n  \"vulnerability_types\": [\n    \"Unchecked low-level call\",\n    \"Access control\"\n  ],\n  \"severity\": \"Medium\",\n  \"reasoning\": \"The contract uses Safe",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. **Required Preconditions:**\n   - The contract is deployed and the deployer is the current `owner`.\n   - The owner has a nonzero token balance (initial supply is assigned to deployer in the construc",
-      "time_verify": 3.23,
-      "tokens_verify": 5038,
+      "verify_reason": "1. **Required Preconditions:**\n   - The contract is deployed and the attacker is **not** the owner.\n   - The owner has previously called `setDistributeAmount(_unitAmount)` with a **non-zero** value.\n ",
+      "time_verify": 3.301,
+      "tokens_verify": 5035,
       "error": ""
     },
     {
@@ -757,9 +757,9 @@
       "stage1_conf": 0.78,
       "stage1_reason": "The contract uses an external token transfer in `release()` via `token_reward.transfer(beneficiary, token_amount);` but does not check the returned boolean. This matches the RAG unchecked-call pattern",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. **Required Preconditions:**\n   - The contract `lockEtherPay` has been deployed.\n   - The contract holds a positive balance of the configured ERC-20 token at `0xAa1ae5e57dc05981D83eC7FcA0b3c7ee2565B",
-      "time_verify": 4.054,
-      "tokens_verify": 1871,
+      "verify_reason": "1. **Required Preconditions:**\n   - The contract `lockEtherPay` has already been deployed.\n   - The contract holds a non-zero balance of the external token at `token_reward` (`0xAa1ae5e57dc05981D83eC7",
+      "time_verify": 4.175,
+      "tokens_verify": 1861,
       "error": ""
     },
     {
@@ -770,9 +770,9 @@
       "stage1_conf": 0.91,
       "stage1_reason": "The contract uses an external token transfer in release() without checking the returned bool, matching the UNCHECKED_CALL pattern from the RAG context (similar to calling transfer() without require(su",
       "hybrid_pred_vuln": true,
-      "verify_reason": "",
-      "time_verify": 0.0,
-      "tokens_verify": 0,
+      "verify_reason": "1. **Required Preconditions:**\n   - The contract `lockEtherPay` has already been deployed.\n   - The deployed contract holds a positive balance of the configured `token_reward` token at address `0xAa1a",
+      "time_verify": 4.428,
+      "tokens_verify": 1905,
       "error": ""
     },
     {
@@ -809,9 +809,9 @@
       "stage1_conf": 0.5,
       "stage1_reason": "{\n  \"has_vulnerability\": true,\n  \"confidence\": 0.91,\n  \"vulnerability_types\": [\"Unchecked Call\", \"Reentrancy\"],\n  \"severity\": \"Low\",\n  \"reasoning\": \"The token logic is mostly safe against INTEGER_OVER",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. **Required Preconditions:**\n   - The GroovaToken contract is deployed and initialized normally.\n   - The initial supply is `1,000,000 GRV`, assigned to:\n     - `0x7f0f94823D1b0fc4D251A72e9375F2AfdA",
-      "time_verify": 4.199,
-      "tokens_verify": 2547,
+      "verify_reason": "1. **Required Preconditions:**\n   - The GroovaToken contract is deployed and initialized normally.\n   - The token supply is held by the deployer-specified address:\n     - `balances[0x7f0f94823D1b0fc4D",
+      "time_verify": 4.645,
+      "tokens_verify": 2686,
       "error": ""
     },
     {
@@ -834,10 +834,10 @@
       "stage1_pred_vuln": true,
       "stage1_conf": 0.5,
       "stage1_reason": "{\n  \"has_vulnerability\": true,\n  \"confidence\": 0.91,\n  \"vulnerability_types\": [\"reentrancy\", \"access_control\"],\n  \"severity\": \"High\",\n  \"reasoning\": \"The contract contains multiple external value tran",
-      "hybrid_pred_vuln": true,
-      "verify_reason": "",
-      "time_verify": 5.562,
-      "tokens_verify": 7734,
+      "hybrid_pred_vuln": false,
+      "verify_reason": "1. **Required Preconditions:**\n   - The contract is deployed and `investStart > 1` during the ICO phase, or `investStart == 0` after the ICO phase.\n   - The attacker has enough ETH to interact with th",
+      "time_verify": 5.002,
+      "tokens_verify": 7585,
       "error": ""
     },
     {
@@ -951,10 +951,10 @@
       "stage1_pred_vuln": true,
       "stage1_conf": 0.5,
       "stage1_reason": "{\n  \"has_vulnerability\": true,\n  \"confidence\": 0.88,\n  \"vulnerability_types\": [\n    \"Unchecked Low-Level Call\",\n    \"Reentrancy\"\n  ],\n  \"severity\": \"Medium\",\n  \"reasoning\": \"The contract uses external",
-      "hybrid_pred_vuln": true,
-      "verify_reason": "1. **Required Preconditions:**\n   - The crowdsale contract has been deployed and initialized by the owner.\n   - `token` is set to an external token contract controlled by the crowdsale logic.\n   - The",
-      "time_verify": 4.629,
-      "tokens_verify": 3409,
+      "hybrid_pred_vuln": false,
+      "verify_reason": "1. **Required Preconditions:**\n   - The crowdsale contract has been deployed and initialized by the owner.\n   - `token` is set to an attacker-controlled or malicious ERC20-like contract implementing `",
+      "time_verify": 5.195,
+      "tokens_verify": 3405,
       "error": ""
     },
     {
@@ -1070,8 +1070,8 @@
       "stage1_reason": "The contract contains the classic vulnerable sell pattern from the RAG context: an external ether transfer to msg.sender after token/state movement, which is reentrancy-prone if not carefully ordered ",
       "hybrid_pred_vuln": true,
       "verify_reason": "",
-      "time_verify": 0.0,
-      "tokens_verify": 0,
+      "time_verify": 5.609,
+      "tokens_verify": 4268,
       "error": ""
     },
     {
@@ -1134,9 +1134,9 @@
       "stage1_conf": 0.5,
       "stage1_reason": "{\n  \"has_vulnerability\": true,\n  \"confidence\": 0.99,\n  \"vulnerability_types\": [\"access_control\", \"delegatecall\"],\n  \"severity\": \"High\",\n  \"reasoning\": \"The contract exposes a public `forward(address c",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. **Required Preconditions:**\n   - The deployed `Proxy` contract has a nonzero balance of ETH or holds any valuable state in its storage.\n   - `owner` is set to the deployer, but **there is no access",
-      "time_verify": 4.172,
-      "tokens_verify": 1134,
+      "verify_reason": "1. **Required Preconditions:**\n   - The deployed `Proxy` contract has a nonzero balance in its own address, or it stores valuable state that can be modified.\n   - The attacker does **not** need to be ",
+      "time_verify": 4.416,
+      "tokens_verify": 1074,
       "error": ""
     },
     {
@@ -1147,9 +1147,9 @@
       "stage1_conf": 0.5,
       "stage1_reason": "{\n  \"has_vulnerability\": true,\n  \"confidence\": 0.98,\n  \"vulnerability_types\": [\"reentrancy\", \"unchecked_low_level_call\"],\n  \"severity\": \"High\",\n  \"reasoning\": \"The contract matches the RAG reentrancy ",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. **Required Preconditions:**\n   - The wallet has been deployed and initialized with:\n     - at least **2 owners**\n     - `m_required >= 2` so multisig approval is needed for privileged actions\n     ",
-      "time_verify": 4.202,
-      "tokens_verify": 5253,
+      "verify_reason": "1. **Required Preconditions:**\n   - The wallet contract has been deployed and initialized with:\n     - at least **2 owners**\n     - `m_required >= 2` so multisig approval is normally needed for large ",
+      "time_verify": 4.926,
+      "tokens_verify": 5407,
       "error": ""
     },
     {
@@ -1173,9 +1173,9 @@
       "stage1_conf": 0.5,
       "stage1_reason": "{\n  \"has_vulnerability\": true,\n  \"confidence\": 0.91,\n  \"vulnerability_types\": [\n    \"Unchecked low-level call\",\n    \"Denial of Service\",\n    \"Integer overflow\"\n  ],\n  \"severity\": \"High\",\n  \"reasoning\"",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. **Required Preconditions:**\n   - The contract has been deployed and `owner` is the deployer.\n   - `SetupQPY(...)` has been called by `owner`, so `setupDone == true`.\n   - `StartDistrib()` has been ",
-      "time_verify": 5.392,
-      "tokens_verify": 3595,
+      "verify_reason": "1. **Required Preconditions:**\n   - The contract has been deployed and `owner` has called `SetupQPY(...)` successfully, so:\n     - `setupDone == true`\n     - `_DistribFundsReceiverAddress` is set to a",
+      "time_verify": 5.222,
+      "tokens_verify": 3736,
       "error": ""
     },
     {
@@ -1226,8 +1226,8 @@
       "stage1_reason": "The contract uses `wallet.send(msg.value)` in `forwardFunds()` and checks the return value, so it follows the safe pattern for low-level calls. However, there are still issues: `tokenReward.transfer(.",
       "hybrid_pred_vuln": true,
       "verify_reason": "",
-      "time_verify": 0.0,
-      "tokens_verify": 0,
+      "time_verify": 5.345,
+      "tokens_verify": 2547,
       "error": ""
     },
     {
@@ -1303,9 +1303,9 @@
       "stage1_conf": 0.78,
       "stage1_reason": "The contract mostly follows safe patterns for arithmetic by using SafeMath, so integer overflow is mitigated. However, `approveAndCall()` makes an external call to `ApproveAndCallFallBack(spender).rec",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. **Required Preconditions:**\n   - The attacker controls a malicious contract that implements `receiveApproval(address from, uint256 tokens, address token, bytes data)`.\n   - A victim token holder mu",
-      "time_verify": 4.785,
-      "tokens_verify": 2852,
+      "verify_reason": "1. **Required Preconditions:**\n   - The attacker must control a contract that implements `ApproveAndCallFallBack.receiveApproval(...)`.\n   - A victim token holder must be willing to call `BTMG.approve",
+      "time_verify": 3.9,
+      "tokens_verify": 2706,
       "error": ""
     },
     {
@@ -1315,10 +1315,10 @@
       "stage1_pred_vuln": true,
       "stage1_conf": 0.5,
       "stage1_reason": "{\n  \"has_vulnerability\": true,\n  \"confidence\": 0.91,\n  \"vulnerability_types\": [\n    \"Unchecked Low-Level Call\",\n    \"Reentrancy\",\n    \"Denial of Service\"\n  ],\n  \"severity\": \"Medium\",\n  \"reasoning\": \"T",
-      "hybrid_pred_vuln": false,
-      "verify_reason": "1. **Required Preconditions:**\n   - The contract `PiecesofEight` is deployed and initialized.\n   - `fundsWallet` is set to the deployer address.\n   - `fundsWallet` holds a positive token balance from ",
-      "time_verify": 4.87,
-      "tokens_verify": 2577,
+      "hybrid_pred_vuln": true,
+      "verify_reason": "1. **Required Preconditions:**\n   - The `PiecesofEight` contract has been deployed and holds a nonzero token balance in `balances[fundsWallet]` (initially the deployer/fundsWallet owns `90,000,000,000",
+      "time_verify": 5.608,
+      "tokens_verify": 2680,
       "error": ""
     },
     {
@@ -1355,9 +1355,9 @@
       "stage1_conf": 0.86,
       "stage1_reason": "The contract uses a bulkWithdraw(address[] addrs) loop that performs external token transfers via withdrawTo() for each address, matching the RAG DoS pattern of an external call in a loop / unbounded ",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. **Required Preconditions:**\n   - The `Savings` contract has been deployed and initialized by the owner:\n     - `init(_periods, _t0special)` called successfully.\n     - `finalizeInit()` called succe",
-      "time_verify": 4.887,
-      "tokens_verify": 4429,
+      "verify_reason": "1. **Required Preconditions:**\n   - The contract has been deployed, initialized, locked, and started:\n     - `init(periods, t0special)` called by `owner`\n     - `finalizeInit()` called by `owner`\n    ",
+      "time_verify": 5.315,
+      "tokens_verify": 4316,
       "error": ""
     },
     {
@@ -1369,7 +1369,7 @@
       "stage1_reason": "{\n  \"has_vulnerability\": true,\n  \"confidence\": 0.98,\n  \"vulnerability_types\": [\"Reentrancy\", \"Unchecked Low-Level Call\", \"Denial of Service\"],\n  \"severity\": \"High\",\n  \"reasoning\": \"The contract repeat",
       "hybrid_pred_vuln": true,
       "verify_reason": "",
-      "time_verify": 16.269,
+      "time_verify": 5.745,
       "tokens_verify": 2394,
       "error": ""
     },
@@ -1446,9 +1446,9 @@
       "stage1_conf": 0.5,
       "stage1_reason": "{\n  \"has_vulnerability\": true,\n  \"confidence\": 0.91,\n  \"vulnerability_types\": [\n    \"Unchecked Low-Level Call\",\n    \"Reentrancy\",\n    \"Integer Overflow/Underflow\"\n  ],\n  \"severity\": \"High\",\n  \"reasoni",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. **Required Preconditions:**\n   - The contract `SLC` has been deployed successfully.\n   - The deployer (`owner`) initially holds the entire supply:\n     - `balances[deployer] = 200000000000000000000",
-      "time_verify": 5.639,
-      "tokens_verify": 2507,
+      "verify_reason": "1. **Required Preconditions:**\n   - The deployed `SLC` contract holds the full initial supply assigned to the deployer:\n     - `balances[deployer] = 200000000000000000000000000`\n     - `totalSupply = ",
+      "time_verify": 4.989,
+      "tokens_verify": 2420,
       "error": ""
     },
     {
@@ -1538,7 +1538,7 @@
       "stage1_reason": "{\n  \"has_vulnerability\": true,\n  \"confidence\": 0.91,\n  \"vulnerability_types\": [\n    \"REENTRANCY\",\n    \"UNCHECKED_CALL\"\n  ],\n  \"severity\": \"Medium\",\n  \"reasoning\": \"The contract uses external value tra",
       "hybrid_pred_vuln": true,
       "verify_reason": "",
-      "time_verify": 5.884,
+      "time_verify": 6.097,
       "tokens_verify": 4345,
       "error": ""
     },
@@ -1577,7 +1577,7 @@
       "stage1_reason": "{\n  \"has_vulnerability\": true,\n  \"confidence\": 0.98,\n  \"vulnerability_types\": [\n    \"Unchecked Low-Level Call\",\n    \"Access Control\",\n    \"Integer Overflow/Underflow\"\n  ],\n  \"severity\": \"High\",\n  \"rea",
       "hybrid_pred_vuln": true,
       "verify_reason": "",
-      "time_verify": 5.917,
+      "time_verify": 5.498,
       "tokens_verify": 1787,
       "error": ""
     },
@@ -1629,8 +1629,8 @@
       "stage1_reason": "The crowdsale uses a low-level `owner.send(msg.value)` in `forwardFunds()` and checks the return value, so that part follows the safe pattern from the RAG context. However, `tokenReward.transfer(...)`",
       "hybrid_pred_vuln": true,
       "verify_reason": "",
-      "time_verify": 0.0,
-      "tokens_verify": 0,
+      "time_verify": 5.847,
+      "tokens_verify": 4322,
       "error": ""
     },
     {
@@ -1680,9 +1680,9 @@
       "stage1_conf": 0.5,
       "stage1_reason": "{\n  \"has_vulnerability\": true,\n  \"confidence\": 0.98,\n  \"vulnerability_types\": [\n    \"Unchecked low-level call\",\n    \"Reentrancy\",\n    \"Denial of Service\"\n  ],\n  \"severity\": \"High\",\n  \"reasoning\": \"The",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. **Required Preconditions:**\n   - The contract `CryptoRoulette` is deployed and funded with ETH from prior players.\n   - `ownerAddr` is set to the deployer.\n   - `secretNumber` is already initialize",
-      "time_verify": 3.845,
-      "tokens_verify": 1407,
+      "verify_reason": "1. **Required Preconditions:**\n   - The contract is deployed and funded with ETH from prior players.\n   - `ownerAddr` is set to the deployer.\n   - `secretNumber` is some value in the range `1..20`, bu",
+      "time_verify": 4.355,
+      "tokens_verify": 1366,
       "error": ""
     },
     {
@@ -1694,7 +1694,7 @@
       "stage1_reason": "{\n  \"has_vulnerability\": true,\n  \"confidence\": 0.98,\n  \"vulnerability_types\": [\n    \"Unchecked Low-Level Call\",\n    \"Reentrancy\",\n    \"Access Control\"\n  ],\n  \"severity\": \"High\",\n  \"reasoning\": \"The co",
       "hybrid_pred_vuln": true,
       "verify_reason": "",
-      "time_verify": 5.67,
+      "time_verify": 5.372,
       "tokens_verify": 1744,
       "error": ""
     },
@@ -1705,10 +1705,10 @@
       "stage1_pred_vuln": true,
       "stage1_conf": 0.5,
       "stage1_reason": "{\n  \"has_vulnerability\": true,\n  \"confidence\": 0.98,\n  \"vulnerability_types\": [\n    \"Unchecked Low-Level Call\",\n    \"Access Control\",\n    \"Denial of Service\"\n  ],\n  \"severity\": \"High\",\n  \"reasoning\": ",
-      "hybrid_pred_vuln": true,
-      "verify_reason": "",
-      "time_verify": 5.333,
-      "tokens_verify": 2091,
+      "hybrid_pred_vuln": false,
+      "verify_reason": "1. Required Preconditions:\n- The contract has been deployed and holds a nonzero ETH balance.\n- The deployment transaction used the intended constructor name `DranMe()`; otherwise `owner` may remain un",
+      "time_verify": 4.387,
+      "tokens_verify": 1855,
       "error": ""
     },
     {
@@ -1731,10 +1731,10 @@
       "stage1_pred_vuln": true,
       "stage1_conf": 0.91,
       "stage1_reason": "The contract is mostly a standard ERC20-style token and uses safe state-update-before-external-call ordering in core balance functions, so it is not broadly vulnerable. However, `approveAndCall()` per",
-      "hybrid_pred_vuln": true,
-      "verify_reason": "",
-      "time_verify": 0.0,
-      "tokens_verify": 0,
+      "hybrid_pred_vuln": false,
+      "verify_reason": "Upon review, a concrete exploit path cannot be constructed, and the initial assessment may be a false positive.\n\nWhy:\n- The only external call is in `approveAndCall()`:\n  ```solidity\n  spender.receive",
+      "time_verify": 1.868,
+      "tokens_verify": 1939,
       "error": ""
     },
     {
@@ -1745,9 +1745,9 @@
       "stage1_conf": 0.5,
       "stage1_reason": "{\n  \"has_vulnerability\": true,\n  \"confidence\": 0.91,\n  \"vulnerability_types\": [\n    \"REENTRANCY\",\n    \"UNCHECKED_CALL\",\n    \"DENIAL_OF_SERVICE\"\n  ],\n  \"severity\": \"High\",\n  \"reasoning\": \"The fallback ",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. **Required Preconditions:**\n   - The `SkyHub` contract has been deployed and holds a large token reserve in `balances[fundsWallet]` (initially the deployer/funds wallet owns the full supply).\n   - ",
-      "time_verify": 4.796,
-      "tokens_verify": 2833,
+      "verify_reason": "",
+      "time_verify": 6.133,
+      "tokens_verify": 3051,
       "error": ""
     },
     {
@@ -1797,9 +1797,9 @@
       "stage1_conf": 0.91,
       "stage1_reason": "The contract uses SafeMath in many places, which is a safe pattern against arithmetic bugs, but there are still unchecked arithmetic operations in the fallback: `totalSupply = initialSupply * 10 ** ui",
       "hybrid_pred_vuln": true,
-      "verify_reason": "",
-      "time_verify": 0.0,
-      "tokens_verify": 0,
+      "verify_reason": "1. **Required Preconditions:**\n   - The contract is deployed and `owner` holds a nonzero token balance in `balances[owner]` (true at deployment because the constructor assigns `totalSupply` to the dep",
+      "time_verify": 4.268,
+      "tokens_verify": 3064,
       "error": ""
     },
     {
@@ -1810,9 +1810,9 @@
       "stage1_conf": 0.5,
       "stage1_reason": "{\n  \"has_vulnerability\": true,\n  \"confidence\": 0.91,\n  \"vulnerability_types\": [\n    \"Unchecked Low-Level Call / External Call Failure\",\n    \"Potential Reentrancy in approveAndCall\",\n    \"Integer Overf",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. **Required Preconditions:**\n   - The contract is deployed and holds a nonzero `totalSupply`.\n   - At least one victim address `V` holds tokens in `balanceOf[V]`.\n   - The victim has previously gran",
-      "time_verify": 3.89,
-      "tokens_verify": 1674,
+      "verify_reason": "1. **Required Preconditions:**\n   - The contract is deployed and holds a nonzero `totalSupply`.\n   - Victim users have already approved some spender contract via `approve()` or `approveAndCall()`.\n   ",
+      "time_verify": 4.485,
+      "tokens_verify": 1702,
       "error": ""
     },
     {
@@ -1862,9 +1862,9 @@
       "stage1_conf": 0.5,
       "stage1_reason": "{\n  \"has_vulnerability\": true,\n  \"confidence\": 0.98,\n  \"vulnerability_types\": [\"REENTRANCY\"],\n  \"severity\": \"High\",\n  \"reasoning\": \"The contract matches the RAG reentrancy pattern: `getFirstWithdrawal",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. **Required Preconditions:**\n   - The contract `Reentrancy_bonus` is deployed and funded with enough Ether to pay out the bonus multiple times.\n   - `rewardsForA[attacker]` is initially `0`.\n   - `c",
-      "time_verify": 4.086,
-      "tokens_verify": 1366,
+      "verify_reason": "",
+      "time_verify": 5.669,
+      "tokens_verify": 1574,
       "error": ""
     },
     {
@@ -1913,10 +1913,10 @@
       "stage1_pred_vuln": true,
       "stage1_conf": 0.91,
       "stage1_reason": "The contract uses SafeMath, so the INTEGER_OVERFLOW pattern is mitigated. However, it contains multiple low-level Ether sends (`send`) that are checked with `require`, which is safe for UNCHECKED_CALL",
-      "hybrid_pred_vuln": true,
-      "verify_reason": "",
-      "time_verify": 0.0,
-      "tokens_verify": 0,
+      "hybrid_pred_vuln": false,
+      "verify_reason": "Upon review, a concrete exploit path cannot be constructed, and the initial assessment may be a false positive.\n\nWhy:\n- The contract\u2019s Ether/token payout functions update accounting state **before** m",
+      "time_verify": 1.731,
+      "tokens_verify": 3084,
       "error": ""
     },
     {
@@ -1927,9 +1927,9 @@
       "stage1_conf": 0.86,
       "stage1_reason": "The token math uses SafeMath and the ownership checks are present, so integer overflow is not indicated. However, the contract performs external token transfers via OppToken.transfer() in returnTokens",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. **Required Preconditions:**\n   - The `OpportyWhiteListHold` contract already holds a non-zero balance of `OpportyToken` (`OppToken`).\n   - The attacker controls an address that has been registered ",
-      "time_verify": 5.197,
-      "tokens_verify": 4270,
+      "verify_reason": "1. **Required Preconditions:**\n   - The `OpportyWhiteListHold` contract has already been deployed and funded with a nonzero balance of `OpportyToken` (`OppToken`).\n   - The owner has called `setToken(",
+      "time_verify": 5.259,
+      "tokens_verify": 4296,
       "error": ""
     },
     {
@@ -2070,9 +2070,9 @@
       "stage1_conf": 0.5,
       "stage1_reason": "{\n  \"has_vulnerability\": true,\n  \"confidence\": 0.98,\n  \"vulnerability_types\": [\n    \"Unchecked Low-Level Call\",\n    \"Reentrancy\",\n    \"Integer Overflow/Underflow\"\n  ],\n  \"severity\": \"High\",\n  \"reasoni",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. **Required Preconditions:**\n   - The attacker must be able to become `owner` of `TokenBank`.\n   - The contract must already hold some Ether or ERC-20 tokens so the exploit has something to drain.\n ",
-      "time_verify": 4.763,
-      "tokens_verify": 1740,
+      "verify_reason": "",
+      "time_verify": 5.961,
+      "tokens_verify": 1801,
       "error": ""
     },
     {
@@ -2134,10 +2134,10 @@
       "stage1_pred_vuln": true,
       "stage1_conf": 0.5,
       "stage1_reason": "{\n  \"has_vulnerability\": true,\n  \"confidence\": 0.91,\n  \"vulnerability_types\": [\"unchecked_call\", \"reentrancy\"],\n  \"severity\": \"Low\",\n  \"reasoning\": \"The contract uses a low-level Ether transfer in pur",
-      "hybrid_pred_vuln": true,
-      "verify_reason": "1. **Required Preconditions:**\n   - The contract is deployed and `owner` is set to the deployer via `Owned()`.\n   - `tokenSaleClosed == false`.\n   - `currentSupply < TOKENS_SALE_HARD_CAP`.\n   - The cu",
-      "time_verify": 3.314,
-      "tokens_verify": 3812,
+      "hybrid_pred_vuln": false,
+      "verify_reason": "1. **Required Preconditions:**\n   - The contract is deployed and `BBTCToken` has a nonzero Ether balance available to receive purchases.\n   - `tokenSaleClosed == false`.\n   - `currentSupply < TOKENS_S",
+      "time_verify": 5.508,
+      "tokens_verify": 4129,
       "error": ""
     },
     {
@@ -2174,9 +2174,9 @@
       "stage1_conf": 0.5,
       "stage1_reason": "{\n  \"has_vulnerability\": true,\n  \"confidence\": 0.98,\n  \"vulnerability_types\": [\"transaction_order_dependence\", \"front_running\", \"access_control\"],\n  \"severity\": \"High\",\n  \"reasoning\": \"The contract ma",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. **Required Preconditions:**\n   - The contract is deployed and `owner` is a known address `O`.\n   - `claimed == false`.\n   - `reward` is already funded with a nonzero amount, e.g. `reward = 10 ether",
-      "time_verify": 2.821,
-      "tokens_verify": 1053,
+      "verify_reason": "1. **Required Preconditions:**\n   - The contract is deployed and has a nonzero `reward` balance already stored in the contract state.\n   - `owner` is the current deployer/administrator address.\n   - `",
+      "time_verify": 3.573,
+      "tokens_verify": 1091,
       "error": ""
     },
     {
@@ -2305,8 +2305,8 @@
       "stage1_reason": "The contract uses SafeMath in most balance/supply updates, which is a safe pattern against integer overflow/underflow. However, `approveAndCall()` makes an external call to `spender.receiveApproval(..",
       "hybrid_pred_vuln": true,
       "verify_reason": "",
-      "time_verify": 0.0,
-      "tokens_verify": 0,
+      "time_verify": 6.149,
+      "tokens_verify": 4090,
       "error": ""
     },
     {
@@ -2382,9 +2382,9 @@
       "stage1_conf": 0.91,
       "stage1_reason": "The contract is mostly a standard ERC20-style token and does not show reentrancy or DoS patterns from the RAG context. However, `approveAndCall()` makes an external call to `spender.receiveApproval(..",
       "hybrid_pred_vuln": true,
-      "verify_reason": "",
-      "time_verify": 0.0,
-      "tokens_verify": 0,
+      "verify_reason": "1. **Required Preconditions:**\n   - The contract is deployed and the deployer holds the full initial supply:\n     - `totalSupply = 99,000,000`\n     - `balanceOf[deployer] = 99,000,000`\n   - The attack",
+      "time_verify": 4.835,
+      "tokens_verify": 2407,
       "error": ""
     },
     {
@@ -2395,9 +2395,9 @@
       "stage1_conf": 0.91,
       "stage1_reason": "The contract mostly follows safe state-update-before-interaction patterns for token transfers and migration bookkeeping, so it is not broadly vulnerable to the RAG reentrancy examples in transfer/tran",
       "hybrid_pred_vuln": true,
-      "verify_reason": "",
-      "time_verify": 0.0,
-      "tokens_verify": 0,
+      "verify_reason": "1. **Required Preconditions:**\n   - The contract is deployed and `owner` holds the initial `MAX_SUPPLY`.\n   - `state == State.Migration`.\n   - `migrationAgent` is set to a malicious contract controlle",
+      "time_verify": 4.875,
+      "tokens_verify": 2697,
       "error": ""
     },
     {
@@ -2409,7 +2409,7 @@
       "stage1_reason": "The contract contains multiple risky patterns from the RAG context. In UnlockToken2, state is updated before PayToken is called, which is the safer reentrancy pattern, but the contract still makes ext",
       "hybrid_pred_vuln": true,
       "verify_reason": "",
-      "time_verify": 5.637,
+      "time_verify": 6.552,
       "tokens_verify": 7636,
       "error": ""
     },
@@ -2473,9 +2473,9 @@
       "stage1_conf": 0.5,
       "stage1_reason": "{\n  \"has_vulnerability\": true,\n  \"confidence\": 0.91,\n  \"vulnerability_types\": [\n    \"Unchecked low-level call / unsafe ether transfer\",\n    \"Potential reentrancy\",\n    \"Denial of service\"\n  ],\n  \"seve",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. **Required Preconditions:**\n   - The contract is deployed and has a valid `owner` address.\n   - The owner holds a sufficient token balance in `balanceOf[owner]` to satisfy `buy()` / fallback purcha",
-      "time_verify": 5.078,
-      "tokens_verify": 3456,
+      "verify_reason": "",
+      "time_verify": 7.723,
+      "tokens_verify": 3535,
       "error": ""
     },
     {
@@ -2550,10 +2550,10 @@
       "stage1_pred_vuln": true,
       "stage1_conf": 0.91,
       "stage1_reason": "The contract is generally safe against the main RAG risks: arithmetic uses SafeMath-style checks, and there is no reentrancy-prone external value transfer pattern. However, `approveAndCall()` makes an",
-      "hybrid_pred_vuln": true,
-      "verify_reason": "",
-      "time_verify": 0.0,
-      "tokens_verify": 0,
+      "hybrid_pred_vuln": false,
+      "verify_reason": "Upon review, a concrete exploit path cannot be constructed, and the initial assessment may be a false positive.\n\n### Why\nThe flagged issue is an unchecked external callback in `approveAndCall()`:\n\n```",
+      "time_verify": 2.308,
+      "tokens_verify": 2238,
       "error": ""
     },
     {
@@ -2603,9 +2603,9 @@
       "stage1_conf": 0.5,
       "stage1_reason": "{\n  \"has_vulnerability\": true,\n  \"confidence\": 0.98,\n  \"vulnerability_types\": [\n    \"Unchecked Low-Level Call\",\n    \"Reentrancy\",\n    \"Integer Overflow/Underflow\"\n  ],\n  \"severity\": \"High\",\n  \"reasoni",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. **Required Preconditions:**\n   - The contract `TokenBank` has been deployed, and `initTokenBank()` has been called so that:\n     - `owner = deployer/init caller`\n     - `MinDeposit = 1 ether`\n   - ",
-      "time_verify": 6.473,
-      "tokens_verify": 1654,
+      "verify_reason": "1. **Required Preconditions:**\n   - The contract `TokenBank` has been deployed, and `initTokenBank()` has been called so that:\n     - `owner = deployer/caller of initTokenBank`\n     - `MinDeposit = 1 ",
+      "time_verify": 7.547,
+      "tokens_verify": 1675,
       "error": ""
     },
     {
@@ -2615,10 +2615,10 @@
       "stage1_pred_vuln": true,
       "stage1_conf": 0.5,
       "stage1_reason": "{\n  \"has_vulnerability\": true,\n  \"confidence\": 0.98,\n  \"vulnerability_types\": [\n    \"Unchecked Low-Level Call\",\n    \"Access Control\"\n  ],\n  \"severity\": \"Medium\",\n  \"reasoning\": \"The contract matches t",
-      "hybrid_pred_vuln": true,
-      "verify_reason": "1. **Required Preconditions:**\n   - The contract `Delta` is deployed and `active == 1`.\n   - The ERC20 token contract at `c` is deployed and `owner` has approved the `Delta` contract to spend at least",
-      "time_verify": 5.576,
-      "tokens_verify": 1948,
+      "hybrid_pred_vuln": false,
+      "verify_reason": "1. **Required Preconditions:**\n   - The contract `Delta` is deployed and `active == 1`.\n   - The contract holds some Ether balance from prior buyers, or the attacker is willing to fund the contract vi",
+      "time_verify": 4.779,
+      "tokens_verify": 1695,
       "error": ""
     },
     {
@@ -2642,9 +2642,9 @@
       "stage1_conf": 0.5,
       "stage1_reason": "{\n  \"has_vulnerability\": true,\n  \"confidence\": 0.99,\n  \"vulnerability_types\": [\"REENTRANCY\", \"UNCHECKED_CALL\"],\n  \"severity\": \"High\",\n  \"reasoning\": \"The contract performs external value-bearing calls",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. **Required Preconditions:**\n   - The wallet has been successfully initialized via `initWallet(...)` or the split init functions, so:\n     - `m_numOwners > 0`\n     - at least one valid owner exists\n",
-      "time_verify": 6.917,
-      "tokens_verify": 4818,
+      "verify_reason": "1. **Required Preconditions:**\n   - The wallet has already been initialized via `initWallet(...)` or the equivalent deployment flow.\n   - There are at least **2 owners** in `m_ownerIndex`, and `m_requ",
+      "time_verify": 5.778,
+      "tokens_verify": 4874,
       "error": ""
     },
     {
@@ -2668,9 +2668,9 @@
       "stage1_conf": 0.5,
       "stage1_reason": "{\n  \"has_vulnerability\": true,\n  \"confidence\": 0.91,\n  \"vulnerability_types\": [\n    \"REENTRANCY\",\n    \"UNCHECKED_CALL\"\n  ],\n  \"severity\": \"Medium\",\n  \"reasoning\": \"The contract is mostly an ERC20 toke",
       "hybrid_pred_vuln": false,
-      "verify_reason": "1. **Required Preconditions:**\n   - The attacker does **not** need owner privileges.\n   - The contract must hold some ETH balance, because the vulnerable path is in `splitFunds()`.\n   - The attacker n",
-      "time_verify": 3.816,
-      "tokens_verify": 1853,
+      "verify_reason": "1. **Required Preconditions:**\n   - The attacker does **not** need owner privileges.\n   - The DINGLE contract must hold some Ether in its balance, because the vulnerable path is in `splitFunds()`.\n   ",
+      "time_verify": 4.906,
+      "tokens_verify": 2221,
       "error": ""
     },
     {
@@ -2707,9 +2707,9 @@
       "stage1_conf": 0.5,
       "stage1_reason": "{\n  \"has_vulnerability\": true,\n  \"confidence\": 0.98,\n  \"vulnerability_types\": [\n    \"Unchecked Low-Level Call\",\n    \"Access Control\"\n  ],\n  \"severity\": \"High\",\n  \"reasoning\": \"The contract contains an",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. **Required Preconditions:**\n   - The contract `TokenBank` has been deployed, but `initTokenBank()` has **not** yet been called, or the attacker can call it first.\n   - Because `initTokenBank()` is ",
-      "time_verify": 5.639,
-      "tokens_verify": 1720,
+      "verify_reason": "1. **Required Preconditions:**\n   - The contract `TokenBank` has been deployed, but `initTokenBank()` has **not yet been called** or was called in a way that leaves `owner` controllable by the attacke",
+      "time_verify": 5.057,
+      "tokens_verify": 1709,
       "error": ""
     },
     {
@@ -2824,9 +2824,9 @@
       "stage1_conf": 0.86,
       "stage1_reason": "The contract uses external token calls inside loops and does not check the returned bool from egt.transfer, egt.transferFrom, or egt.transferAndLock. While these are not low-level .call() operations, ",
       "hybrid_pred_vuln": true,
-      "verify_reason": "",
-      "time_verify": 6.291,
-      "tokens_verify": 1926,
+      "verify_reason": "1. **Required Preconditions:**\n   - One of the five hardcoded admin addresses must control the transaction sender.\n   - The `TransferEGTMulti` contract must hold or be approved to move EGT tokens, dep",
+      "time_verify": 5.056,
+      "tokens_verify": 1785,
       "error": ""
     },
     {
@@ -2837,9 +2837,9 @@
       "stage1_conf": 0.5,
       "stage1_reason": "{\n  \"has_vulnerability\": true,\n  \"confidence\": 0.98,\n  \"vulnerability_types\": [\n    \"BAD_RANDOMNESS\",\n    \"INTEGER_OVERFLOW\"\n  ],\n  \"severity\": \"High\",\n  \"reasoning\": \"The contract uses blockchain-der",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. **Required Preconditions:**\n   - The contract is deployed and funded with enough ETH to pay at least one jackpot.\n   - The attacker is **not** the owner.\n   - The attacker controls one or more exte",
-      "time_verify": 5.187,
-      "tokens_verify": 2120,
+      "verify_reason": "1. **Required Preconditions:**\n   - Contract is deployed and funded with enough ETH to pay at least one jackpot.\n   - `owner` is some EOA or contract controlled by the deployer.\n   - The attacker has ",
+      "time_verify": 4.467,
+      "tokens_verify": 1900,
       "error": ""
     },
     {
@@ -2901,10 +2901,10 @@
       "stage1_pred_vuln": true,
       "stage1_conf": 0.5,
       "stage1_reason": "{\n  \"has_vulnerability\": true,\n  \"confidence\": 0.98,\n  \"vulnerability_types\": [\n    \"reentrancy\",\n    \"access_control\",\n    \"integer_overflow\",\n    \"bad_randomness\"\n  ],\n  \"severity\": \"High\",\n  \"reaso",
-      "hybrid_pred_vuln": false,
-      "verify_reason": "1. **Required Preconditions:**\n   - The contract has already been deployed and contains enough ETH to pay at least one pending payout.\n   - There is at least one unpaid `Entry` in `unpaidEntries`.\n   ",
-      "time_verify": 5.596,
-      "tokens_verify": 2540,
+      "hybrid_pred_vuln": true,
+      "verify_reason": "",
+      "time_verify": 6.467,
+      "tokens_verify": 2610,
       "error": ""
     },
     {
@@ -2979,10 +2979,10 @@
       "stage1_pred_vuln": true,
       "stage1_conf": 0.5,
       "stage1_reason": "{\n  \"has_vulnerability\": true,\n  \"confidence\": 0.99,\n  \"vulnerability_types\": [\n    \"Unchecked Low-Level Call\",\n    \"Access Control / Backdoor\",\n    \"Potential Reentrancy\"\n  ],\n  \"severity\": \"High\",\n ",
-      "hybrid_pred_vuln": true,
-      "verify_reason": "1. **Required Preconditions:**\n   - The contract `WhaleGiveaway2` has been deployed and has a nonzero ETH balance.\n   - The current `Owner` is the deployer address, and the attacker is **not** the own",
-      "time_verify": 5.337,
-      "tokens_verify": 1479,
+      "hybrid_pred_vuln": false,
+      "verify_reason": "1. **Required Preconditions:**\n   - The contract `WhaleGiveaway2` is deployed and has a nonzero ETH balance.\n   - `Owner` is initially set to the deployer address.\n   - Attacker controls an externally",
+      "time_verify": 5.366,
+      "tokens_verify": 1491,
       "error": ""
     },
     {
@@ -3020,8 +3020,8 @@
       "stage1_reason": "The contract contains risky patterns matching the RAG context. In `sendTokenAw`, it performs an external token transfer via `t.coinContract.transfer(receiver, amount);` without checking the returned b",
       "hybrid_pred_vuln": true,
       "verify_reason": "",
-      "time_verify": 0.0,
-      "tokens_verify": 0,
+      "time_verify": 6.19,
+      "tokens_verify": 5272,
       "error": ""
     },
     {
@@ -3096,10 +3096,10 @@
       "stage1_pred_vuln": true,
       "stage1_conf": 0.78,
       "stage1_reason": "The contract does not show unchecked low-level calls or reentrancy patterns from the RAG context. However, `transferFrom` is implemented incorrectly: it checks `balanceOf[msg.sender] >= _value` instea",
-      "hybrid_pred_vuln": false,
-      "verify_reason": "1. **Required Preconditions:**\n   - The token contract is deployed and initialized normally.\n   - `totalSupply = 100000000000000000` and the entire supply is assigned to the deployer (`deployer = msg.",
-      "time_verify": 4.809,
-      "tokens_verify": 1835,
+      "hybrid_pred_vuln": true,
+      "verify_reason": "1. **Required Preconditions:**\n   - The token contract has been deployed successfully.\n   - The deployer/constructor caller owns the full initial supply:\n     - `balanceOf[deployer] = totalSupply = 10",
+      "time_verify": 6.528,
+      "tokens_verify": 1704,
       "error": ""
     },
     {
@@ -3149,9 +3149,9 @@
       "stage1_conf": 0.86,
       "stage1_reason": "The contract is generally safe against integer overflow/underflow because it uses SafeMath throughout, matching the safe pattern in the knowledge base. There are no low-level calls, so unchecked-call ",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. **Required Preconditions:**\n   - The token contract is deployed and fully initialized.\n   - `Alice` is the token owner and holds a nonzero balance, e.g. `balances[Alice] = 1,000 RTT`.\n   - `Bob` is",
-      "time_verify": 4.272,
-      "tokens_verify": 2702,
+      "verify_reason": "1. **Required Preconditions:**\n   - The token contract is deployed and fully initialized.\n   - `Owner`/`Alice` holds a nonzero token balance, e.g. `balances[Alice] = 1,000 RTT`.\n   - `Spender`/`Bob` i",
+      "time_verify": 5.958,
+      "tokens_verify": 2713,
       "error": ""
     },
     {
@@ -3162,9 +3162,9 @@
       "stage1_conf": 0.86,
       "stage1_reason": "The contract mostly follows safe token patterns (state updates before external transfer in getTokens, and onlyOwner checks on administrative functions), so reentrancy is not the main issue. However, T",
       "hybrid_pred_vuln": false,
-      "verify_reason": "1. Required Preconditions:\n- Contract deployed successfully.\n- `owner` and `beneficiary` are initially the deployer (`TokenSale()` sets both to `msg.sender`).\n- Sale is active:\n  - `currentState != ST",
-      "time_verify": 4.306,
-      "tokens_verify": 3236,
+      "verify_reason": "1. **Required Preconditions:**\n   - The contract is deployed and the sale is active:\n     - `currentState != STOPPED` and `currentState != CLOSED`\n     - `msg.value >= _minAmount` for incoming purchas",
+      "time_verify": 6.227,
+      "tokens_verify": 3285,
       "error": ""
     },
     {
