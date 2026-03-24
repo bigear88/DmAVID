@@ -25,6 +25,9 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# WSL forge PATH
+os.environ["PATH"] = "/home/curtis/.foundry/bin:" + os.environ.get("PATH", "")
+
 # Constants
 BASE_DIR = os.environ.get("DAVID_BASE_DIR", "/home/curtis/defi-llm-vulnerability-detection")
 EXPERIMENTS_DIR = os.path.join(BASE_DIR, "experiments")

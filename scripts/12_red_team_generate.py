@@ -44,50 +44,32 @@ TRANSFORMATION_TYPES = [
 client = OpenAI()
 
 
-def load_false_negatives(results_file: str) -> List[Tuple[str, str, Dict[str, Any]]]:
-    """
-    Load false negative cases from Student Agent results JSON.
-
-    Args:
-        results_file: Path to the Student Agent results JSON file
-
-    Returns:
-        List of tuples: (contract_source, vuln_type, ground_truth_metadata)
-    """
-    logger.info(f"Loading false negative cases from {results_file}")
-
-    if not os.path.exists(results_file):
-        logger.error(f"Results file not found: {results_file}")
-        return []
-
+def load_false_negatives(results_file: str):
+    """Load FN cases from LLM+RAG results (fixed for actual JSON format)."""
+    with open(results_file, "r") as f:
+        data = json.load(f)
+    results = data.get("results", [])
+    dataset_path = os.path.join(BASE_DIR, "data", "dataset_1000.json")
+    filepath_map = {}
+    if os.path.exists(dataset_path):
+        with open(dataset_path) as df:
+            ds = json.load(df)
+        for c in ds.get("contracts", []):
+            filepath_map[c.get("id", "")] = c.get("filepath", "")
+            filepath_map[c.get("filename", "")] = c.get("filepath", "")
     false_negatives = []
-
-    try:
-        with open(results_file, 'r') as f:
-            results = json.load(f)
-    except json.JSONDecodeError as e:
-        logger.error(f"Failed to parse JSON from {results_file}: {e}")
-        return []
-
-    # Extract false negative cases (vulnerabilities missed by Student Agent)
-    if isinstance(results, dict) and "results" in results:
-        for item in results.get("results", []):
-            # Check if this is a false negative (has ground truth vulnerability but wasn't detected)
-            if item.get("ground_truth_vulnerabilities") and not item.get("detected_vulnerabilities"):
-                contract_source = item.get("contract_source", "")
-                ground_truth = item.get("ground_truth_vulnerabilities", [])
-
-                # Create an entry for each vulnerability type
-                for vuln in ground_truth:
-                    vuln_type = vuln.get("type", "unknown")
-                    metadata = {
-                        "contract_id": item.get("contract_id"),
-                        "severity": vuln.get("severity", "unknown"),
-                        "location": vuln.get("location", ""),
-                        "description": vuln.get("description", "")
-                    }
-                    false_negatives.append((contract_source, vuln_type, metadata))
-
+    for item in results:
+        if item.get("ground_truth") == "vulnerable" and not item.get("predicted_vulnerable"):
+            cid = item.get("contract_id", "")
+            fp = filepath_map.get(cid, "") or filepath_map.get(item.get("filename", ""), "")
+            try:
+                with open(fp, "r", encoding="utf-8", errors="ignore") as cf:
+                    source = cf.read()
+            except Exception:
+                source = ""
+            vt = item.get("category", "unknown")
+            meta = {"contract_id": cid, "category": vt, "confidence": item.get("confidence", 0)}
+            false_negatives.append((source, vt, meta))
     logger.info(f"Found {len(false_negatives)} false negative cases")
     return false_negatives
 
