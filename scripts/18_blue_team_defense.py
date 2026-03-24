@@ -75,7 +75,12 @@ def synthesize_defense_patterns(variants: List[Dict[str, Any]], vuln_type: str) 
     defense_entries = []
 
     for i, variant in enumerate(variants):
-        contract_source = variant.get("contract_source", "")
+        contract_source = (
+            variant.get("contract_source", "")
+            or variant.get("variant_source", "")
+            or variant.get("code", "")
+            or variant.get("source", "")
+        )
         if not contract_source:
             logger.warning(f"Variant {i} has no contract source, skipping")
             continue
