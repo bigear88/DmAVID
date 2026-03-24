@@ -41,7 +41,7 @@ BASELINE_FILE = os.path.join(BASE_DIR, "experiments/llm_rag/llm_rag_results.json
 OUTPUT_DIR = os.path.join(BASE_DIR, "experiments/davidagent_round2")
 
 # Baseline metrics (from prior experiment)
-BASELINE_F1 = 0.8624
+BASELINE_F1 = 0.8468  # LLM+RAG baseline (gpt-5.4-mini, 243 contracts, JSON fix)
 
 # Cost estimation: ~$0.01 per 1K tokens for gpt-4.1-mini
 COST_PER_1K_TOKENS = 0.01
@@ -555,13 +555,18 @@ def main():
     # Create output directory
     os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-    # Load dataset
+    # Load dataset — sample 143 vulnerable + 100 safe = 243 (same as baseline)
     logger.info("Loading dataset...")
-    dataset = load_dataset(args.dataset)
-    if not dataset:
+    all_contracts = load_dataset(args.dataset)
+    if not all_contracts:
         logger.error("Failed to load dataset. Exiting.")
         sys.exit(1)
-    logger.info(f"Dataset loaded: {len(dataset)} contracts")
+    vuln_contracts = [c for c in all_contracts if c.get("label") == "vulnerable"]
+    safe_contracts = [c for c in all_contracts if c.get("label") == "safe"]
+    random.shuffle(safe_contracts)
+    dataset = vuln_contracts + safe_contracts[:100]
+    random.shuffle(dataset)
+    logger.info(f"Dataset: {len(vuln_contracts)} vuln + {min(100,len(safe_contracts))} safe = {len(dataset)} contracts (from {len(all_contracts)} total)")
 
     # Load sub-modules
     logger.info("Loading sub-modules...")

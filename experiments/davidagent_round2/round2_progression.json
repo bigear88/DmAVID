@@ -1,0 +1,241 @@
+{
+  "config": {
+    "rounds": 3,
+    "budget_usd": 50.0,
+    "model": "gpt-5.4-mini",
+    "dataset_size": 243,
+    "baseline_f1": 0.8468,
+    "dry_run": false,
+    "started_at": "2026-03-25T01:02:26.864319"
+  },
+  "rounds": [
+    {
+      "round": 1,
+      "teacher_challenges": 7,
+      "student_pre_verify": {
+        "tp": 141,
+        "fp": 52,
+        "tn": 48,
+        "fn": 2,
+        "precision": 0.7306,
+        "recall": 0.986,
+        "f1": 0.8393,
+        "fpr": 0.52,
+        "total_samples": 243
+      },
+      "red_team_variants": 2,
+      "foundry_compiled": 1,
+      "foundry_total": 2,
+      "blue_team_patterns": 1,
+      "student_post_verify": {
+        "tp": 95,
+        "fp": 8,
+        "tn": 92,
+        "fn": 48,
+        "precision": 0.9223,
+        "recall": 0.6643,
+        "f1": 0.7724,
+        "fpr": 0.08,
+        "total_samples": 243
+      },
+      "f1_delta_vs_baseline": -0.0744,
+      "challenge_recall": 0.8571,
+      "round_time_seconds": 761.28,
+      "cost_snapshot": {
+        "total_tokens": 504361,
+        "total_cost_usd": 5.0436,
+        "budget_usd": 50.0,
+        "budget_remaining_usd": 44.9564,
+        "per_stage": {
+          "teacher": {
+            "tokens": 7612,
+            "cost_usd": 0.0761
+          },
+          "student": {
+            "tokens": 424854,
+            "cost_usd": 4.2485
+          },
+          "red_team": {
+            "tokens": 1000,
+            "cost_usd": 0.01
+          },
+          "blue_team": {
+            "tokens": 1045,
+            "cost_usd": 0.0104
+          },
+          "self_verify": {
+            "tokens": 61428,
+            "cost_usd": 0.6143
+          },
+          "student_challenge": {
+            "tokens": 8422,
+            "cost_usd": 0.0842
+          }
+        }
+      }
+    },
+    {
+      "round": 2,
+      "teacher_challenges": 8,
+      "student_pre_verify": {
+        "tp": 140,
+        "fp": 47,
+        "tn": 53,
+        "fn": 3,
+        "precision": 0.7487,
+        "recall": 0.979,
+        "f1": 0.8485,
+        "fpr": 0.47,
+        "total_samples": 243
+      },
+      "red_team_variants": 3,
+      "foundry_compiled": 2,
+      "foundry_total": 3,
+      "blue_team_patterns": 2,
+      "student_post_verify": {
+        "tp": 93,
+        "fp": 4,
+        "tn": 96,
+        "fn": 50,
+        "precision": 0.9588,
+        "recall": 0.6503,
+        "f1": 0.775,
+        "fpr": 0.04,
+        "total_samples": 243
+      },
+      "f1_delta_vs_baseline": -0.0718,
+      "challenge_recall": 0.875,
+      "round_time_seconds": 806.88,
+      "cost_snapshot": {
+        "total_tokens": 1012947,
+        "total_cost_usd": 10.1295,
+        "budget_usd": 50.0,
+        "budget_remaining_usd": 39.8705,
+        "per_stage": {
+          "teacher": {
+            "tokens": 17589,
+            "cost_usd": 0.1759
+          },
+          "student": {
+            "tokens": 850310,
+            "cost_usd": 8.5031
+          },
+          "red_team": {
+            "tokens": 2500,
+            "cost_usd": 0.025
+          },
+          "blue_team": {
+            "tokens": 2754,
+            "cost_usd": 0.0275
+          },
+          "self_verify": {
+            "tokens": 120550,
+            "cost_usd": 1.2055
+          },
+          "student_challenge": {
+            "tokens": 19244,
+            "cost_usd": 0.1924
+          }
+        }
+      }
+    },
+    {
+      "round": 3,
+      "teacher_challenges": 7,
+      "student_pre_verify": {
+        "tp": 142,
+        "fp": 44,
+        "tn": 56,
+        "fn": 1,
+        "precision": 0.7634,
+        "recall": 0.993,
+        "f1": 0.8632,
+        "fpr": 0.44,
+        "total_samples": 243
+      },
+      "red_team_variants": 1,
+      "foundry_compiled": 0,
+      "foundry_total": 1,
+      "blue_team_patterns": 0,
+      "student_post_verify": {
+        "tp": 96,
+        "fp": 5,
+        "tn": 95,
+        "fn": 47,
+        "precision": 0.9505,
+        "recall": 0.6713,
+        "f1": 0.7869,
+        "fpr": 0.05,
+        "total_samples": 243
+      },
+      "f1_delta_vs_baseline": -0.0599,
+      "challenge_recall": 0.8571,
+      "round_time_seconds": 766.84,
+      "cost_snapshot": {
+        "total_tokens": 1515335,
+        "total_cost_usd": 15.1533,
+        "budget_usd": 50.0,
+        "budget_remaining_usd": 34.8467,
+        "per_stage": {
+          "teacher": {
+            "tokens": 25372,
+            "cost_usd": 0.2537
+          },
+          "student": {
+            "tokens": 1275685,
+            "cost_usd": 12.7568
+          },
+          "red_team": {
+            "tokens": 3000,
+            "cost_usd": 0.03
+          },
+          "blue_team": {
+            "tokens": 2754,
+            "cost_usd": 0.0275
+          },
+          "self_verify": {
+            "tokens": 180601,
+            "cost_usd": 1.806
+          },
+          "student_challenge": {
+            "tokens": 27923,
+            "cost_usd": 0.2792
+          }
+        }
+      }
+    }
+  ],
+  "completed_at": "2026-03-25T01:41:21.883466",
+  "final_cost": {
+    "total_tokens": 1515335,
+    "total_cost_usd": 15.1533,
+    "budget_usd": 50.0,
+    "budget_remaining_usd": 34.8467,
+    "per_stage": {
+      "teacher": {
+        "tokens": 25372,
+        "cost_usd": 0.2537
+      },
+      "student": {
+        "tokens": 1275685,
+        "cost_usd": 12.7568
+      },
+      "red_team": {
+        "tokens": 3000,
+        "cost_usd": 0.03
+      },
+      "blue_team": {
+        "tokens": 2754,
+        "cost_usd": 0.0275
+      },
+      "self_verify": {
+        "tokens": 180601,
+        "cost_usd": 1.806
+      },
+      "student_challenge": {
+        "tokens": 27923,
+        "cost_usd": 0.2792
+      }
+    }
+  }
+}
