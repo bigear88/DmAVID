@@ -1,0 +1,48 @@
+{
+  "patterns": [
+    {
+      "category": "arithmetic",
+      "title": "State-Update Arithmetic Underflow/Overflow in Legacy Solidity",
+      "description": "Legacy Solidity contracts can still be vulnerable even when they include a superficial balance check. In pre-0.8.0 Solidity, subtraction/addition on uint256 does not revert on underflow/overflow. A contract may check one side of the condition (e.g., sender balance >= value) but still perform an unsafe state update elsewhere, or rely on arithmetic that can wrap due to missing checks on all operands and all affected state variables.",
+      "vulnerability_pattern": "A function performs arithmetic on storage variables in Solidity <0.8.0, especially balance/amount counters, and the code only checks a partial condition before `-=` or `+=`. Example shapes: `require(balanceOf[msg.sender] >= _value); balanceOf[msg.sender] -= _value; balanceOf[_to] += _value;` where one or more related state updates are unchecked, or arithmetic is used in a way that can wrap due to missing bounds on all inputs.",
+      "safe_pattern": "Use Solidity >=0.8.0 with built-in checked arithmetic, or explicitly use SafeMath / explicit bounds checks for every arithmetic operation that mutates state. Ensure all dependent updates are validated, not just the first subtraction. Prefer audited transfer logic that checks both sender sufficiency and recipient/state invariants.",
+      "detection_hints": [
+        "Solidity version <0.8.0",
+        "Presence of `+=`, `-=`, `*`, `++`, `--` on storage variables",
+        "Only one `require` before multiple arithmetic state updates",
+        "Token/balance/allowance/accounting logic",
+        "Look for arithmetic on values derived from user input or external calls"
+      ]
+    },
+    {
+      "category": "unchecked_low_level_calls",
+      "title": "Ignored Return Value of Low-Level External Call",
+      "description": "A contract may appear access-controlled and structurally safe, but still be vulnerable if it uses low-level calls (`call`, `delegatecall`, `callcode`, `send`) and does not verify the returned success flag. This can cause silent failure, inconsistent state, or bypass of intended execution flow. In older Solidity, low-level calls do not automatically revert on failure.",
+      "vulnerability_pattern": "Code invokes a low-level external call and continues execution without checking the boolean return value or without reverting on failure. Example shapes: `addr.call(data);`, `someAddress.send(amount);`, `target.delegatecall(payload);` with no `require(success)` / `assert(success)` / explicit failure handling. Often paired with state changes before or after the call, causing accounting inconsistencies.",
+      "safe_pattern": "Capture the return value of every low-level call and revert or handle failure explicitly. Prefer typed interface calls over raw low-level calls when possible. If using `send`, check the boolean and fail safely; if using `call`/`delegatecall`, require success and validate returned data when relevant. Follow checks-effects-interactions and minimize reliance on low-level calls.",
+      "detection_hints": [
+        "Search for `.call(`, `.delegatecall(`, `.callcode(`, `.send(`",
+        "No `require(success)` or equivalent after the call",
+        "State changes occur around the call site",
+        "Legacy Solidity (<0.5) or code written in pre-checked-call style",
+        "Access-control modifiers do not mitigate call failure"
+      ]
+    },
+    {
+      "category": "control_flow",
+      "title": "False-Safe Pattern from Partial Guarding of Critical Operation",
+      "description": "A common false-negative pattern is when the code contains a correct-looking guard or access-control modifier, but the actual vulnerable operation is not fully protected. The model may overgeneralize from the presence of `require`, `onlyOwner`, or role checks and miss that the dangerous action occurs in a different branch, via another function, or through an unchecked path. This category captures cases where a local safety pattern masks an unsafe execution path.",
+      "vulnerability_pattern": "A function or contract includes standard guards such as `onlyOwner`, zero-address checks, or balance checks, but the critical operation is reachable through another code path, indirect call, fallback, inherited function, or a branch that bypasses the guard. Example shapes: access control on one function while the low-level call / arithmetic / state mutation occurs in a helper without protection; or a check exists but does not cover all parameters or all execution branches.",
+      "safe_pattern": "Ensure the guard covers the exact sink operation, not just the entry point. Apply access control and validation at every externally reachable path that can trigger the sensitive action. Centralize sensitive logic, avoid duplicated helper paths, and verify that all branches enforce the same invariants before state mutation or external interaction.",
+      "detection_hints": [
+        "Presence of `require`/modifiers is not sufficient; inspect call graph and branches",
+        "Sensitive sink in helper/internal function called from multiple entry points",
+        "Different code paths with and without validation",
+        "Inheritance/overrides/fallback functions may bypass apparent checks",
+        "Look for partial validation: checks on one variable but not on all call arguments or state dependencies"
+      ]
+    }
+  ],
+  "tokens_used": 1558,
+  "fn_count": 2
+}

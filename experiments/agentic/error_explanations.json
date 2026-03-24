@@ -1,0 +1,165 @@
+[
+  {
+    "contract_id": "wild_safe_0712_0x1d859ad24b62775dddb73e8990fedfd41a8e9a22.sol",
+    "case_type": "hard_FP",
+    "category": "none",
+    "explanation": {
+      "root_causes": [
+        "The pipeline likely over-weighted a syntactic external call pattern and under-weighted the surrounding control-flow and state conditions. In this contract, the token transfer in `release()` is not a generic unchecked low-level call; it is a high-level ERC20-style `transfer()` on a token interface, and the contract’s safety depends on time-lock/owner gating and release-state checks that may make the call benign in context.",
+        "The baseline reasoning appears to have treated any ignored boolean return from an external token transfer as an `UNCHECKED_CALL` vulnerability, but in Solidity 0.4.x many ERC20 integrations intentionally ignore `transfer()` return values or rely on tokens that revert on failure. This creates a common false-positive pattern if the detector does not distinguish ERC20 token transfers from arbitrary external calls.",
+        "Self-verify did not correct the error because it likely re-evaluated the same local pattern without adding semantic context: whether the call is to a known token interface, whether failure is already prevented by preconditions, and whether the contract’s intended behavior tolerates a false return without asset-loss impact."
+      ],
+      "missing_patterns": [
+        "ERC20 token transfer interface pattern (`transfer(address,uint256) returns (bool)`) treated separately from generic external calls.",
+        "Time-lock / release-gating pattern (`start_time`, `end_time`, `isLocked`, `isReleased`) that constrains when the transfer can occur and reduces exploitability.",
+        "Owner-controlled payout pattern where only the owner can trigger release, which changes the security impact of an ignored return value.",
+        "Legacy Solidity 0.4.x ERC20 compatibility pattern where return values may be inconsistently handled across tokens, making naive unchecked-call labeling noisy."
+      ],
+      "suggested_rule": "Do not flag `UNCHECKED_CALL` solely because a high-level ERC20 `token.transfer(...)` return value is ignored. Only flag when the external call is arbitrary or when the ignored return value can cause loss of funds/state inconsistency without compensating checks. Add a whitelist/semantic rule: if the call target is an ERC20-like interface and the function is protected by owner/time-lock/state guards, classify as low-severity or non-vulnerable unless the contract updates critical state assuming transfer success."
+    },
+    "tokens_used": 1202
+  },
+  {
+    "contract_id": "wild_safe_0228_0xd4a293ae8bb9e0be12e99eb19d48239e8c83a136.sol",
+    "case_type": "hard_FP",
+    "category": "none",
+    "explanation": {
+      "root_causes": [
+        "The pipeline likely overfit to generic ERC20/SafeMath heuristics and treated the presence of token-transfer code as suspicious without finding an actual exploit path.",
+        "The excerpt is from a standard audited token template; the apparent risk comes from common ERC20 state updates and arithmetic, but SafeMath and balance/allowance checks make the usual overflow/underflow and unauthorized transfer patterns non-issues.",
+        "The model likely lacked enough template-specific context to recognize this as a canonical TokenMarket ERC20 implementation, so it defaulted to a conservative vulnerable label when it could not prove safety."
+      ],
+      "missing_patterns": [
+        "Standard ERC20Basic/ERC20 template structure from TokenMarket-style contracts.",
+        "SafeMath-wrapped arithmetic in a legacy Solidity 0.4.x token implementation.",
+        "Canonical balance/allowance update flow with transfer checks that prevent negative balances and unauthorized spending.",
+        "Template/license/header fingerprints indicating a known safe library-derived contract rather than bespoke risky logic."
+      ],
+      "suggested_rule": "If a Solidity 0.4.x token contract matches a known ERC20 template and all balance/allowance mutations use SafeMath with explicit precondition checks (e.g., require/sub assertions on balances and allowances), then suppress INTEGER_OVERFLOW/UNDERFLOW and UNCHECKED_CALL alerts unless there is an actual external call, owner-only mint/burn backdoor, or unchecked state mutation outside the standard transfer/approve/transferFrom flow."
+    },
+    "tokens_used": 1084
+  },
+  {
+    "contract_id": "wild_safe_0075_0x0a6f2d9d82baef6dd0f3a2f4679287680aad1fc0.sol",
+    "case_type": "hard_FP",
+    "category": "none",
+    "explanation": {
+      "root_causes": [
+        "The pipeline over-weighted a generic external-call heuristic: it saw `token_reward.transfer(beneficiary, token_amount)` and treated any token transfer as a potential reentrancy/unchecked-call issue, even though the contract’s actual control flow and state gating may make the call safe in context.",
+        "It appears to have missed the contract’s intended escrow/vesting semantics (`isLocked`, `isReleased`, `start_time`, `end_time`, `beneficiary`, owner-only control), so the external transfer was interpreted in isolation rather than as a one-time release action.",
+        "The model likely conflated ERC20-style `transfer` return-value handling with a security bug, but in Solidity 0.4.x many legacy tokens either revert on failure or are used in patterns where the return value is not relied upon; this is not automatically a vulnerability without an exploitable state inconsistency or fund-loss path.",
+        "Self-verify did not add new evidence because it likely rechecked the same surface pattern (external call without checked return) instead of validating whether the call can be abused, repeated, or reentered."
+      ],
+      "missing_patterns": [
+        "Escrow/vesting release pattern: funds or tokens are released once after a time condition and/or owner authorization, with state flags preventing repeated release.",
+        "One-time payout guarded by state machine flags such as `isLocked` / `isReleased` that make the external transfer non-reentrant in practice if updated before/after the call correctly.",
+        "Legacy ERC20 interaction pattern in Solidity 0.4.x where `transfer()` return-value checking is not always a security issue by itself.",
+        "Safe external token payout pattern: external call to a known token contract from a privileged release function, without user-controlled recipient or amount.",
+        "Time-lock contract pattern using `start_time`/`end_time` and a designated `beneficiary`, which is typically safe when release conditions are enforced."
+      ],
+      "suggested_rule": "Do not flag an external ERC20 `transfer()` as vulnerable solely because its return value is unchecked. Only flag when the call is user-influenced or can be repeated/reentered, or when state changes enabling one-time release are missing. Treat owner/time-locked escrow release functions with `isReleased`/`isLocked`-style guards as safe unless the external call can be exploited to drain additional funds or bypass the release condition."
+    },
+    "tokens_used": 1232
+  },
+  {
+    "contract_id": "curated_arithmetic_insecure_transfer.sol",
+    "case_type": "FN",
+    "category": "arithmetic",
+    "explanation": {
+      "root_causes": [
+        "The pipeline overfit to the presence of a balance check before subtraction and treated the function as generally safe, but the actual issue is the unchecked addition to `balanceOf[_to]` which can overflow in Solidity 0.4.10.",
+        "The model likely conflated underflow protection on the sender side with full arithmetic safety, missing that `uint256` addition is still vulnerable without an upper-bound check.",
+        "RAG examples likely emphasized safe subtraction patterns (`require(balance >= value)`) but did not include the complementary overflow condition for recipient balances.",
+        "The high confidence SAFE result suggests the verifier did not reason about the destination balance state or the absence of `balanceOf[_to] + _value >= balanceOf[_to]` / `balanceOf[_to] <= max - _value` style checks."
+      ],
+      "missing_patterns": [
+        "State update pattern: `balanceOf[_to] += _value` on a `uint256` mapping in Solidity <0.8 without a preceding overflow guard.",
+        "Transfer-like logic that checks only sender sufficiency but not recipient capacity.",
+        "Arithmetic vulnerability pattern where one side of a token transfer is safe (no underflow) while the other side is unsafe (addition overflow).",
+        "Absence of an explicit upper-bound check before addition, e.g. `require(balanceOf[_to] + _value >= balanceOf[_to])` or equivalent.",
+        "Legacy Solidity arithmetic semantics (pre-0.8) where both addition and subtraction are unchecked unless manually guarded."
+      ],
+      "suggested_rule": "Flag any Solidity <0.8 contract that performs `x += y` or `x = x + y` on `uint` state variables/mappings without a dominating overflow check such as `require(x + y >= x)` or `require(x <= type(uint).max - y)`, especially in token/transfer functions where sender balance is checked but recipient balance is incremented."
+    },
+    "tokens_used": 768
+  },
+  {
+    "contract_id": "wild_safe_0508_0x38ba2429cc9546b389cd36c4f09209846ac15a8d.sol",
+    "case_type": "hard_FP",
+    "category": "none",
+    "explanation": {
+      "root_causes": [
+        "The pipeline appears to have over-weighted a generic 'external call = vulnerability' heuristic and treated the `approveAndCall` callback as an unchecked low-level interaction, even though this is an intentional ERC20 extension pattern and not inherently unsafe in this contract.",
+        "The contract uses older Solidity 0.4.x style interfaces and callback-based token logic, which can look suspicious to a model trained on modern best-practice patterns, causing false positives when the code is actually standard and bounded.",
+        "Self-verify did not resolve the false positive because the apparent risk is semantic rather than syntactic: the callback is not a raw `call`, `delegatecall`, or value transfer, and there is no state corruption or reentrancy-prone balance update around it in the excerpt."
+      ],
+      "missing_patterns": [
+        "ERC20 `approveAndCall` / callback-extension pattern (`ApproveAndCallFallBack(spender).receiveApproval(...)`) as a legitimate token integration idiom.",
+        "Distinguishing typed external interface calls from low-level calls: high-level interface invocation is not equivalent to unchecked `call`/`send`/`transfer`-style risk.",
+        "Pattern where external callback occurs after approval logic but without Ether transfer, mutable shared state exposure, or post-call invariant dependence.",
+        "Legacy token contracts that intentionally support spender callbacks and should not be flagged solely for having an external call."
+      ],
+      "suggested_rule": "Do not flag a contract as vulnerable solely because it performs a typed external interface callback in an ERC20 extension such as `approveAndCall`. Only flag if the external call is a low-level call (`call`, `delegatecall`, `callcode`, `send`), transfers Ether, or is followed by state changes that depend on the callee’s behavior without proper checks/effects ordering."
+    },
+    "tokens_used": 1024
+  },
+  {
+    "contract_id": "wild_safe_0314_0x2323aeb683637c15350382df63bf84ce45561aad.sol",
+    "case_type": "hard_FP",
+    "category": "none",
+    "explanation": {
+      "root_causes": [
+        "The pipeline likely over-weighted a generic external-call heuristic: `approveAndCall()` makes an external call after state update, which often appears in reentrancy examples, but here it is an intentional ERC20 extension and not exploitable in the given code path.",
+        "The contract excerpt shows standard ERC20 bookkeeping with balance/allowance checks and no obvious unsafe state ordering in the core transfer logic, so the model appears to have conflated a benign callback pattern with a vulnerability.",
+        "The self-verify step did not correct the initial false positive, suggesting the verification logic lacked a concrete exploitability check (e.g., whether the callback can reenter into a state-changing function with a harmful effect)."
+      ],
+      "missing_patterns": [
+        "Benign ERC20 `approveAndCall`/callback extension pattern: `approve()` followed by `spender.receiveApproval(...)` as an explicit user-invoked integration hook.",
+        "External call after allowance update but without privileged asset movement in the same function, i.e., callback-only design rather than funds transfer.",
+        "Need to distinguish callback-based composability from reentrancy risk by checking whether the external callee can influence an invariant-bearing state transition in the same transaction."
+      ],
+      "suggested_rule": "Do not flag a contract as reentrancy-vulnerable solely because it performs an external callback after `approve()` or similar allowance-setting logic. Only flag if the external call occurs before a critical state update, or if the callback can reenter a function that mutates balances/allowances in a way that can be exploited (e.g., repeated withdrawal, double-spend, or invariant violation)."
+    },
+    "tokens_used": 1004
+  },
+  {
+    "contract_id": "wild_safe_0115_0x16a19f43832292dc41ce7fb500909723b1c3be69.sol",
+    "case_type": "hard_FP",
+    "category": "none",
+    "explanation": {
+      "root_causes": [
+        "The excerpt is truncated before the economically relevant functions, so the model inferred risk from incomplete context rather than verified behavior.",
+        "The contract is Solidity 0.4-era code with legacy constructs (e.g., throw, manual ownership, emergency stop), which often correlate with vulnerabilities but are not vulnerabilities by themselves.",
+        "The baseline appears to have over-weighted the presence of low-level/legacy style and under-weighted the visible use of standard access-control and arithmetic-safety patterns.",
+        "Self-verify could not overturn the initial guess because there was no complete execution path or concrete exploit surface in the provided snippet to prove safety."
+      ],
+      "missing_patterns": [
+        "Legacy but safe governance patterns: Ownable + onlyOwner + emergency halt controls (Haltable) used as defensive access control.",
+        "SafeMath-style arithmetic wrappers in older Solidity code, which are often present in TokenMarket-era contracts and should reduce overflow concern.",
+        "Truncated/partial contract context where the visible code is infrastructure/utility logic rather than the vulnerable business logic; the pipeline lacks a 'insufficient evidence' safe classification for such excerpts."
+      ],
+      "suggested_rule": "If the visible code is only ownership/pausing/utility scaffolding and includes standard access-control or SafeMath patterns, but the vulnerable state-changing business logic is absent or truncated, classify as SAFE/INSUFFICIENT_EVIDENCE rather than VULNERABLE unless a concrete exploit path is visible in the excerpt."
+    },
+    "tokens_used": 996
+  },
+  {
+    "contract_id": "curated_unchecked_low_level_calls_0x663e4229142a27f00bafb5d087e1e730648314c3.sol",
+    "case_type": "FN",
+    "category": "unchecked_low_level_calls",
+    "explanation": {
+      "root_causes": [
+        "The pipeline overfit to access-control cues (Ownable/onlyOwner/onlyCEO-style modifiers) and treated the contract as generally safe, while the actual issue is unrelated to authorization: a low-level call result is used without checking success.",
+        "The RAG examples appear to emphasize missing authorization/zero-address checks, so the model likely learned to associate 'security-looking modifiers' with safety and failed to inspect call sites for unchecked return values.",
+        "The vulnerable sites are likely in deeper code not captured by the excerpt, and the model did not propagate the source annotation of vulnerable lines (1152, 1496, 2467) to focus on low-level call semantics."
+      ],
+      "missing_patterns": [
+        "Low-level external calls such as `.call(...)`, `.delegatecall(...)`, `.callcode(...)`, or `.send(...)` whose boolean return value is ignored.",
+        "Patterns where a call is made for side effects and execution continues regardless of failure, e.g. `addr.call(...)` without `require(...)` or `if (!...) revert`.",
+        "Use of low-level calls inside token transfer / payout / proxy / plugin logic, especially when the code assumes the callee executed successfully but does not verify the returned status.",
+        "False sense of safety from unrelated access-control modifiers coexisting with unchecked external calls."
+      ],
+      "suggested_rule": "Flag any Solidity 0.4.x contract that performs a low-level external call (`call`, `delegatecall`, `callcode`, `send`) and does not immediately check the returned boolean or otherwise enforce failure handling (`require(success)`, `assert(success)`, or explicit conditional revert). Escalate severity when the call result is ignored in state-changing functions or value-transfer paths."
+    },
+    "tokens_used": 1052
+  }
+]
