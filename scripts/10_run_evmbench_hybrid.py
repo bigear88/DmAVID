@@ -43,6 +43,8 @@ except ImportError:
 
 import chromadb
 from openai import OpenAI
+import sys as _s; _s.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _model_compat import token_param
 
 # ========================================================================
 # Setup
@@ -76,7 +78,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # LLM Configuration
-LLM_MODEL = "gpt-4.1-mini"
+LLM_MODEL = os.environ.get("DAVID_MODEL", "gpt-4.1-mini")
 EMBEDDING_MODEL = "text-embedding-3-small"
 COLLECTION_NAME = "vuln_knowledge"
 RAG_TOP_K = 5
@@ -386,7 +388,7 @@ Output ONLY JSON:
         resp = client.chat.completions.create(
             model=LLM_MODEL,
             messages=[{"role": "user", "content": detect_prompt}],
-            temperature=0.1, max_tokens=4000, seed=42
+            temperature=0.1, **token_param(4000), seed=42
         )
         content = resp.choices[0].message.content.strip()
         vulns = []
@@ -472,7 +474,7 @@ def judge_detection(found_vulns: List[Dict], gold_vulns: List[Dict], audit_id: s
             response = client.chat.completions.create(
                 model=LLM_MODEL,
                 messages=[{"role": "user", "content": judge_prompt}],
-                temperature=0.0, max_tokens=500
+                temperature=0.0, **token_param(500)
             )
             content = response.choices[0].message.content.strip()
             if "```json" in content:
