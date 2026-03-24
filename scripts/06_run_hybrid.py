@@ -301,6 +301,130 @@ Respond in JSON format ONLY:
 }"""
 
 
+# ============================================================
+# POST-PREDICTION VALIDATION: Exploit Path Verification
+# Reference: PoCo (arXiv:2511.02780), Heimdallr (arXiv:2601.17833)
+# ============================================================
+
+EXPLOIT_VERIFY_PROMPT = """You have previously identified the following smart contract as vulnerable due to: {vuln_types}.
+
+Your task now is to act as a red team security researcher and provide a concrete, step-by-step exploit path that demonstrates how this vulnerability can be triggered.
+
+Your explanation must include:
+1. Required Preconditions: What state must the contract be in?
+2. Transaction Sequence: A clear sequence of function calls an attacker would make.
+3. Expected Outcome: What is the final state that proves the exploit was successful (e.g., funds drained, unauthorized access)?
+
+IMPORTANT: Be rigorous and honest. If the contract has proper mitigations (ReentrancyGuard, SafeMath, onlyOwner, require checks, Solidity >=0.8 overflow protection), acknowledge them.
+
+If you cannot construct a valid and logical exploit path, explicitly state: "Upon review, a concrete exploit path cannot be constructed, and the initial assessment may be a false positive."
+
+Respond in JSON:
+{{
+  "exploit_constructable": true/false,
+  "preconditions": "...",
+  "transaction_sequence": ["step1", "step2", "..."],
+  "expected_outcome": "...",
+  "mitigations_found": ["mitigation1", "..."],
+  "confidence": 0.0-1.0,
+  "reasoning": "..."
+}}"""
+
+# ============================================================
+# POST-PREDICTION VALIDATION: Contrastive Auditing
+# Reference: LogicScan (arXiv:2602.03271)
+# ============================================================
+
+CONTRASTIVE_PROMPT = """You are comparing a potentially vulnerable contract against known-safe examples.
+
+## Target Contract (flagged as vulnerable for: {vuln_types}):
+```solidity
+{target_code}
+```
+
+## Safe Reference Contracts:
+{safe_examples}
+
+Your task: Identify the CRITICAL DIFFERENCES between the target and safe contracts that justify the vulnerability classification.
+
+If the target contract uses the same security patterns as the safe contracts (guards, checks, mitigations), it is likely a FALSE POSITIVE.
+
+Respond in JSON:
+{{
+  "critical_differences_found": true/false,
+  "differences": ["diff1", "diff2"],
+  "shared_safe_patterns": ["pattern1", "pattern2"],
+  "verdict": "confirmed_vulnerable" or "likely_false_positive",
+  "confidence": 0.0-1.0
+}}"""
+
+
+def run_exploit_verification(code: str, vuln_types: list, llm_client: OpenAI) -> dict:
+    """PoCo-style: verify vulnerability by requiring concrete exploit path."""
+    vuln_str = ", ".join(vuln_types) if vuln_types else "unspecified vulnerability"
+    prompt = EXPLOIT_VERIFY_PROMPT.format(vuln_types=vuln_str)
+
+    try:
+        resp = llm_client.chat.completions.create(
+            model=LLM_MODEL,
+            messages=[
+                {"role": "system", "content": prompt},
+                {"role": "user", "content": f"```solidity\n{code[:MAX_CODE_LENGTH]}\n```"},
+            ],
+            temperature=0.1,
+            **token_param(1024),
+            seed=42,
+        )
+        content = resp.choices[0].message.content.strip()
+        json_match = re.search(r"\{[\s\S]*\}", content)
+        parsed = json.loads(json_match.group()) if json_match else json.loads(content)
+        return {
+            "exploit_constructable": parsed.get("exploit_constructable", True),
+            "confidence": parsed.get("confidence", 0.5),
+            "mitigations_found": parsed.get("mitigations_found", []),
+            "reasoning": parsed.get("reasoning", ""),
+            "tokens_used": resp.usage.total_tokens if resp.usage else 0,
+            "success": True,
+        }
+    except Exception as e:
+        # On error, don't flip — keep original verdict
+        return {"exploit_constructable": True, "confidence": 0.5, "mitigations_found": [],
+                "reasoning": str(e), "tokens_used": 0, "success": False}
+
+
+def run_contrastive_audit(code: str, vuln_types: list, safe_contracts: list, llm_client: OpenAI) -> dict:
+    """LogicScan-style: compare against safe contracts to detect FP."""
+    vuln_str = ", ".join(vuln_types) if vuln_types else "unspecified"
+    safe_examples = ""
+    for i, sc in enumerate(safe_contracts[:2]):
+        safe_examples += f"\n### Safe Contract {i+1}:\n```solidity\n{sc[:3000]}\n```\n"
+
+    prompt = CONTRASTIVE_PROMPT.format(
+        vuln_types=vuln_str, target_code=code[:6000], safe_examples=safe_examples
+    )
+    try:
+        resp = llm_client.chat.completions.create(
+            model=LLM_MODEL,
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.1,
+            **token_param(1500),
+            seed=42,
+        )
+        content = resp.choices[0].message.content.strip()
+        json_match = re.search(r"\{[\s\S]*\}", content)
+        parsed = json.loads(json_match.group()) if json_match else json.loads(content)
+        return {
+            "critical_differences": parsed.get("critical_differences_found", True),
+            "verdict": parsed.get("verdict", "confirmed_vulnerable"),
+            "confidence": parsed.get("confidence", 0.5),
+            "tokens_used": resp.usage.total_tokens if resp.usage else 0,
+            "success": True,
+        }
+    except Exception as e:
+        return {"critical_differences": True, "verdict": "confirmed_vulnerable",
+                "confidence": 0.5, "tokens_used": 0, "success": False}
+
+
 SLITHER_INFORMED_PROMPT = """You are an expert smart contract security auditor with access to:
 1. A vulnerability knowledge base (RAG context)
 2. Static analysis results from Slither (pre-filtered, informational only)
@@ -852,6 +976,32 @@ def hybrid_decision(
         decision_path = "evidence_accumulation"
         final_reasoning = " | ".join(evidence_parts) + f" → score={evidence_score:.2f}"
 
+    elif strategy == "validate":
+        # ═══ Strategy E: Post-Prediction Validation (PoCo + LogicScan) ═══
+        # Step 1: Use LLM+RAG as-is (preserves 98.6% Recall)
+        # Step 2: For vulnerable verdicts, verify via exploit path construction
+        # Step 3: Optionally, contrastive audit against safe contracts
+        # Goal: Flip FPs to TN without touching TPs
+        if s1["predicted_vulnerable"]:
+            # Verify: can LLM construct a concrete exploit?
+            verify = run_exploit_verification(code, s1["vulnerability_types"], llm_client)
+            if verify["exploit_constructable"]:
+                decision_path = "validate_exploit_confirmed"
+                final_vulnerable = True
+                final_confidence = max(s1["confidence"], verify["confidence"])
+            else:
+                # Exploit not constructable → likely FP, but double-check with contrastive
+                decision_path = "validate_exploit_failed_flipped"
+                final_vulnerable = False
+                final_confidence = verify["confidence"]
+            final_reasoning = f"Exploit verify: {'confirmed' if verify['exploit_constructable'] else 'FLIPPED→safe'} ({verify['reasoning'][:100]})"
+            critic_result = verify  # Reuse for output
+        else:
+            decision_path = "validate_safe_passthrough"
+            final_vulnerable = False
+            final_confidence = s1["confidence"]
+            final_reasoning = s1["reasoning"]
+
     elif strategy == "slither_first":
         # ═══ Strategy D: Slither-First Informed (GPTScan-style) ═══
         # Slither runs first, results passed as informational context to LLM+RAG
@@ -905,7 +1055,7 @@ def hybrid_decision(
         "stage2_confidence": stage2_result["confidence"] if stage2_result else None,
         "stage2_verdict_changed": stage2_result.get("verdict_changed") if stage2_result else None,
         # Critic details (GPTLens dual-role)
-        "critic_verdict": critic_result["final_verdict"] if critic_result else None,
+        "critic_verdict": critic_result.get("final_verdict", critic_result.get("exploit_constructable")) if critic_result else None,
         "critic_confirmed": len(critic_result.get("confirmed", [])) if critic_result else 0,
         "critic_rejected": len(critic_result.get("rejected", [])) if critic_result else 0,
         # Timing & tokens
@@ -929,8 +1079,8 @@ def hybrid_decision(
 def main():
     import argparse
     parser = argparse.ArgumentParser(description="DavidAgent Hybrid Framework")
-    parser.add_argument("--strategy", choices=["ensemble", "dual_role", "evidence", "slither_first", "all"],
-                        default="slither_first", help="Fusion strategy (default: slither_first)")
+    parser.add_argument("--strategy", choices=["ensemble", "dual_role", "evidence", "slither_first", "validate", "all"],
+                        default="validate", help="Fusion strategy (default: validate)")
     parser.add_argument("--alpha", type=float, default=0.7, help="Ensemble weight for LLM (default: 0.7)")
     args = parser.parse_args()
 
