@@ -977,26 +977,34 @@ def hybrid_decision(
         final_reasoning = " | ".join(evidence_parts) + f" → score={evidence_score:.2f}"
 
     elif strategy == "validate":
-        # ═══ Strategy E: Post-Prediction Validation (PoCo + LogicScan) ═══
-        # Step 1: Use LLM+RAG as-is (preserves 98.6% Recall)
-        # Step 2: For vulnerable verdicts, verify via exploit path construction
-        # Step 3: Optionally, contrastive audit against safe contracts
-        # Goal: Flip FPs to TN without touching TPs
-        if s1["predicted_vulnerable"]:
-            # Verify: can LLM construct a concrete exploit?
+        # ═══ Strategy E: Targeted Post-Prediction Validation ═══
+        # Based on Perplexity analysis + PoCo (arXiv:2511.02780):
+        # - Keep LLM+RAG as-is for HIGH-confidence predictions (preserves Recall)
+        # - Only verify LOW-confidence "vulnerable" predictions (targets FP zone)
+        # - alpha parameter = confidence threshold for triggering verification
+        # - FP mean conf=0.738, TP mean conf=0.904 → sweet spot around 0.85-0.9
+        verify_threshold = alpha  # Reuse alpha as verification confidence threshold
+        if s1["predicted_vulnerable"] and s1["confidence"] < verify_threshold:
+            # LOW confidence vulnerable → high FP risk → verify via exploit path
             verify = run_exploit_verification(code, s1["vulnerability_types"], llm_client)
             if verify["exploit_constructable"]:
-                decision_path = "validate_exploit_confirmed"
+                decision_path = "validate_lowconf_confirmed"
                 final_vulnerable = True
                 final_confidence = max(s1["confidence"], verify["confidence"])
             else:
-                # Exploit not constructable → likely FP, but double-check with contrastive
-                decision_path = "validate_exploit_failed_flipped"
+                decision_path = "validate_lowconf_flipped"
                 final_vulnerable = False
                 final_confidence = verify["confidence"]
-            final_reasoning = f"Exploit verify: {'confirmed' if verify['exploit_constructable'] else 'FLIPPED→safe'} ({verify['reasoning'][:100]})"
-            critic_result = verify  # Reuse for output
+            final_reasoning = f"LowConf({s1['confidence']:.2f}<{verify_threshold}): {'confirmed' if verify['exploit_constructable'] else 'FLIPPED→safe'}"
+            critic_result = verify
+        elif s1["predicted_vulnerable"]:
+            # HIGH confidence vulnerable → trust LLM directly (no extra API call)
+            decision_path = "validate_highconf_passthrough"
+            final_vulnerable = True
+            final_confidence = s1["confidence"]
+            final_reasoning = f"HighConf({s1['confidence']:.2f}>={verify_threshold}), trusted"
         else:
+            # LLM says safe → passthrough (preserves TN)
             decision_path = "validate_safe_passthrough"
             final_vulnerable = False
             final_confidence = s1["confidence"]
@@ -1081,7 +1089,7 @@ def main():
     parser = argparse.ArgumentParser(description="DavidAgent Hybrid Framework")
     parser.add_argument("--strategy", choices=["ensemble", "dual_role", "evidence", "slither_first", "validate", "all"],
                         default="validate", help="Fusion strategy (default: validate)")
-    parser.add_argument("--alpha", type=float, default=0.7, help="Ensemble weight for LLM (default: 0.7)")
+    parser.add_argument("--alpha", type=float, default=0.9, help="For validate: confidence threshold; for ensemble: LLM weight")
     args = parser.parse_args()
 
     strategy = args.strategy
