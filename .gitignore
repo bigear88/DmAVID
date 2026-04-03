@@ -158,3 +158,8 @@ extract_contracts.py
 fix_paths.py
 show_results.py
 patch_for_gptoss.sh
+data/DeFiHackLabs/
+scripts/_audit_hardcode.py
+scripts/audit_hardcode.py
+*.pyc
+__pycache__/
