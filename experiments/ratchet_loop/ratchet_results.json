@@ -1,0 +1,49 @@
+{
+  "experiment": "knowledge_ratchet_loop",
+  "model": "gpt-4.1-mini",
+  "design_philosophy": "Monotonic improvement guarantee (inspired by autoresearch ratchet + AlphaGo Zero self-play)",
+  "initial_kb_entries": 45,
+  "final_kb_entries": 57,
+  "rounds": [
+    {
+      "round": 1,
+      "type": "AMM/DEX",
+      "entries_generated": 3,
+      "action": "KEEP",
+      "score_before": 0.1282,
+      "score_after": 0.1282,
+      "tokens": 1065
+    },
+    {
+      "round": 2,
+      "type": "Lending/Borrowing",
+      "entries_generated": 3,
+      "action": "KEEP",
+      "score_before": 0.1282,
+      "score_after": 0.1282,
+      "tokens": 1043
+    },
+    {
+      "round": 3,
+      "type": "Token/Governance",
+      "entries_generated": 3,
+      "action": "KEEP",
+      "score_before": 0.1282,
+      "score_after": 0.1282,
+      "tokens": 1405
+    },
+    {
+      "round": 4,
+      "type": "Math/Precision",
+      "entries_generated": 3,
+      "action": "KEEP",
+      "score_before": 0.1282,
+      "score_after": 0.1282,
+      "tokens": 927
+    }
+  ],
+  "kept": 4,
+  "reverted": 0,
+  "total_tokens": 4440,
+  "baseline_score": 0.1282
+}
