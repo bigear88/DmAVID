@@ -13,7 +13,7 @@ import sys; sys.path.insert(0, os.path.dirname(__file__))
 from _model_compat import token_param, MODEL as COMPAT_MODEL
 
 random.seed(42)
-BASE_DIR = "/home/curtis/defi-llm-vulnerability-detection"
+BASE_DIR = "/home/curtis/DmAVID"
 DATASET_FILE = os.path.join(BASE_DIR, "data/dataset_1000.json")
 OUTPUT_FILE = os.path.join(BASE_DIR, "experiments/llm_rag/llm_rag_results.json")
 

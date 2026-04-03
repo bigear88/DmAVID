@@ -27,7 +27,7 @@ from _model_compat import token_param, MODEL as COMPAT_MODEL
 random.seed(42)
 
 # Configuration
-BASE_DIR = os.environ.get("DAVID_BASE_DIR", "/home/curtis/defi-llm-vulnerability-detection")
+BASE_DIR = os.environ.get("DAVID_BASE_DIR", "/home/curtis/DmAVID")
 KNOWLEDGE_DIR = os.path.join(BASE_DIR, "scripts/knowledge")
 EXPERIMENTS_DIR = os.path.join(BASE_DIR, "experiments")
 TEACHER_CHALLENGES_DIR = os.path.join(EXPERIMENTS_DIR, "teacher_challenges")

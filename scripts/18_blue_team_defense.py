@@ -18,7 +18,7 @@ from _model_compat import token_param
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-BASE_DIR = os.environ.get("DAVID_BASE_DIR", "/home/curtis/defi-llm-vulnerability-detection")
+BASE_DIR = os.environ.get("DAVID_BASE_DIR", "/home/curtis/DmAVID")
 MODEL = os.environ.get("DAVID_MODEL", "gpt-4.1-mini")
 client = OpenAI()
 

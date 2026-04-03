@@ -17,8 +17,8 @@ from openai import OpenAI
 
 BASE_DIR = os.environ.get("DAVID_BASE_DIR",
     os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-REPOS_DIR = os.path.join(BASE_DIR, "..", "defi-llm-vulnerability-detection", "data", "evmbench_repos")
-EVMBENCH_DIR = os.path.join(BASE_DIR, "..", "defi-llm-vulnerability-detection", "data", "evmbench")
+REPOS_DIR = os.path.join(BASE_DIR, "data", "evmbench_repos")
+EVMBENCH_DIR = os.path.join(BASE_DIR, "data", "evmbench")
 MODEL = os.environ.get("DAVID_MODEL", "gpt-4.1-mini")
 OUTPUT_DIR = os.path.join(BASE_DIR, "experiments", "evmbench_smart")
 client = OpenAI()

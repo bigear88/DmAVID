@@ -32,7 +32,7 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 # Configuration
 # ---------------------------------------------------------------------------
-BASE_DIR = os.environ.get("DAVID_BASE_DIR", "/home/curtis/defi-llm-vulnerability-detection")
+BASE_DIR = os.environ.get("DAVID_BASE_DIR", "/home/curtis/DmAVID")
 MODEL = os.environ.get("DAVID_MODEL", "gpt-4.1-mini")
 client = OpenAI()
 

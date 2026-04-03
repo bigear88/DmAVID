@@ -163,3 +163,5 @@ scripts/_audit_hardcode.py
 scripts/audit_hardcode.py
 *.pyc
 __pycache__/
+env.sh
+*.ratchet_backup

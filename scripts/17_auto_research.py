@@ -56,7 +56,7 @@ logger = logging.getLogger(__name__)
 
 # ── Constants ──────────────────────────────────────────────────────
 BASE_DIR = os.environ.get(
-    "DAVID_BASE_DIR", "/home/curtis/defi-llm-vulnerability-detection"
+    "DAVID_BASE_DIR", "/home/curtis/DmAVID"
 )
 SCRIPTS_DIR = os.path.join(BASE_DIR, "scripts")
 CONFIGS_DIR = os.path.join(BASE_DIR, "configs")

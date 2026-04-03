@@ -29,7 +29,7 @@ logger = logging.getLogger(__name__)
 # Constants
 BASE_DIR = os.environ.get(
     "DAVID_BASE_DIR",
-    "/home/curtis/defi-llm-vulnerability-detection"
+    "/home/curtis/DmAVID"
 )
 MODEL = os.environ.get("DAVID_MODEL", "gpt-4.1-mini")
 DEFAULT_VARIANTS_PER_CASE = 3

@@ -30,7 +30,7 @@ client = OpenAI()
 MODEL = os.environ.get("DAVID_MODEL", "gpt-4.1-mini")
 
 # Base directory for knowledge bases and results
-BASE_DIR = os.environ.get("DAVID_BASE_DIR", "/home/curtis/defi-llm-vulnerability-detection")
+BASE_DIR = os.environ.get("DAVID_BASE_DIR", "/home/curtis/DmAVID")
 EVMBENCH_DIR = os.path.join(BASE_DIR, "data", "evmbench")
 REPOS_DIR = os.path.join(BASE_DIR, "data", "evmbench_repos")
 KB_DIR = os.path.join(BASE_DIR, "knowledge_bases")
