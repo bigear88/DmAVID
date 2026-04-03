@@ -1,0 +1,197 @@
+{
+  "experiment": "compound_vulnerability_case_study",
+  "model": "gpt-4.1-mini",
+  "cases": [
+    {
+      "case": "Cream Finance (2021-10)",
+      "loss": "$130M",
+      "expected_chain": "Flash Loan -> Price Oracle Manipulation -> Reentrancy",
+      "complexity": "3-step chain",
+      "vulns_found": [
+        "Flash Loan Abuse",
+        "Recursive Borrowing / Reentrancy-like Logic Flaw",
+        "Collateral Valuation Manipulation",
+        "Price Oracle Manipulation",
+        "Unchecked External Calls",
+        "Improper Market Entering and Collateral Accounting"
+      ],
+      "attack_steps": 7,
+      "chain_details": [
+        {
+          "step": 1,
+          "action": "Initiate a large MakerDAO flash loan of 500M DAI to gain initial capital without upfront funds.",
+          "vuln_type": "Flash Loan Abuse",
+          "difficulty": "Medium"
+        },
+        {
+          "step": 2,
+          "action": "Convert DAI to yDAI and then deposit into Yearn 4-Curve pool to mint yUSD tokens, which are then used to mint crYUSD tokens on Cream Finance.",
+          "vuln_type": "Collateral Valuation Manipulation",
+          "difficulty": "Hard"
+        },
+        {
+          "step": 3,
+          "action": "Use crYUSD as collateral on Cream Finance and enter the market to borrow more yUSD tokens.",
+          "vuln_type": "Improper Market Entering and Collateral Accounting",
+          "difficulty": "Medium"
+        },
+        {
+          "step": 4,
+          "action": "Trigger a second flash loan from Aave for 524,000 WETH, then convert most WETH to ETH and mint crETH tokens as collateral on Cream Finance.",
+          "vuln_type": "Flash Loan Abuse",
+          "difficulty": "Medium"
+        },
+        {
+          "step": 5,
+          "action": "Repeatedly borrow yUSD from crYUSD market and mint crYUSD tokens recursively, transferring these tokens to the first contract to inflate collateral value artificially.",
+          "vuln_type": "Recursive Borrowing / Reentrancy-like Logic Flaw",
+          "difficulty": "Hard"
+        },
+        {
+          "step": 6,
+          "action": "Call back to the first contract to convert yUSD collateral to 4-Curve tokens, effectively doubling the collateral value due to price oracle manipulation or flawed price calculations.",
+          "vuln_type": "Price Oracle Manipulation",
+          "difficulty": "Hard"
+        },
+        {
+          "step": 7,
+          "action": "Borrow large amounts against inflated collateral, repay flash loans (Aave and MakerDAO), and keep the surplus as profit.",
+          "vuln_type": "Logic Flaw / Collateral Valuation Manipulation",
+          "difficulty": "Medium"
+        }
+      ],
+      "expected_coverage": 0.75,
+      "could_static_detect": false,
+      "reasoning": "The exploit relies on complex multi-step interactions involving flash loans, recursive borrowing, and price oracle manipulation that are difficult to detect with static analysis alone. The recursive minting and borrowing pattern combined with external protocol calls and price manipulations require d",
+      "tokens": 4652,
+      "time_s": 5.4
+    },
+    {
+      "case": "Euler Finance (2023-03)",
+      "loss": "$197M",
+      "expected_chain": "Flash Loan -> donate() Abuse -> Liquidation Logic Flaw",
+      "complexity": "3-step chain (logic)",
+      "vulns_found": [
+        "flash_loan",
+        "logic_flaw",
+        "economic_manipulation",
+        "improper_reserve_accounting",
+        "liquidation_mechanism_abuse"
+      ],
+      "attack_steps": 9,
+      "chain_details": [
+        {
+          "step": 1,
+          "action": "Obtain a large flash loan of 30M DAI from Aave V2 to fund the exploit",
+          "vuln_type": "flash_loan",
+          "difficulty": "Easy"
+        },
+        {
+          "step": 2,
+          "action": "Deposit 20M DAI into Euler protocol via eDAI.deposit(), receiving eDAI tokens",
+          "vuln_type": "logic_flaw",
+          "difficulty": "Medium"
+        },
+        {
+          "step": 3,
+          "action": "Borrow 200M DAI by minting eDAI tokens (eDAI.mint()), leveraging the deposited collateral excessively",
+          "vuln_type": "logic_flaw",
+          "difficulty": "Medium"
+        },
+        {
+          "step": 4,
+          "action": "Repay 10M DAI debt partially via dDAI.repay(), burning debt tokens",
+          "vuln_type": "logic_flaw",
+          "difficulty": "Medium"
+        },
+        {
+          "step": 5,
+          "action": "Repeat borrowing step to mint more eDAI and borrow more DAI, inflating the protocol's accounting",
+          "vuln_type": "logic_flaw",
+          "difficulty": "Medium"
+        },
+        {
+          "step": 6,
+          "action": "Donate 100M eDAI to reserves via eDAI.donateToReserves(), artificially inflating the reserve balance",
+          "vuln_type": "improper_reserve_accounting",
+          "difficulty": "Hard"
+        },
+        {
+          "step": 7,
+          "action": "Trigger liquidation of the violator account using Euler.liquidate() exploiting the imbalance between eDAI and dDAI",
+          "vuln_type": "liquidation_mechanism_abuse",
+          "difficulty": "Hard"
+        },
+        {
+          "step": 8,
+          "action": "Withdraw all DAI from Euler protocol using eDAI.withdraw(), extracting more funds than legitimately owned",
+          "vuln_type": "logic_flaw",
+          "difficulty": "Medium"
+        },
+        {
+          "step": 9,
+          "action": "Repay the flash loan to Aave V2, keeping the leftover DAI as profit",
+          "vuln_type": "flash_loan",
+          "difficulty": "Easy"
+        }
+      ],
+      "expected_coverage": 0.5,
+      "could_static_detect": false,
+      "reasoning": "The exploit relies on complex economic logic flaws and protocol-specific reserve accounting manipulations that are difficult to detect with static analysis alone. Flash loans are easy to detect, but the chained abuse of mint, repay, donateToReserves, and liquidation mechanisms requires deep semantic",
+      "tokens": 2873,
+      "time_s": 7.9
+    },
+    {
+      "case": "Harvest Finance (2020-10)",
+      "loss": "$34M",
+      "expected_chain": "Flash Loan -> AMM Price Slippage Manipulation",
+      "complexity": "2-step chain",
+      "vulns_found": [
+        "Flash Loan",
+        "Price/Oracle Manipulation",
+        "Logic Flaw",
+        "Reentrancy (indirect via external calls)",
+        "Improper Validation of Exchange Rates"
+      ],
+      "attack_steps": 5,
+      "chain_details": [
+        {
+          "step": 1,
+          "action": "Initiate a large flash loan of USDC from Uniswap V2 USDC/ETH pair by calling swap() with USDC amount and empty data to trigger uniswapV2Call callback",
+          "vuln_type": "Flash Loan",
+          "difficulty": "Medium"
+        },
+        {
+          "step": 2,
+          "action": "Within uniswapV2Call triggered by USDC pair, initiate a second flash loan of USDT from Uniswap V2 USDT/ETH pair by calling swap() with USDT amount",
+          "vuln_type": "Flash Loan",
+          "difficulty": "Medium"
+        },
+        {
+          "step": 3,
+          "action": "Perform multiple iterations of swaps between USDT and USDC on Curve y pool using exchange_underlying to manipulate token balances and indirectly manipulate the price or exchange rate used by the Harvest USDC vault",
+          "vuln_type": "Price/Oracle Manipulation",
+          "difficulty": "Hard"
+        },
+        {
+          "step": 4,
+          "action": "Deposit a large amount of tokens into Harvest USDC vault and immediately withdraw to exploit the vault\u2019s internal accounting or price per share calculation, profiting from the manipulated exchange rates",
+          "vuln_type": "Logic Flaw",
+          "difficulty": "Hard"
+        },
+        {
+          "step": 5,
+          "action": "Repay the USDT flash loan to the USDT Uniswap pair and then repay the USDC flash loan to the USDC Uniswap pair, keeping the profit from the manipulated swaps and vault interactions",
+          "vuln_type": "Flash Loan",
+          "difficulty": "Medium"
+        }
+      ],
+      "expected_coverage": 0.5,
+      "could_static_detect": false,
+      "reasoning": "The exploit relies on complex multi-step interactions involving flash loans, external protocol calls, and subtle price/oracle manipulation that are difficult to detect with static analysis alone. The logic flaw in the vault and the manipulation of exchange rates require dynamic context and understan",
+      "tokens": 2098,
+      "time_s": 4.6
+    }
+  ],
+  "total_tokens": 9623
+}

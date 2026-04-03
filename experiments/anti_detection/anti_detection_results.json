@@ -1,0 +1,78 @@
+{
+  "experiment": "anti_detection_test",
+  "model": "gpt-4.1-mini",
+  "original_contract": "DEP_BANK (reentrancy)",
+  "techniques_tested": 4,
+  "detection_rate": 1.0,
+  "evasion_rate": 0.0,
+  "caught": 5,
+  "evaded": 0,
+  "total": 5,
+  "total_tokens": 7982,
+  "results": [
+    {
+      "technique": "original",
+      "description": "Unmodified vulnerable contract",
+      "detected": true,
+      "confidence": 0.9,
+      "types": [
+        "REENTRANCY",
+        "UNCHECKED_CALL"
+      ]
+    },
+    {
+      "technique": "variable_rename",
+      "description": "Rename all variables and functions to meaningless names (e.g., balances\u2192_d7x, Co",
+      "obfuscated_length": 782,
+      "detected": true,
+      "confidence": 0.9,
+      "types": [
+        "REENTRANCY",
+        "UNCHECKED_CALL"
+      ],
+      "evaded": false,
+      "reasoning": "The contract uses a low-level call (msg.sender.call.value(_r5y)()) without properly updating the state before the external call, which matches the REENTRANCY vulnerable pattern from the RAG context. T"
+    },
+    {
+      "technique": "decoy_guard",
+      "description": "Add a fake ReentrancyGuard modifier that appears to protect but actually does no",
+      "obfuscated_length": 986,
+      "detected": true,
+      "confidence": 0.9,
+      "types": [
+        "Reentrancy",
+        "Unchecked Call",
+        "Access Control"
+      ],
+      "evaded": false,
+      "reasoning": "The contract uses a noReentrancy modifier that does nothing, so it does not prevent reentrancy attacks. In the Collect function, the external call to msg.sender.call.value(_am)() is made before updati"
+    },
+    {
+      "technique": "split_function",
+      "description": "Split the vulnerable Collect function into 3 smaller internal functions that tog",
+      "obfuscated_length": 1310,
+      "detected": true,
+      "confidence": 0.9,
+      "types": [
+        "Reentrancy",
+        "Unchecked Call"
+      ],
+      "evaded": false,
+      "reasoning": "The contract DEP_BANK uses a low-level call in _sendFunds without checking the return value properly and performs the external call before updating the user's balance. According to the RAG context, th"
+    },
+    {
+      "technique": "add_complexity",
+      "description": "Add 3-4 unrelated but legitimate-looking functions (getBalance, setAdmin, pause/",
+      "obfuscated_length": 1519,
+      "detected": true,
+      "confidence": 0.95,
+      "types": [
+        "REENTRANCY",
+        "UNCHECKED_CALL",
+        "ACCESS_CONTROL"
+      ],
+      "evaded": false,
+      "reasoning": "The contract uses a low-level call in Collect() with msg.sender.call.value(_am)() without proper checks on the call's success and updates balances[msg.sender] only after the call, which matches the RE"
+    }
+  ]
+}
