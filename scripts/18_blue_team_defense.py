@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""DavidAgent Blue Team Agent: Synthesizes defensive detection patterns from validated exploits."""
+"""DmAVID Blue Team Agent: Synthesizes defensive detection patterns from validated exploits."""
 
 import os
 import sys
@@ -228,7 +228,7 @@ def update_knowledge_files(new_entries: List[Dict[str, Any]]) -> Dict[str, int]:
 
 def main():
     """Main execution flow for the Blue Team Defense Agent."""
-    parser = argparse.ArgumentParser(description="DavidAgent Blue Team Agent")
+    parser = argparse.ArgumentParser(description="DmAVID Blue Team Agent")
     parser.add_argument("--input", type=str, default=None,
                         help="Path to Foundry validation results JSON")
     parser.add_argument("--dry-run", action="store_true",
@@ -236,7 +236,7 @@ def main():
     args = parser.parse_args()
 
     logger.info("=" * 60)
-    logger.info("DavidAgent Blue Team Agent Starting")
+    logger.info("DmAVID Blue Team Agent Starting")
     logger.info(f"Model: {MODEL}")
     logger.info(f"Dry run: {args.dry_run}")
     logger.info("=" * 60)

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-DavidAgent EVMbench Enhanced Detection Pipeline.
+DmAVID EVMbench Enhanced Detection Pipeline.
 
 Adds two layers on top of 15_evmbench_reeval.py:
 1. Per-finding Self-Verify: Exploit path verification for each found vulnerability
@@ -162,7 +162,7 @@ def main():
     os.makedirs(RESULTS_DIR, exist_ok=True)
 
     print("=" * 70)
-    print("DavidAgent EVMbench Enhanced Detection")
+    print("DmAVID EVMbench Enhanced Detection")
     print(f"Model: {MODEL}")
     print(f"Stages: Per-finding Self-Verify + Targeted-Search")
     print("=" * 70)

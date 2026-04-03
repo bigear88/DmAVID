@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-DavidAgent Red Team Agent: Generates adversarial contract variants from false negative cases.
+DmAVID Red Team Agent: Generates adversarial contract variants from false negative cases.
 
 This script analyzes false negative results from the Student Agent and generates
 semantically equivalent contract variants that preserve the original vulnerabilities.
@@ -215,7 +215,7 @@ Test contract code:"""
 def main():
     """Main execution flow for red team agent."""
     logger.info("=" * 60)
-    logger.info("DavidAgent Red Team Agent Starting")
+    logger.info("DmAVID Red Team Agent Starting")
     logger.info("=" * 60)
 
     # Determine paths

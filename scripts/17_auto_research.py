@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-DavidAgent Coordinator AutoResearch Module: Autonomous experiment loop that
+DmAVID Coordinator AutoResearch Module: Autonomous experiment loop that
 optimises detection parameters for the hybrid DeFi vulnerability detection
 pipeline.  Inspired by karpathy/autoresearch.
 
@@ -826,7 +826,7 @@ def run_auto_research(
 
 def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="DavidAgent AutoResearch – autonomous parameter optimisation",
+        description="DmAVID AutoResearch – autonomous parameter optimisation",
     )
     parser.add_argument(
         "--experiment-type",

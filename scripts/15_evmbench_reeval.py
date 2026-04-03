@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-DavidAgent EVMbench Re-evaluation: Re-tests on EVMbench after adversarial enhancement
+DmAVID EVMbench Re-evaluation: Re-tests on EVMbench after adversarial enhancement
 
 This script runs after the adversarial iteration loop (14_adversarial_iterate.py) to
 measure improvements in vulnerability detection on the EVMbench benchmark.
@@ -532,7 +532,7 @@ def load_baseline_results():
 
 def main():
     print("=" * 80)
-    print("DavidAgent EVMbench Re-evaluation: Post-Adversarial Iteration")
+    print("DmAVID EVMbench Re-evaluation: Post-Adversarial Iteration")
     print(f"Timestamp: {datetime.now().isoformat()}")
     print("=" * 80)
 

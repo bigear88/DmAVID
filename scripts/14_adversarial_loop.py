@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-DavidAgent Adversarial Iteration Loop: Orchestrates the dual-layer iteration process.
+DmAVID Adversarial Iteration Loop: Orchestrates the dual-layer iteration process.
 
 This script implements the core adversarial iteration mechanism:
 - Outer loop: Vulnerability type coverage (Teacher Agent)
@@ -589,7 +589,7 @@ def print_summary(history: List[Dict], config: IterationConfig):
 def main():
     """Main execution flow."""
     parser = argparse.ArgumentParser(
-        description="DavidAgent Adversarial Iteration Loop Orchestrator"
+        description="DmAVID Adversarial Iteration Loop Orchestrator"
     )
     parser.add_argument("--max-rounds", type=int, default=5,
                        help="Maximum outer iteration rounds")

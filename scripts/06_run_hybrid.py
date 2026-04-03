@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Experiment 5: DavidAgent Hybrid Framework (Slither + LLM + RAG).
+Experiment 5: DmAVID Hybrid Framework (Slither + LLM + RAG).
 
 Three-Strategy Fusion with GPTLens Dual-Role approach for maximizing F1:
 
@@ -871,7 +871,7 @@ def hybrid_decision(
     strategy: str = "dual_role",
     alpha: float = 0.7,
 ) -> dict:
-    """DavidAgent Hybrid Fusion with three strategy options.
+    """DmAVID Hybrid Fusion with three strategy options.
 
     Strategies:
       - 'ensemble': Parallel weighted fusion (α × LLM + (1-α) × Slither)
@@ -1086,7 +1086,7 @@ def hybrid_decision(
 
 def main():
     import argparse
-    parser = argparse.ArgumentParser(description="DavidAgent Hybrid Framework")
+    parser = argparse.ArgumentParser(description="DmAVID Hybrid Framework")
     parser.add_argument("--strategy", choices=["ensemble", "dual_role", "evidence", "slither_first", "validate", "all"],
                         default="validate", help="Fusion strategy (default: validate)")
     parser.add_argument("--alpha", type=float, default=0.9, help="For validate: confidence threshold; for ensemble: LLM weight")
@@ -1094,7 +1094,7 @@ def main():
 
     strategy = args.strategy
     print("=" * 60)
-    print(f"Experiment 5: DavidAgent Hybrid Framework [{strategy}]")
+    print(f"Experiment 5: DmAVID Hybrid Framework [{strategy}]")
     print(f"         Fusion: GPTLens Dual-Role + Ensemble + Evidence")
     print(f"Timestamp: {datetime.now().isoformat()}")
     print(f"LLM Model: {LLM_MODEL}")

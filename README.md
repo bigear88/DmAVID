@@ -14,7 +14,7 @@ This research project implements a **hybrid vulnerability detection framework** 
 - **RAG Enhancement**: Retrieval-Augmented Generation with DeFi-specific vulnerability knowledge base
 - **Hybrid Approach**: Combines static analysis (Slither) with LLM + RAG semantic analysis
 - **DeFi-Specific**: Focuses on DeFi protocol vulnerabilities including flash loan attacks, price oracle manipulation, and reentrancy
-- **DavidAgent Multi-Agent Framework**: Adversarial self-strengthening via Teacher-Student-Red Team iteration
+- **DmAVID Multi-Agent Framework**: Adversarial self-strengthening via Teacher-Student-Red Team iteration
 - **Real Experiments**: All results are from actual tool execution on SmartBugs dataset
 - **Statistical Validation**: McNemar tests and cost-sensitive analysis included
 - **Full Reproducibility**: One-click reproduction script and raw prediction CSV provided
@@ -42,13 +42,13 @@ defi-llm-vulnerability-detection/
 │   ├── 09_gen_supplementary_charts.py   # Generate supplementary charts
 │   ├── 09_run_evmbench_detect.py        # EVMbench LLM+RAG detection
 │   ├── 10_run_evmbench_hybrid.py        # EVMbench Hybrid detection
-│   ├── 11_teacher_challenge.py          # ★ DavidAgent Teacher Agent
-│   ├── 12_red_team_generate.py          # ★ DavidAgent Red Team Agent
-│   ├── 13_foundry_validate.py           # ★ DavidAgent Foundry Validator
-│   ├── 14_adversarial_loop.py           # ★ DavidAgent Dual-layer Iteration Loop
+│   ├── 11_teacher_challenge.py          # ★ DmAVID Teacher Agent
+│   ├── 12_red_team_generate.py          # ★ DmAVID Red Team Agent
+│   ├── 13_foundry_validate.py           # ★ DmAVID Foundry Validator
+│   ├── 14_adversarial_loop.py           # ★ DmAVID Dual-layer Iteration Loop
 │   ├── 15_evmbench_reeval.py            # ★ EVMbench Post-iteration Re-evaluation
-│   ├── 16_vuln_intel_collector.py       # ★ DavidAgent Zero-day Intel Collector
-│   ├── 17_auto_research.py             # ★ DavidAgent AutoResearch Coordinator
+│   ├── 16_vuln_intel_collector.py       # ★ DmAVID Zero-day Intel Collector
+│   ├── 17_auto_research.py             # ★ DmAVID AutoResearch Coordinator
 │   └── run_experiment.py                # Legacy experiment runner
 ├── src/                                  # Source code modules
 │   ├── detection/
@@ -215,7 +215,7 @@ All evaluations are performed at the **contract level** (binary classification: 
 This research follows the **Design Science Research** methodology (Hevner et al., 2004) in five phases:
 
 1. **Problem Identification**: DeFi security challenges — 410 incidents / $2.013B losses in 2024; traditional tools insufficient for DeFi-specific vulnerabilities
-2. **Solution Design**: DavidAgent five-agent adversarial self-strengthening framework with real-time zero-day intelligence
+2. **Solution Design**: DmAVID five-agent adversarial self-strengthening framework with real-time zero-day intelligence
 3. **Development**: Three-stage hybrid detection pipeline + AutoResearch parameter optimization
 4. **Demonstration**: SmartBugs (243 contracts) + EVMbench (10 projects/39 vulns) + GPT-4.1-mini vs GPT-5.x comparison
 5. **Evaluation**: F1/Recall/FPR metrics, McNemar tests, cost-sensitive analysis, ablation studies
@@ -386,9 +386,9 @@ python scripts/09_run_evmbench_detect.py
 python scripts/10_run_evmbench_hybrid.py
 ```
 
-## DavidAgent: Adversarial Self-Strengthening Framework (Mar 2026)
+## DmAVID: Adversarial Self-Strengthening Framework (Mar 2026)
 
-To address the low EVMbench detection rate (7.69%), we developed **DavidAgent**, a multi-agent adversarial iteration framework that continuously improves detection coverage through Teacher-Student-Red Team interactions.
+To address the low EVMbench detection rate (7.69%), we developed **DmAVID**, a multi-agent adversarial iteration framework that continuously improves detection coverage through Teacher-Student-Red Team interactions.
 
 ### Framework Architecture
 
@@ -452,7 +452,7 @@ After adversarial iteration, we re-evaluated on the same 10 EVMbench audits:
 | 2026-01-tempo | 2 | 0 | **1** |
 | Others (5 audits) | 18 | 0 | 0 |
 
-### Running DavidAgent
+### Running DmAVID
 
 ```bash
 # Install Foundry (required for validation)

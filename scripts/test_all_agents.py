@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Test each DavidAgent agent with contracts for OpenAI log verification."""
+"""Test each DmAVID agent with contracts for OpenAI log verification."""
 import json, os, sys, time, random
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from _model_compat import token_param

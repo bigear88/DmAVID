@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""DavidAgent Coordinator: Round 2 full pipeline orchestrator.
+"""DmAVID Coordinator: Round 2 full pipeline orchestrator.
 
 Runs iterative improvement rounds through the multi-agent pipeline:
   Teacher -> Student -> Red Team -> Foundry -> Blue Team -> Self-Verify -> Evaluate
@@ -532,7 +532,7 @@ def load_dataset(path: str) -> List[Dict[str, Any]]:
 # ---------------------------------------------------------------------------
 def main():
     parser = argparse.ArgumentParser(
-        description="DavidAgent Coordinator: Round 2 full pipeline orchestrator"
+        description="DmAVID Coordinator: Round 2 full pipeline orchestrator"
     )
     parser.add_argument("--rounds", type=int, default=3, help="Number of iteration rounds (default: 3)")
     parser.add_argument("--budget", type=float, default=20.0, help="USD budget limit (default: 20.0)")
@@ -545,7 +545,7 @@ def main():
     args = parser.parse_args()
 
     logger.info("=" * 70)
-    logger.info("DavidAgent Coordinator — Round 2 Pipeline")
+    logger.info("DmAVID Coordinator — Round 2 Pipeline")
     logger.info(f"Timestamp: {datetime.now().isoformat()}")
     logger.info(f"Model: {MODEL}")
     logger.info(f"Rounds: {args.rounds} | Budget: ${args.budget:.2f} | Dry run: {args.dry_run}")
@@ -720,7 +720,7 @@ def main():
     # Final summary
     logger.info("")
     logger.info("=" * 70)
-    logger.info("DavidAgent Coordinator — Round 2 Summary")
+    logger.info("DmAVID Coordinator — Round 2 Summary")
     logger.info("=" * 70)
     logger.info(f"Rounds completed: {len(progression['rounds'])}/{args.rounds}")
     logger.info(f"Baseline F1: {BASELINE_F1}")

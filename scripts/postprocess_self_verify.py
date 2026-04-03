@@ -169,7 +169,7 @@ def main():
     args = parser.parse_args()
 
     print("=" * 60)
-    print("DavidAgent Self-Verification Post-Processing")
+    print("DmAVID Self-Verification Post-Processing")
     print(f"Model: {MODEL}")
     print(f"Confidence threshold: {args.conf_threshold or 'ALL (verify every vulnerable prediction)'}")
     print("=" * 60)

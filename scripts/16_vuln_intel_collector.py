@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-DavidAgent Vulnerability Intelligence Collector: Aggregates real-world DeFi exploit
+DmAVID Vulnerability Intelligence Collector: Aggregates real-world DeFi exploit
 data from multiple open-source intelligence feeds and updates the RAG knowledge base.
 
 Sources:
@@ -677,7 +677,7 @@ def main() -> int:
     global BASE_DIR, SCRIPTS_DIR, INTEL_DIR, DEFIHACKLABS_DIR
 
     parser = argparse.ArgumentParser(
-        description="DavidAgent Vulnerability Intelligence Collector — "
+        description="DmAVID Vulnerability Intelligence Collector — "
         "aggregates real-world DeFi exploit data and updates the RAG knowledge base.",
     )
     parser.add_argument(
@@ -714,7 +714,7 @@ def main() -> int:
         DEFIHACKLABS_DIR = os.path.join(BASE_DIR, "data", "defihacklabs")
 
     logger.info("=" * 70)
-    logger.info("DavidAgent Vulnerability Intelligence Collector")
+    logger.info("DmAVID Vulnerability Intelligence Collector")
     logger.info("=" * 70)
     logger.info("Base directory : %s", BASE_DIR)
     logger.info("Sources        : %s", args.source or "all")

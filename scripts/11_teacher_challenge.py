@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-DavidAgent Teacher Agent: Generates vulnerability challenges for Student Agent.
+DmAVID Teacher Agent: Generates vulnerability challenges for Student Agent.
 
 The Teacher Agent is responsible for:
 1. Identifying uncovered vulnerability types from the SWC Registry

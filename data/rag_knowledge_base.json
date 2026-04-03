@@ -71,6 +71,27 @@
       "pattern": "challenge_3_access_control\n# adversarial variation 3",
       "confidence": 0.8923998942808781,
       "source": "red_team_variant"
+    },
+    "bt_BT-ARI-1774372191-0": {
+      "vulnerability_type": "arithmetic",
+      "pattern": "Unchecked arithmetic on critical state variables (especially balances, counters, allowances, or supply) hidden behind unnecessary or obfuscated control flow, where the apparent branching does not prevent overflow/underflow and the contract relies on raw integer operations instead of checked math.",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Use checked arithmetic (e.g., SafeMath in Solidity <0.8 or native checked arithmetic in >=0.8), validate preconditions before state changes (`require(balanceOf[msg.sender] >= _value)`), and keep control flow simple and auditable. Add invariant checks and unit tests for overflow/underflow edge cases."
+    },
+    "bt_BT-ARI-1774372987-0": {
+      "vulnerability_type": "arithmetic",
+      "pattern": "Unchecked arithmetic in state-mutating logic, especially balance/accounting updates in Solidity 0.4.x and earlier, where direct addition/subtraction on unsigned integers can overflow or underflow and enable asset inflation, balance corruption, or unauthorized value transfer.",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Use SafeMath (for Solidity <0.8) or upgrade to Solidity >=0.8 where arithmetic overflow/underflow reverts by default. Additionally, validate transfer invariants explicitly and prefer well-tested token transfer logic from audited libraries/frameworks."
+    },
+    "bt_BT-ARI-1774372990-1": {
+      "vulnerability_type": "arithmetic",
+      "pattern": "Unchecked integer arithmetic in smart contracts, especially unsigned subtraction/underflow or addition/multiplication overflow, where attacker-influenced operands can cause wraparound due to missing validation or lack of checked arithmetic.",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Validate operands before arithmetic (`require(a >= b)` for subtraction) or use compiler versions with checked arithmetic (Solidity 0.8+) / vetted math libraries such as OpenZeppelin SafeMath for legacy code."
     }
   },
   "vulnerability_types": {

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-DavidAgent Error Analysis + Pattern Synthesis + KB Update Pipeline.
+DmAVID Error Analysis + Pattern Synthesis + KB Update Pipeline.
 
 Combines three Perplexity-recommended agents into one script:
 1. Error-Explainer: Analyzes why FN/hard cases were misclassified
@@ -301,8 +301,8 @@ def phase_update_kb(patterns):
             "mitigation": "See detection hints",
             "severity": "Medium",
             "swc_id": "Custom",
-            "real_world_case": "Discovered via DavidAgent error analysis",
-            "source": "DavidAgent Pattern-Synthesis Agent",
+            "real_world_case": "Discovered via DmAVID error analysis",
+            "source": "DmAVID Pattern-Synthesis Agent",
         }
         kb["entries"].append(entry)
         added += 1
@@ -321,7 +321,7 @@ def phase_update_kb(patterns):
 # Main
 # ============================================================
 def main():
-    parser = argparse.ArgumentParser(description="DavidAgent Error Analysis Pipeline")
+    parser = argparse.ArgumentParser(description="DmAVID Error Analysis Pipeline")
     parser.add_argument("--phase", choices=["analyze", "explain", "synthesize", "update-kb", "all"],
                         default="all")
     parser.add_argument("--baseline", default=BASELINE_FILE)
@@ -329,7 +329,7 @@ def main():
     args = parser.parse_args()
 
     logger.info("=" * 60)
-    logger.info("DavidAgent Error Analysis Pipeline")
+    logger.info("DmAVID Error Analysis Pipeline")
     logger.info(f"Model: {MODEL} | Phase: {args.phase}")
     logger.info("=" * 60)
 

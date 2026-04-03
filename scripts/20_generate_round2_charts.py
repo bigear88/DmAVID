@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Generate charts for DavidAgent Round 2 experiments.
+Generate charts for DmAVID Round 2 experiments.
 Produces 4 figures saved to charts/ directory.
 """
 
@@ -97,9 +97,9 @@ if selfverify_data and "hybrid_metrics" in selfverify_data:
     }
     SELF_VERIFY_F1 = f1_val
 
-# DavidAgent R2 final round
+# DmAVID R2 final round
 final = rounds_data[-1]
-BASELINES["DavidAgent R2"] = {
+BASELINES["DmAVID R2"] = {
     "precision": final["precision"], "recall": final["recall"],
     "f1": final["f1"], "fpr": final["fpr"],
 }
@@ -138,7 +138,7 @@ ax.set_xlabel('Round (0 = Baseline)')
 ax.set_ylabel('Score')
 ax.set_ylim(0.70, 1.00)
 ax.set_xticks(xs)
-ax.set_title('DavidAgent F1 Progression (GPT-5.4-mini)')
+ax.set_title('DmAVID F1 Progression (GPT-5.4-mini)')
 ax.legend(loc='lower right', fontsize=12)
 ax.grid(True, alpha=0.3)
 plt.tight_layout()
@@ -152,7 +152,7 @@ print("Generated: fig5_1_f1_progression.png")
 fig, ax = plt.subplots(figsize=(12, 7))
 
 method_order = ["Slither", "Mythril", "LLM Base", "LLM+RAG",
-                "Self-Verify", "DavidAgent R2"]
+                "Self-Verify", "DmAVID R2"]
 x = np.arange(len(method_order))
 w = 0.25
 
@@ -200,7 +200,7 @@ fpr_values = [t[1] for t in fpr_items]
 
 colors_fpr = []
 for name in method_names:
-    if name == "DavidAgent R2":
+    if name == "DmAVID R2":
         colors_fpr.append('#2196F3')
     elif fpr_values[method_names.index(name)] > 50:
         colors_fpr.append('#F44336')
@@ -234,7 +234,7 @@ costs = [r["cost_usd"] for r in rounds_data]
 f1_curve = [r["f1"] for r in rounds_data]
 
 ax.plot(costs, f1_curve, 'o-', color='#2196F3', linewidth=2.5,
-        markersize=12, zorder=5, label='DavidAgent Rounds')
+        markersize=12, zorder=5, label='DmAVID Rounds')
 
 for r in rounds_data:
     ax.annotate(f'R{r["round"]}',
