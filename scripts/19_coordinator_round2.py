@@ -38,7 +38,7 @@ client = OpenAI()
 
 DATASET_FILE = os.path.join(BASE_DIR, "data/dataset_1000.json")
 BASELINE_FILE = os.path.join(BASE_DIR, "experiments/llm_rag/llm_rag_results.json")
-OUTPUT_DIR = os.path.join(BASE_DIR, "experiments/davidagent_round2")
+OUTPUT_DIR = os.path.join(BASE_DIR, "experiments/dmavid_round2")
 
 # Baseline metrics (from prior experiment)
 BASELINE_F1 = 0.8468  # LLM+RAG baseline (gpt-4.1-mini, 243 contracts, JSON fix)

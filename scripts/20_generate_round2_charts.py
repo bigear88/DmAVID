@@ -41,7 +41,7 @@ def safe_load(path):
     return None
 
 # --------------- load data sources ---------------
-progression_path = f"{BASE}/experiments/davidagent_round2/round2_progression.json"
+progression_path = f"{BASE}/experiments/dmavid_round2/round2_progression.json"
 rag_path = f"{BASE}/experiments/llm_rag/llm_rag_results.json"
 selfverify_path = f"{BASE}/experiments/hybrid/self_verify_results.json"
 
