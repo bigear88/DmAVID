@@ -1,0 +1,122 @@
+{
+  "experiment": "traditional_ml_baselines",
+  "dataset": "SmartBugs 243 contracts",
+  "features": "TF-IDF (500) + structural (19)",
+  "cross_validation": "5-fold",
+  "results": {
+    "Random Forest": {
+      "cv_f1_mean": 0.993,
+      "cv_f1_std": 0.0086,
+      "cv_precision_mean": 1.0,
+      "cv_recall_mean": 0.9862,
+      "train_f1": 1.0,
+      "train_tp": 143,
+      "train_fn": 0,
+      "train_fp": 0,
+      "train_tn": 100,
+      "time_seconds": 2.86,
+      "top_structural_features": [
+        {
+          "name": "num_events",
+          "importance": 0.0175
+        },
+        {
+          "name": "num_mappings",
+          "importance": 0.0112
+        },
+        {
+          "name": "num_msg_sender",
+          "importance": 0.008
+        },
+        {
+          "name": "num_requires",
+          "importance": 0.0061
+        },
+        {
+          "name": "num_asserts",
+          "importance": 0.0028
+        }
+      ]
+    },
+    "Logistic Regression": {
+      "cv_f1_mean": 0.9083,
+      "cv_f1_std": 0.0181,
+      "cv_precision_mean": 0.8901,
+      "cv_recall_mean": 0.9303,
+      "train_f1": 0.9448,
+      "train_tp": 137,
+      "train_fn": 6,
+      "train_fp": 10,
+      "train_tn": 90,
+      "time_seconds": 2.97
+    },
+    "Gradient Boosting": {
+      "cv_f1_mean": 1.0,
+      "cv_f1_std": 0.0,
+      "cv_precision_mean": 1.0,
+      "cv_recall_mean": 1.0,
+      "train_f1": 1.0,
+      "train_tp": 143,
+      "train_fn": 0,
+      "train_fp": 0,
+      "train_tn": 100,
+      "time_seconds": 2.85,
+      "top_structural_features": [
+        {
+          "name": "code_length",
+          "importance": 0.0
+        },
+        {
+          "name": "has_onlyowner",
+          "importance": 0.0
+        },
+        {
+          "name": "has_payable",
+          "importance": 0.0
+        },
+        {
+          "name": "has_reentrancy_guard",
+          "importance": 0.0
+        },
+        {
+          "name": "has_safemath",
+          "importance": 0.0
+        }
+      ]
+    },
+    "SVM (RBF)": {
+      "cv_f1_mean": 0.8115,
+      "cv_f1_std": 0.0442,
+      "cv_precision_mean": 0.8067,
+      "cv_recall_mean": 0.8185,
+      "train_f1": 0.8166,
+      "train_tp": 118,
+      "train_fn": 25,
+      "train_fp": 28,
+      "train_tn": 72,
+      "time_seconds": 0.69
+    }
+  },
+  "comparison": {
+    "Slither": {
+      "f1": 0.7459,
+      "precision": 0.6164,
+      "recall": 0.9441
+    },
+    "LLM_Base": {
+      "f1": 0.7507,
+      "precision": 0.6008,
+      "recall": 1.0
+    },
+    "LLM_RAG": {
+      "f1": 0.8468,
+      "precision": 0.7421,
+      "recall": 0.986
+    },
+    "LLM_RAG_SelfVerify": {
+      "f1": 0.8896,
+      "precision": 0.8103,
+      "recall": 0.986
+    }
+  }
+}
