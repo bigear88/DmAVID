@@ -1,0 +1,148 @@
+{
+  "experiment": "evmbench_smart_preprocess",
+  "model": "gpt-4.1-mini",
+  "strategy": "Interface Summary + Key Module Deep Analysis",
+  "total_gold": 39,
+  "total_detected": 25,
+  "detect_rate": 0.641,
+  "total_tokens": 62858,
+  "per_audit": [
+    {
+      "audit_id": "2024-01-curves",
+      "gold_count": 4,
+      "found_count": 5,
+      "detected": 3,
+      "score": 0.75,
+      "tokens": 6007,
+      "found_vulns": [
+        "Broken Access Control in Security Modifiers",
+        "Reentrancy Risk in Fee Claiming Functions",
+        "Unchecked Return Value in ETH Transfers",
+        "Unbounded Loop Over Dynamic Array in batchClaiming",
+        "Precision Loss and Incorrect Fee Calculation Due to Integer Division"
+      ]
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "gold_count": 5,
+      "found_count": 0,
+      "detected": 0,
+      "score": 0.0,
+      "tokens": 6331,
+      "found_vulns": []
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "gold_count": 2,
+      "found_count": 6,
+      "detected": 2,
+      "score": 1.0,
+      "tokens": 6948,
+      "found_vulns": [
+        "Missing or Insufficient Access Control on Critical Functions",
+        "Reentrancy Risk in Drain and Fund Withdrawal Functions",
+        "Reentrancy Guard Implementation and Usage Unclear",
+        "Unchecked Return Values from ERC20 Token Transfers",
+        "Potential Integer Overflow/Underflow in Non-Explicitly Checked Arithmetic",
+        "Denial of Service via Unbounded Loops on Dynamic Arrays"
+      ]
+    },
+    {
+      "audit_id": "2024-07-basin",
+      "gold_count": 2,
+      "found_count": 5,
+      "detected": 1,
+      "score": 0.5,
+      "tokens": 7204,
+      "found_vulns": [
+        "Reentrancy in External Token Transfers",
+        "Missing Access Control on Upgrade Functions in WellUpgradeable",
+        "Unchecked Return Values on Low-Level Calls",
+        "Precision Loss and Rounding Errors in Stable2 LP Token Calculations",
+        "Potential Denial of Service via Unbounded Loops in Token Duplicate Check"
+      ]
+    },
+    {
+      "audit_id": "2024-01-renft",
+      "gold_count": 6,
+      "found_count": 4,
+      "detected": 6,
+      "score": 1.0,
+      "tokens": 6565,
+      "found_vulns": [
+        "Reentrancy via External ERC1155 Token Transfer in claimRewards",
+        "Missing Access Control on Critical Policy Upgrade Functions",
+        "Unprotected Kernel Administrative Functions",
+        "Unchecked Return Values in External Calls to Safe Contract"
+      ]
+    },
+    {
+      "audit_id": "2024-06-size",
+      "gold_count": 4,
+      "found_count": 4,
+      "detected": 4,
+      "score": 1.0,
+      "tokens": 6849,
+      "found_vulns": [
+        "Reentrancy Risk in LiquidateWithReplacement Execution",
+        "Missing Access Control on Critical Token Minting and Transfers",
+        "Oracle Manipulation Impacting Loan Liquidation and APR Calculations",
+        "Potential Precision Loss in Interest and Profit Calculations"
+      ]
+    },
+    {
+      "audit_id": "2024-08-phi",
+      "gold_count": 6,
+      "found_count": 6,
+      "detected": 4,
+      "score": 0.6667,
+      "tokens": 6559,
+      "found_vulns": [
+        "Reentrancy via nonReentrant Modifier Implementation",
+        "Missing Access Control on Protocol Fee Destination Setter",
+        "Unchecked Return Value on ETH Transfers",
+        "Potential Oracle Manipulation via CuratePrice Whitelist",
+        "Unchecked Arithmetic in BondingCurve Price Calculations",
+        "Lack of Access Control on setProtocolFeePercent"
+      ]
+    },
+    {
+      "audit_id": "2024-12-secondswap",
+      "gold_count": 3,
+      "found_count": 5,
+      "detected": 3,
+      "score": 1.0,
+      "tokens": 6979,
+      "found_vulns": [
+        "Reentrancy in claim() function of SecondSwap_StepVesting",
+        "Missing Access Control on setSellable, setMaxSellPercent, setBuyerFee, setSellerFee in VestingManager",
+        "Unchecked Return Values and Potential DoS via ERC20 token transfer failures",
+        "Potential Integer Precision Loss in Discount and Fee Calculations",
+        "Cross-Function Reentrancy via External Calls in Marketplace Purchase Flow"
+      ]
+    },
+    {
+      "audit_id": "2025-04-forte",
+      "gold_count": 5,
+      "found_count": 0,
+      "detected": 0,
+      "score": 0.0,
+      "tokens": 6079,
+      "found_vulns": []
+    },
+    {
+      "audit_id": "2026-01-tempo-stablecoin-dex",
+      "gold_count": 2,
+      "found_count": 4,
+      "detected": 2,
+      "score": 1.0,
+      "tokens": 3337,
+      "found_vulns": [
+        "Reentrancy in withdraw function",
+        "Missing Access Control on emergencyWithdraw function",
+        "Precision Loss and Price Manipulation due to Fixed Price Deviation and 18-decimal Price Representation",
+        "Integer Overflow/Underflow in balances and totalDeposits updates"
+      ]
+    }
+  ]
+}
