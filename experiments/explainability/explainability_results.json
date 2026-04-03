@@ -1,0 +1,52 @@
+{
+  "experiment": "explainability_metrics",
+  "source": "experiments/llm_rag/llm_rag_results.json",
+  "note": "All metrics are automatically computed, no human review involved",
+  "metric_1_pattern_coverage": {
+    "global_coverage": 0.9,
+    "per_contract_avg": 0.205,
+    "tp_contracts": 141,
+    "pattern_counts": {
+      "reentrancy": 81,
+      "unchecked": 98,
+      "overflow": 26,
+      "underflow": 15,
+      "denial of service": 18,
+      "timestamp": 8,
+      "access control": 30,
+      "randomness": 11,
+      "delegatecall": 2
+    }
+  },
+  "metric_2_code_line_reference": {
+    "contracts_with_gt": 141,
+    "contracts_with_line_citations": 0,
+    "avg_precision": 0,
+    "avg_recall": 0,
+    "note": "LLM provides semantic reasoning rather than line-specific references"
+  },
+  "metric_3_explanation_depth": {
+    "tp_avg_words": 64.7,
+    "tn_avg_words": 75.0,
+    "tp_avg_vuln_types": 1.4,
+    "tp_repair_suggestion_rate": 0.5248,
+    "tp_with_repair": 74,
+    "comparison": {
+      "traditional_ml": {
+        "words": 0,
+        "types": 0,
+        "repair": 0
+      },
+      "slither": {
+        "words": 15,
+        "types": 1,
+        "repair": 0.2
+      },
+      "dmavid": {
+        "words": 65,
+        "types": 1.4,
+        "repair": 0.52
+      }
+    }
+  }
+}
