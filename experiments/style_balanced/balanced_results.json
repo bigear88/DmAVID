@@ -1,0 +1,28 @@
+{
+  "experiment": "style_balanced_test",
+  "balanced_set": "143 vuln + 143 safe",
+  "original_set": "143 vuln + 100 safe",
+  "results": {
+    "Random Forest": {
+      "balanced_f1": 0.9082,
+      "balanced_std": 0.0109,
+      "original_f1": 0.9412,
+      "original_std": 0.0083,
+      "drop": -0.033
+    },
+    "Logistic Regression": {
+      "balanced_f1": 0.9188,
+      "balanced_std": 0.026,
+      "original_f1": 0.8982,
+      "original_std": 0.026,
+      "drop": 0.0206
+    },
+    "Gradient Boosting": {
+      "balanced_f1": 0.9342,
+      "balanced_std": 0.0252,
+      "original_f1": 0.9348,
+      "original_std": 0.0118,
+      "drop": -0.0006
+    }
+  }
+}

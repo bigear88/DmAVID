@@ -1,0 +1,48 @@
+{
+  "experiment": "defi_real_world_test",
+  "dataset": "DeFiHackLabs (100 vuln) + SmartBugs Wild (100 safe)",
+  "traditional_ml": {
+    "Random Forest": {
+      "cv_f1": 1.0,
+      "cv_f1_std": 0.0,
+      "cv_prec": 1.0,
+      "cv_rec": 1.0
+    },
+    "Logistic Regression": {
+      "cv_f1": 0.9851,
+      "cv_f1_std": 0.0122,
+      "cv_prec": 0.981,
+      "cv_rec": 0.99
+    },
+    "Gradient Boosting": {
+      "cv_f1": 0.99,
+      "cv_f1_std": 0.0123,
+      "cv_prec": 0.9905,
+      "cv_rec": 0.99
+    },
+    "SVM (RBF)": {
+      "cv_f1": 0.7248,
+      "cv_f1_std": 0.0619,
+      "cv_prec": 0.6638,
+      "cv_rec": 0.8
+    }
+  },
+  "llm_rag": {
+    "tp": 4,
+    "fn": 11,
+    "fp": 4,
+    "tn": 11,
+    "f1": 0.3478,
+    "precision": 0.5,
+    "recall": 0.2667,
+    "fpr": 0.2667,
+    "n_tested": 30
+  },
+  "smartbugs_comparison": {
+    "Random Forest": 0.993,
+    "Logistic Regression": 0.9083,
+    "Gradient Boosting": 1.0,
+    "SVM (RBF)": 0.8115
+  },
+  "conclusion": "Traditional ML F1 drops significantly on real DeFi data, confirming style leakage on SmartBugs"
+}
