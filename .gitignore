@@ -133,8 +133,8 @@ data/evmbench_repos/
 env.sh
 secrets.yaml
 
-# Claude Code
-.claude/
+# IDE and tool cache
+.tool_cache/
 
 # API keys
 *api_key*
