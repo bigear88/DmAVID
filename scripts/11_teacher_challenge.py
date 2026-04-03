@@ -278,7 +278,7 @@ def adjust_difficulty(coverage_results, current_challenges):
 def main():
     """Main execution flow for the Teacher Agent."""
     print("=" * 70)
-    print("DAVIDAGENT TEACHER AGENT: Challenge Generation and Coverage Analysis")
+    print("DMAVID TEACHER AGENT: Challenge Generation and Coverage Analysis")
     print(f"Timestamp: {datetime.now().isoformat()}")
     print(f"Model: {MODEL}")
     print("=" * 70)

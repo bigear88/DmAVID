@@ -259,7 +259,7 @@ print("Generated: fig5_4_cost_efficiency.png")
 # Summary
 # ============================================================
 print("\n" + "=" * 72)
-print("DAVIDAGENT ROUND 2 - CHART GENERATION SUMMARY")
+print("DMAVID ROUND 2 - CHART GENERATION SUMMARY")
 print("=" * 72)
 print(f"{'Method':<16} {'Prec':>8} {'Recall':>8} {'F1':>8} {'FPR':>8}")
 print("-" * 72)

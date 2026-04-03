@@ -68,7 +68,7 @@ DmAVID/
 │   ├── llm_base/                     # LLM 基線結果
 │   ├── llm_rag/                      # LLM+RAG 結果 (F1=0.8468)
 │   ├── hybrid/                       # Self-Verify 結果 (F1=0.8896)
-│   ├── davidagent_round2/            # DmAVID 迭代結果
+│   ├── dmavid_round2/            # DmAVID 迭代結果
 │   ├── evmbench_enhanced/            # EVMbench 增強偵測 (20.51%)
 │   ├── traditional_ml/              # 傳統 ML 基線 (RF/LR/GB/SVM)
 │   ├── defi_real_world/             # DeFiHackLabs 測試
