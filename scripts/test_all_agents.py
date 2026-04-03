@@ -6,7 +6,7 @@ from _model_compat import token_param
 from importlib import import_module
 
 random.seed(42)
-MODEL = os.environ.get("DAVID_MODEL", "gpt-5.4-mini")
+MODEL = os.environ.get("DAVID_MODEL", "gpt-4.1-mini")
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 with open(os.path.join(BASE_DIR, "data/dataset_1000.json")) as f:

@@ -1,10 +1,10 @@
-"""Model compatibility layer for GPT-4.x and GPT-5.x series."""
+"""Model compatibility layer for GPT-4.x and GPT-4.1-mini series."""
 import os
 
 MODEL = os.environ.get("DAVID_MODEL", "gpt-4.1-mini")
 
 def is_gpt5_model(model=None):
-    """Check if model is GPT-5 series (requires max_completion_tokens)."""
+    """Check if model requires max_completion_tokens (future-proofing)."""
     m = model or MODEL
     return m.startswith("gpt-5") or m.startswith("o1") or m.startswith("o3")
 

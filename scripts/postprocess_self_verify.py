@@ -2,7 +2,7 @@
 """
 Post-processing for Strategy 1: Self-Verification via Exploit Path Generation.
 
-- Input : experiments/llm_rag/llm_rag_results.json (gpt-5.x + RAG)
+- Input : experiments/llm_rag/llm_rag_results.json (gpt-4.1-mini + RAG)
 - Output: prints baseline vs hybrid metrics, and optionally writes a new JSON.
 
 Only re-examines cases where Stage-1 predicted_vulnerable == True.
@@ -28,7 +28,7 @@ DATASET_FILE = os.path.join(BASE_DIR, "data", "dataset_1000.json")
 OUTPUT_FILE = os.path.join(BASE_DIR, "experiments", "hybrid", "self_verify_results.json")
 
 client = OpenAI()
-MODEL = os.environ.get("DAVID_MODEL", "gpt-5.4-mini")
+MODEL = os.environ.get("DAVID_MODEL", "gpt-4.1-mini")
 
 
 @dataclass

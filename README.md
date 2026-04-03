@@ -217,7 +217,7 @@ This research follows the **Design Science Research** methodology (Hevner et al.
 1. **Problem Identification**: DeFi security challenges — 410 incidents / $2.013B losses in 2024; traditional tools insufficient for DeFi-specific vulnerabilities
 2. **Solution Design**: DmAVID five-agent adversarial self-strengthening framework with real-time zero-day intelligence
 3. **Development**: Three-stage hybrid detection pipeline + AutoResearch parameter optimization
-4. **Demonstration**: SmartBugs (243 contracts) + EVMbench (10 projects/39 vulns) + GPT-4.1-mini vs GPT-5.x comparison
+4. **Demonstration**: SmartBugs (243 contracts) + EVMbench (10 projects/39 vulns) + GPT-4.1-mini vs GPT-4.1-mini comparison
 5. **Evaluation**: F1/Recall/FPR metrics, McNemar tests, cost-sensitive analysis, ablation studies
 
 ### Datasets

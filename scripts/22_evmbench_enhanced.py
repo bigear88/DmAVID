@@ -22,7 +22,7 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger(__name__)
 
 BASE_DIR = os.environ.get("DAVID_BASE_DIR", os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-MODEL = os.environ.get("DAVID_MODEL", "gpt-5.4-mini")
+MODEL = os.environ.get("DAVID_MODEL", "gpt-4.1-mini")
 EVMBENCH_DIR = os.path.join(BASE_DIR, "data", "evmbench")
 REPOS_DIR = os.path.join(BASE_DIR, "data", "evmbench_repos")
 RESULTS_DIR = os.path.join(BASE_DIR, "experiments", "evmbench_enhanced")

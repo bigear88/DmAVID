@@ -143,7 +143,7 @@ SmartBugs Curated (Ferreira et al., 2020) is a PUBLIC dataset:
 - Contains contracts from Etherscan (public blockchain)
 - Contract source code is publicly available
 
-GPT-5.4-mini training data cutoff includes:
+GPT-4.1-mini training data cutoff includes:
 - All SmartBugs-related papers and analyses
 - Security audit reports referencing these contracts
 - GitHub repositories that fork/analyze SmartBugs

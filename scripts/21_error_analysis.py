@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 
 BASE_DIR = os.environ.get("DAVID_BASE_DIR",
     os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-MODEL = os.environ.get("DAVID_MODEL", "gpt-5.4-mini")
+MODEL = os.environ.get("DAVID_MODEL", "gpt-4.1-mini")
 client = OpenAI()
 
 BASELINE_FILE = os.path.join(BASE_DIR, "experiments/llm_rag/llm_rag_results.json")
