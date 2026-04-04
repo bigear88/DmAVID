@@ -165,3 +165,8 @@ scripts/audit_hardcode.py
 __pycache__/
 env.sh
 *.ratchet_backup
+run_all_experiments.py
+sync_thesis_final.py
+fix_*.py
+check_*.py
+verify_*.py
