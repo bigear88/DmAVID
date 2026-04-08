@@ -1,0 +1,84 @@
+{
+  "experiment": "ablation_study_v3",
+  "description": "Ablation with consistent baseline (uses 05_run_llm_rag.py analyze_with_rag)",
+  "model": "gpt-4.1-mini",
+  "dataset_size": 243,
+  "timestamp": "2026-04-09T01:19:25.839641",
+  "total_time_seconds": 1609.6,
+  "configs": [
+    {
+      "config": "baseline",
+      "description": "LLM+RAG (identical to 05_run_llm_rag.py)",
+      "metrics": {
+        "tp": 140,
+        "fp": 27,
+        "tn": 73,
+        "fn": 3,
+        "precision": 0.8383,
+        "recall": 0.979,
+        "f1": 0.9032,
+        "total": 243
+      },
+      "tokens": 427882
+    },
+    {
+      "config": "+self-verify",
+      "description": "LLM+RAG + Self-Verify (conf_threshold=0.90)",
+      "metrics": {
+        "tp": 140,
+        "fp": 27,
+        "tn": 73,
+        "fn": 3,
+        "precision": 0.8383,
+        "recall": 0.979,
+        "f1": 0.9032,
+        "total": 243
+      },
+      "tokens": 427882
+    },
+    {
+      "config": "+critique",
+      "description": "LLM+RAG + Critic failure analysis feedback (Reflexion pattern)",
+      "metrics": {
+        "tp": 142,
+        "fp": 96,
+        "tn": 4,
+        "fn": 1,
+        "precision": 0.5966,
+        "recall": 0.993,
+        "f1": 0.7454,
+        "total": 243
+      },
+      "tokens": 626930,
+      "critic_summary": {
+        "fn_analyzed": 3,
+        "fp_analyzed": 8,
+        "fn_hints": 2,
+        "fp_hints": 8
+      }
+    },
+    {
+      "config": "+critique+debate",
+      "description": "LLM+RAG + Critic + Adversarial Debate",
+      "metrics": {
+        "tp": 142,
+        "fp": 96,
+        "tn": 4,
+        "fn": 1,
+        "precision": 0.5966,
+        "recall": 0.993,
+        "f1": 0.7454,
+        "total": 243
+      },
+      "tokens": 0,
+      "debate_summary": {
+        "total_debates": 0,
+        "flips": {
+          "flip_to_vuln": 0,
+          "flip_to_safe": 0,
+          "no_change": 0
+        }
+      }
+    }
+  ]
+}
