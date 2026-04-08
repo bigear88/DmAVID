@@ -1,0 +1,119 @@
+{
+  "experiment": "traditional_ml_baselines_FIXED",
+  "fix_description": [
+    "TF-IDF inside sklearn Pipeline (no leakage across CV folds)",
+    "70/30 stratified train/test split (test set never seen during training/CV)",
+    "Removed train=test evaluation"
+  ],
+  "dataset": "SmartBugs 243 contracts",
+  "train_size": 170,
+  "test_size": 73,
+  "features": "TF-IDF (500) + structural (19) via Pipeline",
+  "cross_validation": "5-fold StratifiedKFold on train only",
+  "results": {
+    "Random Forest": {
+      "cv_f1_mean": 0.9949,
+      "cv_f1_std": 0.0103,
+      "cv_precision_mean": 1.0,
+      "cv_recall_mean": 0.99,
+      "test_f1": 1.0,
+      "test_precision": 1.0,
+      "test_recall": 1.0,
+      "test_fpr": 0.0,
+      "test_tp": 43,
+      "test_fn": 0,
+      "test_fp": 0,
+      "test_tn": 30,
+      "time_seconds": 5.6,
+      "top_structural_features": [
+        {
+          "name": "num_functions",
+          "importance": 0.0194
+        },
+        {
+          "name": "num_msg_sender",
+          "importance": 0.0115
+        },
+        {
+          "name": "code_length",
+          "importance": 0.0097
+        },
+        {
+          "name": "num_asserts",
+          "importance": 0.0066
+        },
+        {
+          "name": "num_mappings",
+          "importance": 0.0058
+        }
+      ]
+    },
+    "Logistic Regression": {
+      "cv_f1_mean": 0.9134,
+      "cv_f1_std": 0.0114,
+      "cv_precision_mean": 0.8828,
+      "cv_recall_mean": 0.95,
+      "test_f1": 0.9011,
+      "test_precision": 0.8542,
+      "test_recall": 0.9535,
+      "test_fpr": 0.2333,
+      "test_tp": 41,
+      "test_fn": 2,
+      "test_fp": 7,
+      "test_tn": 23,
+      "time_seconds": 4.44
+    },
+    "Gradient Boosting": {
+      "cv_f1_mean": 1.0,
+      "cv_f1_std": 0.0,
+      "cv_precision_mean": 1.0,
+      "cv_recall_mean": 1.0,
+      "test_f1": 1.0,
+      "test_precision": 1.0,
+      "test_recall": 1.0,
+      "test_fpr": 0.0,
+      "test_tp": 43,
+      "test_fn": 0,
+      "test_fp": 0,
+      "test_tn": 30,
+      "time_seconds": 4.61,
+      "top_structural_features": [
+        {
+          "name": "code_length",
+          "importance": 0.0
+        },
+        {
+          "name": "has_onlyowner",
+          "importance": 0.0
+        },
+        {
+          "name": "has_payable",
+          "importance": 0.0
+        },
+        {
+          "name": "has_reentrancy_guard",
+          "importance": 0.0
+        },
+        {
+          "name": "has_safemath",
+          "importance": 0.0
+        }
+      ]
+    },
+    "SVM (RBF)": {
+      "cv_f1_mean": 0.7987,
+      "cv_f1_std": 0.0554,
+      "cv_precision_mean": 0.781,
+      "cv_recall_mean": 0.82,
+      "test_f1": 0.8333,
+      "test_precision": 0.8537,
+      "test_recall": 0.814,
+      "test_fpr": 0.2,
+      "test_tp": 35,
+      "test_fn": 8,
+      "test_fp": 6,
+      "test_tn": 24,
+      "time_seconds": 3.25
+    }
+  }
+}

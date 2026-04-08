@@ -1,0 +1,69 @@
+{
+  "experiment": "ablation_study",
+  "description": "Ablation: Baseline vs +Critique vs +Debate",
+  "model": "gpt-4.1-mini",
+  "dataset_size": 243,
+  "timestamp": "2026-04-08T08:04:00.192090",
+  "total_time_seconds": 1361.3,
+  "configs": [
+    {
+      "config": "baseline",
+      "description": "LLM+RAG single pass",
+      "metrics": {
+        "tp": 143,
+        "fp": 84,
+        "tn": 16,
+        "fn": 0,
+        "precision": 0.63,
+        "recall": 1.0,
+        "f1": 0.773,
+        "total": 243
+      },
+      "tokens": 352545
+    },
+    {
+      "config": "+critique",
+      "description": "LLM+RAG + Critic failure analysis feedback (2 rounds)",
+      "metrics": {
+        "tp": 140,
+        "fp": 43,
+        "tn": 57,
+        "fn": 3,
+        "precision": 0.765,
+        "recall": 0.979,
+        "f1": 0.8589,
+        "total": 243
+      },
+      "tokens": 508585,
+      "critic_report_summary": {
+        "fn_analyzed": 0,
+        "fp_analyzed": 8,
+        "fn_hints": 0,
+        "fp_hints": 8
+      }
+    },
+    {
+      "config": "+debate",
+      "description": "LLM+RAG + Critic + Adversarial Debate (Red Team vs Student)",
+      "metrics": {
+        "tp": 141,
+        "fp": 32,
+        "tn": 68,
+        "fn": 2,
+        "precision": 0.815,
+        "recall": 0.986,
+        "f1": 0.8924,
+        "total": 243
+      },
+      "tokens": 29495,
+      "debate_summary": {
+        "total_debates": 15,
+        "flips": {
+          "fn_to_vuln": 1,
+          "fp_to_safe": 11,
+          "no_change": 3
+        }
+      }
+    }
+  ]
+}

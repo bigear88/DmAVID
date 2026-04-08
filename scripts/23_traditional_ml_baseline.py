@@ -1,56 +1,38 @@
 #!/usr/bin/env python3
 """
 Step 3a: Traditional ML Baselines for Smart Contract Vulnerability Detection.
-
-Implements Random Forest, Logistic Regression, and simple CNN/LSTM baselines
-using opcode-level TF-IDF features from compiled Solidity contracts.
-
-Since many SmartBugs contracts use old Solidity versions that are hard to compile,
-we use source-code-level features as a practical alternative:
-  - Token-level TF-IDF (Solidity keywords + operators)
-  - Code structure features (function count, modifier count, etc.)
-  - Slither alert features (if available)
-
-Per committee requirement: establish traditional ML baselines to compare against
-DmAVID's LLM+RAG approach (張教授, 中期實驗補強).
+FIXED VERSION — corrects data leakage issues:
+  1. TF-IDF is now inside a Pipeline (fitted only on train folds)
+  2. Proper 70/30 train/test split
+  3. No more train=test evaluation
+  4. Reports both CV (on train) and held-out test F1
 """
 import json, os, sys, re, time, warnings
 import numpy as np
 from collections import Counter
+from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC
 from sklearn.metrics import f1_score, precision_score, recall_score, classification_report, confusion_matrix
-from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import cross_val_score, train_test_split, StratifiedKFold
+from sklearn.pipeline import Pipeline, FeatureUnion
+from scipy.sparse import hstack, csr_matrix
 import random
 
 warnings.filterwarnings("ignore")
 random.seed(42)
 np.random.seed(42)
 
-BASE_DIR = os.environ.get("DAVID_BASE_DIR",
+BASE_DIR = os.environ.get("DMAVID_BASE_DIR",
     os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 DATASET_FILE = os.path.join(BASE_DIR, "data", "dataset_1000.json")
-OUTPUT_FILE = os.path.join(BASE_DIR, "experiments", "traditional_ml", "ml_baseline_results.json")
+OUTPUT_FILE = os.path.join(BASE_DIR, "experiments", "traditional_ml", "ml_baseline_results_fixed.json")
 
 # ============================================================
-# Feature Extraction from Solidity Source Code
+# Feature Extraction
 # ============================================================
-
-SOLIDITY_KEYWORDS = [
-    "pragma", "contract", "function", "modifier", "event", "struct", "enum",
-    "mapping", "address", "uint", "int", "bool", "string", "bytes",
-    "public", "private", "internal", "external", "view", "pure", "payable",
-    "require", "assert", "revert", "if", "else", "for", "while", "do",
-    "return", "returns", "emit", "new", "delete", "throw",
-    "msg.sender", "msg.value", "block.timestamp", "block.number",
-    "transfer", "send", "call", "delegatecall", "staticcall",
-    "this", "super", "selfdestruct", "suicide",
-    "storage", "memory", "calldata",
-    "constructor", "fallback", "receive",
-    "onlyOwner", "nonReentrant", "SafeMath",
-]
 
 def extract_structural_features(code):
     """Extract structural features from Solidity source code."""
@@ -74,14 +56,32 @@ def extract_structural_features(code):
     features["has_onlyowner"] = 1 if re.search(r"onlyOwner|only_owner", code, re.IGNORECASE) else 0
     features["has_reentrancy_guard"] = 1 if re.search(r"nonReentrant|ReentrancyGuard|mutex", code, re.IGNORECASE) else 0
     features["has_safemath"] = 1 if "SafeMath" in code else 0
-    # Solidity version
     ver_match = re.search(r"pragma\s+solidity\s+[\^>=<]*\s*(0\.\d+)", code)
     features["solidity_major_version"] = int(ver_match.group(1).split(".")[1]) if ver_match else 8
     features["is_pre_08"] = 1 if features["solidity_major_version"] < 8 else 0
     return features
 
-def load_and_extract_features():
-    """Load dataset and extract features for all contracts."""
+
+class StructuralFeatureExtractor(BaseEstimator, TransformerMixin):
+    """Sklearn-compatible transformer for structural features."""
+    def __init__(self):
+        self.feature_names_ = None
+
+    def fit(self, X, y=None):
+        sample = extract_structural_features(X[0])
+        self.feature_names_ = sorted(sample.keys())
+        return self
+
+    def transform(self, X, y=None):
+        rows = []
+        for code in X:
+            sf = extract_structural_features(code)
+            rows.append([sf[fn] for fn in self.feature_names_])
+        return np.array(rows)
+
+
+def load_dataset():
+    """Load dataset and return raw codes + labels."""
     with open(DATASET_FILE) as f:
         ds = json.load(f)
 
@@ -95,7 +95,6 @@ def load_and_extract_features():
 
     codes = []
     labels = []
-    struct_features = []
 
     for c in sample:
         fp = c["filepath"]
@@ -107,45 +106,38 @@ def load_and_extract_features():
             continue
         codes.append(code)
         labels.append(1 if c["label"] == "vulnerable" else 0)
-        struct_features.append(extract_structural_features(code))
 
     print(f"Loaded: {len(codes)} contracts ({sum(labels)} vuln, {len(labels)-sum(labels)} safe)")
-    return codes, labels, struct_features
+    return codes, labels
 
-def build_feature_matrix(codes, struct_features):
-    """Build combined feature matrix: TF-IDF + structural features."""
-    # TF-IDF on source code tokens
-    tfidf = TfidfVectorizer(
-        max_features=500,
-        token_pattern=r"[a-zA-Z_][a-zA-Z0-9_]*",
-        ngram_range=(1, 2),
-        sublinear_tf=True,
-    )
-    X_tfidf = tfidf.fit_transform(codes)
-
-    # Structural features
-    feature_names = sorted(struct_features[0].keys())
-    X_struct = np.array([[sf[fn] for fn in feature_names] for sf in struct_features])
-
-    # Combine
-    X_combined = np.hstack([X_tfidf.toarray(), X_struct])
-    print(f"Feature matrix: {X_combined.shape} (TF-IDF={X_tfidf.shape[1]} + struct={X_struct.shape[1]})")
-
-    return X_combined, tfidf, feature_names
 
 # ============================================================
-# Run Experiments
+# Main — FIXED version
 # ============================================================
 def main():
     print("=" * 60)
-    print("Traditional ML Baselines for Smart Contract Detection")
+    print("Traditional ML Baselines — FIXED (no data leakage)")
+    print("  - TF-IDF inside Pipeline (fitted only on train folds)")
+    print("  - 70/30 stratified train/test split")
+    print("  - CV on train set only, final score on held-out test")
     print("=" * 60)
 
-    codes, labels, struct_features = load_and_extract_features()
-    X, tfidf, feat_names = build_feature_matrix(codes, struct_features)
+    codes, labels = load_dataset()
     y = np.array(labels)
 
-    # Models to test
+    # ============================================================
+    # PROPER 70/30 SPLIT
+    # ============================================================
+    codes_train, codes_test, y_train, y_test = train_test_split(
+        codes, y, test_size=0.30, random_state=42, stratify=y
+    )
+    print(f"\nTrain: {len(codes_train)} ({sum(y_train)} vuln, {len(y_train)-sum(y_train)} safe)")
+    print(f"Test:  {len(codes_test)} ({sum(y_test)} vuln, {len(y_test)-sum(y_test)} safe)")
+
+    # ============================================================
+    # Build Pipeline: TF-IDF + Structural → Classifier
+    # TF-IDF is INSIDE the pipeline so it only sees train data
+    # ============================================================
     models = {
         "Random Forest": RandomForestClassifier(n_estimators=100, random_state=42, n_jobs=-1),
         "Logistic Regression": LogisticRegression(max_iter=1000, random_state=42, C=1.0),
@@ -155,20 +147,38 @@ def main():
 
     results = {}
 
-    for name, model in models.items():
+    for name, clf in models.items():
         print(f"\n--- {name} ---")
         t0 = time.time()
 
-        # 5-fold cross validation
-        cv_f1 = cross_val_score(model, X, y, cv=5, scoring="f1")
-        cv_prec = cross_val_score(model, X, y, cv=5, scoring="precision")
-        cv_rec = cross_val_score(model, X, y, cv=5, scoring="recall")
+        # Pipeline ensures TF-IDF is fit only on training folds
+        pipe = Pipeline([
+            ('features', FeatureUnion([
+                ('tfidf', TfidfVectorizer(
+                    max_features=500,
+                    token_pattern=r"[a-zA-Z_][a-zA-Z0-9_]*",
+                    ngram_range=(1, 2),
+                    sublinear_tf=True,
+                )),
+                ('struct', StructuralFeatureExtractor()),
+            ])),
+            ('clf', clf),
+        ])
 
-        # Also train on full set and get predictions for confusion matrix
-        model.fit(X, y)
-        y_pred = model.predict(X)
-        tn, fp, fn, tp = confusion_matrix(y, y_pred).ravel()
-        train_f1 = f1_score(y, y_pred)
+        # 5-fold CV on TRAIN SET ONLY
+        cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+        cv_f1 = cross_val_score(pipe, codes_train, y_train, cv=cv, scoring="f1")
+        cv_prec = cross_val_score(pipe, codes_train, y_train, cv=cv, scoring="precision")
+        cv_rec = cross_val_score(pipe, codes_train, y_train, cv=cv, scoring="recall")
+
+        # Train on full train set, evaluate on held-out TEST set
+        pipe.fit(codes_train, y_train)
+        y_pred_test = pipe.predict(codes_test)
+        tn, fp, fn, tp = confusion_matrix(y_test, y_pred_test).ravel()
+        test_f1 = f1_score(y_test, y_pred_test)
+        test_prec = precision_score(y_test, y_pred_test)
+        test_rec = recall_score(y_test, y_pred_test)
+        fpr = fp / (fp + tn) if (fp + tn) > 0 else 0
 
         elapsed = time.time() - t0
 
@@ -177,61 +187,67 @@ def main():
             "cv_f1_std": round(float(cv_f1.std()), 4),
             "cv_precision_mean": round(float(cv_prec.mean()), 4),
             "cv_recall_mean": round(float(cv_rec.mean()), 4),
-            "train_f1": round(train_f1, 4),
-            "train_tp": int(tp), "train_fn": int(fn),
-            "train_fp": int(fp), "train_tn": int(tn),
+            "test_f1": round(float(test_f1), 4),
+            "test_precision": round(float(test_prec), 4),
+            "test_recall": round(float(test_rec), 4),
+            "test_fpr": round(float(fpr), 4),
+            "test_tp": int(tp), "test_fn": int(fn),
+            "test_fp": int(fp), "test_tn": int(tn),
             "time_seconds": round(elapsed, 2),
         }
         results[name] = result
 
-        fpr = fp / (fp + tn) if (fp + tn) > 0 else 0
-        print(f"  CV F1: {cv_f1.mean():.4f} (+/- {cv_f1.std():.4f})")
-        print(f"  CV Precision: {cv_prec.mean():.4f}")
-        print(f"  CV Recall: {cv_rec.mean():.4f}")
-        print(f"  Train: TP={tp} FN={fn} FP={fp} TN={tn} F1={train_f1:.4f} FPR={fpr:.4f}")
+        print(f"  CV F1 (train):  {cv_f1.mean():.4f} (+/- {cv_f1.std():.4f})")
+        print(f"  CV Precision:   {cv_prec.mean():.4f}")
+        print(f"  CV Recall:      {cv_rec.mean():.4f}")
+        print(f"  Test F1:        {test_f1:.4f}")
+        print(f"  Test Precision: {test_prec:.4f}")
+        print(f"  Test Recall:    {test_rec:.4f}")
+        print(f"  Test: TP={tp} FN={fn} FP={fp} TN={tn} FPR={fpr:.4f}")
         print(f"  Time: {elapsed:.2f}s")
 
         # Feature importance for tree-based models
-        if hasattr(model, "feature_importances_"):
-            importances = model.feature_importances_
-            # Get top structural feature importances
-            tfidf_count = X.shape[1] - len(feat_names)
-            struct_imp = [(feat_names[i], importances[tfidf_count + i]) for i in range(len(feat_names))]
+        if hasattr(pipe.named_steps['clf'], "feature_importances_"):
+            importances = pipe.named_steps['clf'].feature_importances_
+            feat_union = pipe.named_steps['features']
+            tfidf_n = len(feat_union.transformer_list[0][1].vocabulary_)
+            struct_names = feat_union.transformer_list[1][1].feature_names_
+            struct_imp = [(struct_names[i], importances[tfidf_n + i]) for i in range(len(struct_names))]
             struct_imp.sort(key=lambda x: x[1], reverse=True)
             top5 = struct_imp[:5]
             result["top_structural_features"] = [{"name": n, "importance": round(float(v), 4)} for n, v in top5]
-            print(f"  Top structural features: {', '.join(f'{n}={v:.3f}' for n, v in top5)}")
+            print(f"  Top structural: {', '.join(f'{n}={v:.3f}' for n, v in top5)}")
 
     # Summary comparison
     print("\n" + "=" * 60)
-    print("SUMMARY: Traditional ML vs DmAVID Pipeline")
+    print("SUMMARY: Traditional ML — FIXED (no data leakage)")
     print("=" * 60)
-    print(f"\n{'Method':<25} {'CV F1':>8} {'CV Prec':>8} {'CV Rec':>8}")
-    print("-" * 55)
+    print(f"\n{'Method':<25} {'CV F1':>8} {'Test F1':>9} {'Test P':>8} {'Test R':>8} {'FPR':>6}")
+    print("-" * 70)
     for name, r in results.items():
-        print(f"{name:<25} {r['cv_f1_mean']:>8.4f} {r['cv_precision_mean']:>8.4f} {r['cv_recall_mean']:>8.4f}")
+        print(f"{name:<25} {r['cv_f1_mean']:>8.4f} {r['test_f1']:>9.4f} "
+              f"{r['test_precision']:>8.4f} {r['test_recall']:>8.4f} {r['test_fpr']:>6.4f}")
 
-    # DmAVID baselines for comparison
+    # DmAVID baselines for comparison (from experiments/*.json)
     print(f"\n{'--- DmAVID Pipeline ---':<25}")
-    print(f"{'Slither':<25} {'0.7459':>8} {'0.6164':>8} {'0.9441':>8}")
-    print(f"{'LLM Base (GPT-4.1-mini)':<25} {'0.7507':>8} {'0.6008':>8} {'1.0000':>8}")
-    print(f"{'LLM+RAG':<25} {'0.8468':>8} {'0.7421':>8} {'0.9860':>8}")
-    print(f"{'LLM+RAG+Self-Verify':<25} {'0.8896':>8} {'0.8103':>8} {'0.9860':>8}")
+    print(f"{'Slither':<25} {'—':>8} {'0.7459':>9} {'0.6164':>8} {'0.9441':>8}")
+    print(f"{'LLM+RAG':<25} {'—':>8} {'0.8917':>9} {'0.8189':>8} {'0.9790':>8}")
 
-    # Save results
+    # Save
     os.makedirs(os.path.dirname(OUTPUT_FILE), exist_ok=True)
     output = {
-        "experiment": "traditional_ml_baselines",
-        "dataset": "SmartBugs 243 contracts",
-        "features": "TF-IDF (500) + structural (19)",
-        "cross_validation": "5-fold",
+        "experiment": "traditional_ml_baselines_FIXED",
+        "fix_description": [
+            "TF-IDF inside sklearn Pipeline (no leakage across CV folds)",
+            "70/30 stratified train/test split (test set never seen during training/CV)",
+            "Removed train=test evaluation",
+        ],
+        "dataset": f"SmartBugs {len(codes)} contracts",
+        "train_size": len(codes_train),
+        "test_size": len(codes_test),
+        "features": "TF-IDF (500) + structural (19) via Pipeline",
+        "cross_validation": "5-fold StratifiedKFold on train only",
         "results": results,
-        "comparison": {
-            "Slither": {"f1": 0.7459, "precision": 0.6164, "recall": 0.9441},
-            "LLM_Base": {"f1": 0.7507, "precision": 0.6008, "recall": 1.0},
-            "LLM_RAG": {"f1": 0.8468, "precision": 0.7421, "recall": 0.986},
-            "LLM_RAG_SelfVerify": {"f1": 0.8896, "precision": 0.8103, "recall": 0.986},
-        }
     }
     with open(OUTPUT_FILE, "w") as f:
         json.dump(output, f, indent=2)

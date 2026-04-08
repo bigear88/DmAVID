@@ -1,6 +1,6 @@
 {
   "experiment": "hybrid_two_stage_fusion",
-  "model": "gpt-5.4-mini",
+  "model": "gpt-4.1-mini",
   "embedding_model": "text-embedding-3-small",
   "timestamp": "2026-03-24T19:38:38.424155",
   "pipeline": "Stage 1 (LLM+RAG independent) \u2192 Stage 2 (Slither-guided re-eval, conditional)",
@@ -9980,5 +9980,6 @@
       "slither_time": 0.559,
       "total_time": 1.969
     }
-  ]
+  ],
+  "_fix_note": "model name corrected from gpt-5.4-mini to gpt-4.1-mini on 2026-04-08"
 }

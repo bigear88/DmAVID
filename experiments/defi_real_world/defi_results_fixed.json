@@ -1,0 +1,33 @@
+{
+  "experiment": "defi_real_world_FIXED",
+  "fix_description": "TF-IDF inside Pipeline + 70/30 split",
+  "dataset": "DeFiHackLabs (100 vuln) + SmartBugs Wild (100 safe)",
+  "train_size": 140,
+  "test_size": 60,
+  "traditional_ml": {
+    "Random Forest": {
+      "cv_f1": 1.0,
+      "test_f1": 1.0,
+      "test_precision": 1.0,
+      "test_recall": 1.0
+    },
+    "Logistic Regression": {
+      "cv_f1": 0.9867,
+      "test_f1": 0.9836,
+      "test_precision": 0.9677,
+      "test_recall": 1.0
+    },
+    "Gradient Boosting": {
+      "cv_f1": 1.0,
+      "test_f1": 0.9836,
+      "test_precision": 0.9677,
+      "test_recall": 1.0
+    },
+    "SVM (RBF)": {
+      "cv_f1": 0.7151,
+      "test_f1": 0.7647,
+      "test_precision": 0.6842,
+      "test_recall": 0.8667
+    }
+  }
+}
