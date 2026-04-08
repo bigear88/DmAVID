@@ -327,21 +327,27 @@ def main():
     print("CONFIG 4: +Critique+Debate (adversarial debate on disputed cases)")
     print("=" * 60)
 
-    fn_cases = [
-        {"contract_id": r["contract_id"], "category": r["category"],
-         "reasoning": r["reasoning"], "is_fn": True}
+    # Select disputed cases by confidence score, NOT by ground truth
+    # Low-confidence predictions are most likely to benefit from debate
+    low_conf_vuln = [
+        {"contract_id": r["contract_id"],
+         "reasoning": r["reasoning"],
+         "student_prediction": True,
+         "confidence": r.get("confidence", 0.5)}
         for r in critique_results
-        if r.get("ground_truth_vulnerable") and not r.get("predicted_vulnerable")
+        if r.get("predicted_vulnerable") and float(r.get("confidence", 0.5)) < 0.85
     ]
-    fp_cases = [
-        {"contract_id": r["contract_id"], "category": r.get("category", "unknown"),
-         "reasoning": r["reasoning"], "is_fn": False}
+    low_conf_safe = [
+        {"contract_id": r["contract_id"],
+         "reasoning": r["reasoning"],
+         "student_prediction": False,
+         "confidence": r.get("confidence", 0.5)}
         for r in critique_results
-        if not r.get("ground_truth_vulnerable") and r.get("predicted_vulnerable")
+        if not r.get("predicted_vulnerable") and float(r.get("confidence", 0.5)) < 0.70
     ]
 
-    disputed = fn_cases + fp_cases
-    print(f"  Disputed: {len(fn_cases)} FN + {len(fp_cases)} FP = {len(disputed)}")
+    disputed = low_conf_vuln + low_conf_safe
+    print(f"  Disputed: {len(low_conf_vuln)} low-conf vuln + {len(low_conf_safe)} low-conf safe = {len(disputed)}")
 
     debater = DebateRound(max_debate_rounds=2, max_cases=15)
     debate_output = debater.run_debates(disputed, code_loader)

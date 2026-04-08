@@ -30,58 +30,53 @@ client = OpenAI()
 # Failure Analysis Prompt Templates
 # ---------------------------------------------------------------------------
 
-FN_ANALYSIS_PROMPT = """You are a smart contract security expert reviewing a FALSE NEGATIVE case.
+FN_ANALYSIS_PROMPT = """You are a smart contract security expert providing a second opinion.
 
-The Student detector classified this vulnerable contract as SAFE (missed the vulnerability).
+The Student detector classified this contract as SAFE. However, you suspect it may contain vulnerabilities that were missed.
 
 ## Contract Code:
 ```solidity
 {code}
 ```
 
-## Ground Truth:
-- Vulnerability Category: {category}
-- Label: VULNERABLE
-
-## Student's Reasoning:
+## Student's Reasoning for classifying as SAFE:
 "{reasoning}"
 
 ## Your Task:
-Analyze WHY the Student missed this vulnerability. Provide:
+Independently analyze the contract and determine if the Student missed any vulnerabilities. Provide:
 
-1. **root_cause**: Why did the Student's reasoning fail? (e.g., "overlooked external call before state update", "confused SafeMath usage with actual safety")
-2. **missed_pattern**: What specific code pattern should have triggered detection?
-3. **corrective_hint**: A concise instruction the Student should follow next time to catch this type of vulnerability.
+1. **root_cause**: If you find a vulnerability the Student missed, explain why the Student's reasoning failed.
+2. **missed_pattern**: What specific code pattern indicates a potential vulnerability?
+3. **corrective_hint**: A concise instruction the Student should follow to improve detection.
 4. **confidence_calibration**: Was the Student overconfident in its "safe" classification?
+
+If you agree the contract is safe, set root_cause to "Student assessment appears correct".
 
 Respond in JSON:
 {{"root_cause": "...", "missed_pattern": "...", "corrective_hint": "...", "confidence_calibration": "overconfident/appropriate/underconfident"}}"""
 
-FP_ANALYSIS_PROMPT = """You are a smart contract security expert reviewing a FALSE POSITIVE case.
+FP_ANALYSIS_PROMPT = """You are a smart contract security expert providing a second opinion.
 
-The Student detector classified this SAFE contract as VULNERABLE (false alarm).
+The Student detector classified this contract as VULNERABLE. You need to verify whether this assessment is correct.
 
 ## Contract Code:
 ```solidity
 {code}
 ```
 
-## Ground Truth:
-- Label: SAFE (no known vulnerability)
-
-## Student's Reasoning:
+## Student's Reasoning for classifying as VULNERABLE:
 "{reasoning}"
 
 ## Student's Claimed Vulnerability Types:
 {vuln_types}
 
 ## Your Task:
-Analyze WHY the Student raised a false alarm. Provide:
+Independently analyze the contract. Determine if the Student's vulnerability assessment is justified or a false alarm. Provide:
 
-1. **root_cause**: Why did the Student incorrectly flag this? (e.g., "mistook checked arithmetic for unchecked", "flagged a pattern that has a mitigating guard")
-2. **false_trigger**: What specific code pattern triggered the false alarm?
-3. **corrective_hint**: A concise instruction the Student should follow to avoid this false positive pattern.
-4. **mitigation_missed**: What defense mechanism did the Student fail to recognize?
+1. **root_cause**: If this is a false alarm, explain why the Student was wrong. If the vulnerability is real, say "Student assessment appears correct".
+2. **false_trigger**: What specific code pattern may have misled the Student?
+3. **corrective_hint**: A concise instruction to help the Student make more accurate assessments.
+4. **mitigation_missed**: What defense mechanisms exist in the code that the Student may have overlooked?
 
 Respond in JSON:
 {{"root_cause": "...", "false_trigger": "...", "corrective_hint": "...", "mitigation_missed": "..."}}"""
@@ -145,7 +140,6 @@ class CriticAgent:
 
             prompt = FN_ANALYSIS_PROMPT.format(
                 code=code[:8000],
-                category=case.get("category", "unknown"),
                 reasoning=case.get("reasoning", "No reasoning provided")[:1500],
             )
             content, tokens = self._call_llm(prompt)

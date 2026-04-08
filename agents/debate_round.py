@@ -43,14 +43,12 @@ client = OpenAI()
 # ---------------------------------------------------------------------------
 
 RED_TEAM_ATTACK_PROMPT = """You are a Red Team attacker analyzing a smart contract.
-Your goal is to PROVE that this contract contains a vulnerability.
+Your goal is to find and PROVE any vulnerability in this contract.
 
 ## Contract Code:
 ```solidity
 {code}
 ```
-
-## Vulnerability Category (ground truth): {category}
 
 {rebuttal_context}
 
@@ -150,16 +148,16 @@ class DebateRound:
             pass
         return {"error": "parse_failed", "raw": text[:500]}
 
-    def debate_single_case(self, code: str, category: str,
-                           student_reasoning: str, is_fn: bool) -> Dict:
+    def debate_single_case(self, code: str,
+                           student_original_prediction: bool,
+                           student_reasoning: str) -> Dict:
         """
         Run a multi-round debate on a single contract.
 
         Args:
             code: Solidity source code.
-            category: Vulnerability category.
+            student_original_prediction: True if Student predicted vulnerable.
             student_reasoning: Student's original reasoning.
-            is_fn: True if this is a false negative (Student said safe, GT=vuln).
 
         Returns:
             Dict with debate transcript, final verdict, and whether to flip.
@@ -170,7 +168,7 @@ class DebateRound:
         # Round 1: Red Team attacks
         rebuttal_ctx = ""
         red_prompt = RED_TEAM_ATTACK_PROMPT.format(
-            code=code_short, category=category, rebuttal_context=rebuttal_ctx
+            code=code_short, rebuttal_context=rebuttal_ctx
         )
         red_content, red_tokens = self._call_llm(
             "You are an aggressive Red Team attacker trying to find exploits.",
@@ -187,7 +185,8 @@ class DebateRound:
                 "transcript": transcript,
                 "final_verdict": "safe",
                 "red_team_conceded": True,
-                "flip_prediction": not is_fn,  # If FP, flip to safe
+                "flip_prediction": student_original_prediction,  # Flip if Student said vuln
+                "new_prediction": False,  # Coordinator says safe
                 "tokens_used": red_tokens,
             }
 
@@ -212,7 +211,8 @@ class DebateRound:
                 "transcript": transcript,
                 "final_verdict": "vulnerable",
                 "student_conceded": True,
-                "flip_prediction": is_fn,  # If FN, flip to vulnerable
+                "flip_prediction": not student_original_prediction,  # Flip if Student said safe
+                "new_prediction": True,  # Coordinator says vulnerable
                 "tokens_used": red_tokens + student_tokens,
             }
 
@@ -223,7 +223,7 @@ class DebateRound:
             rebuttal_ctx = f"Student's defense from previous round:\n{prev_defense}\n\nCounter their rebuttals."
 
             red_prompt = RED_TEAM_ATTACK_PROMPT.format(
-                code=code_short, category=category, rebuttal_context=rebuttal_ctx
+                code=code_short, rebuttal_context=rebuttal_ctx
             )
             red_content, _ = self._call_llm(
                 "You are an aggressive Red Team attacker. Counter the defense.",
@@ -269,8 +269,8 @@ class DebateRound:
         coord_parsed = self._parse_json(coord_content)
 
         final_verdict = coord_parsed.get("final_verdict", "safe")
-        flip = (final_verdict == "vulnerable" and is_fn) or \
-               (final_verdict == "safe" and not is_fn)
+        new_pred = final_verdict == "vulnerable"
+        flip = new_pred != student_original_prediction
 
         return {
             "debate_rounds": len([t for t in transcript if t["role"] == "red_team"]),
@@ -278,6 +278,7 @@ class DebateRound:
             "coordinator_verdict": coord_parsed,
             "final_verdict": final_verdict,
             "flip_prediction": flip,
+            "new_prediction": new_pred,
             "tokens_used": self.total_tokens,
         }
 
@@ -295,7 +296,7 @@ class DebateRound:
         """
         cases = disputed_cases[:self.max_cases]
         debate_results = []
-        flips = {"fn_to_vuln": 0, "fp_to_safe": 0, "no_change": 0}
+        flips = {"flip_to_vuln": 0, "flip_to_safe": 0, "no_change": 0}
 
         print(f"  [DEBATE] Running {len(cases)} debates (max {self.max_debate_rounds} rounds each)...")
 
@@ -305,24 +306,24 @@ class DebateRound:
             if not code:
                 continue
 
-            is_fn = case.get("is_fn", True)
-            print(f"    Debate {i+1}/{len(cases)}: {cid} ({'FN' if is_fn else 'FP'})", end="")
+            student_pred = case.get("student_prediction", True)
+            print(f"    Debate {i+1}/{len(cases)}: {cid} (pred={'vuln' if student_pred else 'safe'})", end="")
 
             result = self.debate_single_case(
                 code=code,
-                category=case.get("category", "unknown"),
+                student_original_prediction=student_pred,
                 student_reasoning=case.get("reasoning", ""),
-                is_fn=is_fn,
             )
             result["contract_id"] = cid
-            result["original_type"] = "FN" if is_fn else "FP"
+            result["student_original_prediction"] = student_pred
 
             if result.get("flip_prediction"):
-                if is_fn:
-                    flips["fn_to_vuln"] += 1
+                new_pred = result.get("new_prediction", not student_pred)
+                if new_pred:
+                    flips["flip_to_vuln"] += 1
                     print(f" -> FLIP to vulnerable")
                 else:
-                    flips["fp_to_safe"] += 1
+                    flips["flip_to_safe"] += 1
                     print(f" -> FLIP to safe")
             else:
                 flips["no_change"] += 1
@@ -352,7 +353,7 @@ def apply_debate_flips(student_results: List[Dict], debate_output: Dict) -> List
     for dr in debate_output.get("debate_results", []):
         if dr.get("flip_prediction"):
             cid = dr["contract_id"]
-            flip_map[cid] = dr["final_verdict"] == "vulnerable"
+            flip_map[cid] = dr.get("new_prediction", dr["final_verdict"] == "vulnerable")
 
     updated = []
     for r in student_results:
