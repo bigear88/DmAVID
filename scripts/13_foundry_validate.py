@@ -29,7 +29,7 @@ logger = logging.getLogger(__name__)
 os.environ["PATH"] = "/home/curtis/.foundry/bin:" + os.environ.get("PATH", "")
 
 # Constants
-BASE_DIR = os.environ.get("DAVID_BASE_DIR", "/home/curtis/DmAVID")
+BASE_DIR = os.environ.get("DMAVID_BASE_DIR", "/home/curtis/DmAVID")
 EXPERIMENTS_DIR = os.path.join(BASE_DIR, "experiments")
 RED_TEAM_DIR = os.path.join(EXPERIMENTS_DIR, "red_team")
 FOUNDRY_VALIDATION_DIR = os.path.join(EXPERIMENTS_DIR, "foundry_validation")

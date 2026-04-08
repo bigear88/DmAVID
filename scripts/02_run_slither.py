@@ -12,7 +12,7 @@ import time
 import glob
 from datetime import datetime
 
-BASE_DIR = "/home/ubuntu/defi-vuln-detection"
+BASE_DIR = "/home/curtis/DmAVID"
 CURATED_DIR = os.path.join(BASE_DIR, "data/smartbugs_curated_repo/dataset")
 WILD_DIR = os.path.join(BASE_DIR, "data/smartbugs_wild_repo/contracts")
 OUTPUT_FILE = os.path.join(BASE_DIR, "experiments/slither/slither_results.json")

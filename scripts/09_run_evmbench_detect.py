@@ -76,7 +76,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # LLM Configuration
-LLM_MODEL = os.environ.get("DAVID_MODEL", "gpt-4.1-mini")
+LLM_MODEL = os.environ.get("DMAVID_MODEL", "gpt-4.1-mini")
 EMBEDDING_MODEL = "text-embedding-3-small"
 COLLECTION_NAME = "vuln_knowledge"
 RAG_TOP_K = 5

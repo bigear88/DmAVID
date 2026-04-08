@@ -28,10 +28,10 @@ logger = logging.getLogger(__name__)
 
 # Constants
 BASE_DIR = os.environ.get(
-    "DAVID_BASE_DIR",
+    "DMAVID_BASE_DIR",
     "/home/curtis/DmAVID"
 )
-MODEL = os.environ.get("DAVID_MODEL", "gpt-4.1-mini")
+MODEL = os.environ.get("DMAVID_MODEL", "gpt-4.1-mini")
 DEFAULT_VARIANTS_PER_CASE = 3
 TRANSFORMATION_TYPES = [
     "variable_renaming",

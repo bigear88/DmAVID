@@ -3,10 +3,10 @@
   "environment": {
     "platform": "Windows 10 WSL2 Ubuntu",
     "python_version": "3.12.3",
-    "working_directory": "C:\\github\\defi-llm-vulnerability-detection"
+    "working_directory": "C:\\github\\DmAVID"
   },
   "setup_commands": [
-    "git clone https://github.com/bigear88/defi-llm-vulnerability-detection.git",
+    "git clone https://github.com/bigear88/DmAVID.git",
     "python3 -m venv venv",
     "source venv/bin/activate",
     "pip install -r requirements.txt",

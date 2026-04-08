@@ -29,11 +29,11 @@
 
 ```bash
 # 如果專案還在 NTFS，先複製到 ext4
-cp -r /mnt/c/.../defi-llm-vulnerability-detection ~/defi-vuln-detection
-cd ~/defi-vuln-detection
+cp -r /mnt/c/.../DmAVID ~/DmAVID
+cd ~/DmAVID
 ```
 
-如果專案已在 ext4 (`~/defi-vuln-detection`)，直接 cd 進去即可。
+如果專案已在 ext4 (`~/DmAVID`)，直接 cd 進去即可。
 
 ### Step 2: 設定環境
 

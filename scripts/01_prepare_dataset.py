@@ -15,7 +15,7 @@ from datetime import datetime
 SEED = 42
 random.seed(SEED)
 
-BASE_DIR = "/home/ubuntu/defi-vuln-detection"
+BASE_DIR = "/home/curtis/DmAVID"
 CURATED_DIR = os.path.join(BASE_DIR, "data/smartbugs_curated_repo/dataset")
 WILD_DIR = os.path.join(BASE_DIR, "data/smartbugs_wild_repo/contracts")
 OUTPUT_FILE = os.path.join(BASE_DIR, "data/dataset_1000.json")

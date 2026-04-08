@@ -15,11 +15,11 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from _model_compat import token_param
 from openai import OpenAI
 
-BASE_DIR = os.environ.get("DAVID_BASE_DIR",
+BASE_DIR = os.environ.get("DMAVID_BASE_DIR",
     os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 REPOS_DIR = os.path.join(BASE_DIR, "data", "evmbench_repos")
 EVMBENCH_DIR = os.path.join(BASE_DIR, "data", "evmbench")
-MODEL = os.environ.get("DAVID_MODEL", "gpt-4.1-mini")
+MODEL = os.environ.get("DMAVID_MODEL", "gpt-4.1-mini")
 OUTPUT_DIR = os.path.join(BASE_DIR, "experiments", "evmbench_smart")
 client = OpenAI()
 

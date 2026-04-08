@@ -23,7 +23,7 @@ plt.rcParams.update({
 import numpy as np
 
 # --------------- paths ---------------
-BASE = os.environ.get("DAVID_BASE_DIR",
+BASE = os.environ.get("DMAVID_BASE_DIR",
         os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 CHART_DIR = os.path.join(BASE, "charts")
 os.makedirs(CHART_DIR, exist_ok=True)

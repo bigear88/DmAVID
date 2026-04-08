@@ -28,7 +28,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Base directory setup
-BASE_DIR = os.environ.get("DAVID_BASE_DIR", "/home/curtis/DmAVID")
+BASE_DIR = os.environ.get("DMAVID_BASE_DIR", "/home/curtis/DmAVID")
 SCRIPTS_DIR = os.path.join(BASE_DIR, "scripts")
 
 

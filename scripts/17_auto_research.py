@@ -56,14 +56,14 @@ logger = logging.getLogger(__name__)
 
 # ── Constants ──────────────────────────────────────────────────────
 BASE_DIR = os.environ.get(
-    "DAVID_BASE_DIR", "/home/curtis/DmAVID"
+    "DMAVID_BASE_DIR", "/home/curtis/DmAVID"
 )
 SCRIPTS_DIR = os.path.join(BASE_DIR, "scripts")
 CONFIGS_DIR = os.path.join(BASE_DIR, "configs")
 EXPERIMENTS_DIR = os.path.join(BASE_DIR, "experiments", "autoresearch")
 DATASET_FILE = os.path.join(BASE_DIR, "data", "dataset_1000.json")
 
-MODEL = os.environ.get("DAVID_MODEL", "gpt-4.1-mini")
+MODEL = os.environ.get("DMAVID_MODEL", "gpt-4.1-mini")
 EMBEDDING_MODEL = "text-embedding-3-small"
 
 # Approximate pricing for gpt-4.1-mini (USD per token)
@@ -807,7 +807,7 @@ def run_auto_research(
         budget:          Maximum USD spend for this session.
         dry_run:         If True, simulate all LLM calls.
         quick:           If True, run sanity-check only (10 contracts).
-        base_dir:        Override for DAVID_BASE_DIR.
+        base_dir:        Override for DMAVID_BASE_DIR.
 
     Returns:
         Summary dict with best_params, best_result, budget info, log path.
@@ -855,7 +855,7 @@ def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
         "--base-dir",
         type=str,
         default=None,
-        help="Override DAVID_BASE_DIR",
+        help="Override DMAVID_BASE_DIR",
     )
     return parser.parse_args(argv)
 

@@ -27,14 +27,14 @@ from _model_compat import token_param, MODEL as COMPAT_MODEL
 random.seed(42)
 
 # Configuration
-BASE_DIR = os.environ.get("DAVID_BASE_DIR", "/home/curtis/DmAVID")
+BASE_DIR = os.environ.get("DMAVID_BASE_DIR", "/home/curtis/DmAVID")
 KNOWLEDGE_DIR = os.path.join(BASE_DIR, "scripts/knowledge")
 EXPERIMENTS_DIR = os.path.join(BASE_DIR, "experiments")
 TEACHER_CHALLENGES_DIR = os.path.join(EXPERIMENTS_DIR, "teacher_challenges")
 KNOWLEDGE_FILE = os.path.join(KNOWLEDGE_DIR, "vulnerability_knowledge.json")
 
 client = OpenAI()
-MODEL = os.environ.get("DAVID_MODEL", "gpt-4.1-mini")
+MODEL = os.environ.get("DMAVID_MODEL", "gpt-4.1-mini")
 
 # SWC vulnerability categories (from Smart Contract Weakness Classification Registry)
 SWC_CATEGORIES = {

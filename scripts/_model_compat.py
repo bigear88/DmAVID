@@ -1,7 +1,7 @@
 """Model compatibility layer for GPT-4.x and GPT-4.1-mini series."""
 import os
 
-MODEL = os.environ.get("DAVID_MODEL", "gpt-4.1-mini")
+MODEL = os.environ.get("DMAVID_MODEL", "gpt-4.1-mini")
 
 def is_gpt5_model(model=None):
     """Check if model requires max_completion_tokens (future-proofing)."""

@@ -8,7 +8,7 @@ import os, json, subprocess, time, glob, random, re
 from datetime import datetime
 
 random.seed(42)
-BASE_DIR = "/home/ubuntu/defi-vuln-detection"
+BASE_DIR = "/home/curtis/DmAVID"
 CURATED_DIR = os.path.join(BASE_DIR, "data/smartbugs_curated_repo/dataset")
 WILD_DIR = os.path.join(BASE_DIR, "data/smartbugs_wild_repo/contracts")
 OUTPUT_FILE = os.path.join(BASE_DIR, "experiments/mythril/mythril_results.json")

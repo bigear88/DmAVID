@@ -27,10 +27,10 @@ import sys; sys.path.insert(0, os.path.dirname(__file__))
 from _model_compat import token_param, MODEL as COMPAT_MODEL
 
 client = OpenAI()
-MODEL = os.environ.get("DAVID_MODEL", "gpt-4.1-mini")
+MODEL = os.environ.get("DMAVID_MODEL", "gpt-4.1-mini")
 
 # Base directory for knowledge bases and results
-BASE_DIR = os.environ.get("DAVID_BASE_DIR", "/home/curtis/DmAVID")
+BASE_DIR = os.environ.get("DMAVID_BASE_DIR", "/home/curtis/DmAVID")
 EVMBENCH_DIR = os.path.join(BASE_DIR, "data", "evmbench")
 REPOS_DIR = os.path.join(BASE_DIR, "data", "evmbench_repos")
 KB_DIR = os.path.join(BASE_DIR, "knowledge_bases")

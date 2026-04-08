@@ -28,7 +28,7 @@
 ### 前置準備
 
 ```bash
-cd ~/defi-vuln-detection  # 或你的專案目錄
+cd ~/DmAVID  # 或你的專案目錄
 
 # 1. 設定 API Key
 export OPENAI_API_KEY="sk-proj-..."

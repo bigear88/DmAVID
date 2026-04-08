@@ -14,7 +14,7 @@ from datetime import datetime
 from openai import OpenAI
 
 random.seed(42)
-BASE_DIR = "/home/ubuntu/defi-vuln-detection"
+BASE_DIR = "/home/curtis/DmAVID"
 DATASET_FILE = os.path.join(BASE_DIR, "data/dataset_1000.json")
 
 client = OpenAI()

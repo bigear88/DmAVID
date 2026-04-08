@@ -18,8 +18,8 @@ from _model_compat import token_param
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-BASE_DIR = os.environ.get("DAVID_BASE_DIR", "/home/curtis/DmAVID")
-MODEL = os.environ.get("DAVID_MODEL", "gpt-4.1-mini")
+BASE_DIR = os.environ.get("DMAVID_BASE_DIR", "/home/curtis/DmAVID")
+MODEL = os.environ.get("DMAVID_MODEL", "gpt-4.1-mini")
 client = OpenAI()
 
 KNOWLEDGE_FILE = os.path.join(BASE_DIR, "scripts/knowledge/vulnerability_knowledge.json")

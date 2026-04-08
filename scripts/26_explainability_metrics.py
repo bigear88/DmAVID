@@ -12,7 +12,7 @@ All data comes from experiments/llm_rag/llm_rag_results.json (actual results).
 import json, os, re, sys
 from collections import Counter, defaultdict
 
-BASE_DIR = os.environ.get("DAVID_BASE_DIR",
+BASE_DIR = os.environ.get("DMAVID_BASE_DIR",
     os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 RESULTS_FILE = os.path.join(BASE_DIR, "experiments", "llm_rag", "llm_rag_results.json")
 DATASET_FILE = os.path.join(BASE_DIR, "data", "dataset_1000.json")

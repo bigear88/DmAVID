@@ -14,7 +14,7 @@ import csv
 import numpy as np
 from collections import defaultdict
 
-BASE_DIR = "/home/ubuntu/defi-vuln-detection"
+BASE_DIR = "/home/curtis/DmAVID"
 EXP_DIR = os.path.join(BASE_DIR, "experiments")
 OUTPUT_DIR = os.path.join(BASE_DIR, "supplementary_results")
 os.makedirs(OUTPUT_DIR, exist_ok=True)

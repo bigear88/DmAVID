@@ -185,8 +185,8 @@ curl -L https://foundry.paradigm.xyz | bash && foundryup
 
 ```bash
 export OPENAI_API_KEY="your-key"
-export DAVID_MODEL="gpt-4.1-mini"
-export DAVID_BASE_DIR="/path/to/DmAVID"
+export DMAVID_MODEL="gpt-4.1-mini"
+export DMAVID_BASE_DIR="/path/to/DmAVID"
 ```
 
 ---
