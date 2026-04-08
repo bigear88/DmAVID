@@ -222,7 +222,7 @@ Respond in JSON format ONLY:
   "reasoning": "brief explanation referencing the RAG context"
 }"""
 
-def analyze_with_rag(code, max_retries=2):
+def analyze_with_rag(code, max_retries=2, extra_context=""):
     """Analyze contract with RAG-enhanced LLM."""
     if len(code) > 12000:
         code = code[:12000] + "\n// ... (truncated)"
@@ -236,7 +236,7 @@ def analyze_with_rag(code, max_retries=2):
                 model=MODEL,
                 messages=[
                     {"role": "system", "content": RAG_SYSTEM_PROMPT},
-                    {"role": "user", "content": f"## RAG Knowledge Base Context:\n{rag_context}\n\n## Contract to Analyze:\n```solidity\n{code}\n```"}
+                    {"role": "user", "content": f"## RAG Knowledge Base Context:\n{rag_context}\n\n{extra_context}\n\n## Contract to Analyze:\n```solidity\n{code}\n```"}
                 ],
                 temperature=0.1, **token_param(1024), seed=42
             )
