@@ -1,19 +1,20 @@
 #!/usr/bin/env python3
 """
-Phase 3: Style-Balanced Experiment — FIXED version.
-Proves ML learned style, not vulnerabilities.
+Phase 3: Style-Balanced Experiment — Three-Stage Fairness Ablation.
 
-FIXES:
-  1. TF-IDF inside Pipeline (no cross-fold leakage)
-  2. 70/30 train/test split
-  3. Reports held-out test F1
+Stage 1 (Naive):          random.shuffle(safe) + safe[:100], full TF-IDF, all structural
+Stage 2 (Length-Matched):  nearest-neighbor length matching 143v+143s=286, full TF-IDF
+Stage 3 (Keyword-Only):   same as Stage 2, keyword-only TF-IDF, no total_lines/code_length
+
+All stages: 5-fold Stratified CV + 70/30 held-out test, 4 models (RF, LR, GB, SVM-RBF)
 """
-import json, os, sys, re, random, warnings, time
+import json, os, re, random, warnings, time
 import numpy as np
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC
 from sklearn.metrics import f1_score, confusion_matrix
 from sklearn.model_selection import cross_val_score, StratifiedKFold, train_test_split
 from sklearn.pipeline import Pipeline, FeatureUnion
@@ -25,8 +26,26 @@ np.random.seed(42)
 BASE_DIR = os.environ.get("DMAVID_BASE_DIR",
     os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 DATASET_FILE = os.path.join(BASE_DIR, "data", "dataset_1000.json")
-OUTPUT_FILE = os.path.join(BASE_DIR, "experiments", "style_balanced", "balanced_results_fixed.json")
+OUTPUT_FILE = os.path.join(BASE_DIR, "experiments", "traditional_ml", "ml_fairness_ablation.json")
 
+# ============================================================
+# Solidity vulnerability keyword whitelist (Stage 3)
+# ============================================================
+SOLIDITY_VULN_KEYWORDS = [
+    'function', 'public', 'external', 'internal', 'private',
+    'require', 'assert', 'revert', 'if', 'else', 'for', 'while',
+    'call', 'delegatecall', 'send', 'transfer', 'value',
+    'msg', 'sender', 'tx', 'origin', 'block', 'timestamp',
+    'mapping', 'address', 'uint', 'uint256', 'int', 'payable',
+    'fallback', 'receive', 'selfdestruct', 'suicide',
+    'storage', 'memory', 'modifier', 'onlyOwner', 'nonReentrant',
+]
+
+STAGE3_EXCLUDED_STRUCTURAL = {"total_lines", "code_length"}
+
+# ============================================================
+# Feature Extraction
+# ============================================================
 
 def extract_features(code):
     features = {}
@@ -37,12 +56,16 @@ def extract_features(code):
     features["num_events"] = len(re.findall(r"\bevent\b", code))
     features["num_mappings"] = len(re.findall(r"\bmapping\b", code))
     features["num_requires"] = len(re.findall(r"\brequire\b", code))
-    features["num_external_calls"] = len(re.findall(r"\.call\b|\.send\b|\.transfer\b", code))
+    features["num_asserts"] = len(re.findall(r"\bassert\b", code))
+    features["num_reverts"] = len(re.findall(r"\brevert\b", code))
+    features["num_external_calls"] = len(re.findall(r"\.call\b|\.send\b|\.transfer\b|\.delegatecall\b", code))
     features["num_msg_value"] = len(re.findall(r"msg\.value", code))
     features["num_msg_sender"] = len(re.findall(r"msg\.sender", code))
+    features["num_block_timestamp"] = len(re.findall(r"block\.timestamp|now\b", code))
+    features["num_selfdestruct"] = len(re.findall(r"selfdestruct|suicide", code))
     features["has_payable"] = 1 if "payable" in code else 0
-    features["has_onlyowner"] = 1 if re.search(r"onlyOwner", code, re.IGNORECASE) else 0
-    features["has_reentrancy_guard"] = 1 if "nonReentrant" in code else 0
+    features["has_onlyowner"] = 1 if re.search(r"onlyOwner|only_owner", code, re.IGNORECASE) else 0
+    features["has_reentrancy_guard"] = 1 if re.search(r"nonReentrant|ReentrancyGuard|mutex", code, re.IGNORECASE) else 0
     features["has_safemath"] = 1 if "SafeMath" in code else 0
     ver = re.search(r"pragma\s+solidity\s+[\^>=<]*\s*(0\.\d+)", code)
     features["solidity_ver"] = int(ver.group(1).split(".")[1]) if ver else 8
@@ -51,11 +74,13 @@ def extract_features(code):
 
 
 class StructuralFeatureExtractor(BaseEstimator, TransformerMixin):
-    def __init__(self):
+    def __init__(self, exclude_features=None):
+        self.exclude_features = exclude_features
         self.feature_names_ = None
 
     def fit(self, X, y=None):
-        self.feature_names_ = sorted(extract_features(X[0]).keys())
+        excl = self.exclude_features or set()
+        self.feature_names_ = sorted(k for k in extract_features(X[0]).keys() if k not in excl)
         return self
 
     def transform(self, X, y=None):
@@ -71,167 +96,276 @@ def clean_code(code):
     return code
 
 
-def build_pipeline(clf):
+# ============================================================
+# Dataset loading
+# ============================================================
+
+def load_all_contracts():
+    """Load all contracts, return (vuln_codes, safe_codes)."""
+    with open(DATASET_FILE) as f:
+        ds = json.load(f)
+
+    def read_list(clist):
+        out = []
+        for c in clist:
+            fp = c["filepath"]
+            if not os.path.exists(fp):
+                continue
+            with open(fp, "r", encoding="utf-8", errors="ignore") as f:
+                code = clean_code(f.read())
+            if code.strip():
+                out.append(code)
+        return out
+
+    vuln_raw = [c for c in ds["contracts"] if c["label"] == "vulnerable"]
+    safe_raw = [c for c in ds["contracts"] if c["label"] == "safe"]
+    return read_list(vuln_raw), read_list(safe_raw)
+
+
+# ============================================================
+# Sampling strategies
+# ============================================================
+
+def sample_naive(vuln_codes, safe_codes):
+    """Stage 1: random shuffle + take first 100 safe."""
+    safe_shuffled = list(safe_codes)
+    random.seed(42)
+    random.shuffle(safe_shuffled)
+    n_safe = min(100, len(safe_shuffled))
+    codes = vuln_codes + safe_shuffled[:n_safe]
+    labels = [1] * len(vuln_codes) + [0] * n_safe
+    return codes, np.array(labels)
+
+
+def sample_length_matched(vuln_codes, safe_codes):
+    """Stage 2 & 3: nearest-neighbor length matching, 143v + 143s = 286."""
+    vuln_lens = [len(c) for c in vuln_codes]
+    safe_lens = np.array([len(c) for c in safe_codes], dtype=float)
+
+    matched_safe = []
+    used = set()
+    length_diffs = []
+
+    for vl in vuln_lens:
+        diffs = np.abs(safe_lens - vl)
+        for idx in used:
+            diffs[idx] = np.inf
+        best = int(np.argmin(diffs))
+        used.add(best)
+        matched_safe.append(safe_codes[best])
+        length_diffs.append(abs(int(safe_lens[best]) - vl))
+
+    codes = vuln_codes + matched_safe
+    labels = [1] * len(vuln_codes) + [0] * len(matched_safe)
+
+    stats = {
+        "num_pairs": len(length_diffs),
+        "median_diff": int(np.median(length_diffs)),
+        "mean_diff": round(float(np.mean(length_diffs)), 1),
+        "max_diff": int(np.max(length_diffs)),
+        "min_diff": int(np.min(length_diffs)),
+    }
+    return codes, np.array(labels), stats
+
+
+# ============================================================
+# Model definitions
+# ============================================================
+
+def get_models():
+    return {
+        "Random Forest": RandomForestClassifier(n_estimators=100, random_state=42, n_jobs=-1),
+        "Logistic Regression": LogisticRegression(max_iter=1000, random_state=42, C=1.0),
+        "Gradient Boosting": GradientBoostingClassifier(n_estimators=100, random_state=42),
+        "SVM (RBF)": SVC(kernel="rbf", random_state=42),
+    }
+
+
+def build_pipeline(clf, tfidf_kwargs, struct_exclude=None):
     return Pipeline([
         ('features', FeatureUnion([
-            ('tfidf', TfidfVectorizer(
-                max_features=500,
-                token_pattern=r"[a-zA-Z_][a-zA-Z0-9_]*",
-                ngram_range=(1, 2),
-                sublinear_tf=True,
-            )),
-            ('struct', StructuralFeatureExtractor()),
+            ('tfidf', TfidfVectorizer(**tfidf_kwargs)),
+            ('struct', StructuralFeatureExtractor(exclude_features=struct_exclude)),
         ])),
         ('clf', clf),
     ])
 
 
+# ============================================================
+# Run one stage
+# ============================================================
+
+def run_stage(codes, labels, stage_name, tfidf_kwargs, struct_exclude=None):
+    """Run 5-fold CV + 70/30 held-out test for all 4 models."""
+    print(f"\n{'='*60}")
+    print(f"  {stage_name}")
+    print(f"  Dataset: {sum(labels)} vuln + {len(labels)-sum(labels)} safe = {len(labels)}")
+    print(f"{'='*60}")
+
+    codes_train, codes_test, y_train, y_test = train_test_split(
+        codes, labels, test_size=0.30, random_state=42, stratify=labels)
+    print(f"  Train: {len(codes_train)}, Test: {len(codes_test)}")
+
+    models = get_models()
+    cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+    stage_results = {}
+
+    for name, clf in models.items():
+        t0 = time.time()
+        pipe = build_pipeline(
+            type(clf)(**clf.get_params()), tfidf_kwargs, struct_exclude)
+
+        # 5-fold CV on train
+        cv_f1 = cross_val_score(pipe, codes_train, y_train, cv=cv, scoring="f1")
+
+        # Held-out test
+        pipe.fit(codes_train, y_train)
+        y_pred = pipe.predict(codes_test)
+        test_f1 = f1_score(y_test, y_pred)
+        tn, fp, fn, tp = confusion_matrix(y_test, y_pred).ravel()
+        fpr = fp / (fp + tn) if (fp + tn) > 0 else 0
+
+        elapsed = time.time() - t0
+
+        stage_results[name] = {
+            "cv_f1_mean": round(float(cv_f1.mean()), 4),
+            "cv_f1_std": round(float(cv_f1.std()), 4),
+            "cv_f1_folds": [round(float(x), 4) for x in cv_f1],
+            "test_f1": round(float(test_f1), 4),
+            "test_tp": int(tp), "test_fn": int(fn),
+            "test_fp": int(fp), "test_tn": int(tn),
+            "test_fpr": round(float(fpr), 4),
+            "time_seconds": round(elapsed, 2),
+        }
+        print(f"  {name:<25} CV F1={cv_f1.mean():.4f}+/-{cv_f1.std():.4f}  "
+              f"Test F1={test_f1:.4f}  ({elapsed:.1f}s)")
+
+    return stage_results
+
+
+# ============================================================
+# Main
+# ============================================================
 def main():
     print("=" * 60)
-    print("Phase 3: Style-Balanced ML Experiment — FIXED")
-    print("  - TF-IDF inside Pipeline")
-    print("  - 70/30 train/test split")
+    print("ML Fairness Ablation — Three-Stage Experiment")
+    print("  - TF-IDF inside Pipeline (no leakage)")
+    print("  - 70/30 stratified train/test split")
     print("=" * 60)
 
-    with open(DATASET_FILE) as f:
-        ds = json.load(f)
+    vuln_codes, safe_codes = load_all_contracts()
+    print(f"Loaded: {len(vuln_codes)} vulnerable, {len(safe_codes)} safe contracts")
+
+    # TF-IDF configs
+    tfidf_full = dict(
+        max_features=500,
+        token_pattern=r"[a-zA-Z_][a-zA-Z0-9_]*",
+        ngram_range=(1, 2),
+        sublinear_tf=True,
+    )
+    tfidf_keywords = dict(
+        vocabulary=SOLIDITY_VULN_KEYWORDS,
+        token_pattern=r"[a-zA-Z_][a-zA-Z0-9_]*",
+        sublinear_tf=True,
+    )
+
+    # ========================
+    # Stage 1: Naive
+    # ========================
+    codes_s1, labels_s1 = sample_naive(vuln_codes, safe_codes)
+    results_s1 = run_stage(codes_s1, labels_s1,
+        "Stage 1: Naive (random 100 safe, full TF-IDF)", tfidf_full)
+
+    # ========================
+    # Stage 2: Length-Matched
+    # ========================
+    codes_s2, labels_s2, pairing_stats = sample_length_matched(vuln_codes, safe_codes)
+    results_s2 = run_stage(codes_s2, labels_s2,
+        "Stage 2: Length-Matched (143v+143s, full TF-IDF)", tfidf_full)
+
+    # ========================
+    # Stage 3: LM + Keyword-Only
+    # ========================
+    results_s3 = run_stage(codes_s2, labels_s2,
+        "Stage 3: LM + Keyword-Only (143v+143s, keyword TF-IDF, no length feats)",
+        tfidf_keywords, struct_exclude=STAGE3_EXCLUDED_STRUCTURAL)
 
     # ============================================================
-    # Experiment 1: Same-source balanced (Curated only + short Wild)
+    # Three-Stage Comparison Table
     # ============================================================
-    print("\n--- Exp 1: SmartBugs Curated + Short Wild (style-balanced) ---")
+    print("\n" + "=" * 80)
+    print("  THREE-STAGE COMPARISON TABLE (CV F1)")
+    print("=" * 80)
+    print(f"\n{'Model':<25} {'S1 Naive':>16} {'S2 LenMatch':>16} {'S3 Keyword':>16}  {'S1->S3':>8}")
+    print("-" * 85)
+    for name in get_models().keys():
+        s1 = results_s1[name]
+        s2 = results_s2[name]
+        s3 = results_s3[name]
+        drop = s3["cv_f1_mean"] - s1["cv_f1_mean"]
+        print(f"{name:<25} "
+              f"{s1['cv_f1_mean']:.4f}+/-{s1['cv_f1_std']:.4f}  "
+              f"{s2['cv_f1_mean']:.4f}+/-{s2['cv_f1_std']:.4f}  "
+              f"{s3['cv_f1_mean']:.4f}+/-{s3['cv_f1_std']:.4f}  "
+              f"{drop:>+7.4f}")
 
-    curated = [c for c in ds["contracts"] if c.get("source") == "smartbugs_curated"]
-    wild = [c for c in ds["contracts"] if c.get("source") == "smartbugs_wild"]
-
-    codes_1, labels_1 = [], []
-    for c in curated:
-        fp = c["filepath"]
-        if not os.path.exists(fp):
-            continue
-        with open(fp, "r", encoding="utf-8", errors="ignore") as f:
-            code = clean_code(f.read())
-        if not code.strip():
-            continue
-        codes_1.append(code)
-        labels_1.append(1)
-
-    short_wild = [c for c in wild if c["lines"] < 200]
-    random.shuffle(short_wild)
-    for c in short_wild[:min(len(curated), len(short_wild))]:
-        fp = c["filepath"]
-        if not os.path.exists(fp):
-            continue
-        with open(fp, "r", encoding="utf-8", errors="ignore") as f:
-            code = clean_code(f.read())
-        if not code.strip():
-            continue
-        codes_1.append(code)
-        labels_1.append(0)
-
-    y1 = np.array(labels_1)
-    print(f"Balanced set: {sum(y1)} vuln + {len(y1)-sum(y1)} safe = {len(y1)}")
-
-    # 70/30 split
-    codes_1_train, codes_1_test, y1_train, y1_test = train_test_split(
-        codes_1, y1, test_size=0.30, random_state=42, stratify=y1)
-    print(f"  Train: {len(codes_1_train)}, Test: {len(codes_1_test)}")
+    print(f"\n{'Model':<25} {'S1 Test F1':>11} {'S2 Test F1':>11} {'S3 Test F1':>11}  {'S1->S3':>8}")
+    print("-" * 70)
+    for name in get_models().keys():
+        s1_t = results_s1[name]["test_f1"]
+        s2_t = results_s2[name]["test_f1"]
+        s3_t = results_s3[name]["test_f1"]
+        drop = s3_t - s1_t
+        print(f"{name:<25} {s1_t:>11.4f} {s2_t:>11.4f} {s3_t:>11.4f}  {drop:>+7.4f}")
 
     # ============================================================
-    # Experiment 2: Original SmartBugs (style-biased)
+    # Pairing Quality (Stage 2)
     # ============================================================
-    print("\n--- Exp 2: Original SmartBugs (Curated vuln + Wild safe, biased) ---")
-    vuln_all = [c for c in ds["contracts"] if c["label"] == "vulnerable"]
-    safe_all = [c for c in ds["contracts"] if c["label"] == "safe"]
-    random.shuffle(safe_all)
-    sample2 = vuln_all + safe_all[:100]
+    print(f"\n--- Stage 2 Length-Matching Quality ---")
+    print(f"  Pairs:       {pairing_stats['num_pairs']}")
+    print(f"  Median diff: {pairing_stats['median_diff']} chars")
+    print(f"  Mean diff:   {pairing_stats['mean_diff']} chars")
+    print(f"  Max diff:    {pairing_stats['max_diff']} chars")
+    print(f"  Min diff:    {pairing_stats['min_diff']} chars")
 
-    codes_2, labels_2 = [], []
-    for c in sample2:
-        fp = c["filepath"]
-        if not os.path.exists(fp):
-            continue
-        with open(fp, "r", encoding="utf-8", errors="ignore") as f:
-            code = clean_code(f.read())
-        if not code.strip():
-            continue
-        codes_2.append(code)
-        labels_2.append(1 if c["label"] == "vulnerable" else 0)
-
-    y2 = np.array(labels_2)
-
-    codes_2_train, codes_2_test, y2_train, y2_test = train_test_split(
-        codes_2, y2, test_size=0.30, random_state=42, stratify=y2)
-    print(f"Original set: {sum(y2)} vuln + {len(y2)-sum(y2)} safe = {len(y2)}")
-    print(f"  Train: {len(codes_2_train)}, Test: {len(codes_2_test)}")
-
-    # Run models
-    models = {
-        "Random Forest": RandomForestClassifier(n_estimators=100, random_state=42, n_jobs=-1),
-        "Logistic Regression": LogisticRegression(max_iter=1000, random_state=42),
-        "Gradient Boosting": GradientBoostingClassifier(n_estimators=100, random_state=42),
-    }
-
-    results = {}
-    cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
-
-    for name, model_cls in models.items():
-        # Exp 1: balanced — Pipeline on train, test on held-out
-        pipe1 = build_pipeline(type(model_cls)(**model_cls.get_params()))
-        cv_f1_bal = cross_val_score(pipe1, codes_1_train, y1_train, cv=cv, scoring="f1")
-        pipe1.fit(codes_1_train, y1_train)
-        test_f1_bal = f1_score(y1_test, pipe1.predict(codes_1_test))
-
-        # Exp 2: original (biased) — Pipeline on train, test on held-out
-        pipe2 = build_pipeline(type(model_cls)(**model_cls.get_params()))
-        cv_f1_orig = cross_val_score(pipe2, codes_2_train, y2_train, cv=cv, scoring="f1")
-        pipe2.fit(codes_2_train, y2_train)
-        test_f1_orig = f1_score(y2_test, pipe2.predict(codes_2_test))
-
-        drop_cv = cv_f1_bal.mean() - cv_f1_orig.mean()
-        drop_test = test_f1_bal - test_f1_orig
-
-        results[name] = {
-            "balanced_cv_f1": round(float(cv_f1_bal.mean()), 4),
-            "balanced_test_f1": round(float(test_f1_bal), 4),
-            "original_cv_f1": round(float(cv_f1_orig.mean()), 4),
-            "original_test_f1": round(float(test_f1_orig), 4),
-            "drop_cv": round(float(drop_cv), 4),
-            "drop_test": round(float(drop_test), 4),
-        }
-        print(f"\n  {name}:")
-        print(f"    Original  — CV F1={cv_f1_orig.mean():.4f}, Test F1={test_f1_orig:.4f}")
-        print(f"    Balanced  — CV F1={cv_f1_bal.mean():.4f}, Test F1={test_f1_bal:.4f}")
-        print(f"    Drop (test): {drop_test:+.4f}")
-
-    # Summary
-    print("\n" + "=" * 60)
-    print("STYLE LEAKAGE PROOF — FIXED (Pipeline + 70/30 split)")
-    print("=" * 60)
-    print(f"\n{'Method':<25} {'Orig Test F1':>13} {'Bal Test F1':>13} {'Drop':>8}")
-    print("-" * 63)
-    for name, r in results.items():
-        print(f"{name:<25} {r['original_test_f1']:>13.4f} {r['balanced_test_f1']:>13.4f} {r['drop_test']:>+8.4f}")
-
-    for name, r in results.items():
-        if r["drop_test"] < -0.10:
-            print(f"\n  ⚠️  {name}: Test F1 dropped {abs(r['drop_test'])*100:.1f}% → CONFIRMS style leakage")
-        elif r["drop_test"] < -0.05:
-            print(f"\n  ⚠️  {name}: Test F1 dropped {abs(r['drop_test'])*100:.1f}% → Partial style leakage")
-        else:
-            print(f"\n  ✅ {name}: Test F1 stable → learned real patterns (or residual style)")
-
-    # Save
+    # ============================================================
+    # Save JSON
+    # ============================================================
     os.makedirs(os.path.dirname(OUTPUT_FILE), exist_ok=True)
+    output = {
+        "experiment": "ml_fairness_ablation",
+        "description": "Three-stage fairness ablation: Naive -> Length-Matched -> Keyword-Only",
+        "pipeline": "TF-IDF inside sklearn Pipeline (no cross-fold leakage), 70/30 stratified split",
+        "stages": {
+            "stage1_naive": {
+                "description": "Random 100 safe, full TF-IDF (500 features), all structural features",
+                "dataset_size": int(len(labels_s1)),
+                "vuln_count": int(sum(labels_s1)),
+                "safe_count": int(len(labels_s1) - sum(labels_s1)),
+                "results": results_s1,
+            },
+            "stage2_length_matched": {
+                "description": "Nearest-neighbor length matching, 143v+143s, full TF-IDF, all structural",
+                "dataset_size": int(len(labels_s2)),
+                "vuln_count": int(sum(labels_s2)),
+                "safe_count": int(len(labels_s2) - sum(labels_s2)),
+                "pairing_quality": pairing_stats,
+                "results": results_s2,
+            },
+            "stage3_keyword_only": {
+                "description": "Length-matched + keyword-only TF-IDF + structural without total_lines/code_length",
+                "dataset_size": int(len(labels_s2)),
+                "vuln_count": int(sum(labels_s2)),
+                "safe_count": int(len(labels_s2) - sum(labels_s2)),
+                "keyword_vocabulary": SOLIDITY_VULN_KEYWORDS,
+                "excluded_structural": sorted(STAGE3_EXCLUDED_STRUCTURAL),
+                "results": results_s3,
+            },
+        },
+    }
     with open(OUTPUT_FILE, "w") as f:
-        json.dump({
-            "experiment": "style_balanced_test_FIXED",
-            "fix_description": "TF-IDF inside Pipeline + 70/30 split",
-            "balanced_set": f"{sum(y1)} vuln + {len(y1)-sum(y1)} safe",
-            "original_set": f"{sum(y2)} vuln + {len(y2)-sum(y2)} safe",
-            "results": results,
-        }, f, indent=2)
-    print(f"\nSaved: {OUTPUT_FILE}")
+        json.dump(output, f, indent=2)
+    print(f"\nResults saved to: {OUTPUT_FILE}")
 
 
 if __name__ == "__main__":
