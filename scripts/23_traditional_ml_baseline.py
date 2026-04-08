@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 """
-Step 3a: Traditional ML Baselines for Smart Contract Vulnerability Detection.
-FIXED VERSION — corrects data leakage issues:
-  1. TF-IDF is now inside a Pipeline (fitted only on train folds)
-  2. Proper 70/30 train/test split
-  3. No more train=test evaluation
-  4. Reports both CV (on train) and held-out test F1
+Step 3a: Traditional ML Fairness Ablation — Three-Stage Experiment.
+
+Stage 1 (Naive):       random.shuffle(safe) + safe[:100], TF-IDF max_features=500 full vocab
+Stage 2 (Length-Matched): nearest-neighbor length matching, 143v+143s=286, TF-IDF same as Stage 1
+Stage 3 (LM+Keyword-Only): sampling same as Stage 2, TF-IDF with Solidity keyword whitelist only,
+                            structural features exclude total_lines and code_length
+
+All stages: 5-fold Stratified CV, 4 models (RF, LR, GB, SVM-RBF)
 """
 import json, os, sys, re, time, warnings
 import numpy as np
@@ -15,27 +17,41 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC
-from sklearn.metrics import f1_score, precision_score, recall_score, classification_report, confusion_matrix
-from sklearn.model_selection import cross_val_score, train_test_split, StratifiedKFold
+from sklearn.metrics import f1_score
+from sklearn.model_selection import cross_val_score, StratifiedKFold
 from sklearn.pipeline import Pipeline, FeatureUnion
-from scipy.sparse import hstack, csr_matrix
 import random
 
 warnings.filterwarnings("ignore")
 random.seed(42)
 np.random.seed(42)
 
-BASE_DIR = os.environ.get("DMAVID_BASE_DIR",
+BASE_DIR = os.environ.get("DAVID_BASE_DIR",
     os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 DATASET_FILE = os.path.join(BASE_DIR, "data", "dataset_1000.json")
-OUTPUT_FILE = os.path.join(BASE_DIR, "experiments", "traditional_ml", "ml_baseline_results_fixed.json")
+OUTPUT_FILE = os.path.join(BASE_DIR, "experiments", "traditional_ml", "ml_fairness_ablation.json")
+
+# ============================================================
+# Solidity vulnerability keyword whitelist (Stage 3)
+# ============================================================
+SOLIDITY_VULN_KEYWORDS = [
+    'function', 'public', 'external', 'internal', 'private',
+    'require', 'assert', 'revert', 'if', 'else', 'for', 'while',
+    'call', 'delegatecall', 'send', 'transfer', 'value',
+    'msg', 'sender', 'tx', 'origin', 'block', 'timestamp',
+    'mapping', 'address', 'uint', 'uint256', 'int', 'payable',
+    'fallback', 'receive', 'selfdestruct', 'suicide',
+    'storage', 'memory', 'modifier', 'onlyOwner', 'nonReentrant',
+]
+
+# Structural features to EXCLUDE in Stage 3
+STAGE3_EXCLUDED_STRUCTURAL = {"total_lines", "code_length"}
 
 # ============================================================
 # Feature Extraction
 # ============================================================
 
 def extract_structural_features(code):
-    """Extract structural features from Solidity source code."""
     features = {}
     lines = code.split("\n")
     features["total_lines"] = len(lines)
@@ -63,13 +79,14 @@ def extract_structural_features(code):
 
 
 class StructuralFeatureExtractor(BaseEstimator, TransformerMixin):
-    """Sklearn-compatible transformer for structural features."""
-    def __init__(self):
+    def __init__(self, exclude_features=None):
+        self.exclude_features = exclude_features
         self.feature_names_ = None
 
     def fit(self, X, y=None):
         sample = extract_structural_features(X[0])
-        self.feature_names_ = sorted(sample.keys())
+        excl = self.exclude_features or set()
+        self.feature_names_ = sorted(k for k in sample.keys() if k not in excl)
         return self
 
     def transform(self, X, y=None):
@@ -80,174 +97,237 @@ class StructuralFeatureExtractor(BaseEstimator, TransformerMixin):
         return np.array(rows)
 
 
-def load_dataset():
-    """Load dataset and return raw codes + labels."""
+# ============================================================
+# Dataset loading helpers
+# ============================================================
+
+def load_all_contracts():
+    """Load all contracts from dataset, return (vuln_list, safe_list) each as (code, filepath)."""
     with open(DATASET_FILE) as f:
         ds = json.load(f)
 
     contracts = ds["contracts"]
-    vuln = [c for c in contracts if c["label"] == "vulnerable"]
-    safe = [c for c in contracts if c["label"] == "safe"]
-    random.shuffle(safe)
-    sample = vuln + safe[:100]
+    vuln_raw = [c for c in contracts if c["label"] == "vulnerable"]
+    safe_raw = [c for c in contracts if c["label"] == "safe"]
 
-    print(f"Dataset: {len(vuln)} vulnerable + {min(100, len(safe))} safe = {len(sample)}")
+    def read_contracts(clist):
+        out = []
+        for c in clist:
+            fp = c["filepath"]
+            if not os.path.exists(fp):
+                continue
+            with open(fp, "r", encoding="utf-8", errors="ignore") as f:
+                code = f.read()
+            if code.strip():
+                out.append(code)
+        return out
 
-    codes = []
-    labels = []
+    return read_contracts(vuln_raw), read_contracts(safe_raw)
 
-    for c in sample:
-        fp = c["filepath"]
-        if not os.path.exists(fp):
-            continue
-        with open(fp, "r", encoding="utf-8", errors="ignore") as f:
-            code = f.read()
-        if not code.strip():
-            continue
-        codes.append(code)
-        labels.append(1 if c["label"] == "vulnerable" else 0)
 
-    print(f"Loaded: {len(codes)} contracts ({sum(labels)} vuln, {len(labels)-sum(labels)} safe)")
-    return codes, labels
+def sample_stage1(vuln_codes, safe_codes):
+    """Stage 1: random shuffle + take first 100 safe."""
+    safe_shuffled = list(safe_codes)
+    random.seed(42)
+    random.shuffle(safe_shuffled)
+    codes = vuln_codes + safe_shuffled[:100]
+    labels = [1] * len(vuln_codes) + [0] * min(100, len(safe_shuffled))
+    return codes, np.array(labels)
+
+
+def sample_stage2(vuln_codes, safe_codes):
+    """Stage 2: length-matched nearest-neighbor pairing. 143v + 143s = 286."""
+    vuln_lens = [len(c) for c in vuln_codes]
+    safe_lens = np.array([len(c) for c in safe_codes], dtype=float)
+
+    matched_safe = []
+    used_indices = set()
+    length_diffs = []
+
+    for vl in vuln_lens:
+        diffs = np.abs(safe_lens - vl)
+        # mask already-used indices
+        for idx in used_indices:
+            diffs[idx] = np.inf
+        best_idx = int(np.argmin(diffs))
+        used_indices.add(best_idx)
+        matched_safe.append(safe_codes[best_idx])
+        length_diffs.append(abs(int(safe_lens[best_idx]) - vl))
+
+    codes = vuln_codes + matched_safe
+    labels = [1] * len(vuln_codes) + [0] * len(matched_safe)
+
+    # pairing quality stats
+    pairing_stats = {
+        "median_diff": int(np.median(length_diffs)),
+        "mean_diff": round(float(np.mean(length_diffs)), 1),
+        "max_diff": int(np.max(length_diffs)),
+        "min_diff": int(np.min(length_diffs)),
+        "num_pairs": len(length_diffs),
+    }
+    return codes, np.array(labels), pairing_stats
 
 
 # ============================================================
-# Main — FIXED version
+# Run one stage
 # ============================================================
-def main():
-    print("=" * 60)
-    print("Traditional ML Baselines — FIXED (no data leakage)")
-    print("  - TF-IDF inside Pipeline (fitted only on train folds)")
-    print("  - 70/30 stratified train/test split")
-    print("  - CV on train set only, final score on held-out test")
-    print("=" * 60)
 
-    codes, labels = load_dataset()
-    y = np.array(labels)
-
-    # ============================================================
-    # PROPER 70/30 SPLIT
-    # ============================================================
-    codes_train, codes_test, y_train, y_test = train_test_split(
-        codes, y, test_size=0.30, random_state=42, stratify=y
-    )
-    print(f"\nTrain: {len(codes_train)} ({sum(y_train)} vuln, {len(y_train)-sum(y_train)} safe)")
-    print(f"Test:  {len(codes_test)} ({sum(y_test)} vuln, {len(y_test)-sum(y_test)} safe)")
-
-    # ============================================================
-    # Build Pipeline: TF-IDF + Structural → Classifier
-    # TF-IDF is INSIDE the pipeline so it only sees train data
-    # ============================================================
-    models = {
+def get_models():
+    return {
         "Random Forest": RandomForestClassifier(n_estimators=100, random_state=42, n_jobs=-1),
         "Logistic Regression": LogisticRegression(max_iter=1000, random_state=42, C=1.0),
         "Gradient Boosting": GradientBoostingClassifier(n_estimators=100, random_state=42),
-        "SVM (RBF)": SVC(kernel="rbf", random_state=42, probability=True),
+        "SVM (RBF)": SVC(kernel="rbf", random_state=42),
     }
 
-    results = {}
+
+def run_stage(codes, labels, stage_name, tfidf_kwargs, struct_exclude=None):
+    """Run 5-fold CV for all 4 models. Returns dict of results."""
+    print(f"\n{'='*60}")
+    print(f"  {stage_name}")
+    print(f"  Dataset: {sum(labels)} vuln + {len(labels)-sum(labels)} safe = {len(labels)}")
+    print(f"{'='*60}")
+
+    models = get_models()
+    cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+    stage_results = {}
 
     for name, clf in models.items():
-        print(f"\n--- {name} ---")
         t0 = time.time()
 
-        # Pipeline ensures TF-IDF is fit only on training folds
         pipe = Pipeline([
             ('features', FeatureUnion([
-                ('tfidf', TfidfVectorizer(
-                    max_features=500,
-                    token_pattern=r"[a-zA-Z_][a-zA-Z0-9_]*",
-                    ngram_range=(1, 2),
-                    sublinear_tf=True,
-                )),
-                ('struct', StructuralFeatureExtractor()),
+                ('tfidf', TfidfVectorizer(**tfidf_kwargs)),
+                ('struct', StructuralFeatureExtractor(exclude_features=struct_exclude)),
             ])),
             ('clf', clf),
         ])
 
-        # 5-fold CV on TRAIN SET ONLY
-        cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
-        cv_f1 = cross_val_score(pipe, codes_train, y_train, cv=cv, scoring="f1")
-        cv_prec = cross_val_score(pipe, codes_train, y_train, cv=cv, scoring="precision")
-        cv_rec = cross_val_score(pipe, codes_train, y_train, cv=cv, scoring="recall")
-
-        # Train on full train set, evaluate on held-out TEST set
-        pipe.fit(codes_train, y_train)
-        y_pred_test = pipe.predict(codes_test)
-        tn, fp, fn, tp = confusion_matrix(y_test, y_pred_test).ravel()
-        test_f1 = f1_score(y_test, y_pred_test)
-        test_prec = precision_score(y_test, y_pred_test)
-        test_rec = recall_score(y_test, y_pred_test)
-        fpr = fp / (fp + tn) if (fp + tn) > 0 else 0
-
+        cv_f1 = cross_val_score(pipe, codes, labels, cv=cv, scoring="f1")
         elapsed = time.time() - t0
 
-        result = {
+        stage_results[name] = {
             "cv_f1_mean": round(float(cv_f1.mean()), 4),
             "cv_f1_std": round(float(cv_f1.std()), 4),
-            "cv_precision_mean": round(float(cv_prec.mean()), 4),
-            "cv_recall_mean": round(float(cv_rec.mean()), 4),
-            "test_f1": round(float(test_f1), 4),
-            "test_precision": round(float(test_prec), 4),
-            "test_recall": round(float(test_rec), 4),
-            "test_fpr": round(float(fpr), 4),
-            "test_tp": int(tp), "test_fn": int(fn),
-            "test_fp": int(fp), "test_tn": int(tn),
+            "cv_f1_folds": [round(float(x), 4) for x in cv_f1],
             "time_seconds": round(elapsed, 2),
         }
-        results[name] = result
+        print(f"  {name:<25} F1 = {cv_f1.mean():.4f} ± {cv_f1.std():.4f}  ({elapsed:.1f}s)")
 
-        print(f"  CV F1 (train):  {cv_f1.mean():.4f} (+/- {cv_f1.std():.4f})")
-        print(f"  CV Precision:   {cv_prec.mean():.4f}")
-        print(f"  CV Recall:      {cv_rec.mean():.4f}")
-        print(f"  Test F1:        {test_f1:.4f}")
-        print(f"  Test Precision: {test_prec:.4f}")
-        print(f"  Test Recall:    {test_rec:.4f}")
-        print(f"  Test: TP={tp} FN={fn} FP={fp} TN={tn} FPR={fpr:.4f}")
-        print(f"  Time: {elapsed:.2f}s")
+    return stage_results
 
-        # Feature importance for tree-based models
-        if hasattr(pipe.named_steps['clf'], "feature_importances_"):
-            importances = pipe.named_steps['clf'].feature_importances_
-            feat_union = pipe.named_steps['features']
-            tfidf_n = len(feat_union.transformer_list[0][1].vocabulary_)
-            struct_names = feat_union.transformer_list[1][1].feature_names_
-            struct_imp = [(struct_names[i], importances[tfidf_n + i]) for i in range(len(struct_names))]
-            struct_imp.sort(key=lambda x: x[1], reverse=True)
-            top5 = struct_imp[:5]
-            result["top_structural_features"] = [{"name": n, "importance": round(float(v), 4)} for n, v in top5]
-            print(f"  Top structural: {', '.join(f'{n}={v:.3f}' for n, v in top5)}")
 
-    # Summary comparison
-    print("\n" + "=" * 60)
-    print("SUMMARY: Traditional ML — FIXED (no data leakage)")
+# ============================================================
+# Main
+# ============================================================
+def main():
     print("=" * 60)
-    print(f"\n{'Method':<25} {'CV F1':>8} {'Test F1':>9} {'Test P':>8} {'Test R':>8} {'FPR':>6}")
-    print("-" * 70)
-    for name, r in results.items():
-        print(f"{name:<25} {r['cv_f1_mean']:>8.4f} {r['test_f1']:>9.4f} "
-              f"{r['test_precision']:>8.4f} {r['test_recall']:>8.4f} {r['test_fpr']:>6.4f}")
+    print("ML Fairness Ablation — Three-Stage Experiment")
+    print("=" * 60)
 
-    # DmAVID baselines for comparison (from experiments/*.json)
-    print(f"\n{'--- DmAVID Pipeline ---':<25}")
-    print(f"{'Slither':<25} {'—':>8} {'0.7459':>9} {'0.6164':>8} {'0.9441':>8}")
-    print(f"{'LLM+RAG':<25} {'—':>8} {'0.8917':>9} {'0.8189':>8} {'0.9790':>8}")
+    vuln_codes, safe_codes = load_all_contracts()
+    print(f"Loaded: {len(vuln_codes)} vulnerable, {len(safe_codes)} safe contracts")
 
-    # Save
+    # --- Common TF-IDF settings for Stage 1 & 2 ---
+    tfidf_full = dict(
+        max_features=500,
+        token_pattern=r"[a-zA-Z_][a-zA-Z0-9_]*",
+        ngram_range=(1, 2),
+        sublinear_tf=True,
+    )
+
+    # --- Stage 3 TF-IDF: keyword whitelist only ---
+    tfidf_keywords = dict(
+        vocabulary=SOLIDITY_VULN_KEYWORDS,
+        token_pattern=r"[a-zA-Z_][a-zA-Z0-9_]*",
+        sublinear_tf=True,
+    )
+
+    # ========================
+    # Stage 1: Naive sampling
+    # ========================
+    codes_s1, labels_s1 = sample_stage1(vuln_codes, safe_codes)
+    results_s1 = run_stage(codes_s1, labels_s1,
+                           "Stage 1: Naive (random 100 safe, full TF-IDF)",
+                           tfidf_full)
+
+    # ========================
+    # Stage 2: Length-matched
+    # ========================
+    codes_s2, labels_s2, pairing_stats = sample_stage2(vuln_codes, safe_codes)
+    results_s2 = run_stage(codes_s2, labels_s2,
+                           "Stage 2: Length-Matched (143v + 143s, full TF-IDF)",
+                           tfidf_full)
+
+    # ========================
+    # Stage 3: LM + Keyword-Only
+    # ========================
+    # Uses same length-matched data as Stage 2
+    results_s3 = run_stage(codes_s2, labels_s2,
+                           "Stage 3: LM + Keyword-Only (143v + 143s, keyword TF-IDF, no length features)",
+                           tfidf_keywords,
+                           struct_exclude=STAGE3_EXCLUDED_STRUCTURAL)
+
+    # ============================================================
+    # Print comparison table
+    # ============================================================
+    print("\n" + "=" * 70)
+    print("  THREE-STAGE COMPARISON TABLE")
+    print("=" * 70)
+    print(f"\n{'Model':<25} {'Stage 1 (Naive)':>16} {'Stage 2 (LM)':>16} {'Stage 3 (KW)':>16}")
+    print("-" * 73)
+    for name in get_models().keys():
+        s1 = results_s1[name]
+        s2 = results_s2[name]
+        s3 = results_s3[name]
+        print(f"{name:<25} "
+              f"{s1['cv_f1_mean']:.4f}±{s1['cv_f1_std']:.4f}  "
+              f"{s2['cv_f1_mean']:.4f}±{s2['cv_f1_std']:.4f}  "
+              f"{s3['cv_f1_mean']:.4f}±{s3['cv_f1_std']:.4f}")
+
+    # ============================================================
+    # Print pairing quality (Stage 2)
+    # ============================================================
+    print(f"\n--- Stage 2 Length-Matching Quality ---")
+    print(f"  Pairs:       {pairing_stats['num_pairs']}")
+    print(f"  Median diff: {pairing_stats['median_diff']} chars")
+    print(f"  Mean diff:   {pairing_stats['mean_diff']} chars")
+    print(f"  Max diff:    {pairing_stats['max_diff']} chars")
+    print(f"  Min diff:    {pairing_stats['min_diff']} chars")
+
+    # ============================================================
+    # Save JSON
+    # ============================================================
     os.makedirs(os.path.dirname(OUTPUT_FILE), exist_ok=True)
     output = {
-        "experiment": "traditional_ml_baselines_FIXED",
-        "fix_description": [
-            "TF-IDF inside sklearn Pipeline (no leakage across CV folds)",
-            "70/30 stratified train/test split (test set never seen during training/CV)",
-            "Removed train=test evaluation",
-        ],
-        "dataset": f"SmartBugs {len(codes)} contracts",
-        "train_size": len(codes_train),
-        "test_size": len(codes_test),
-        "features": "TF-IDF (500) + structural (19) via Pipeline",
-        "cross_validation": "5-fold StratifiedKFold on train only",
-        "results": results,
+        "experiment": "ml_fairness_ablation",
+        "description": "Three-stage fairness ablation: Naive → Length-Matched → Keyword-Only",
+        "stages": {
+            "stage1_naive": {
+                "description": "Random 100 safe, full TF-IDF (500 features), all structural features",
+                "dataset_size": len(labels_s1),
+                "vuln_count": int(sum(labels_s1)),
+                "safe_count": int(len(labels_s1) - sum(labels_s1)),
+                "results": results_s1,
+            },
+            "stage2_length_matched": {
+                "description": "Nearest-neighbor length matching, 143v+143s, full TF-IDF, all structural",
+                "dataset_size": len(labels_s2),
+                "vuln_count": int(sum(labels_s2)),
+                "safe_count": int(len(labels_s2) - sum(labels_s2)),
+                "pairing_quality": pairing_stats,
+                "results": results_s2,
+            },
+            "stage3_keyword_only": {
+                "description": "Length-matched + keyword-only TF-IDF + structural without total_lines/code_length",
+                "dataset_size": len(labels_s2),
+                "vuln_count": int(sum(labels_s2)),
+                "safe_count": int(len(labels_s2) - sum(labels_s2)),
+                "keyword_vocabulary": SOLIDITY_VULN_KEYWORDS,
+                "excluded_structural": list(STAGE3_EXCLUDED_STRUCTURAL),
+                "results": results_s3,
+            },
+        },
     }
     with open(OUTPUT_FILE, "w") as f:
         json.dump(output, f, indent=2)

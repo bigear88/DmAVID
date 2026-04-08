@@ -1,0 +1,225 @@
+{
+  "experiment": "ml_fairness_ablation",
+  "description": "Three-stage fairness ablation: Naive \u2192 Length-Matched \u2192 Keyword-Only",
+  "stages": {
+    "stage1_naive": {
+      "description": "Random 100 safe, full TF-IDF (500 features), all structural features",
+      "dataset_size": 243,
+      "vuln_count": 143,
+      "safe_count": 100,
+      "results": {
+        "Random Forest": {
+          "cv_f1_mean": 1.0,
+          "cv_f1_std": 0.0,
+          "cv_f1_folds": [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "time_seconds": 2.13
+        },
+        "Logistic Regression": {
+          "cv_f1_mean": 0.9316,
+          "cv_f1_std": 0.0099,
+          "cv_f1_folds": [
+            0.9333,
+            0.9355,
+            0.9286,
+            0.9153,
+            0.9455
+          ],
+          "time_seconds": 1.84
+        },
+        "Gradient Boosting": {
+          "cv_f1_mean": 1.0,
+          "cv_f1_std": 0.0,
+          "cv_f1_folds": [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "time_seconds": 2.0
+        },
+        "SVM (RBF)": {
+          "cv_f1_mean": 0.8112,
+          "cv_f1_std": 0.052,
+          "cv_f1_folds": [
+            0.7451,
+            0.8333,
+            0.8966,
+            0.7742,
+            0.807
+          ],
+          "time_seconds": 1.3
+        }
+      }
+    },
+    "stage2_length_matched": {
+      "description": "Nearest-neighbor length matching, 143v+143s, full TF-IDF, all structural",
+      "dataset_size": 286,
+      "vuln_count": 143,
+      "safe_count": 143,
+      "pairing_quality": {
+        "median_diff": 401,
+        "mean_diff": 989.3,
+        "max_diff": 47442,
+        "min_diff": 0,
+        "num_pairs": 143
+      },
+      "results": {
+        "Random Forest": {
+          "cv_f1_mean": 1.0,
+          "cv_f1_std": 0.0,
+          "cv_f1_folds": [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "time_seconds": 1.75
+        },
+        "Logistic Regression": {
+          "cv_f1_mean": 0.9021,
+          "cv_f1_std": 0.0201,
+          "cv_f1_folds": [
+            0.9032,
+            0.9355,
+            0.8814,
+            0.8814,
+            0.9091
+          ],
+          "time_seconds": 1.46
+        },
+        "Gradient Boosting": {
+          "cv_f1_mean": 1.0,
+          "cv_f1_std": 0.0,
+          "cv_f1_folds": [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "time_seconds": 1.5
+        },
+        "SVM (RBF)": {
+          "cv_f1_mean": 0.6922,
+          "cv_f1_std": 0.0823,
+          "cv_f1_folds": [
+            0.5965,
+            0.625,
+            0.7077,
+            0.6984,
+            0.8333
+          ],
+          "time_seconds": 0.92
+        }
+      }
+    },
+    "stage3_keyword_only": {
+      "description": "Length-matched + keyword-only TF-IDF + structural without total_lines/code_length",
+      "dataset_size": 286,
+      "vuln_count": 143,
+      "safe_count": 143,
+      "keyword_vocabulary": [
+        "function",
+        "public",
+        "external",
+        "internal",
+        "private",
+        "require",
+        "assert",
+        "revert",
+        "if",
+        "else",
+        "for",
+        "while",
+        "call",
+        "delegatecall",
+        "send",
+        "transfer",
+        "value",
+        "msg",
+        "sender",
+        "tx",
+        "origin",
+        "block",
+        "timestamp",
+        "mapping",
+        "address",
+        "uint",
+        "uint256",
+        "int",
+        "payable",
+        "fallback",
+        "receive",
+        "selfdestruct",
+        "suicide",
+        "storage",
+        "memory",
+        "modifier",
+        "onlyOwner",
+        "nonReentrant"
+      ],
+      "excluded_structural": [
+        "total_lines",
+        "code_length"
+      ],
+      "results": {
+        "Random Forest": {
+          "cv_f1_mean": 0.8839,
+          "cv_f1_std": 0.0384,
+          "cv_f1_folds": [
+            0.9355,
+            0.8485,
+            0.8571,
+            0.8525,
+            0.9259
+          ],
+          "time_seconds": 1.47
+        },
+        "Logistic Regression": {
+          "cv_f1_mean": 0.8309,
+          "cv_f1_std": 0.017,
+          "cv_f1_folds": [
+            0.8254,
+            0.8438,
+            0.8571,
+            0.8136,
+            0.8148
+          ],
+          "time_seconds": 0.67
+        },
+        "Gradient Boosting": {
+          "cv_f1_mean": 0.8842,
+          "cv_f1_std": 0.0246,
+          "cv_f1_folds": [
+            0.9032,
+            0.8358,
+            0.8966,
+            0.8966,
+            0.8889
+          ],
+          "time_seconds": 1.02
+        },
+        "SVM (RBF)": {
+          "cv_f1_mean": 0.8059,
+          "cv_f1_std": 0.0393,
+          "cv_f1_folds": [
+            0.8125,
+            0.8286,
+            0.75,
+            0.7761,
+            0.8621
+          ],
+          "time_seconds": 0.6
+        }
+      }
+    }
+  }
+}
