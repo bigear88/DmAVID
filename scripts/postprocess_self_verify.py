@@ -164,8 +164,8 @@ def recompute_metrics(samples: List[SampleResult]) -> Dict[str, Any]:
 def main():
     import argparse
     parser = argparse.ArgumentParser(description="Self-Verification Post-Processing")
-    parser.add_argument("--conf-threshold", type=float, default=None,
-                        help="Only verify samples with confidence below this threshold (default: verify all)")
+    parser.add_argument("--conf-threshold", type=float, default=0.90,
+                        help="Only verify samples with confidence below this threshold (default: 0.90, protects high-confidence TP)")
     args = parser.parse_args()
 
     print("=" * 60)

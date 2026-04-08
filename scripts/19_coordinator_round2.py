@@ -439,7 +439,8 @@ def run_blue_team_stage(
 # Stage: Self-Verify — post-process predictions
 # ---------------------------------------------------------------------------
 def run_self_verify_stage(
-    student_results: List[Dict], cost: CostTracker, dry_run: bool
+    student_results: List[Dict], cost: CostTracker, dry_run: bool,
+    conf_threshold: float = 0.90
 ) -> List[Dict[str, Any]]:
     """Run self-verification on positive predictions to reduce false positives.
 
@@ -447,17 +448,27 @@ def run_self_verify_stage(
     exploit path.  If it cannot, flip the prediction to safe.
     """
     logger.info("[SELF-VERIFY] Running exploit-path verification on positive predictions...")
+    logger.info(f"[SELF-VERIFY] Confidence threshold: {conf_threshold or 'ALL'}")
 
     positives = [r for r in student_results if r.get("predicted_vulnerable")]
     logger.info(f"[SELF-VERIFY] {len(positives)} positive predictions to verify")
 
     verified_results = []
     flipped = 0
+    skipped_high_conf = 0
 
     for r in student_results:
         new_r = dict(r)  # shallow copy
 
-        if r.get("predicted_vulnerable") and not dry_run and cost.under_budget():
+        # Confidence gate: skip high-confidence predictions to protect true positives
+        pred_vuln = r.get("predicted_vulnerable")
+        conf = float(r.get("confidence", 0.5))
+        should_verify = pred_vuln and not dry_run and cost.under_budget()
+        if should_verify and conf_threshold is not None and conf >= conf_threshold:
+            should_verify = False
+            skipped_high_conf += 1
+
+        if should_verify:
             # Ask LLM for an exploit path
             reasoning = r.get("reasoning", "")[:1500]
             vuln_types = r.get("vulnerability_types", [])
@@ -503,7 +514,7 @@ def run_self_verify_stage(
 
         verified_results.append(new_r)
 
-    logger.info(f"[SELF-VERIFY] Flipped {flipped}/{len(positives)} predictions from vulnerable to safe")
+    logger.info(f"[SELF-VERIFY] Flipped {flipped}/{len(positives)} predictions (skipped {skipped_high_conf} high-confidence)")
     return verified_results
 
 
@@ -650,7 +661,10 @@ def main():
         round_data["blue_team_patterns"] = len(defense_entries)
 
         # --- (f) Self-Verify: Post-process predictions ---
-        verified_results = run_self_verify_stage(student_results, cost, args.dry_run)
+        # Dynamic conf_threshold: increases with rounds as Student improves
+        sv_threshold = 0.85 + 0.03 * round_num  # R1: 0.88, R2: 0.91, R3: 0.94
+        logger.info(f"[SELF-VERIFY] Dynamic threshold for round {round_num}: {sv_threshold:.2f}")
+        verified_results = run_self_verify_stage(student_results, cost, args.dry_run, conf_threshold=sv_threshold)
 
         # --- (g) Evaluate: Compute final metrics ---
         post_verify_metrics = compute_metrics(verified_results)
