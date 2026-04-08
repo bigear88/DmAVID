@@ -1,0 +1,78 @@
+{
+  "experiment": "ablation_study_v4",
+  "description": "Redesigned multi-agent pipeline: structured Self-Verify, FP-focused Critique, disagreement-triggered Debate",
+  "model": "gpt-4.1-mini",
+  "dataset_size": 243,
+  "timestamp": "2026-04-09T02:35:13.044660",
+  "total_time_seconds": 2018.4,
+  "configs": [
+    {
+      "config": "baseline",
+      "description": "LLM+RAG (identical to 05_run_llm_rag.py)",
+      "metrics": {
+        "tp": 140,
+        "fp": 27,
+        "tn": 73,
+        "fn": 3,
+        "precision": 0.8383,
+        "recall": 0.979,
+        "f1": 0.9032,
+        "total": 243
+      },
+      "tokens": 426813
+    },
+    {
+      "config": "+self-verify",
+      "description": "Baseline + structured exploit path verification (null fields → SAFE)",
+      "metrics": {
+        "tp": 55,
+        "fp": 3,
+        "tn": 97,
+        "fn": 88,
+        "precision": 0.9483,
+        "recall": 0.3846,
+        "f1": 0.5473,
+        "total": 243
+      },
+      "tokens": 614980
+    },
+    {
+      "config": "+critique",
+      "description": "Baseline + Self-Verify + FP-focused Critique (auditor persona, few-shot)",
+      "metrics": {
+        "tp": 33,
+        "fp": 1,
+        "tn": 99,
+        "fn": 110,
+        "precision": 0.9706,
+        "recall": 0.2308,
+        "f1": 0.3729,
+        "total": 243
+      },
+      "tokens": 693602
+    },
+    {
+      "config": "+debate",
+      "description": "Full pipeline: Baseline + Self-Verify + Critique + Disagreement Debate",
+      "metrics": {
+        "tp": 38,
+        "fp": 1,
+        "tn": 99,
+        "fn": 105,
+        "precision": 0.9744,
+        "recall": 0.2657,
+        "f1": 0.4176,
+        "total": 243
+      },
+      "tokens": 795081,
+      "debate_summary": {
+        "total_debates": 20,
+        "flips": {
+          "restored_to_vuln": 5,
+          "confirmed_safe": 15,
+          "no_debate": 223
+        }
+      }
+    }
+  ]
+}
