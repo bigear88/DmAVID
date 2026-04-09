@@ -3,57 +3,57 @@
   "description": "Ablation with consistent baseline (uses 05_run_llm_rag.py analyze_with_rag)",
   "model": "gpt-4.1-mini",
   "dataset_size": 243,
-  "timestamp": "2026-04-08T14:21:59.396937",
-  "total_time_seconds": 1430.6,
+  "timestamp": "2026-04-08T21:58:04.471169",
+  "total_time_seconds": 1767.0,
   "configs": [
     {
       "config": "baseline",
       "description": "LLM+RAG (identical to 05_run_llm_rag.py)",
       "metrics": {
         "tp": 140,
-        "fp": 27,
-        "tn": 73,
+        "fp": 29,
+        "tn": 71,
         "fn": 3,
-        "precision": 0.8383,
+        "precision": 0.8284,
         "recall": 0.979,
-        "f1": 0.9032,
+        "f1": 0.8974,
         "total": 243
       },
-      "tokens": 427667
+      "tokens": 427154
     },
     {
       "config": "+self-verify",
       "description": "LLM+RAG + Self-Verify (conf_threshold=0.90)",
       "metrics": {
         "tp": 140,
-        "fp": 27,
-        "tn": 73,
+        "fp": 29,
+        "tn": 71,
         "fn": 3,
-        "precision": 0.8383,
+        "precision": 0.8284,
         "recall": 0.979,
-        "f1": 0.9032,
+        "f1": 0.8974,
         "total": 243
       },
-      "tokens": 427667
+      "tokens": 427154
     },
     {
       "config": "+critique",
       "description": "LLM+RAG + Critic failure analysis feedback (Reflexion pattern)",
       "metrics": {
         "tp": 142,
-        "fp": 26,
-        "tn": 74,
+        "fp": 85,
+        "tn": 15,
         "fn": 1,
-        "precision": 0.8452,
+        "precision": 0.6256,
         "recall": 0.993,
-        "f1": 0.9132,
+        "f1": 0.7676,
         "total": 243
       },
-      "tokens": 667340,
+      "tokens": 640207,
       "critic_summary": {
         "fn_analyzed": 3,
         "fp_analyzed": 8,
-        "fn_hints": 3,
+        "fn_hints": 2,
         "fp_hints": 8
       }
     },
@@ -62,21 +62,21 @@
       "description": "LLM+RAG + Critic + Adversarial Debate",
       "metrics": {
         "tp": 142,
-        "fp": 14,
-        "tn": 86,
+        "fp": 85,
+        "tn": 15,
         "fn": 1,
-        "precision": 0.9103,
+        "precision": 0.6256,
         "recall": 0.993,
-        "f1": 0.9498,
+        "f1": 0.7676,
         "total": 243
       },
-      "tokens": 36040,
+      "tokens": 0,
       "debate_summary": {
-        "total_debates": 15,
+        "total_debates": 0,
         "flips": {
-          "fn_to_vuln": 0,
-          "fp_to_safe": 12,
-          "no_change": 3
+          "flip_to_vuln": 0,
+          "flip_to_safe": 0,
+          "no_change": 0
         }
       }
     }
