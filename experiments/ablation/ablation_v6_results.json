@@ -1,0 +1,148 @@
+{
+  "experiment": "ablation_study_v6",
+  "description": "Conservative Critique with mitigation-gated flipping + Self-Verify context injection",
+  "model": "gpt-4.1-mini",
+  "dataset_size": 243,
+  "timestamp": "2026-04-09T14:42:51.536680",
+  "total_time_seconds": 1834.5,
+  "configs": [
+    {
+      "config": "baseline",
+      "description": "LLM+RAG (identical to 05_run_llm_rag.py)",
+      "metrics": {
+        "tp": 139,
+        "fp": 28,
+        "tn": 72,
+        "fn": 4,
+        "precision": 0.8323,
+        "recall": 0.972,
+        "f1": 0.8968,
+        "total": 243
+      },
+      "tokens": 427291
+    },
+    {
+      "config": "+self-verify",
+      "description": "Baseline + type-aware exploit path verification (per-type required fields)",
+      "metrics": {
+        "tp": 126,
+        "fp": 9,
+        "tn": 91,
+        "fn": 17,
+        "precision": 0.9333,
+        "recall": 0.8811,
+        "f1": 0.9065,
+        "total": 243
+      },
+      "tokens": 614006,
+      "type_stats": {
+        "reentrancy": {
+          "total": 37,
+          "flipped": 7
+        },
+        "integer_overflow": {
+          "total": 14,
+          "flipped": 0
+        },
+        "denial_of_service": {
+          "total": 6,
+          "flipped": 0
+        },
+        "time_manipulation": {
+          "total": 5,
+          "flipped": 1
+        },
+        "unchecked_call": {
+          "total": 72,
+          "flipped": 22
+        },
+        "access_control": {
+          "total": 20,
+          "flipped": 1
+        },
+        "front_running": {
+          "total": 4,
+          "flipped": 0
+        },
+        "bad_randomness": {
+          "total": 8,
+          "flipped": 1
+        },
+        "unknown": {
+          "total": 1,
+          "flipped": 0
+        }
+      }
+    },
+    {
+      "config": "+critique",
+      "description": "Baseline + Type-Aware Self-Verify + Conservative Critique (mitigation-gated)",
+      "metrics": {
+        "tp": 118,
+        "fp": 9,
+        "tn": 91,
+        "fn": 25,
+        "precision": 0.9291,
+        "recall": 0.8252,
+        "f1": 0.8741,
+        "total": 243
+      },
+      "tokens": 773334
+    },
+    {
+      "config": "+debate",
+      "description": "Full pipeline: Baseline + Type-Aware Self-Verify + Conservative Critique + Debate",
+      "metrics": {
+        "tp": 118,
+        "fp": 9,
+        "tn": 91,
+        "fn": 25,
+        "precision": 0.9291,
+        "recall": 0.8252,
+        "f1": 0.8741,
+        "total": 243
+      },
+      "tokens": 806313,
+      "debate_summary": {
+        "total_debates": 8,
+        "flips": {
+          "restored_to_vuln": 0,
+          "confirmed_safe": 8,
+          "no_debate": 235
+        }
+      }
+    }
+  ],
+  "v5_comparison": {
+    "v5_critique": {
+      "f1": 0.5813,
+      "precision": 0.9833,
+      "recall": 0.4126
+    },
+    "v6_critique": {
+      "tp": 118,
+      "fp": 9,
+      "tn": 91,
+      "fn": 25,
+      "precision": 0.9291,
+      "recall": 0.8252,
+      "f1": 0.8741,
+      "total": 243
+    },
+    "v5_debate": {
+      "f1": 0.6124,
+      "precision": 0.9697,
+      "recall": 0.4476
+    },
+    "v6_debate": {
+      "tp": 118,
+      "fp": 9,
+      "tn": 91,
+      "fn": 25,
+      "precision": 0.9291,
+      "recall": 0.8252,
+      "f1": 0.8741,
+      "total": 243
+    }
+  }
+}
