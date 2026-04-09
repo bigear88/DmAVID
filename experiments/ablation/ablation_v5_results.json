@@ -1,0 +1,133 @@
+{
+  "experiment": "ablation_study_v5",
+  "description": "Per-vulnerability-type Self-Verify: type-specific exploit path validation replacing one-size-fits-all reentrancy prompt",
+  "model": "gpt-4.1-mini",
+  "dataset_size": 243,
+  "timestamp": "2026-04-09T08:36:20.691327",
+  "total_time_seconds": 2186.8,
+  "configs": [
+    {
+      "config": "baseline",
+      "description": "LLM+RAG (identical to 05_run_llm_rag.py)",
+      "metrics": {
+        "tp": 140,
+        "fp": 26,
+        "tn": 74,
+        "fn": 3,
+        "precision": 0.8434,
+        "recall": 0.979,
+        "f1": 0.9061,
+        "total": 243
+      },
+      "tokens": 427996
+    },
+    {
+      "config": "+self-verify",
+      "description": "Baseline + type-aware exploit path verification (per-type required fields)",
+      "metrics": {
+        "tp": 122,
+        "fp": 10,
+        "tn": 90,
+        "fn": 21,
+        "precision": 0.9242,
+        "recall": 0.8531,
+        "f1": 0.8873,
+        "total": 243
+      },
+      "tokens": 613391,
+      "type_stats": {
+        "reentrancy": {
+          "total": 35,
+          "flipped": 5
+        },
+        "integer_overflow": {
+          "total": 14,
+          "flipped": 0
+        },
+        "denial_of_service": {
+          "total": 6,
+          "flipped": 1
+        },
+        "time_manipulation": {
+          "total": 5,
+          "flipped": 0
+        },
+        "unchecked_call": {
+          "total": 72,
+          "flipped": 26
+        },
+        "access_control": {
+          "total": 19,
+          "flipped": 1
+        },
+        "front_running": {
+          "total": 4,
+          "flipped": 0
+        },
+        "bad_randomness": {
+          "total": 9,
+          "flipped": 1
+        },
+        "unknown": {
+          "total": 2,
+          "flipped": 0
+        }
+      }
+    },
+    {
+      "config": "+critique",
+      "description": "Baseline + Type-Aware Self-Verify + FP-focused Critique",
+      "metrics": {
+        "tp": 59,
+        "fp": 1,
+        "tn": 99,
+        "fn": 84,
+        "precision": 0.9833,
+        "recall": 0.4126,
+        "f1": 0.5813,
+        "total": 243
+      },
+      "tokens": 782937
+    },
+    {
+      "config": "+debate",
+      "description": "Full pipeline: Baseline + Type-Aware Self-Verify + Critique + Debate",
+      "metrics": {
+        "tp": 64,
+        "fp": 2,
+        "tn": 98,
+        "fn": 79,
+        "precision": 0.9697,
+        "recall": 0.4476,
+        "f1": 0.6124,
+        "total": 243
+      },
+      "tokens": 912747,
+      "debate_summary": {
+        "total_debates": 30,
+        "flips": {
+          "restored_to_vuln": 6,
+          "confirmed_safe": 24,
+          "no_debate": 213
+        }
+      }
+    }
+  ],
+  "v4_comparison": {
+    "v4_self_verify": {
+      "f1": 0.5473,
+      "precision": 0.9483,
+      "recall": 0.3846
+    },
+    "v5_self_verify": {
+      "tp": 122,
+      "fp": 10,
+      "tn": 90,
+      "fn": 21,
+      "precision": 0.9242,
+      "recall": 0.8531,
+      "f1": 0.8873,
+      "total": 243
+    }
+  }
+}
