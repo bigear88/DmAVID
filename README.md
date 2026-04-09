@@ -22,11 +22,10 @@ Stage 4: DmAVID 多代理迭代         → Teacher/Student/Red Team/Blue Team �
 
 | 方法 | F1 | Precision | Recall | FPR | 資料集 |
 |------|-----|-----------|--------|-----|--------|
-| Slither | 0.7459 | 61.6% | 94.4% | 84% | SmartBugs 243 |
-| LLM Base | 0.7507 | 60.1% | 100% | 95% | SmartBugs 243 |
-| **LLM+RAG** | **0.8468** | **74.2%** | **98.6%** | **49%** | SmartBugs 243 |
-| **+Self-Verify** | **0.8896** | **81.0%** | **98.6%** | **33%** | SmartBugs 243 |
-| **+DmAVID 迭代** | **0.8924** | **81.5%** | **98.6%** | **32%** | SmartBugs 243 |
+| Slither | 0.7459 | 61.6% | 94.4% | 84.0% | SmartBugs 243 |
+| LLM Base | 0.7474 | 59.9% | 99.3% | 95.0% | SmartBugs 243 |
+| **LLM+RAG** | **0.9061** | **84.3%** | **97.9%** | **26.0%** | SmartBugs 243 |
+| **+Self-Verify** | **0.9121** | **85.4%** | **97.9%** | **24.0%** | SmartBugs 243 |
 | DmAVID Enhanced | 20.51% detect | 100% | 20.5% | 0% | EVMbench 39 |
 
 ---
@@ -66,8 +65,8 @@ DmAVID/
 ├── experiments/                       # 實驗結果
 │   ├── slither/                      # Slither 基線結果
 │   ├── llm_base/                     # LLM 基線結果
-│   ├── llm_rag/                      # LLM+RAG 結果 (F1=0.8468)
-│   ├── hybrid/                       # Self-Verify 結果 (F1=0.8896)
+│   ├── llm_rag/                      # LLM+RAG 結果 (F1=0.9061)
+│   ├── hybrid/                       # Self-Verify 結果 (F1=0.9121)
 │   ├── dmavid_round2/            # DmAVID 迭代結果
 │   ├── evmbench_enhanced/            # EVMbench 增強偵測 (20.51%)
 │   ├── traditional_ml/              # 傳統 ML 基線 (RF/LR/GB/SVM)

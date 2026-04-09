@@ -1,0 +1,84 @@
+{
+  "experiment": "ablation_study_v5_clean",
+  "description": "Three-class Self-Verify: UNCERTAIN preserves baseline, only SAFE with concrete mitigation flips",
+  "model": "gpt-4.1-mini",
+  "dataset_size": 243,
+  "timestamp": "2026-04-09T22:12:15.097716",
+  "total_time_seconds": 2173.1,
+  "configs": [
+    {
+      "config": "baseline",
+      "description": "LLM+RAG (identical to 05_run_llm_rag.py)",
+      "metrics": {
+        "tp": 140,
+        "fp": 26,
+        "tn": 74,
+        "fn": 3,
+        "precision": 0.8434,
+        "recall": 0.979,
+        "f1": 0.9061,
+        "total": 243
+      },
+      "tokens": 427617
+    },
+    {
+      "config": "+self-verify",
+      "description": "LLM+RAG + Three-Class Self-Verify (UNCERTAIN preserves baseline)",
+      "metrics": {
+        "tp": 140,
+        "fp": 24,
+        "tn": 76,
+        "fn": 3,
+        "precision": 0.8537,
+        "recall": 0.979,
+        "f1": 0.9121,
+        "total": 243
+      },
+      "tokens": 673490
+    },
+    {
+      "config": "+critique",
+      "description": "Self-Verify + Critic failure analysis feedback (Reflexion)",
+      "metrics": {
+        "tp": 143,
+        "fp": 88,
+        "tn": 12,
+        "fn": 0,
+        "precision": 0.619,
+        "recall": 1.0,
+        "f1": 0.7647,
+        "total": 243
+      },
+      "tokens": 662486,
+      "critic_summary": {
+        "fn_analyzed": 3,
+        "fp_analyzed": 8,
+        "fn_hints": 2,
+        "fp_hints": 8
+      }
+    },
+    {
+      "config": "+critique+debate",
+      "description": "Self-Verify + Critic + Adversarial Debate",
+      "metrics": {
+        "tp": 143,
+        "fp": 88,
+        "tn": 12,
+        "fn": 0,
+        "precision": 0.619,
+        "recall": 1.0,
+        "f1": 0.7647,
+        "total": 243
+      },
+      "tokens": 0,
+      "debate_summary": {
+        "total_debates": 0,
+        "flips": {
+          "flip_to_vuln": 0,
+          "flip_to_safe": 0,
+          "no_change": 0
+        }
+      }
+    }
+  ]
+}
