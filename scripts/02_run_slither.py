@@ -76,7 +76,7 @@ def run_slither_on_file(filepath, timeout=60):
             "num_detections": len(detectors),
             "vuln_types": list(vuln_types),
             "severities": severities,
-            "predicted_vulnerable": has_high_severity or len(detectors) > 0,
+            "predicted_vulnerable": has_high_severity,  # Only High/Medium severity counts
             "high_severity": has_high_severity,
             "time_seconds": round(elapsed, 3),
             "error": None

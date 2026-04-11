@@ -295,7 +295,7 @@ def main():
     print()
     print(f"  Comparison:")
     print(f"    Baseline (4.1-mini):  3/39 (7.69%)")
-    print(f"    Reeval (5.4-mini):    5/39 (12.82%)")
+    print(f"    Reeval (4.1-mini):    5/39 (12.82%)")
     print(f"    Enhanced (this run):  {overall_detected}/39 ({detect_rate:.2%})")
 
     # Per-audit table

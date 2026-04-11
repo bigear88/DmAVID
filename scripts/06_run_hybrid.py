@@ -1239,8 +1239,14 @@ def main():
     print(f"    Raw Slither findings: {total_raw}")
     print(f"    After pre-filtering: {total_filtered} ({filter_reduction:.1f}% reduction)")
 
-    # Comparison with LLM+RAG baseline
-    llm_rag_f1 = 0.8304
+    # Load LLM+RAG baseline F1 from results file instead of hardcoding
+    _rag_path = os.path.join(BASE_DIR, "experiments/llm_rag/llm_rag_results.json")
+    if os.path.exists(_rag_path):
+        with open(_rag_path) as _rf:
+            llm_rag_f1 = json.load(_rf)["metrics"]["f1_score"]
+    else:
+        llm_rag_f1 = 0.8304  # fallback if results file missing
+        print("  [warn] LLM+RAG results file not found, using fallback F1")
     improvement = ((f1 - llm_rag_f1) / llm_rag_f1) * 100
     print(f"\n  vs LLM+RAG (F1={llm_rag_f1:.4f}): {'IMPROVED' if f1 > llm_rag_f1 else 'NOT IMPROVED'} "
           f"({'+' if improvement > 0 else ''}{improvement:.2f}%)")

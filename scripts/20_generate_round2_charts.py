@@ -63,7 +63,13 @@ PLACEHOLDER_PROGRESSION = {
     ]
 }
 
-progression = progression_raw if progression_raw else PLACEHOLDER_PROGRESSION
+if not progression_raw:
+    raise RuntimeError(
+        f"Round 2 progression data not found at {progression_path}. "
+        "Run the Round 2 pipeline first to generate real data. "
+        "Refusing to generate charts from placeholder data."
+    )
+progression = progression_raw
 rounds_data = progression["rounds"]
 
 # Baseline constants

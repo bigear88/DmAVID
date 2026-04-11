@@ -562,14 +562,18 @@ def main():
     print(f"  Total Tokens: {total_tokens:,}")
     print(f"  Skipped by Slither (no alert): {skipped_by_slither}")
 
-    # Comparison with LLM+RAG baseline
-    llm_rag_f1 = 0.8917
+    # Load LLM+RAG baseline F1 from results file instead of hardcoding
+    _rag_path = os.path.join(BASE_DIR, "experiments/llm_rag/llm_rag_results.json")
+    if os.path.exists(_rag_path):
+        with open(_rag_path) as _rf:
+            llm_rag_f1 = json.load(_rf)["metrics"]["f1_score"]
+    else:
+        llm_rag_f1 = 0.8917  # fallback if results file missing
+        print("  [warn] LLM+RAG results file not found, using fallback F1")
     improvement = ((f1 - llm_rag_f1) / llm_rag_f1) * 100
-    print(f"\n  vs LLM+RAG (F1=89.17%): {'IMPROVED' if f1 > llm_rag_f1 else 'NOT IMPROVED'} "
+    print(f"\n  vs LLM+RAG (F1={llm_rag_f1:.4f}): {'IMPROVED' if f1 > llm_rag_f1 else 'NOT IMPROVED'} "
           f"({'+' if improvement > 0 else ''}{improvement:.2f}%)")
 
-    # Per-category
-    print("\n  Per-category Recall:")
     for cat in sorted(set(r["category"] for r in results if r["ground_truth"] == "vulnerable")):
         cr = [r for r in results if r["category"] == cat and r["ground_truth"] == "vulnerable"]
         ctp = sum(1 for r in cr if r["predicted_vulnerable"])

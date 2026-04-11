@@ -26,7 +26,7 @@ np.random.seed(42)
 BASE_DIR = os.environ.get("DMAVID_BASE_DIR",
     os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 DATASET_FILE = os.path.join(BASE_DIR, "data", "dataset_1000.json")
-OUTPUT_FILE = os.path.join(BASE_DIR, "experiments", "traditional_ml", "ml_fairness_ablation.json")
+OUTPUT_FILE = os.path.join(BASE_DIR, "experiments", "traditional_ml", "ml_fairness_ablation_balanced.json")
 
 # ============================================================
 # Solidity vulnerability keyword whitelist (Stage 3)
@@ -93,6 +93,8 @@ def clean_code(code):
     code = re.sub(r"@author:.*", "", code)
     code = re.sub(r"<yes>.*<report>.*", "", code)
     code = re.sub(r"// SPDX-License.*", "", code)
+    code = re.sub(r"// SWC-\d+.*", "", code)
+    code = re.sub(r"// .*vulnerab.*", "", code, flags=re.IGNORECASE)
     return code
 
 

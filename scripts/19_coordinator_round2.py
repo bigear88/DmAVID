@@ -41,7 +41,7 @@ BASELINE_FILE = os.path.join(BASE_DIR, "experiments/llm_rag/llm_rag_results.json
 OUTPUT_DIR = os.path.join(BASE_DIR, "experiments/dmavid_round2")
 
 # Baseline metrics (from prior experiment)
-BASELINE_F1 = 0.8468  # LLM+RAG baseline (gpt-4.1-mini, 243 contracts, JSON fix)
+BASELINE_F1 = 0.9061  # LLM+RAG baseline (verified, gpt-4.1-mini)
 
 # Cost estimation: ~$0.01 per 1K tokens for gpt-4.1-mini
 COST_PER_1K_TOKENS = 0.01

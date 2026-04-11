@@ -193,7 +193,9 @@ def main():
 
         # Student: re-evaluate (in real implementation, re-run EVMbench)
         # For now, we simulate by checking if the new patterns are relevant
-        new_score = baseline_score  # Would be: run_evmbench_detect()
+        # TODO: Actually re-evaluate after KB update. Currently uses placeholder score.
+        # Without real re-evaluation, the "monotonic improvement guarantee" is untested.
+        new_score = baseline_score  # PLACEHOLDER — should call run_detection_pipeline()
         # In a real run, this would call the actual detection pipeline
 
         # Coordinator: ratchet decision
