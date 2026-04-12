@@ -60,6 +60,14 @@ INLINE = {
         ("僅成功偵測到 3 個（偵測率 25.64%）",
          "僅成功偵測到 3 個（偵測率 7.69%）",
          "Ch4 p156 alt phrasing"),
+        # Table 4-5 敘述段 (p70): 原文寫 LLM+RAG 在 1x-20x 最低 — 連舊表的「最佳方法」欄都標 Hybrid，自相矛盾
+        ("分析結果顯示，在絕大多數成本比率（1x 至 20x）下，LLM+RAG 都是總成本最低的方法。",
+         "分析結果顯示，在絕大多數成本比率（1x 至 20x）下，混合式框架（LLM+RAG+Self-Verify）都是總成本最低的方法。",
+         "Ch4 p70 Table 4-5 narrative"),
+        # LLM Base FPR 應為 95%（FP=95, TN=5），原文寫 98%
+        ("但代價是 98% 的誤報率",
+         "但代價是 95% 的誤報率（FPR=0.95）",
+         "Ch4 p70 LLM Base FPR"),
     ],
     "DmAVID_論文第五章.docx": [
         ("F1 從 0.8917 提升至 0.8924（+5.4%）",
@@ -85,6 +93,29 @@ INLINE = {
 
 # 表格儲存格座標精準修正：(chapter, table_idx, row, col, old, new, comment)
 CELL_FIXES = [
+    # Table 4-5 (idx 4): 成本敏感分析 — 用 canonical FP/FN 重算
+    # 公式: cost = FP + FN × ratio
+    # 舊表用了 LLM+RAG FP=57/FN=1 與 Hybrid FP=52/FN=1（不存在於 GitHub 的更早版本）
+    # 新值: Slither (FP=84,FN=8) 不變; LLM Base (FP=95,FN=1); LLM+RAG (FP=26,FN=3); Hybrid (FP=24,FN=3)
+    ("DmAVID_論文第四章.docx", 4, 1, 2, "95", "96", "Table 4-5 LLM Base 1x"),
+    ("DmAVID_論文第四章.docx", 4, 2, 2, "95", "97", "Table 4-5 LLM Base 2x"),
+    ("DmAVID_論文第四章.docx", 4, 3, 2, "95", "100", "Table 4-5 LLM Base 5x"),
+    ("DmAVID_論文第四章.docx", 4, 4, 2, "95", "105", "Table 4-5 LLM Base 10x"),
+    ("DmAVID_論文第四章.docx", 4, 5, 2, "95", "115", "Table 4-5 LLM Base 20x"),
+    ("DmAVID_論文第四章.docx", 4, 6, 2, "95", "145", "Table 4-5 LLM Base 50x"),
+    ("DmAVID_論文第四章.docx", 4, 1, 3, "58", "29", "Table 4-5 LLM+RAG 1x"),
+    ("DmAVID_論文第四章.docx", 4, 2, 3, "59", "32", "Table 4-5 LLM+RAG 2x"),
+    ("DmAVID_論文第四章.docx", 4, 3, 3, "62", "41", "Table 4-5 LLM+RAG 5x"),
+    ("DmAVID_論文第四章.docx", 4, 4, 3, "67", "56", "Table 4-5 LLM+RAG 10x"),
+    ("DmAVID_論文第四章.docx", 4, 5, 3, "77", "86", "Table 4-5 LLM+RAG 20x"),
+    ("DmAVID_論文第四章.docx", 4, 6, 3, "107", "176", "Table 4-5 LLM+RAG 50x"),
+    ("DmAVID_論文第四章.docx", 4, 1, 4, "53", "27", "Table 4-5 Hybrid 1x"),
+    ("DmAVID_論文第四章.docx", 4, 2, 4, "54", "30", "Table 4-5 Hybrid 2x"),
+    ("DmAVID_論文第四章.docx", 4, 3, 4, "57", "39", "Table 4-5 Hybrid 5x"),
+    ("DmAVID_論文第四章.docx", 4, 4, 4, "62", "54", "Table 4-5 Hybrid 10x"),
+    ("DmAVID_論文第四章.docx", 4, 5, 4, "72", "84", "Table 4-5 Hybrid 20x"),
+    ("DmAVID_論文第四章.docx", 4, 6, 4, "102", "174", "Table 4-5 Hybrid 50x"),
+
     # Table 4-1 (idx 0): 與相關研究比較 — 混合式框架 row
     ("DmAVID_論文第四章.docx", 0, 4, 2, "0.73", "0.85", "Table 4-1 混合式框架 Precision"),
     ("DmAVID_論文第四章.docx", 0, 4, 3, "0.99", "0.98", "Table 4-1 混合式框架 Recall"),
