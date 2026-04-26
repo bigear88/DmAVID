@@ -1,0 +1,5 @@
+variant,description,n,tp,fp,tn,fn,precision,recall,f1,f1_ci_low,f1_ci_high,accuracy,input_tokens,output_tokens,total_tokens,cost_usd,avg_time_sec,error_count
+V1_baseline,原 04_run_llm_base.py prompt，無 CoT 提示，純 JSON 輸出指令,243,142,96,4,1,0.5966,0.993,0.7454,0.6921,0.7899,0.6008,323273,40579,363852,0.1942,2.413,0
+V2_cot,"Zero-shot CoT (Kojima et al., 2022)：追加 magic prompt",243,143,94,6,0,0.6034,1.0,0.7526,0.6997,0.798,0.6132,331778,49911,381689,0.2126,2.668,0
+V3_plan_solve,"Plan-and-Solve (Wang et al., 2023)：先規劃再執行",243,142,85,15,1,0.6256,0.993,0.7676,0.7155,0.8128,0.6461,333722,47647,381369,0.2097,2.447,0
+V4_plan_solve_user,Plan-and-Solve + 使用者具體弱點提示（對應 Tsai 2023 第 31 頁）,243,142,75,25,1,0.6544,0.993,0.7889,0.7384,0.8316,0.6872,348545,50826,399371,0.2207,2.689,0
