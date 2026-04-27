@@ -1,0 +1,371 @@
+{
+  "metrics": {
+    "experiment": "Sprint 3 — CodeBERT Baseline",
+    "model": "microsoft/codebert-base",
+    "timestamp": "2026-04-27T13:59:10.015978",
+    "device": "cuda",
+    "epochs": 3,
+    "batch_size": 8,
+    "learning_rate": 2e-05,
+    "max_seq_len": 512,
+    "train_size": 194,
+    "test_size": 49,
+    "train_time_seconds": 8.59,
+    "leaky_comments_kept": false,
+    "tp": 28,
+    "fp": 4,
+    "tn": 16,
+    "fn": 1,
+    "precision": 0.875,
+    "recall": 0.9655,
+    "f1": 0.918,
+    "f1_ci_low": 0.84,
+    "f1_ci_high": 0.9831,
+    "accuracy": 0.898
+  },
+  "results": [
+    {
+      "name": "wild_safe_0075_0x0a6f2d9d82baef6dd0f3a2f4679287680aad1fc0.sol",
+      "ground_truth": "safe",
+      "predicted": "safe",
+      "category": "none",
+      "correct": true
+    },
+    {
+      "name": "wild_safe_0127_0xef64c6b4f189d2053b8a00a23c725475fc509884.sol",
+      "ground_truth": "safe",
+      "predicted": "safe",
+      "category": "none",
+      "correct": true
+    },
+    {
+      "name": "wild_safe_0354_0x4b77bde81ceaf137d883e43aa27cf767cd2f8141.sol",
+      "ground_truth": "safe",
+      "predicted": "vulnerable",
+      "category": "none",
+      "correct": false
+    },
+    {
+      "name": "wild_safe_0119_0x3d9c6c5a7b2b2744870166eac237bd6e366fa3ef.sol",
+      "ground_truth": "safe",
+      "predicted": "safe",
+      "category": "none",
+      "correct": true
+    },
+    {
+      "name": "wild_safe_0233_0x99ed8fb173f6b447542d6037303b2c3b6738eeaa.sol",
+      "ground_truth": "safe",
+      "predicted": "vulnerable",
+      "category": "none",
+      "correct": false
+    },
+    {
+      "name": "curated_unchecked_low_level_calls_0x52d2e0f9b01101a59b38a3d05c80b7618aeed984.sol",
+      "ground_truth": "vulnerable",
+      "predicted": "vulnerable",
+      "category": "unchecked_low_level_calls",
+      "correct": true
+    },
+    {
+      "name": "curated_reentrancy_reentrancy_simple.sol",
+      "ground_truth": "vulnerable",
+      "predicted": "vulnerable",
+      "category": "reentrancy",
+      "correct": true
+    },
+    {
+      "name": "curated_reentrancy_0x96edbe868531bd23a6c05e9d0c424ea64fb1b78b.sol",
+      "ground_truth": "vulnerable",
+      "predicted": "vulnerable",
+      "category": "reentrancy",
+      "correct": true
+    },
+    {
+      "name": "wild_safe_0093_0x324a48ebcbb46e61993931ef9d35f6697cd2901b.sol",
+      "ground_truth": "safe",
+      "predicted": "vulnerable",
+      "category": "none",
+      "correct": false
+    },
+    {
+      "name": "wild_safe_0264_0xf5aa54d121dfe0d5eeb37c83aed42238f4f2c5c6.sol",
+      "ground_truth": "safe",
+      "predicted": "vulnerable",
+      "category": "none",
+      "correct": false
+    },
+    {
+      "name": "curated_bad_randomness_lottery.sol",
+      "ground_truth": "vulnerable",
+      "predicted": "vulnerable",
+      "category": "bad_randomness",
+      "correct": true
+    },
+    {
+      "name": "curated_arithmetic_insecure_transfer.sol",
+      "ground_truth": "vulnerable",
+      "predicted": "vulnerable",
+      "category": "arithmetic",
+      "correct": true
+    },
+    {
+      "name": "wild_safe_0023_0x912fef2b95bed78c12faf7b33347532370d23a5d.sol",
+      "ground_truth": "safe",
+      "predicted": "safe",
+      "category": "none",
+      "correct": true
+    },
+    {
+      "name": "wild_safe_0782_0x54ecf8024088ce6d4895871e85d2d28f73f3fce8.sol",
+      "ground_truth": "safe",
+      "predicted": "safe",
+      "category": "none",
+      "correct": true
+    },
+    {
+      "name": "curated_unchecked_low_level_calls_mishandled.sol",
+      "ground_truth": "vulnerable",
+      "predicted": "vulnerable",
+      "category": "unchecked_low_level_calls",
+      "correct": true
+    },
+    {
+      "name": "wild_safe_0712_0x1d859ad24b62775dddb73e8990fedfd41a8e9a22.sol",
+      "ground_truth": "safe",
+      "predicted": "safe",
+      "category": "none",
+      "correct": true
+    },
+    {
+      "name": "curated_unchecked_low_level_calls_0x3f2ef511aa6e75231e4deafc7a3d2ecab3741de2.sol",
+      "ground_truth": "vulnerable",
+      "predicted": "vulnerable",
+      "category": "unchecked_low_level_calls",
+      "correct": true
+    },
+    {
+      "name": "curated_arithmetic_integer_overflow_1.sol",
+      "ground_truth": "vulnerable",
+      "predicted": "vulnerable",
+      "category": "arithmetic",
+      "correct": true
+    },
+    {
+      "name": "wild_safe_0185_0x73281c0c4325d714408712b7313d5b6e87bd00e7.sol",
+      "ground_truth": "safe",
+      "predicted": "safe",
+      "category": "none",
+      "correct": true
+    },
+    {
+      "name": "curated_access_control_multiowned_vulnerable.sol",
+      "ground_truth": "vulnerable",
+      "predicted": "vulnerable",
+      "category": "access_control",
+      "correct": true
+    },
+    {
+      "name": "curated_other_crypto_roulette.sol",
+      "ground_truth": "vulnerable",
+      "predicted": "vulnerable",
+      "category": "other",
+      "correct": true
+    },
+    {
+      "name": "curated_unchecked_low_level_calls_0x39cfd754c85023648bf003bea2dd498c5612abfa.sol",
+      "ground_truth": "vulnerable",
+      "predicted": "vulnerable",
+      "category": "unchecked_low_level_calls",
+      "correct": true
+    },
+    {
+      "name": "wild_safe_0455_0x44456721189001766a7157ed8f8727e819a58446.sol",
+      "ground_truth": "safe",
+      "predicted": "safe",
+      "category": "none",
+      "correct": true
+    },
+    {
+      "name": "curated_reentrancy_0x941d225236464a25eb18076df7da6a91d0f95e9e.sol",
+      "ground_truth": "vulnerable",
+      "predicted": "vulnerable",
+      "category": "reentrancy",
+      "correct": true
+    },
+    {
+      "name": "curated_front_running_eth_tx_order_dependence_minimal.sol",
+      "ground_truth": "vulnerable",
+      "predicted": "vulnerable",
+      "category": "front_running",
+      "correct": true
+    },
+    {
+      "name": "wild_safe_0408_0x49ceb57714000f18f3749cf2d130e135f9c473a4.sol",
+      "ground_truth": "safe",
+      "predicted": "safe",
+      "category": "none",
+      "correct": true
+    },
+    {
+      "name": "wild_safe_0257_0xb51088f5f37286b5c3462043200a0ce9aee71459.sol",
+      "ground_truth": "safe",
+      "predicted": "safe",
+      "category": "none",
+      "correct": true
+    },
+    {
+      "name": "wild_safe_0813_0x80623c126ce442980666ef38a72ec7b9e80f4706.sol",
+      "ground_truth": "safe",
+      "predicted": "safe",
+      "category": "none",
+      "correct": true
+    },
+    {
+      "name": "curated_time_manipulation_timed_crowdsale.sol",
+      "ground_truth": "vulnerable",
+      "predicted": "vulnerable",
+      "category": "time_manipulation",
+      "correct": true
+    },
+    {
+      "name": "curated_arithmetic_timelock.sol",
+      "ground_truth": "vulnerable",
+      "predicted": "vulnerable",
+      "category": "arithmetic",
+      "correct": true
+    },
+    {
+      "name": "curated_unchecked_low_level_calls_0x0cbe050f75bc8f8c2d6c0d249fea125fd6e1acc9.sol",
+      "ground_truth": "vulnerable",
+      "predicted": "vulnerable",
+      "category": "unchecked_low_level_calls",
+      "correct": true
+    },
+    {
+      "name": "curated_access_control_incorrect_constructor_name1.sol",
+      "ground_truth": "vulnerable",
+      "predicted": "vulnerable",
+      "category": "access_control",
+      "correct": true
+    },
+    {
+      "name": "curated_front_running_ERC20.sol",
+      "ground_truth": "vulnerable",
+      "predicted": "safe",
+      "category": "front_running",
+      "correct": false
+    },
+    {
+      "name": "curated_denial_of_service_send_loop.sol",
+      "ground_truth": "vulnerable",
+      "predicted": "vulnerable",
+      "category": "denial_of_service",
+      "correct": true
+    },
+    {
+      "name": "curated_unchecked_low_level_calls_0xf70d589d76eebdd7c12cc5eec99f8f6fa4233b9e.sol",
+      "ground_truth": "vulnerable",
+      "predicted": "vulnerable",
+      "category": "unchecked_low_level_calls",
+      "correct": true
+    },
+    {
+      "name": "curated_access_control_phishable.sol",
+      "ground_truth": "vulnerable",
+      "predicted": "vulnerable",
+      "category": "access_control",
+      "correct": true
+    },
+    {
+      "name": "curated_access_control_unprotected0.sol",
+      "ground_truth": "vulnerable",
+      "predicted": "vulnerable",
+      "category": "access_control",
+      "correct": true
+    },
+    {
+      "name": "curated_unchecked_low_level_calls_0x3e013fc32a54c4c5b6991ba539dcd0ec4355c859.sol",
+      "ground_truth": "vulnerable",
+      "predicted": "vulnerable",
+      "category": "unchecked_low_level_calls",
+      "correct": true
+    },
+    {
+      "name": "wild_safe_0563_0xc3b0f76d12de247103be16133620afcaf0f8e3c5.sol",
+      "ground_truth": "safe",
+      "predicted": "safe",
+      "category": "none",
+      "correct": true
+    },
+    {
+      "name": "curated_denial_of_service_dos_simple.sol",
+      "ground_truth": "vulnerable",
+      "predicted": "vulnerable",
+      "category": "denial_of_service",
+      "correct": true
+    },
+    {
+      "name": "curated_unchecked_low_level_calls_0x84d9ec85c9c568eb332b7226a8f826d897e0a4a8.sol",
+      "ground_truth": "vulnerable",
+      "predicted": "vulnerable",
+      "category": "unchecked_low_level_calls",
+      "correct": true
+    },
+    {
+      "name": "curated_reentrancy_reentrancy_cross_function.sol",
+      "ground_truth": "vulnerable",
+      "predicted": "vulnerable",
+      "category": "reentrancy",
+      "correct": true
+    },
+    {
+      "name": "wild_safe_0445_0x6d081571b8dd296605d5914131937d7732e2087c.sol",
+      "ground_truth": "safe",
+      "predicted": "safe",
+      "category": "none",
+      "correct": true
+    },
+    {
+      "name": "curated_unchecked_low_level_calls_0x5aa88d2901c68fda244f1d0584400368d2c8e739.sol",
+      "ground_truth": "vulnerable",
+      "predicted": "vulnerable",
+      "category": "unchecked_low_level_calls",
+      "correct": true
+    },
+    {
+      "name": "wild_safe_0560_0x149b8c8e5c039d3e3c00203fcd24b0dd5596c4b2.sol",
+      "ground_truth": "safe",
+      "predicted": "safe",
+      "category": "none",
+      "correct": true
+    },
+    {
+      "name": "wild_safe_0286_0x24700a297960e8477ce3ca6c58b70a7af3410398.sol",
+      "ground_truth": "safe",
+      "predicted": "safe",
+      "category": "none",
+      "correct": true
+    },
+    {
+      "name": "curated_unchecked_low_level_calls_0x4b71ad9c1a84b9b643aa54fdd66e2dec96e8b152.sol",
+      "ground_truth": "vulnerable",
+      "predicted": "vulnerable",
+      "category": "unchecked_low_level_calls",
+      "correct": true
+    },
+    {
+      "name": "curated_unchecked_low_level_calls_0x2972d548497286d18e92b5fa1f8f9139e5653fd2.sol",
+      "ground_truth": "vulnerable",
+      "predicted": "vulnerable",
+      "category": "unchecked_low_level_calls",
+      "correct": true
+    },
+    {
+      "name": "wild_safe_0451_0x139d415b5fd0981fbee78d0fa503168855b34652.sol",
+      "ground_truth": "safe",
+      "predicted": "safe",
+      "category": "none",
+      "correct": true
+    }
+  ]
+}
