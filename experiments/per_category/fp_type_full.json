@@ -1,0 +1,83 @@
+{
+  "timestamp": "2026-04-27T19:00:10.306461",
+  "methods": [
+    "LLM_Baseline",
+    "V4_Prompt",
+    "DmAVID_Hybrid"
+  ],
+  "by_method": {
+    "LLM_Baseline": {
+      "overall": {
+        "tp": 142,
+        "fp": 95,
+        "tn": 5,
+        "fn": 1,
+        "precision": 0.5992,
+        "recall": 0.993,
+        "f1": 0.7474
+      },
+      "fp_count": 95,
+      "fp_with_types": 95,
+      "avg_types_per_fp": 2.42,
+      "type_mentions": {
+        "access_control": 92,
+        "unchecked_low_level_calls": 57,
+        "arithmetic": 29,
+        "reentrancy": 21,
+        "denial_of_service": 20,
+        "race_condition_in_approve": 4,
+        "approval_race_condition": 3,
+        "time_manipulation": 1,
+        "missing_approval_mechanism": 1,
+        "bad_randomness": 1,
+        "use_of_throw_(deprecated)": 1
+      }
+    },
+    "V4_Prompt": {
+      "overall": {
+        "tp": 142,
+        "fp": 75,
+        "tn": 25,
+        "fn": 1,
+        "precision": 0.6544,
+        "recall": 0.993,
+        "f1": 0.7889
+      },
+      "fp_count": 75,
+      "fp_with_types": 75,
+      "avg_types_per_fp": 2.76,
+      "type_mentions": {
+        "access_control": 75,
+        "unchecked_low_level_calls": 62,
+        "reentrancy": 39,
+        "arithmetic": 16,
+        "time_manipulation": 10,
+        "bad_randomness": 2,
+        "denial_of_service": 2,
+        "tx.origin_authentication": 1
+      }
+    },
+    "DmAVID_Hybrid": {
+      "overall": {
+        "tp": 140,
+        "fp": 24,
+        "tn": 76,
+        "fn": 3,
+        "precision": 0.8537,
+        "recall": 0.979,
+        "f1": 0.9121
+      },
+      "fp_count": 24,
+      "fp_with_types": 24,
+      "avg_types_per_fp": 1.96,
+      "type_mentions": {
+        "unchecked_low_level_calls": 21,
+        "reentrancy": 17,
+        "access_control": 4,
+        "denial_of_service": 2,
+        "arithmetic": 2,
+        "unchecked_call_return": 1
+      }
+    }
+  }
+}
