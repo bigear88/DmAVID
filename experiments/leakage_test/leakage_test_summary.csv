@@ -1,0 +1,15 @@
+dataset,n_samples_or_vulns,metric,value,cutoff_status
+A. SmartBugs Hybrid (existing),243,F1,0.9121,pre-2023 (likely leaked)
+B. EVMbench 2024 (existing),39,Detection Rate,0.3077,boundary (cutoff=2024-10)
+C. EVMbench 2025+ (Sprint 2),17,Detection Rate,0.1176,post-cutoff (clean)
+
+per-audit detail (post-cutoff)
+audit_id,num_gold_vulns,num_detected,detect_rate
+2025-01-liquid-ron,1,0,0.0
+2025-04-forte,5,0,0.0
+2025-04-virtuals,4,0,0.0
+2025-05-blackhole,1,0,0.0
+2025-06-panoptic,2,0,0.0
+2026-01-tempo-feeamm,1,1,1.0
+2026-01-tempo-mpp-streams,1,0,0.0
+2026-01-tempo-stablecoin-dex,2,1,0.5

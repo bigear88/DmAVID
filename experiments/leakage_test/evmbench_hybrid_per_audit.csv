@@ -1,0 +1,9 @@
+audit_id,status,num_gold_vulns,num_found_by_llm,num_detected,detect_score
+2025-01-liquid-ron,completed,1,3,0,0.0
+2025-04-forte,completed,5,0,0,0.0
+2025-04-virtuals,completed,4,3,0,0.0
+2025-05-blackhole,completed,1,3,0,0.0
+2025-06-panoptic,completed,2,4,0,0.0
+2026-01-tempo-feeamm,completed,1,3,1,1.0
+2026-01-tempo-mpp-streams,completed,1,0,0,0.0
+2026-01-tempo-stablecoin-dex,completed,2,2,1,0.5
