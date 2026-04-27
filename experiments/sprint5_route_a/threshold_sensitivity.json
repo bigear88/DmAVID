@@ -1,0 +1,102 @@
+{
+  "experiment": "sprint5_route_a_threshold_sensitivity",
+  "timestamp": "2026-04-28T05:16:07.599652",
+  "audits": [
+    "2025-01-liquid-ron",
+    "2025-04-forte",
+    "2025-04-virtuals",
+    "2025-05-blackhole",
+    "2025-06-panoptic",
+    "2026-01-tempo-feeamm",
+    "2026-01-tempo-mpp-streams",
+    "2026-01-tempo-stablecoin-dex"
+  ],
+  "thresholds_tested": [
+    0.5,
+    0.45,
+    0.4,
+    0.35,
+    0.3,
+    0.25,
+    0.2
+  ],
+  "results": {
+    "Random Forest": {
+      "probas": [
+        0.26,
+        0.39,
+        0.22,
+        0.28,
+        0.3,
+        0.21,
+        0.23,
+        0.16
+      ],
+      "recall_at_0.50": "0/8 = 0.00%",
+      "recall_at_0.45": "0/8 = 0.00%",
+      "recall_at_0.40": "0/8 = 0.00%",
+      "recall_at_0.35": "1/8 = 12.50%",
+      "recall_at_0.30": "2/8 = 25.00%",
+      "recall_at_0.25": "4/8 = 50.00%",
+      "recall_at_0.20": "7/8 = 87.50%"
+    },
+    "Logistic Regression": {
+      "probas": [
+        0.0,
+        1.0,
+        0.0,
+        0.0009,
+        0.0001,
+        0.045,
+        0.0,
+        0.0
+      ],
+      "recall_at_0.50": "1/8 = 12.50%",
+      "recall_at_0.45": "1/8 = 12.50%",
+      "recall_at_0.40": "1/8 = 12.50%",
+      "recall_at_0.35": "1/8 = 12.50%",
+      "recall_at_0.30": "1/8 = 12.50%",
+      "recall_at_0.25": "1/8 = 12.50%",
+      "recall_at_0.20": "1/8 = 12.50%"
+    },
+    "Gradient Boosting": {
+      "probas": [
+        0.0499,
+        0.0228,
+        0.0365,
+        0.0206,
+        0.0435,
+        0.0569,
+        0.2006,
+        0.0362
+      ],
+      "recall_at_0.50": "0/8 = 0.00%",
+      "recall_at_0.45": "0/8 = 0.00%",
+      "recall_at_0.40": "0/8 = 0.00%",
+      "recall_at_0.35": "0/8 = 0.00%",
+      "recall_at_0.30": "0/8 = 0.00%",
+      "recall_at_0.25": "0/8 = 0.00%",
+      "recall_at_0.20": "1/8 = 12.50%"
+    },
+    "SVM (RBF)": {
+      "probas": [
+        0.6848,
+        0.7091,
+        0.6842,
+        0.3348,
+        0.6673,
+        0.5854,
+        0.696,
+        0.6623
+      ],
+      "recall_at_0.50": "7/8 = 87.50%",
+      "recall_at_0.45": "7/8 = 87.50%",
+      "recall_at_0.40": "7/8 = 87.50%",
+      "recall_at_0.35": "7/8 = 87.50%",
+      "recall_at_0.30": "8/8 = 100.00%",
+      "recall_at_0.25": "8/8 = 100.00%",
+      "recall_at_0.20": "8/8 = 100.00%"
+    }
+  },
+  "interpretation": "若 threshold 從 0.5 降到 0.3 後 RF/GB recall 顯著上升，表示 distribution shift 主要把 P_vuln 整體往 safe 方向推，非「模型完全無法區分」。但 threshold 調整需要 OOD validation set，在僅 8 vulnerable audits 無 safe 對照下，這只能作為診斷而非優化方法。"
+}
