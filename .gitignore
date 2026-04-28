@@ -170,3 +170,6 @@ sync_thesis_final.py
 fix_*.py
 check_*.py
 verify_*.py
+
+# 論文文件不入 git（避免 GitHub 公開 + 減少 repo 體積）
+*.docx
