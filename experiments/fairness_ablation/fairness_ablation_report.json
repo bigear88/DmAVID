@@ -1,0 +1,215 @@
+{
+  "experiment": "Sprint 5C \u2014 ML Fairness Ablation",
+  "timestamp": "2026-04-28T09:23:28.952586",
+  "seed": 42,
+  "stages": [
+    {
+      "stage": "S1 Naive",
+      "n_samples": 243,
+      "n_vuln": 143,
+      "n_safe": 100,
+      "n_features_tfidf": 500,
+      "n_features_struct": 19,
+      "use_strip_comments": false,
+      "use_keyword_only": false,
+      "classifiers": {
+        "RF": {
+          "precision": 1.0,
+          "precision_std": 0.0,
+          "recall": 0.9648,
+          "recall_std": 0.0226,
+          "f1": 0.9819,
+          "f1_std": 0.0117,
+          "accuracy": 0.9793,
+          "accuracy_std": 0.0132
+        },
+        "GB": {
+          "precision": 1.0,
+          "precision_std": 0.0,
+          "recall": 1.0,
+          "recall_std": 0.0,
+          "f1": 1.0,
+          "f1_std": 0.0,
+          "accuracy": 1.0,
+          "accuracy_std": 0.0
+        },
+        "LR": {
+          "precision": 0.9392,
+          "precision_std": 0.023,
+          "recall": 0.9579,
+          "recall_std": 0.0147,
+          "f1": 0.9482,
+          "f1_std": 0.0103,
+          "accuracy": 0.9383,
+          "accuracy_std": 0.0129
+        },
+        "SVM": {
+          "precision": 0.9105,
+          "precision_std": 0.0473,
+          "recall": 0.9507,
+          "recall_std": 0.0289,
+          "f1": 0.9289,
+          "f1_std": 0.0218,
+          "accuracy": 0.9137,
+          "accuracy_std": 0.0297
+        }
+      }
+    },
+    {
+      "stage": "S2 + Length-matched",
+      "n_samples": 286,
+      "n_vuln": 143,
+      "n_safe": 143,
+      "n_features_tfidf": 500,
+      "n_features_struct": 19,
+      "use_strip_comments": false,
+      "use_keyword_only": false,
+      "classifiers": {
+        "RF": {
+          "precision": 1.0,
+          "precision_std": 0.0,
+          "recall": 0.9788,
+          "recall_std": 0.0285,
+          "f1": 0.9891,
+          "f1_std": 0.0147,
+          "accuracy": 0.9895,
+          "accuracy_std": 0.014
+        },
+        "GB": {
+          "precision": 1.0,
+          "precision_std": 0.0,
+          "recall": 0.9929,
+          "recall_std": 0.0143,
+          "f1": 0.9964,
+          "f1_std": 0.0073,
+          "accuracy": 0.9965,
+          "accuracy_std": 0.007
+        },
+        "LR": {
+          "precision": 0.8824,
+          "precision_std": 0.0471,
+          "recall": 0.8946,
+          "recall_std": 0.0505,
+          "f1": 0.8883,
+          "f1_std": 0.0473,
+          "accuracy": 0.8881,
+          "accuracy_std": 0.0465
+        },
+        "SVM": {
+          "precision": 0.7806,
+          "precision_std": 0.0723,
+          "recall": 0.9089,
+          "recall_std": 0.0576,
+          "f1": 0.8395,
+          "f1_std": 0.0655,
+          "accuracy": 0.825,
+          "accuracy_std": 0.0738
+        }
+      }
+    },
+    {
+      "stage": "S3 + Strip-comments",
+      "n_samples": 286,
+      "n_vuln": 143,
+      "n_safe": 143,
+      "n_features_tfidf": 500,
+      "n_features_struct": 19,
+      "use_strip_comments": true,
+      "use_keyword_only": false,
+      "classifiers": {
+        "RF": {
+          "precision": 0.8313,
+          "precision_std": 0.0894,
+          "recall": 0.9224,
+          "recall_std": 0.0613,
+          "f1": 0.8722,
+          "f1_std": 0.064,
+          "accuracy": 0.8635,
+          "accuracy_std": 0.0689
+        },
+        "GB": {
+          "precision": 0.8748,
+          "precision_std": 0.0789,
+          "recall": 0.902,
+          "recall_std": 0.0341,
+          "f1": 0.8851,
+          "f1_std": 0.0339,
+          "accuracy": 0.8811,
+          "accuracy_std": 0.0407
+        },
+        "LR": {
+          "precision": 0.8518,
+          "precision_std": 0.0669,
+          "recall": 0.8599,
+          "recall_std": 0.0497,
+          "f1": 0.8544,
+          "f1_std": 0.0492,
+          "accuracy": 0.8532,
+          "accuracy_std": 0.0515
+        },
+        "SVM": {
+          "precision": 0.7873,
+          "precision_std": 0.0564,
+          "recall": 0.9227,
+          "recall_std": 0.0572,
+          "f1": 0.8489,
+          "f1_std": 0.0513,
+          "accuracy": 0.8357,
+          "accuracy_std": 0.0549
+        }
+      }
+    },
+    {
+      "stage": "S4 + Keyword-only",
+      "n_samples": 286,
+      "n_vuln": 143,
+      "n_safe": 143,
+      "n_features_tfidf": 131,
+      "n_features_struct": 19,
+      "use_strip_comments": true,
+      "use_keyword_only": true,
+      "classifiers": {
+        "RF": {
+          "precision": 0.8783,
+          "precision_std": 0.096,
+          "recall": 0.9224,
+          "recall_std": 0.0613,
+          "f1": 0.8966,
+          "f1_std": 0.0618,
+          "accuracy": 0.8915,
+          "accuracy_std": 0.0661
+        },
+        "GB": {
+          "precision": 0.8791,
+          "precision_std": 0.0791,
+          "recall": 0.9089,
+          "recall_std": 0.0358,
+          "f1": 0.8916,
+          "f1_std": 0.0455,
+          "accuracy": 0.888,
+          "accuracy_std": 0.0505
+        },
+        "LR": {
+          "precision": 0.8434,
+          "precision_std": 0.0648,
+          "recall": 0.8527,
+          "recall_std": 0.0477,
+          "f1": 0.8474,
+          "f1_std": 0.0522,
+          "accuracy": 0.8461,
+          "accuracy_std": 0.0538
+        },
+        "SVM": {
+          "precision": 0.7859,
+          "precision_std": 0.0577,
+          "recall": 0.9158,
+          "recall_std": 0.0535,
+          "f1": 0.8454,
+          "f1_std": 0.0526,
+          "accuracy": 0.8322,
+          "accuracy_std": 0.0572
+        }
+      }
+    }
+  ]
+}
