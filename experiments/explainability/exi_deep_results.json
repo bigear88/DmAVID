@@ -1,0 +1,72 @@
+{
+  "experiment": "explainability_deep",
+  "timestamp": "2026-04-30T21:23:59.947367",
+  "weights": {
+    "pattern_coverage": 25,
+    "root_cause": 30,
+    "attack_path": 25,
+    "repair_quality": 20
+  },
+  "exi_formula": "EXI = 25*PC + 30*RCA + 25*APC + 20*(RQ/5)",
+  "repair_quality_status": {
+    "available": true,
+    "dmavid_avg": 2.906,
+    "n_judged": 117,
+    "n_total_with_repair": 117,
+    "score_distribution": {
+      "1": 5,
+      "2": 43,
+      "3": 36,
+      "4": 24,
+      "5": 9
+    }
+  },
+  "dmavid": {
+    "pattern_coverage": 1.0,
+    "pattern_coverage_breakdown": {
+      "hits": 140,
+      "tp_total": 140
+    },
+    "root_cause": 0.95,
+    "root_cause_breakdown": {
+      "correct": 133,
+      "tp_total": 140
+    },
+    "attack_path": 0.641,
+    "attack_path_breakdown": {
+      "detected": 25,
+      "total_gold": 39,
+      "source": "experiments/evmbench_smart/smart_preprocess_results.json"
+    },
+    "repair_quality_avg_1to5": 2.906,
+    "exi": 81.15
+  },
+  "slither": {
+    "pattern_coverage": 0.5778,
+    "pattern_coverage_breakdown": {
+      "hits": 78,
+      "tp_total": 135
+    },
+    "root_cause": 0.4,
+    "root_cause_breakdown": {
+      "correct": 54,
+      "tp_total": 135
+    },
+    "attack_path": 0.0,
+    "attack_path_note": "Slither 既有實驗未涵蓋 EVMbench post-cutoff audits",
+    "repair_quality_avg_1to5": 0.0,
+    "repair_quality_note": "Slither 不輸出可執行修復建議；不送 LLM-judge 以避免 fabricate",
+    "exi": 26.44
+  },
+  "codebert": {
+    "pattern_coverage": 0.0,
+    "pattern_coverage_note": "CodeBERT 為黑箱二元分類器，無 reasoning 輸出",
+    "root_cause": 0.0,
+    "root_cause_note": "CodeBERT 不輸出漏洞類型",
+    "attack_path": 0.0,
+    "attack_path_note": "CodeBERT 既有實驗未涵蓋 EVMbench post-cutoff audits",
+    "repair_quality_avg_1to5": 0.0,
+    "repair_quality_note": "CodeBERT 無修復建議輸出",
+    "exi": 0.0
+  }
+}

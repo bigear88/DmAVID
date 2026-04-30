@@ -1,0 +1,964 @@
+{
+  "experiment": "explainability_repair_quality_judge",
+  "model": "gpt-4.1-mini",
+  "timestamp": "2026-04-30T21:23:52.168220",
+  "n_total_with_repair": 117,
+  "n_judged": 117,
+  "actual_cost_usd": 0.0136,
+  "actual_input_tokens": 22614,
+  "actual_output_tokens": 2851,
+  "results": [
+    {
+      "contract_id": "curated_reentrancy_0x941d225236464a25eb18076df7da6a91d0f95e9e.sol",
+      "category": "reentrancy",
+      "score": 2,
+      "reasoning": "The suggestion correctly identifies the lack of safe patterns but is vague, does not specify exact lines or code changes, and does not provide a concrete fix, so while directionally correct, it lacks actionable detail and completeness for compilation and correctness assurance.",
+      "input_tokens": 529,
+      "output_tokens": 60
+    },
+    {
+      "contract_id": "curated_reentrancy_0x01f8c4e3fa3edeb29e514cba738d87ce8c091d3f.sol",
+      "category": "reentrancy",
+      "score": 4,
+      "reasoning": "The suggestion correctly identifies the vulnerable external call in the Collect function and implies reordering to update state before the call, which effectively prevents reentrancy and compiles under Solidity 0.4–0.8, but it lacks explicit code changes or line numbers for precise modification.",
+      "input_tokens": 575,
+      "output_tokens": 68
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0xdb1c55f6926e7d847ddf8678905ad871a68199d2.sol",
+      "category": "unchecked_low_level_calls",
+      "score": 3,
+      "reasoning": "The suggestion correctly identifies the problematic function and potential reentrancy risk but lacks concrete code changes and does not address the unchecked low-level call issue specifically, making it partially correct and incomplete for compilation assurance.",
+      "input_tokens": 348,
+      "output_tokens": 52
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0xa1fceeff3acc57d257b917e30c4df661401d6431.sol",
+      "category": "unchecked_low_level_calls",
+      "score": 2,
+      "reasoning": "The suggestion correctly identifies the issue of unchecked low-level calls causing silent failures but lacks specificity on which line or how to fix it, and does not provide a concrete, compilable code fix.",
+      "input_tokens": 371,
+      "output_tokens": 50
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0xb0510d68f210b7db66e8c7c814f22680f2b8d1d6.sol",
+      "category": "unchecked_low_level_calls",
+      "score": 2,
+      "reasoning": "The suggestion correctly identifies the unchecked calls as risky but fails to specify exact lines or functions to fix and does not provide a concrete, compilable code fix to ensure call success is checked.",
+      "input_tokens": 610,
+      "output_tokens": 49
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x78c2a1e91b52bca4130b6ed9edd9fbcfd4671c37.sol",
+      "category": "unchecked_low_level_calls",
+      "score": 3,
+      "reasoning": "The suggestion correctly identifies the unchecked low-level call issue but lacks precise line/function details and does not provide a concrete fix, making it partially helpful yet incomplete and uncertain for compilation.",
+      "input_tokens": 310,
+      "output_tokens": 45
+    },
+    {
+      "contract_id": "curated_reentrancy_0x7b368c4e805c3870b6c49a3f1f49f69af8662cf3.sol",
+      "category": "reentrancy",
+      "score": 3,
+      "reasoning": "The suggestion correctly identifies the need to update state before the external call to prevent reentrancy but lacks specificity about exact lines or code changes and does not provide a concrete fix, though the concept is valid and compatible with Solidity 0.4–0.8.",
+      "input_tokens": 555,
+      "output_tokens": 65
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x4a66ad0bca2d700f11e1f2fc2c106f7d3264504c.sol",
+      "category": "unchecked_low_level_calls",
+      "score": 3,
+      "reasoning": "The suggestion correctly identifies the unchecked low-level call in the loop but lacks a concrete fix or code example, so while it points to the right issue, it does not fully ensure correctness or compileability without further detail.",
+      "input_tokens": 415,
+      "output_tokens": 55
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0xb11b2fed6c9354f7aa2f658d3b4d7b31d8a13b77.sol",
+      "category": "unchecked_low_level_calls",
+      "score": 5,
+      "reasoning": "The suggestion precisely identifies the flawed Owner shadowing and tx.origin misuse in Vault(), correctly addressing access control vulnerabilities, and the recommended changes are compatible with Solidity 0.4.24 syntax and semantics.",
+      "input_tokens": 485,
+      "output_tokens": 52
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0xbebbfe5b549f5db6e6c78ca97cac19d1fb03082c.sol",
+      "category": "unchecked_low_level_calls",
+      "score": 4,
+      "reasoning": "The suggestion correctly identifies the Owner variable shadowing and flawed access control in withdraw, as well as the discouraged use of tx.origin, providing specific and accurate guidance that would compile and improve security, though it lacks exact line numbers or code snippets for the fix.",
+      "input_tokens": 494,
+      "output_tokens": 61
+    },
+    {
+      "contract_id": "curated_reentrancy_0x23a91059fdc9579a9fbd0edc5f2ea0bfdb70deb4.sol",
+      "category": "reentrancy",
+      "score": 4,
+      "reasoning": "The suggestion correctly identifies the need to update the balance before the external call to prevent reentrancy, is accurate and applicable to the CashOut function, and the fix would compile in Solidity 0.4.x, but it lacks explicit line references and detailed code changes.",
+      "input_tokens": 533,
+      "output_tokens": 66
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0xd2018bfaa266a9ec0a1a84b061640faa009def76.sol",
+      "category": "unchecked_low_level_calls",
+      "score": 2,
+      "reasoning": "The suggestion correctly identifies a missing reentrancy guard but lacks specificity about which lines or functions to modify and does not provide concrete code changes, making it insufficient to ensure the vulnerability is fixed or that the code compiles after modification.",
+      "input_tokens": 275,
+      "output_tokens": 56
+    },
+    {
+      "contract_id": "curated_reentrancy_0x4320e6f8c05b27ab4707cd1f6d5ce6f3e4b3a5a1.sol",
+      "category": "reentrancy",
+      "score": 3,
+      "reasoning": "The suggestion correctly identifies the vulnerability and the need to update state before the external call but lacks specific code changes and does not provide a complete fix or mention reentrancy guards, making it partially correct and incomplete for compilation as-is.",
+      "input_tokens": 590,
+      "output_tokens": 58
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x806a6bd219f162442d992bdc4ee6eba1f2c5a707.sol",
+      "category": "unchecked_low_level_calls",
+      "score": 3,
+      "reasoning": "The suggestion correctly identifies the problematic function and issues like unchecked calls and reentrancy risk but lacks precise line references and concrete code fixes, and mentions deprecated features without providing a fully compatible, compilable replacement for Solidity 0.4–0.8.",
+      "input_tokens": 354,
+      "output_tokens": 63
+    },
+    {
+      "contract_id": "curated_reentrancy_0xbe4041d55db380c5ae9d4a9b9703f1ed4e7e3888.sol",
+      "category": "reentrancy",
+      "score": 3,
+      "reasoning": "The suggestion correctly identifies the lack of state update before the external call causing reentrancy but lacks specificity on exact lines or code changes and does not provide a concrete fix, though the concept is valid and applicable across Solidity versions 0.4 to 0.8.",
+      "input_tokens": 553,
+      "output_tokens": 66
+    },
+    {
+      "contract_id": "curated_reentrancy_0x7a8721a9d64c74da899424c1b52acbf58ddc9782.sol",
+      "category": "reentrancy",
+      "score": 4,
+      "reasoning": "The suggestion correctly identifies the reentrancy issue in the CashOut function and the misuse of tx.origin in onlyOwner, providing specific and correct guidance that would compile in Solidity 0.4.x, but it lacks exact line references and full code examples for clarity.",
+      "input_tokens": 534,
+      "output_tokens": 65
+    },
+    {
+      "contract_id": "curated_reentrancy_0x93c32845fae42c83a70e5f06214c8433665c2ab5.sol",
+      "category": "reentrancy",
+      "score": 3,
+      "reasoning": "The suggestion correctly identifies the vulnerability source and the need to reorder state updates or use a reentrancy guard, but it lacks specific code changes and does not provide a complete fix, though the implied changes would compile in Solidity 0.4–0.8.",
+      "input_tokens": 572,
+      "output_tokens": 63
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0xe894d54dca59cb53fe9cbc5155093605c7068220.sol",
+      "category": "unchecked_low_level_calls",
+      "score": 2,
+      "reasoning": "The suggestion correctly identifies the unchecked call issue but lacks specificity on how to fix it and does not provide a compilable code fix, reducing its overall usefulness.",
+      "input_tokens": 321,
+      "output_tokens": 41
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x52d2e0f9b01101a59b38a3d05c80b7618aeed984.sol",
+      "category": "unchecked_low_level_calls",
+      "score": 4,
+      "reasoning": "The suggestion correctly identifies the unchecked external calls in withdrawTokens and withdrawEther and the lack of access control, providing specific and accurate guidance likely to fix the vulnerabilities, though it lacks explicit code examples and minor Solidity version details for full compileability assurance.",
+      "input_tokens": 413,
+      "output_tokens": 61
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0xb7c5c5aa4d42967efe906e1b66cb8df9cebf04f7.sol",
+      "category": "unchecked_low_level_calls",
+      "score": 3,
+      "reasoning": "The suggestion correctly identifies the need to update state before the external call and check its success but lacks specific code changes and does not address Solidity version compatibility details explicitly.",
+      "input_tokens": 338,
+      "output_tokens": 44
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0xd5967fed03e85d1cce44cab284695b41bc675b5c.sol",
+      "category": "unchecked_low_level_calls",
+      "score": 3,
+      "reasoning": "The suggestion correctly identifies the unchecked call issue but lacks a concrete fix or code example, so while it points to the right problem, it does not fully ensure correctness or compileability improvements.",
+      "input_tokens": 300,
+      "output_tokens": 49
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x5aa88d2901c68fda244f1d0584400368d2c8e739.sol",
+      "category": "unchecked_low_level_calls",
+      "score": 4,
+      "reasoning": "The suggestion correctly identifies the unchecked call in the Command function as the vulnerability and implies replacing it with a checked call like transfer or call with return value check, which would fix the issue and compile in Solidity 0.4.x, but it lacks explicit code or line reference details for full specificity.",
+      "input_tokens": 356,
+      "output_tokens": 71
+    },
+    {
+      "contract_id": "curated_reentrancy_0xb93430ce38ac4a6bb47fb1fc085ea669353fd89e.sol",
+      "category": "reentrancy",
+      "score": 3,
+      "reasoning": "The suggestion correctly identifies the reentrancy issue in the CashOut function but lacks explicit code changes or line references, and while the fix conceptually eliminates the vulnerability, no concrete, compilable code is provided.",
+      "input_tokens": 514,
+      "output_tokens": 52
+    },
+    {
+      "contract_id": "curated_reentrancy_0x7541b76cb60f4c60af330c208b0623b7f54bf615.sol",
+      "category": "reentrancy",
+      "score": 4,
+      "reasoning": "The suggestion correctly identifies the reentrancy vulnerability and implies updating state before the external call, which effectively fixes the issue and compiles under Solidity 0.4.x, but it lacks explicit line or function references reducing specificity slightly.",
+      "input_tokens": 587,
+      "output_tokens": 58
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x4051334adc52057aca763453820cb0e045076ef3.sol",
+      "category": "unchecked_low_level_calls",
+      "score": 3,
+      "reasoning": "The suggestion correctly identifies the unchecked call issue in the loop but lacks a concrete fix and does not specify how to handle the call result, so while it points to the right problem, it is incomplete and may not compile as-is without further code changes.",
+      "input_tokens": 302,
+      "output_tokens": 62
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x70f9eddb3931491aab1aeafbc1e7f1ca2a012db4.sol",
+      "category": "unchecked_low_level_calls",
+      "score": 3,
+      "reasoning": "The suggestion correctly identifies the need to check call success to prevent silent failures but lacks specificity about the exact lines or functions to modify and does not provide concrete code changes, though the advice is generally applicable and compatible with Solidity 0.4–0.8.",
+      "input_tokens": 263,
+      "output_tokens": 62
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x7a4349a749e59a5736efb7826ee3496a2dfd5489.sol",
+      "category": "unchecked_low_level_calls",
+      "score": 3,
+      "reasoning": "The suggestion correctly identifies the need for reentrancy protection and checking call success but lacks specificity about exact lines or functions to modify and does not provide concrete code changes, making it incomplete though directionally correct and generally compatible with Solidity 0.4–0.8.",
+      "input_tokens": 290,
+      "output_tokens": 64
+    },
+    {
+      "contract_id": "curated_reentrancy_0xbaf51e761510c1a11bf48dd87c0307ac8a8c8a4f.sol",
+      "category": "reentrancy",
+      "score": 2,
+      "reasoning": "The suggestion correctly identifies the lack of state update before the external call as the root cause but lacks specificity on which lines to change and does not provide a concrete fix, though the implied fix would compile in Solidity 0.4–0.8.",
+      "input_tokens": 512,
+      "output_tokens": 62
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0xec329ffc97d75fe03428ae155fc7793431487f63.sol",
+      "category": "unchecked_low_level_calls",
+      "score": 3,
+      "reasoning": "The suggestion correctly identifies the unchecked call as a vulnerability but lacks a concrete fix or code example, so while it points out the issue specifically, it does not provide a complete, compilable solution that fully eliminates the risk.",
+      "input_tokens": 544,
+      "output_tokens": 55
+    },
+    {
+      "contract_id": "curated_reentrancy_0xf015c35649c82f5467c9c74b7f28ee67665aad68.sol",
+      "category": "reentrancy",
+      "score": 4,
+      "reasoning": "The suggestion correctly identifies the reentrancy vulnerability in the Collect function and implies updating state before the external call, which effectively prevents reentrancy and compiles under Solidity 0.4.25, but it lacks explicit code changes or line references reducing specificity slightly.",
+      "input_tokens": 587,
+      "output_tokens": 65
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x4b71ad9c1a84b9b643aa54fdd66e2dec96e8b152.sol",
+      "category": "unchecked_low_level_calls",
+      "score": 3,
+      "reasoning": "The suggestion correctly identifies the need to check the call result to prevent silent failures but lacks specificity on how to implement it and does not provide code that would compile as-is in Solidity 0.4.24.",
+      "input_tokens": 316,
+      "output_tokens": 54
+    },
+    {
+      "contract_id": "curated_reentrancy_0x561eac93c92360949ab1f1403323e6db345cbf31.sol",
+      "category": "reentrancy",
+      "score": 2,
+      "reasoning": "The suggestion correctly identifies the need to update state before the external call to prevent reentrancy but lacks specificity about which function or lines to change and does not provide a concrete fix, so while conceptually correct, it is incomplete and does not ensure compileability as-is.",
+      "input_tokens": 544,
+      "output_tokens": 66
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0xbaa3de6504690efb064420d89e871c27065cdd52.sol",
+      "category": "unchecked_low_level_calls",
+      "score": 4,
+      "reasoning": "The suggestion correctly identifies the redeclaration of Owner causing access control issues and the tx.origin anti-pattern, providing specific functions to address, and the recommended fixes are compatible with Solidity 0.4–0.8, though it does not explicitly detail the exact code changes to fully eliminate unchecked call vulnerabilities.",
+      "input_tokens": 472,
+      "output_tokens": 72
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x39cfd754c85023648bf003bea2dd498c5612abfa.sol",
+      "category": "unchecked_low_level_calls",
+      "score": 4,
+      "reasoning": "The suggestion correctly identifies the weak onlyOwner modifier and the incorrect holder check, improving access control and logic, but lacks exact line references and a full code fix, though the recommended changes are compatible with Solidity 0.4–0.8.",
+      "input_tokens": 608,
+      "output_tokens": 61
+    },
+    {
+      "contract_id": "curated_reentrancy_0x627fa62ccbb1c1b04ffaecd72a53e37fc0e17839.sol",
+      "category": "reentrancy",
+      "score": 2,
+      "reasoning": "The suggestion correctly identifies the reentrancy pattern and lack of protection but fails to specify exact lines or functions to change and does not provide a concrete fix, so while conceptually correct, it lacks actionable detail and code to ensure compilation.",
+      "input_tokens": 578,
+      "output_tokens": 58
+    },
+    {
+      "contract_id": "curated_reentrancy_0x4e73b32ed6c35f570686b89848e5f39f20ecc106.sol",
+      "category": "reentrancy",
+      "score": 2,
+      "reasoning": "The suggestion correctly identifies the lack of reentrancy protection but is vague, does not specify the vulnerable function or lines, and adding ReentrancyGuard from later Solidity versions would not compile in 0.4.19 without modification.",
+      "input_tokens": 530,
+      "output_tokens": 59
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0xe09b1ab8111c2729a76f16de96bc86a7af837928.sol",
+      "category": "unchecked_low_level_calls",
+      "score": 4,
+      "reasoning": "The suggestion correctly identifies the unchecked external call as the vulnerability and implies adding require checks to prevent silent failures, which would fix the issue and compile under Solidity 0.4.24, but it lacks explicit line or function references reducing specificity.",
+      "input_tokens": 604,
+      "output_tokens": 60
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0xf29ebe930a539a60279ace72c707cba851a57707.sol",
+      "category": "unchecked_low_level_calls",
+      "score": 2,
+      "reasoning": "The suggestion correctly identifies the unchecked call as problematic but lacks a concrete fix or code example, making it insufficiently specific and incomplete for compilation or full correctness assurance.",
+      "input_tokens": 294,
+      "output_tokens": 44
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0xb620cee6b52f96f3c6b253e6eea556aa2d214a99.sol",
+      "category": "unchecked_low_level_calls",
+      "score": 5,
+      "reasoning": "The suggestion precisely identifies the constructor naming issue causing the owner to remain unset, which breaks access control and can be fixed by renaming the constructor to 'DrainMe', a change that compiles correctly in Solidity 0.4.23 and effectively eliminates the vulnerability.",
+      "input_tokens": 584,
+      "output_tokens": 64
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0xa46edd6a9a93feec36576ee5048146870ea2c3ae.sol",
+      "category": "unchecked_low_level_calls",
+      "score": 3,
+      "reasoning": "The suggestion correctly identifies the unchecked call issue at line 16 but lacks a concrete fix and does not provide code that would compile or fully eliminate the vulnerability.",
+      "input_tokens": 302,
+      "output_tokens": 43
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x7d09edb07d23acb532a82be3da5c17d9d85806b4.sol",
+      "category": "unchecked_low_level_calls",
+      "score": 2,
+      "reasoning": "The suggestion correctly identifies the need to check low-level call results but lacks specificity about which lines or functions to modify and does not provide concrete code changes, making it incomplete though directionally correct and generally compatible with Solidity 0.4–0.8.",
+      "input_tokens": 525,
+      "output_tokens": 63
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x07f7ecb66d788ab01dc93b9b71a88401de7d0f2e.sol",
+      "category": "unchecked_low_level_calls",
+      "score": 2,
+      "reasoning": "The suggestion correctly identifies the need to check call results to fix unchecked low-level calls but lacks specificity about which lines or functions to modify and does not provide concrete code changes, making it incomplete and not directly compile-ready.",
+      "input_tokens": 525,
+      "output_tokens": 55
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x0cbe050f75bc8f8c2d6c0d249fea125fd6e1acc9.sol",
+      "category": "unchecked_low_level_calls",
+      "score": 5,
+      "reasoning": "The suggestion precisely identifies the unchecked low-level call at line 12, correctly advises checking the return value to prevent silent failures, and the recommended pattern using require is compatible with Solidity 0.4.10 and later versions.",
+      "input_tokens": 282,
+      "output_tokens": 54
+    },
+    {
+      "contract_id": "curated_reentrancy_0xaae1f51cf3339f18b6d3f3bdc75a5facd744b0b8.sol",
+      "category": "reentrancy",
+      "score": 2,
+      "reasoning": "The suggestion correctly identifies the lack of a reentrancy guard or state update before the external call but lacks specificity on which lines or functions to modify and does not provide a concrete fix, making it incomplete and not directly compile-ready.",
+      "input_tokens": 544,
+      "output_tokens": 58
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x3a0e9acd953ffc0dd18d63603488846a6b8b2b01.sol",
+      "category": "unchecked_low_level_calls",
+      "score": 4,
+      "reasoning": "The suggestion correctly identifies the unchecked call and reentrancy risk in WithdrawToken and WithdrawTokenToHolder functions and advises proper state update ordering and call success checks, but it lacks explicit code-level fixes and Solidity version-specific syntax details for full compileability assurance.",
+      "input_tokens": 601,
+      "output_tokens": 63
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x610495793564aed0f9c7fc48dc4c7c9151d34fd6.sol",
+      "category": "unchecked_low_level_calls",
+      "score": 2,
+      "reasoning": "The suggestion correctly identifies the lack of checking the call result but fails to specify the exact line or function to fix and does not provide a concrete, compilable code fix, thus only partially addressing the vulnerability.",
+      "input_tokens": 343,
+      "output_tokens": 51
+    },
+    {
+      "contract_id": "curated_reentrancy_0xb5e1b1ee15c6fa0e48fce100125569d430f1bd12.sol",
+      "category": "reentrancy",
+      "score": 3,
+      "reasoning": "The suggestion correctly identifies the need to update state before the external call to prevent reentrancy but lacks specificity on exact lines or code changes and does not provide a complete, compilable fix.",
+      "input_tokens": 507,
+      "output_tokens": 50
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x89c1b3807d4c67df034fffb62f3509561218d30b.sol",
+      "category": "unchecked_low_level_calls",
+      "score": 2,
+      "reasoning": "The suggestion is too generic without specifying affected lines or functions, and while reentrancy guards help in some cases, unchecked low-level calls require explicit call success checks rather than just reentrancy protection, plus ReentrancyGuard is not natively available in Solidity 0.4.x and would require additional code to compile.",
+      "input_tokens": 537,
+      "output_tokens": 77
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x958a8f594101d2c0485a52319f29b2647f2ebc06.sol",
+      "category": "unchecked_low_level_calls",
+      "score": 2,
+      "reasoning": "The suggestion correctly identifies the unchecked low-level call issue but lacks specificity about the exact line or function to fix and does not provide a concrete code fix, making it incomplete and unverifiable for compilation.",
+      "input_tokens": 553,
+      "output_tokens": 51
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0xe4eabdca81e31d9acbc4af76b30f532b6ed7f3bf.sol",
+      "category": "unchecked_low_level_calls",
+      "score": 3,
+      "reasoning": "The suggestion correctly identifies the risk of unchecked low-level calls and lack of reentrancy guards but lacks specificity about exact lines or functions to modify and does not provide concrete code changes, making it only partially helpful and not directly compile-ready.",
+      "input_tokens": 276,
+      "output_tokens": 57
+    },
+    {
+      "contract_id": "curated_reentrancy_0xcead721ef5b11f1a7b530171aab69b16c5e66b6e.sol",
+      "category": "reentrancy",
+      "score": 4,
+      "reasoning": "The suggestion correctly identifies the reentrancy vulnerability and the need to update state before the external call, but it lacks explicit code changes or line references, though the fix would compile in Solidity 0.4.25.",
+      "input_tokens": 587,
+      "output_tokens": 56
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x8fd1e427396ddb511533cf9abdbebd0a7e08da35.sol",
+      "category": "unchecked_low_level_calls",
+      "score": 3,
+      "reasoning": "The suggestion correctly identifies the unchecked call and reentrancy risk but lacks precise line/function references and does not provide a concrete fix, so while conceptually valid, it is incomplete and does not guarantee compile-ready code.",
+      "input_tokens": 599,
+      "output_tokens": 55
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x9d06cbafa865037a01d322d3f4222fa3e04e5488.sol",
+      "category": "unchecked_low_level_calls",
+      "score": 2,
+      "reasoning": "The suggestion is vague, does not specify the exact lines or functions to fix, and incorrectly focuses on access control rather than checking the success of low-level calls, so it does not effectively eliminate the unchecked call vulnerability or ensure compilation correctness.",
+      "input_tokens": 582,
+      "output_tokens": 59
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x627fa62ccbb1c1b04ffaecd72a53e37fc0e17839.sol",
+      "category": "unchecked_low_level_calls",
+      "score": 2,
+      "reasoning": "The suggestion correctly identifies the unchecked call issue but lacks specificity on the exact fix and does not provide code changes, so while it points out the problem, it does not ensure a compilable or complete solution.",
+      "input_tokens": 533,
+      "output_tokens": 53
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0xf2570186500a46986f3139f65afedc2afe4f445d.sol",
+      "category": "unchecked_low_level_calls",
+      "score": 3,
+      "reasoning": "The suggestion correctly identifies the unchecked call as the issue but lacks a concrete fix or code example, so while it points to the right problem, it does not fully ensure correctness or compileability without further detail.",
+      "input_tokens": 334,
+      "output_tokens": 53
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x3e013fc32a54c4c5b6991ba539dcd0ec4355c859.sol",
+      "category": "unchecked_low_level_calls",
+      "score": 4,
+      "reasoning": "The suggestion correctly identifies the unchecked call in the Command function as the critical issue and implies adding a check for its success, which would fix the vulnerability and compile under Solidity 0.4.x, but it lacks explicit code or line references reducing specificity slightly.",
+      "input_tokens": 367,
+      "output_tokens": 61
+    },
+    {
+      "contract_id": "curated_reentrancy_0x8c7777c45481dba411450c228cb692ac3d550344.sol",
+      "category": "reentrancy",
+      "score": 3,
+      "reasoning": "The suggestion correctly identifies the need to update state before the external call to prevent reentrancy but lacks specificity about which lines to change and does not provide code, so while conceptually correct, it is incomplete and does not guarantee compileability without further detail.",
+      "input_tokens": 513,
+      "output_tokens": 63
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0xe82f0742a71a02b9e9ffc142fdcb6eb1ed06fb87.sol",
+      "category": "unchecked_low_level_calls",
+      "score": 2,
+      "reasoning": "The suggestion correctly identifies the risk of silent failures from unchecked low-level calls but lacks specificity on which lines or functions to modify and does not provide a concrete fix, making it incomplete and not directly compile-ready.",
+      "input_tokens": 282,
+      "output_tokens": 53
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0xf70d589d76eebdd7c12cc5eec99f8f6fa4233b9e.sol",
+      "category": "unchecked_low_level_calls",
+      "score": 3,
+      "reasoning": "The suggestion correctly identifies the unchecked low-level call issue and advises using require on the call return, but it lacks precise line or function details and does not provide explicit code changes, making it partially specific and correct, while the recommended pattern is compatible with Solidity 0.4–0.8.",
+      "input_tokens": 307,
+      "output_tokens": 71
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x84d9ec85c9c568eb332b7226a8f826d897e0a4a8.sol",
+      "category": "unchecked_low_level_calls",
+      "score": 2,
+      "reasoning": "The suggestion correctly identifies the general issue of unchecked low-level calls but lacks specificity about which lines or functions to change and does not provide a concrete fix, making it unclear if the repair would compile or fully eliminate the vulnerability.",
+      "input_tokens": 536,
+      "output_tokens": 56
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x19cf8481ea15427a98ba3cdd6d9e14690011ab10.sol",
+      "category": "unchecked_low_level_calls",
+      "score": 2,
+      "reasoning": "The suggestion correctly identifies general issues but lacks specificity about exact lines or functions to fix and does not provide concrete code changes, making it insufficient to fully eliminate the vulnerability or guarantee compilation.",
+      "input_tokens": 585,
+      "output_tokens": 48
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0xb37f18af15bafb869a065b61fc83cfc44ed9cc27.sol",
+      "category": "unchecked_low_level_calls",
+      "score": 2,
+      "reasoning": "The suggestion correctly identifies the unchecked call issue in sendMoney but lacks a concrete fix and does not specify how to handle the call result, so while it points out the problem, it does not provide a complete, compilable, and secure solution.",
+      "input_tokens": 329,
+      "output_tokens": 61
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x2972d548497286d18e92b5fa1f8f9139e5653fd2.sol",
+      "category": "unchecked_low_level_calls",
+      "score": 2,
+      "reasoning": "The suggestion correctly identifies the unchecked call issue but lacks specificity on how to handle the call result and does not provide a concrete fix, so it may not fully eliminate the vulnerability or guarantee compilation.",
+      "input_tokens": 301,
+      "output_tokens": 50
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x524960d55174d912768678d8c606b4d50b79d7b1.sol",
+      "category": "unchecked_low_level_calls",
+      "score": 2,
+      "reasoning": "The suggestion correctly identifies the risk of unchecked low-level calls but lacks specificity on which exact line to fix and does not provide a concrete fix, making it incomplete and not guaranteed to compile as-is.",
+      "input_tokens": 372,
+      "output_tokens": 51
+    },
+    {
+      "contract_id": "curated_reentrancy_0x96edbe868531bd23a6c05e9d0c424ea64fb1b78b.sol",
+      "category": "reentrancy",
+      "score": 3,
+      "reasoning": "The suggestion correctly identifies the reentrancy issue and the need to update state before the external call but lacks specific code changes and does not address compileability or Solidity version nuances explicitly.",
+      "input_tokens": 598,
+      "output_tokens": 48
+    },
+    {
+      "contract_id": "curated_arithmetic_integer_overflow_multitx_onefunc_feasible.sol",
+      "category": "arithmetic",
+      "score": 4,
+      "reasoning": "The suggestion correctly identifies the vulnerable subtraction in the 'run' function and the need for a check to prevent underflow, which would fix the issue and compile in Solidity 0.4.23, but it lacks an explicit code fix or mention of SafeMath usage for full clarity.",
+      "input_tokens": 360,
+      "output_tokens": 69
+    },
+    {
+      "contract_id": "curated_arithmetic_integer_overflow_1.sol",
+      "category": "arithmetic",
+      "score": 4,
+      "reasoning": "The suggestion correctly identifies the vulnerable function and provides a proper overflow check that would fix the issue, but it lacks explicit integration into the existing function and minor syntax adjustments for full compilation under Solidity 0.4–0.8.",
+      "input_tokens": 329,
+      "output_tokens": 58
+    },
+    {
+      "contract_id": "curated_denial_of_service_send_loop.sol",
+      "category": "denial_of_service",
+      "score": 3,
+      "reasoning": "The suggestion correctly identifies the vulnerable function and issue but lacks a concrete fix or code example, so while conceptually correct, it does not provide a directly compilable or specific repair.",
+      "input_tokens": 454,
+      "output_tokens": 48
+    },
+    {
+      "contract_id": "curated_time_manipulation_governmental_survey.sol",
+      "category": "time_manipulation",
+      "score": 1,
+      "reasoning": "The suggestion is vague, does not specify any code changes or functions to modify, and thus provides no actionable fix or guarantee of eliminating the vulnerability or maintaining compileability.",
+      "input_tokens": 470,
+      "output_tokens": 45
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_etherpot_lotto.sol",
+      "category": "unchecked_low_level_calls",
+      "score": 3,
+      "reasoning": "The suggestion correctly identifies the unchecked low-level call issue and the need to check transfer success, but it lacks specificity about exact lines or functions to modify and does not provide code, so while conceptually correct, it is incomplete and does not guarantee compileability without further detail.",
+      "input_tokens": 540,
+      "output_tokens": 66
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_mishandled.sol",
+      "category": "unchecked_low_level_calls",
+      "score": 4,
+      "reasoning": "The suggestion correctly identifies the unchecked send call as the issue and implies handling its return value, which eliminates the vulnerability and compiles in Solidity 0.4–0.8, but it lacks explicit code or line reference for the fix.",
+      "input_tokens": 292,
+      "output_tokens": 58
+    },
+    {
+      "contract_id": "curated_front_running_FindThisHash.sol",
+      "category": "front_running",
+      "score": 3,
+      "reasoning": "The suggestion correctly identifies the front-running issue and general mitigation strategies but lacks specific code changes or line references and does not provide a compilable fix.",
+      "input_tokens": 381,
+      "output_tokens": 39
+    },
+    {
+      "contract_id": "curated_arithmetic_token.sol",
+      "category": "arithmetic",
+      "score": 3,
+      "reasoning": "The suggestion correctly identifies the ineffective require check and the need for SafeMath but lacks specificity on exact code changes and does not provide a complete fix, though the implied use of SafeMath would compile in Solidity 0.4.18.",
+      "input_tokens": 421,
+      "output_tokens": 58
+    },
+    {
+      "contract_id": "curated_denial_of_service_auction.sol",
+      "category": "denial_of_service",
+      "score": 2,
+      "reasoning": "The suggestion correctly identifies the root cause of the denial of service but fails to provide a specific code change or alternative refund mechanism, and without code it is unclear if the fix would compile or fully resolve the issue.",
+      "input_tokens": 445,
+      "output_tokens": 54
+    },
+    {
+      "contract_id": "curated_reentrancy_reentrance.sol",
+      "category": "reentrancy",
+      "score": 2,
+      "reasoning": "The suggestion correctly identifies the reentrancy issue and improper call handling but lacks a concrete fix or specific code changes, making it incomplete and insufficient for compilation or full vulnerability elimination.",
+      "input_tokens": 435,
+      "output_tokens": 47
+    },
+    {
+      "contract_id": "curated_bad_randomness_random_number_generator.sol",
+      "category": "bad_randomness",
+      "score": 2,
+      "reasoning": "The suggestion correctly identifies the lack of safe randomness but lacks specificity on code changes and does not provide a compileable fix, reducing its overall usefulness.",
+      "input_tokens": 438,
+      "output_tokens": 40
+    },
+    {
+      "contract_id": "curated_arithmetic_tokensalechallenge.sol",
+      "category": "arithmetic",
+      "score": 2,
+      "reasoning": "The suggestion correctly notes the lack of SafeMath and proper state update order but fails to specify exact lines or functions to modify and does not provide concrete code changes, limiting its usefulness and completeness.",
+      "input_tokens": 451,
+      "output_tokens": 50
+    },
+    {
+      "contract_id": "curated_bad_randomness_etheraffle.sol",
+      "category": "bad_randomness",
+      "score": 2,
+      "reasoning": "The suggestion correctly identifies a real issue with unchecked transfer calls but does not address the primary bad randomness vulnerability or specify exact lines/functions, and adding checks for transfer return values in Solidity 0.4.x requires careful handling to compile properly.",
+      "input_tokens": 570,
+      "output_tokens": 58
+    },
+    {
+      "contract_id": "curated_front_running_ERC20.sol",
+      "category": "front_running",
+      "score": 2,
+      "reasoning": "The suggestion correctly identifies the general vulnerability and the use of SafeMath but lacks specificity on which lines or functions to change and does not provide a concrete fix to prevent front-running allowance issues, thus it is incomplete and does not guarantee compilation or full vulnerability elimination.",
+      "input_tokens": 642,
+      "output_tokens": 63
+    },
+    {
+      "contract_id": "curated_denial_of_service_dos_number.sol",
+      "category": "denial_of_service",
+      "score": 2,
+      "reasoning": "The suggestion correctly identifies the problematic function and issue but lacks concrete code changes to fix the vulnerability and does not address compileability or provide a specific repair, resulting in low completeness and practical utility.",
+      "input_tokens": 501,
+      "output_tokens": 48
+    },
+    {
+      "contract_id": "curated_access_control_phishable.sol",
+      "category": "access_control",
+      "score": 2,
+      "reasoning": "The suggestion correctly identifies the misuse of tx.origin in withdrawAll but does not specify a concrete fix or replacement code, so while it points out the issue, it lacks actionable detail and does not guarantee compileability without further guidance.",
+      "input_tokens": 305,
+      "output_tokens": 56
+    },
+    {
+      "contract_id": "curated_bad_randomness_smart_billions.sol",
+      "category": "bad_randomness",
+      "score": 2,
+      "reasoning": "The suggestion correctly highlights potential reentrancy risks and the need for protection but lacks specificity on exact lines or code changes and does not directly address the bad randomness vulnerability, making it an incomplete and partially relevant fix that may compile if implemented properly.",
+      "input_tokens": 642,
+      "output_tokens": 60
+    },
+    {
+      "contract_id": "curated_arithmetic_insecure_transfer.sol",
+      "category": "arithmetic",
+      "score": 4,
+      "reasoning": "The suggestion correctly identifies the need for overflow checks in the transfer function but lacks explicit line references and code examples, though using SafeMath or Solidity 0.8+ built-ins would effectively fix the issue and compile properly in the specified versions.",
+      "input_tokens": 328,
+      "output_tokens": 58
+    },
+    {
+      "contract_id": "curated_arithmetic_overflow_single_tx.sol",
+      "category": "arithmetic",
+      "score": 3,
+      "reasoning": "The suggestion correctly identifies the vulnerable functions but lacks specific code changes and does not mention SafeMath imports or Solidity version compatibility, so while conceptually correct, it is incomplete and may not compile as-is.",
+      "input_tokens": 565,
+      "output_tokens": 52
+    },
+    {
+      "contract_id": "curated_bad_randomness_blackjack.sol",
+      "category": "bad_randomness",
+      "score": 1,
+      "reasoning": "The suggestion is unrelated to the bad randomness vulnerability and does not specify any lines or functions to change, nor does it address the core issue or provide a compileable fix.",
+      "input_tokens": 676,
+      "output_tokens": 46
+    },
+    {
+      "contract_id": "curated_bad_randomness_old_blockhash.sol",
+      "category": "bad_randomness",
+      "score": 2,
+      "reasoning": "The suggestion correctly identifies the use of blockhash as the vulnerability but lacks specificity on how to change the code and does not provide a concrete fix, so while it points out the issue, it does not ensure elimination of the vulnerability or compile-ready code.",
+      "input_tokens": 507,
+      "output_tokens": 62
+    },
+    {
+      "contract_id": "curated_access_control_parity_wallet_bug_1.sol",
+      "category": "access_control",
+      "score": 2,
+      "reasoning": "The suggestion is generic and does not specify exact lines or functions to change, partially addresses reentrancy risks but does not directly fix access control issues, and is broadly compatible with Solidity 0.4–0.8 but lacks concrete code changes to verify compilation.",
+      "input_tokens": 548,
+      "output_tokens": 65
+    },
+    {
+      "contract_id": "curated_access_control_arbitrary_location_write_simple.sol",
+      "category": "access_control",
+      "score": 5,
+      "reasoning": "The suggestion specifically targets the PopBonusCode function, correctly adds an owner check to prevent unauthorized access and underflow, and the fix is compatible with Solidity 0.4.25 syntax, thus fully addressing the vulnerability.",
+      "input_tokens": 452,
+      "output_tokens": 56
+    },
+    {
+      "contract_id": "curated_denial_of_service_list_dos.sol",
+      "category": "denial_of_service",
+      "score": 3,
+      "reasoning": "The suggestion correctly identifies the unchecked send calls as problematic but lacks specific line references or concrete code fixes, and while the advice is valid, it does not provide a complete, compilable repair under Solidity 0.4–0.8.",
+      "input_tokens": 553,
+      "output_tokens": 60
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_unchecked_return_value.sol",
+      "category": "unchecked_low_level_calls",
+      "score": 5,
+      "reasoning": "The suggestion correctly identifies the vulnerable function and line, proposes a fix that checks the call return value to eliminate the vulnerability, and the pattern is compatible with Solidity 0.4.25 compilation.",
+      "input_tokens": 324,
+      "output_tokens": 51
+    },
+    {
+      "contract_id": "curated_arithmetic_overflow_simple_add.sol",
+      "category": "arithmetic",
+      "score": 2,
+      "reasoning": "The suggestion correctly identifies the vulnerability but lacks specificity on how to fix it and does not provide a concrete, compileable code fix for Solidity 0.4.25.",
+      "input_tokens": 306,
+      "output_tokens": 46
+    },
+    {
+      "contract_id": "curated_access_control_incorrect_constructor_name3.sol",
+      "category": "access_control",
+      "score": 2,
+      "reasoning": "The suggestion correctly identifies the access control issue but lacks specificity on the exact fix (renaming the constructor) and does not provide a compile-ready solution.",
+      "input_tokens": 309,
+      "output_tokens": 41
+    },
+    {
+      "contract_id": "curated_arithmetic_integer_overflow_add.sol",
+      "category": "arithmetic",
+      "score": 2,
+      "reasoning": "The suggestion correctly identifies the vulnerable operation but lacks a concrete fix or code changes, so it is specific and correct in diagnosis but does not provide a compilable repair.",
+      "input_tokens": 316,
+      "output_tokens": 45
+    },
+    {
+      "contract_id": "curated_other_crypto_roulette.sol",
+      "category": "other",
+      "score": 1,
+      "reasoning": "The suggestion does not address the uninitialized storage pointer vulnerability in the play() function, lacks specificity on which lines to change, and does not provide any code fix, so it neither eliminates the issue nor ensures compileability.",
+      "input_tokens": 531,
+      "output_tokens": 56
+    },
+    {
+      "contract_id": "curated_access_control_unprotected0.sol",
+      "category": "access_control",
+      "score": 5,
+      "reasoning": "The suggestion precisely identifies the changeOwner function as lacking access control, correctly proposes adding the onlyowner modifier to fix the vulnerability, and the modified code compiles under Solidity 0.4.15 as shown in the commented fixed function.",
+      "input_tokens": 368,
+      "output_tokens": 58
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_king_of_the_ether_throne.sol",
+      "category": "unchecked_low_level_calls",
+      "score": 3,
+      "reasoning": "The suggestion correctly identifies the need to check call success to fix unchecked low-level calls but lacks specificity about exact lines or functions and does not provide concrete code changes, though the concept is valid and compatible with Solidity 0.4–0.8.",
+      "input_tokens": 577,
+      "output_tokens": 62
+    },
+    {
+      "contract_id": "curated_reentrancy_simple_dao.sol",
+      "category": "reentrancy",
+      "score": 4,
+      "reasoning": "The suggestion correctly identifies the need to update state before the external call or use a reentrancy guard, which effectively prevents the vulnerability, but it lacks explicit line or function references and code examples for full specificity and compile-ready guidance.",
+      "input_tokens": 330,
+      "output_tokens": 57
+    },
+    {
+      "contract_id": "curated_access_control_incorrect_constructor_name2.sol",
+      "category": "access_control",
+      "score": 3,
+      "reasoning": "The suggestion correctly identifies the access control issue but lacks specificity on fixing the constructor name and does not provide a concrete fix, so while conceptually correct, it is incomplete and may not compile as-is.",
+      "input_tokens": 307,
+      "output_tokens": 50
+    },
+    {
+      "contract_id": "curated_time_manipulation_roulette.sol",
+      "category": "time_manipulation",
+      "score": 1,
+      "reasoning": "The suggestion does not address the time manipulation vulnerability or specify code changes, only comments on transfer safety, thus failing specificity and correctness despite compileability.",
+      "input_tokens": 377,
+      "output_tokens": 41
+    },
+    {
+      "contract_id": "curated_denial_of_service_dos_address.sol",
+      "category": "denial_of_service",
+      "score": 2,
+      "reasoning": "The suggestion correctly identifies the general vulnerability and mitigation approach but lacks specificity on which lines or functions to modify and does not provide concrete code changes, making it incomplete and unverifiable for compilation.",
+      "input_tokens": 409,
+      "output_tokens": 49
+    },
+    {
+      "contract_id": "curated_front_running_eth_tx_order_dependence_minimal.sol",
+      "category": "front_running",
+      "score": 2,
+      "reasoning": "The suggestion correctly identifies the front-running issue but lacks specific code changes or functions to modify, and does not provide a concrete fix that would compile or fully eliminate the vulnerability.",
+      "input_tokens": 410,
+      "output_tokens": 46
+    },
+    {
+      "contract_id": "curated_access_control_multiowned_vulnerable.sol",
+      "category": "access_control",
+      "score": 5,
+      "reasoning": "The suggestion precisely identifies the newOwner function as missing the onlyOwner modifier, correctly fixes the access control vulnerability, and the resulting code remains compatible with Solidity 0.4–0.8.",
+      "input_tokens": 547,
+      "output_tokens": 51
+    },
+    {
+      "contract_id": "curated_access_control_simple_suicide.sol",
+      "category": "access_control",
+      "score": 4,
+      "reasoning": "The suggestion correctly identifies the vulnerable function and the need for access control to prevent unauthorized selfdestruct calls, but it lacks explicit code for the fix and does not specify the exact lines to modify, though the concept is clear and would compile if implemented properly.",
+      "input_tokens": 276,
+      "output_tokens": 62
+    },
+    {
+      "contract_id": "curated_arithmetic_timelock.sol",
+      "category": "arithmetic",
+      "score": 3,
+      "reasoning": "The suggestion correctly identifies the arithmetic vulnerability in increaseLockTime but lacks specificity on the fix implementation and does not provide code, so while conceptually correct, it is incomplete and may not compile as-is.",
+      "input_tokens": 373,
+      "output_tokens": 52
+    },
+    {
+      "contract_id": "curated_arithmetic_integer_overflow_mapping_sym_1.sol",
+      "category": "arithmetic",
+      "score": 4,
+      "reasoning": "The suggestion correctly identifies the vulnerable subtraction in the init function and recommends adding safety checks or SafeMath to prevent underflow, which would fix the issue and compile under Solidity 0.4.11, but it lacks explicit code or line-level fix details for full specificity.",
+      "input_tokens": 345,
+      "output_tokens": 66
+    },
+    {
+      "contract_id": "curated_access_control_mycontract.sol",
+      "category": "access_control",
+      "score": 5,
+      "reasoning": "The suggestion precisely identifies the vulnerable line in sendTo, correctly advises replacing tx.origin with msg.sender to fix the access control issue, and the resulting code compiles cleanly in Solidity 0.4.24.",
+      "input_tokens": 336,
+      "output_tokens": 54
+    },
+    {
+      "contract_id": "curated_arithmetic_integer_overflow_multitx_multifunc_feasible.sol",
+      "category": "arithmetic",
+      "score": 3,
+      "reasoning": "The suggestion correctly identifies the arithmetic underflow issue in the 'run' function but lacks a concrete fix or code example, so while it points to the right problem, it does not provide a complete, compileable solution.",
+      "input_tokens": 321,
+      "output_tokens": 56
+    },
+    {
+      "contract_id": "curated_access_control_rubixi.sol",
+      "category": "access_control",
+      "score": 4,
+      "reasoning": "The suggestion correctly identifies the misnamed constructor 'DynamicPyramid' as the root cause of the access control issue and notes the unchecked call vulnerability, providing specific and accurate guidance that would compile and fix the problem, though it could be more explicit about the exact line numbers and replacement code.",
+      "input_tokens": 553,
+      "output_tokens": 69
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_lotto.sol",
+      "category": "unchecked_low_level_calls",
+      "score": 4,
+      "reasoning": "The suggestion correctly identifies the need to check send() return values to prevent silent failures, applies specifically to the sendToWinner and withdrawLeftOver functions, and the fix is compatible with Solidity 0.4–0.8, though it could be more explicit about exact code changes.",
+      "input_tokens": 355,
+      "output_tokens": 69
+    },
+    {
+      "contract_id": "curated_arithmetic_integer_overflow_mul.sol",
+      "category": "arithmetic",
+      "score": 3,
+      "reasoning": "The suggestion correctly identifies the vulnerability and the need for overflow checks but lacks specific code changes or SafeMath usage details, and does not provide a directly compilable fix for Solidity 0.4.19.",
+      "input_tokens": 322,
+      "output_tokens": 53
+    },
+    {
+      "contract_id": "curated_access_control_parity_wallet_bug_2.sol",
+      "category": "access_control",
+      "score": 2,
+      "reasoning": "The suggestion correctly highlights general best practices but lacks specificity about which lines or functions to change and does not directly address the access control vulnerability, making it only partially helpful and not guaranteed to compile without concrete code changes.",
+      "input_tokens": 524,
+      "output_tokens": 54
+    },
+    {
+      "contract_id": "curated_access_control_wallet_02_refund_nosub.sol",
+      "category": "access_control",
+      "score": 2,
+      "reasoning": "The suggestion correctly points out general safe patterns but lacks specificity on which lines to change and does not provide a concrete fix, so while it hints at the right direction, it does not ensure elimination of the vulnerability or guarantee compileability as-is.",
+      "input_tokens": 448,
+      "output_tokens": 60
+    },
+    {
+      "contract_id": "curated_arithmetic_integer_overflow_minimal.sol",
+      "category": "arithmetic",
+      "score": 4,
+      "reasoning": "The suggestion correctly identifies the vulnerable subtraction in the run function and the need for underflow checks or SafeMath usage, which would fix the issue and compile in Solidity 0.4.19, but it lacks explicit code-level specificity on the exact fix implementation.",
+      "input_tokens": 342,
+      "output_tokens": 64
+    },
+    {
+      "contract_id": "curated_front_running_odds_and_evens.sol",
+      "category": "front_running",
+      "score": 2,
+      "reasoning": "The suggestion correctly points out potential silent failures in fund transfers but lacks specificity on which lines to change and does not address the core front-running vulnerability, though the implied fix would compile in Solidity 0.4–0.8.",
+      "input_tokens": 460,
+      "output_tokens": 58
+    },
+    {
+      "contract_id": "curated_reentrancy_modifier_reentrancy.sol",
+      "category": "reentrancy",
+      "score": 3,
+      "reasoning": "The suggestion correctly identifies the external call in the supportsToken modifier as the reentrancy source but lacks a concrete fix or code changes, so while it points to the vulnerable function, it does not provide a complete, compilable solution that eliminates the vulnerability.",
+      "input_tokens": 561,
+      "output_tokens": 63
+    },
+    {
+      "contract_id": "curated_bad_randomness_lucky_doubler.sol",
+      "category": "bad_randomness",
+      "score": 1,
+      "reasoning": "The suggestion addresses only naming and style of the access control modifier without specifying lines or functions and does not fix the core bad randomness vulnerability, nor does it ensure compilation improvements relevant to the issue.",
+      "input_tokens": 546,
+      "output_tokens": 50
+    },
+    {
+      "contract_id": "curated_access_control_wallet_04_confused_sign.sol",
+      "category": "access_control",
+      "score": 5,
+      "reasoning": "The suggestion precisely identifies the incorrect comparison in withdraw(), correctly fixes the access control flaw by changing to 'amount <= balances[msg.sender]', and the code remains compatible with Solidity 0.4.24.",
+      "input_tokens": 436,
+      "output_tokens": 52
+    }
+  ],
+  "score_stats": {
+    "n": 117,
+    "avg": 2.906,
+    "min": 1,
+    "max": 5,
+    "distribution": {
+      "1": 5,
+      "2": 43,
+      "3": 36,
+      "4": 24,
+      "5": 9
+    }
+  },
+  "cumulative_input_tokens": 52394,
+  "cumulative_output_tokens": 6589,
+  "cumulative_cost_usd": 0.0315
+}
