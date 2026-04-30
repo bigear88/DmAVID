@@ -1,0 +1,146 @@
+{
+  "experiment": "agent_leaveoneout_ablation",
+  "timestamp": "2026-04-30T22:43:20.499960",
+  "full_dmavid_f1": 0.9121,
+  "full_dmavid_source": "experiments/ablation/ablation_v5_clean_self-verify_details.json",
+  "removable_threshold_pp": 0.005,
+  "leave_one_out": {
+    "teacher": {
+      "f1": 0.7474,
+      "metrics": {
+        "total": 243,
+        "tp": 142,
+        "fn": 1,
+        "fp": 95,
+        "tn": 5,
+        "accuracy": 0.6049,
+        "precision": 0.5992,
+        "recall": 0.993,
+        "f1_score": 0.7474,
+        "fpr": 0.95,
+        "specificity": 0.05,
+        "avg_time_seconds": 2.034,
+        "avg_confidence": 0.952,
+        "total_tokens": 364206
+      },
+      "source": "experiments/llm_base/llm_base_results.json",
+      "interpretation": "等同 LLM Base（無 RAG）",
+      "marginal_contribution": 0.1647,
+      "removable": false
+    },
+    "student": {
+      "f1": 0.0,
+      "metrics": null,
+      "source": "n/a (框架不存在)",
+      "interpretation": "Student 為核心 LLM 引擎，移除後框架無法運行",
+      "marginal_contribution": 0.9121,
+      "removable": false
+    },
+    "red_team": {
+      "f1": 0.7454,
+      "metrics": {
+        "total": 243,
+        "tp": 142,
+        "fp": 96,
+        "tn": 4,
+        "fn": 1,
+        "precision": 0.5966,
+        "recall": 0.993,
+        "f1": 0.7454,
+        "accuracy": 0.6008,
+        "total_input_tokens": 323273,
+        "total_output_tokens": 40579,
+        "total_tokens": 363852,
+        "estimated_cost_usd": 0.1942,
+        "total_time_seconds": 586.28,
+        "avg_time_per_call_seconds": 2.413,
+        "error_count": 0,
+        "f1_ci_low": 0.6921,
+        "f1_ci_high": 0.7899
+      },
+      "source": "experiments/prompt_ablation/V1_baseline_results.json",
+      "interpretation": "等同 V1_baseline（無 adversarial iteration）",
+      "marginal_contribution": 0.1667,
+      "removable": false
+    },
+    "blue_team": {
+      "f1": 0.9061,
+      "metrics": {
+        "total": 243,
+        "tp": 140,
+        "fn": 3,
+        "fp": 26,
+        "tn": 74,
+        "accuracy": 0.8807,
+        "precision": 0.8434,
+        "recall": 0.979,
+        "f1_score": 0.9061,
+        "fpr": 0.26,
+        "specificity": 0.74,
+        "avg_time_seconds": 3.084,
+        "avg_confidence": 0.92,
+        "total_tokens": 427535
+      },
+      "source": "experiments/llm_rag/llm_rag_results.json",
+      "interpretation": "等同 LLM+RAG only（無 critique / self-verify）",
+      "marginal_contribution": 0.006,
+      "removable": false
+    },
+    "coordinator": {
+      "f1": 0.918,
+      "metrics": {
+        "total": 243,
+        "tp": 140,
+        "fp": 22,
+        "tn": 78,
+        "fn": 3,
+        "precision": 0.8642,
+        "recall": 0.979,
+        "f1": 0.918,
+        "fpr": 0.22,
+        "actual_red_team_cost_usd": 0.3654,
+        "red_team_input_tokens": 314427,
+        "red_team_output_tokens": 149792,
+        "red_team_errors": 0,
+        "teacher_embed_tokens": 176568,
+        "teacher_embed_cost_usd": 0.003531,
+        "total_cost_usd": 0.369
+      },
+      "source": "experiments/coordinator_ablation/no_coordinator_results.json",
+      "interpretation": "4 agent 並行 + simple majority voting（NEW 實驗）",
+      "marginal_contribution": -0.0059,
+      "removable": true
+    }
+  },
+  "ranking_by_contribution": [
+    {
+      "agent": "student",
+      "marginal_contribution": 0.9121
+    },
+    {
+      "agent": "red_team",
+      "marginal_contribution": 0.1667
+    },
+    {
+      "agent": "teacher",
+      "marginal_contribution": 0.1647
+    },
+    {
+      "agent": "blue_team",
+      "marginal_contribution": 0.006
+    },
+    {
+      "agent": "coordinator",
+      "marginal_contribution": -0.0059
+    }
+  ],
+  "removable_agents": [
+    "coordinator"
+  ],
+  "essential_agents": [
+    "teacher",
+    "student",
+    "red_team",
+    "blue_team"
+  ]
+}

@@ -1,0 +1,974 @@
+{
+  "curated_reentrancy_0x941d225236464a25eb18076df7da6a91d0f95e9e.sol": {
+    "distance": 0.4918516278266907,
+    "embed_tokens": 355
+  },
+  "wild_safe_0824_0xd46883ddff92cc0474255f2f8134c63f8209171d.sol": {
+    "distance": 0.41884249448776245,
+    "embed_tokens": 1258
+  },
+  "curated_arithmetic_integer_overflow_multitx_onefunc_feasible.sol": {
+    "distance": 0.4342648983001709,
+    "embed_tokens": 147
+  },
+  "wild_safe_0451_0x139d415b5fd0981fbee78d0fa503168855b34652.sol": {
+    "distance": 0.4566042423248291,
+    "embed_tokens": 1356
+  },
+  "curated_arithmetic_integer_overflow_1.sol": {
+    "distance": 0.33200663328170776,
+    "embed_tokens": 153
+  },
+  "curated_reentrancy_0x01f8c4e3fa3edeb29e514cba738d87ce8c091d3f.sol": {
+    "distance": 0.5564244985580444,
+    "embed_tokens": 442
+  },
+  "curated_denial_of_service_send_loop.sol": {
+    "distance": 0.3875104784965515,
+    "embed_tokens": 239
+  },
+  "curated_time_manipulation_governmental_survey.sol": {
+    "distance": 0.5131617784500122,
+    "embed_tokens": 315
+  },
+  "wild_safe_0712_0x1d859ad24b62775dddb73e8990fedfd41a8e9a22.sol": {
+    "distance": 0.44937020540237427,
+    "embed_tokens": 768
+  },
+  "curated_unchecked_low_level_calls_0xdb1c55f6926e7d847ddf8678905ad871a68199d2.sol": {
+    "distance": 0.5156614780426025,
+    "embed_tokens": 264
+  },
+  "curated_unchecked_low_level_calls_0xa1fceeff3acc57d257b917e30c4df661401d6431.sol": {
+    "distance": 0.5348023176193237,
+    "embed_tokens": 211
+  },
+  "curated_unchecked_low_level_calls_0xb0510d68f210b7db66e8c7c814f22680f2b8d1d6.sol": {
+    "distance": 0.5427569150924683,
+    "embed_tokens": 898
+  },
+  "wild_safe_0323_0x357d20bb068cfc3f78642df881d7856158f94f93.sol": {
+    "distance": 0.5252781510353088,
+    "embed_tokens": 763
+  },
+  "wild_safe_0006_0xc9b3b3c9f3ff68d5c75a651136c6ee2897c936aa.sol": {
+    "distance": 0.5125361084938049,
+    "embed_tokens": 1220
+  },
+  "curated_unchecked_low_level_calls_etherpot_lotto.sol": {
+    "distance": 0.5741307139396667,
+    "embed_tokens": 1290
+  },
+  "curated_access_control_wallet_03_wrong_constructor.sol": {
+    "distance": 0.4523261785507202,
+    "embed_tokens": 243
+  },
+  "curated_unchecked_low_level_calls_mishandled.sol": {
+    "distance": 0.447210431098938,
+    "embed_tokens": 128
+  },
+  "curated_unchecked_low_level_calls_0x78c2a1e91b52bca4130b6ed9edd9fbcfd4671c37.sol": {
+    "distance": 0.5303696990013123,
+    "embed_tokens": 178
+  },
+  "curated_front_running_FindThisHash.sol": {
+    "distance": 0.5871907472610474,
+    "embed_tokens": 168
+  },
+  "wild_safe_0389_0x500f8b1ed860f37a3124994608cec1fef481ab8a.sol": {
+    "distance": 0.4528822898864746,
+    "embed_tokens": 1521
+  },
+  "curated_arithmetic_token.sol": {
+    "distance": 0.3890048861503601,
+    "embed_tokens": 195
+  },
+  "wild_safe_0479_0xdcf8bb5c9cb9b2846f240d063fe6ea880fda297b.sol": {
+    "distance": 0.5217790603637695,
+    "embed_tokens": 1469
+  },
+  "curated_reentrancy_0x7b368c4e805c3870b6c49a3f1f49f69af8662cf3.sol": {
+    "distance": 0.5657614469528198,
+    "embed_tokens": 385
+  },
+  "curated_denial_of_service_auction.sol": {
+    "distance": 0.4322134852409363,
+    "embed_tokens": 214
+  },
+  "wild_safe_0718_0x20c476bb4c7aa64f919278fb9c09e880583beb4c.sol": {
+    "distance": 0.5020703077316284,
+    "embed_tokens": 372
+  },
+  "curated_unchecked_low_level_calls_0x4a66ad0bca2d700f11e1f2fc2c106f7d3264504c.sol": {
+    "distance": 0.4879450798034668,
+    "embed_tokens": 252
+  },
+  "wild_safe_0830_0x2edb2235bd850f72e417c2d191e7c305650d8d13.sol": {
+    "distance": 0.4951581358909607,
+    "embed_tokens": 205
+  },
+  "wild_safe_0258_0x1ca8ddc12e6618d007740c2bca92d2e69d84bec5.sol": {
+    "distance": 0.44557422399520874,
+    "embed_tokens": 1506
+  },
+  "wild_safe_0007_0x25127edc1d0985c83186c8e3d1ea0f80dd360dfe.sol": {
+    "distance": 0.4494783878326416,
+    "embed_tokens": 770
+  },
+  "wild_safe_0266_0x6ed0e1c20bf3ff8384570de742cf98cd08f2a012.sol": {
+    "distance": 0.4336221218109131,
+    "embed_tokens": 1462
+  },
+  "wild_safe_0785_0x3f6a224f0a6350dc9ccfee200e21b011a37957b1.sol": {
+    "distance": 0.42066246271133423,
+    "embed_tokens": 1081
+  },
+  "curated_unchecked_low_level_calls_0xb11b2fed6c9354f7aa2f658d3b4d7b31d8a13b77.sol": {
+    "distance": 0.47085487842559814,
+    "embed_tokens": 251
+  },
+  "wild_safe_0152_0xfac1c7270bc5b0664e27e7f2e82281d564aedf4e.sol": {
+    "distance": 0.6730632781982422,
+    "embed_tokens": 231
+  },
+  "curated_unchecked_low_level_calls_0xbebbfe5b549f5db6e6c78ca97cac19d1fb03082c.sol": {
+    "distance": 0.4656674265861511,
+    "embed_tokens": 251
+  },
+  "curated_reentrancy_reentrance.sol": {
+    "distance": 0.3622729778289795,
+    "embed_tokens": 202
+  },
+  "wild_safe_0119_0x3d9c6c5a7b2b2744870166eac237bd6e366fa3ef.sol": {
+    "distance": 0.4884719252586365,
+    "embed_tokens": 1734
+  },
+  "curated_reentrancy_0x23a91059fdc9579a9fbd0edc5f2ea0bfdb70deb4.sol": {
+    "distance": 0.5247206091880798,
+    "embed_tokens": 325
+  },
+  "curated_bad_randomness_random_number_generator.sol": {
+    "distance": 0.37932515144348145,
+    "embed_tokens": 268
+  },
+  "wild_safe_0228_0xd4a293ae8bb9e0be12e99eb19d48239e8c83a136.sol": {
+    "distance": 0.4223480820655823,
+    "embed_tokens": 1497
+  },
+  "wild_safe_0283_0xecc3a47f5d0ac33db287d8f9debf03830853cbb9.sol": {
+    "distance": 0.38616639375686646,
+    "embed_tokens": 1485
+  },
+  "curated_unchecked_low_level_calls_0xd2018bfaa266a9ec0a1a84b061640faa009def76.sol": {
+    "distance": 0.532501220703125,
+    "embed_tokens": 162
+  },
+  "wild_safe_0229_0xcc27ce64cf6f807cebfac616ccfe512641fa503d.sol": {
+    "distance": 0.5487418174743652,
+    "embed_tokens": 163
+  },
+  "curated_arithmetic_tokensalechallenge.sol": {
+    "distance": 0.4400328993797302,
+    "embed_tokens": 260
+  },
+  "wild_safe_0301_0x9eeab220e44410c16ac80c12830bc11af7dd5c6e.sol": {
+    "distance": 0.44557422399520874,
+    "embed_tokens": 1506
+  },
+  "curated_bad_randomness_etheraffle.sol": {
+    "distance": 0.5593003034591675,
+    "embed_tokens": 1216
+  },
+  "curated_reentrancy_0x4320e6f8c05b27ab4707cd1f6d5ce6f3e4b3a5a1.sol": {
+    "distance": 0.5432236194610596,
+    "embed_tokens": 444
+  },
+  "curated_front_running_ERC20.sol": {
+    "distance": 0.43085408210754395,
+    "embed_tokens": 928
+  },
+  "curated_denial_of_service_dos_number.sol": {
+    "distance": 0.4839429259300232,
+    "embed_tokens": 278
+  },
+  "wild_safe_0471_0x7273ae7182cc1d942f2a8805951f23f4f74e1797.sol": {
+    "distance": 0.5188312530517578,
+    "embed_tokens": 443
+  },
+  "curated_unchecked_low_level_calls_0x806a6bd219f162442d992bdc4ee6eba1f2c5a707.sol": {
+    "distance": 0.549910306930542,
+    "embed_tokens": 223
+  },
+  "wild_safe_0127_0xef64c6b4f189d2053b8a00a23c725475fc509884.sol": {
+    "distance": 0.5580313205718994,
+    "embed_tokens": 1487
+  },
+  "curated_reentrancy_0xbe4041d55db380c5ae9d4a9b9703f1ed4e7e3888.sol": {
+    "distance": 0.5778249502182007,
+    "embed_tokens": 461
+  },
+  "wild_safe_0813_0x80623c126ce442980666ef38a72ec7b9e80f4706.sol": {
+    "distance": 0.510182797908783,
+    "embed_tokens": 1397
+  },
+  "curated_reentrancy_0x7a8721a9d64c74da899424c1b52acbf58ddc9782.sol": {
+    "distance": 0.5141633749008179,
+    "embed_tokens": 375
+  },
+  "wild_safe_0765_0x90527aae61e861cd308560d19e25de66f918d747.sol": {
+    "distance": 0.4512571692466736,
+    "embed_tokens": 1471
+  },
+  "wild_safe_0075_0x0a6f2d9d82baef6dd0f3a2f4679287680aad1fc0.sol": {
+    "distance": 0.44894278049468994,
+    "embed_tokens": 773
+  },
+  "wild_safe_0810_0xba4dbdb36d398586c4de0537e53d47b12ac86c73.sol": {
+    "distance": 0.4448331594467163,
+    "embed_tokens": 762
+  },
+  "curated_denial_of_service_dos_simple.sol": {
+    "distance": 0.46999192237854004,
+    "embed_tokens": 149
+  },
+  "curated_reentrancy_reentrancy_dao.sol": {
+    "distance": 0.31640326976776123,
+    "embed_tokens": 174
+  },
+  "wild_safe_0174_0x959225d25f645b9c66498ef99ce39911fc1dced9.sol": {
+    "distance": 0.45406925678253174,
+    "embed_tokens": 1100
+  },
+  "curated_access_control_phishable.sol": {
+    "distance": 0.4805406332015991,
+    "embed_tokens": 117
+  },
+  "curated_bad_randomness_smart_billions.sol": {
+    "distance": 0.4744558334350586,
+    "embed_tokens": 1492
+  },
+  "curated_arithmetic_insecure_transfer.sol": {
+    "distance": 0.2992202043533325,
+    "embed_tokens": 154
+  },
+  "curated_arithmetic_overflow_single_tx.sol": {
+    "distance": 0.3600223660469055,
+    "embed_tokens": 363
+  },
+  "curated_reentrancy_0x93c32845fae42c83a70e5f06214c8433665c2ab5.sol": {
+    "distance": 0.5572173595428467,
+    "embed_tokens": 385
+  },
+  "curated_access_control_FibonacciBalance.sol": {
+    "distance": 0.5606951713562012,
+    "embed_tokens": 425
+  },
+  "wild_safe_0388_0x30ed9d2a07f4a79557c8e75ad4d95071a18af0bc.sol": {
+    "distance": 0.42617255449295044,
+    "embed_tokens": 1392
+  },
+  "wild_safe_0436_0x43567eb78638a55bbe51e9f9fb5b2d7ad1f125aa.sol": {
+    "distance": 0.48793041706085205,
+    "embed_tokens": 1056
+  },
+  "curated_access_control_incorrect_constructor_name1.sol": {
+    "distance": 0.46223604679107666,
+    "embed_tokens": 165
+  },
+  "wild_safe_0474_0x78c292d1445e6b9558bf42e8bc369271ded062ea.sol": {
+    "distance": 0.4709817171096802,
+    "embed_tokens": 1388
+  },
+  "wild_safe_0257_0xb51088f5f37286b5c3462043200a0ce9aee71459.sol": {
+    "distance": 0.45700037479400635,
+    "embed_tokens": 1467
+  },
+  "curated_short_addresses_short_address_example.sol": {
+    "distance": 0.4129461646080017,
+    "embed_tokens": 191
+  },
+  "curated_unchecked_low_level_calls_0xe894d54dca59cb53fe9cbc5155093605c7068220.sol": {
+    "distance": 0.4950101375579834,
+    "embed_tokens": 158
+  },
+  "curated_unchecked_low_level_calls_0x52d2e0f9b01101a59b38a3d05c80b7618aeed984.sol": {
+    "distance": 0.4476041793823242,
+    "embed_tokens": 189
+  },
+  "wild_safe_0790_0xb70010ea4aa80292bbc49a2c8fac361d3c7f32df.sol": {
+    "distance": 0.5222062468528748,
+    "embed_tokens": 1324
+  },
+  "curated_unchecked_low_level_calls_0xb7c5c5aa4d42967efe906e1b66cb8df9cebf04f7.sol": {
+    "distance": 0.42903709411621094,
+    "embed_tokens": 161
+  },
+  "curated_unchecked_low_level_calls_0xd5967fed03e85d1cce44cab284695b41bc675b5c.sol": {
+    "distance": 0.5359829664230347,
+    "embed_tokens": 137
+  },
+  "curated_unchecked_low_level_calls_0x5aa88d2901c68fda244f1d0584400368d2c8e739.sol": {
+    "distance": 0.5283403396606445,
+    "embed_tokens": 177
+  },
+  "curated_bad_randomness_lottery.sol": {
+    "distance": 0.4699298143386841,
+    "embed_tokens": 447
+  },
+  "wild_safe_0184_0x9c78afb1b50170761fa2c842701e66e80e67d438.sol": {
+    "distance": 0.44887036085128784,
+    "embed_tokens": 1349
+  },
+  "curated_reentrancy_0xb93430ce38ac4a6bb47fb1fc085ea669353fd89e.sol": {
+    "distance": 0.5278375148773193,
+    "embed_tokens": 325
+  },
+  "curated_bad_randomness_blackjack.sol": {
+    "distance": 0.6136680841445923,
+    "embed_tokens": 1777
+  },
+  "wild_safe_0033_0x77550f6f32a5d809b899a1d661df31a1636db73a.sol": {
+    "distance": 0.42128753662109375,
+    "embed_tokens": 1057
+  },
+  "curated_bad_randomness_old_blockhash.sol": {
+    "distance": 0.313881516456604,
+    "embed_tokens": 315
+  },
+  "curated_access_control_proxy.sol": {
+    "distance": 0.45682138204574585,
+    "embed_tokens": 123
+  },
+  "curated_access_control_parity_wallet_bug_1.sol": {
+    "distance": 0.4179540276527405,
+    "embed_tokens": 1490
+  },
+  "wild_safe_0655_0xe5cfc0f15116c51f6352411ee532aeabf719ef2f.sol": {
+    "distance": 0.44327110052108765,
+    "embed_tokens": 925
+  },
+  "wild_safe_0021_0x2fe0bc5ffb80a84739da913f0a393a4b0cce661b.sol": {
+    "distance": 0.5171194076538086,
+    "embed_tokens": 1494
+  },
+  "wild_safe_0142_0x57f854ba5baf019ec3a77f81c2966fd0d8905a38.sol": {
+    "distance": 0.5691795349121094,
+    "embed_tokens": 1411
+  },
+  "curated_reentrancy_0x7541b76cb60f4c60af330c208b0623b7f54bf615.sol": {
+    "distance": 0.5733892917633057,
+    "embed_tokens": 381
+  },
+  "curated_unchecked_low_level_calls_0x4051334adc52057aca763453820cb0e045076ef3.sol": {
+    "distance": 0.5254968404769897,
+    "embed_tokens": 139
+  },
+  "wild_safe_0811_0xbe8f09ab5b0dda98db12d39fd7e6e61ea4f5d21b.sol": {
+    "distance": 0.46096086502075195,
+    "embed_tokens": 1063
+  },
+  "curated_unchecked_low_level_calls_0x70f9eddb3931491aab1aeafbc1e7f1ca2a012db4.sol": {
+    "distance": 0.5711879730224609,
+    "embed_tokens": 150
+  },
+  "curated_arithmetic_integer_overflow_benign_1.sol": {
+    "distance": 0.3652496337890625,
+    "embed_tokens": 126
+  },
+  "curated_access_control_arbitrary_location_write_simple.sol": {
+    "distance": 0.4858781099319458,
+    "embed_tokens": 245
+  },
+  "wild_safe_0286_0x24700a297960e8477ce3ca6c58b70a7af3410398.sol": {
+    "distance": 0.4720495343208313,
+    "embed_tokens": 1098
+  },
+  "wild_safe_0485_0x95c166ab3f680b909233f954e4c9310f367a20b2.sol": {
+    "distance": 0.41909313201904297,
+    "embed_tokens": 1274
+  },
+  "wild_safe_0508_0x38ba2429cc9546b389cd36c4f09209846ac15a8d.sol": {
+    "distance": 0.4812055826187134,
+    "embed_tokens": 1054
+  },
+  "wild_safe_0372_0x84684d48f9983bf959a2b4e88fb9393e90b9166f.sol": {
+    "distance": 0.47848737239837646,
+    "embed_tokens": 1318
+  },
+  "curated_unchecked_low_level_calls_0x7a4349a749e59a5736efb7826ee3496a2dfd5489.sol": {
+    "distance": 0.5411719083786011,
+    "embed_tokens": 167
+  },
+  "curated_reentrancy_0xbaf51e761510c1a11bf48dd87c0307ac8a8c8a4f.sol": {
+    "distance": 0.49908381700515747,
+    "embed_tokens": 337
+  },
+  "wild_safe_0057_0x03a2d646d36ffc371e04e840604c5ba46393dd26.sol": {
+    "distance": 0.5102683305740356,
+    "embed_tokens": 1370
+  },
+  "curated_denial_of_service_list_dos.sol": {
+    "distance": 0.5333215594291687,
+    "embed_tokens": 1099
+  },
+  "wild_safe_0836_0xb28f2d66e28a3cff06e2035757726409982a62f8.sol": {
+    "distance": 0.427335262298584,
+    "embed_tokens": 1082
+  },
+  "curated_reentrancy_reentrancy_cross_function.sol": {
+    "distance": 0.23868811130523682,
+    "embed_tokens": 207
+  },
+  "curated_unchecked_low_level_calls_0xec329ffc97d75fe03428ae155fc7793431487f63.sol": {
+    "distance": 0.41488343477249146,
+    "embed_tokens": 934
+  },
+  "wild_safe_0192_0xdd89da72119799b6faf621cde0aa697ee6353cb1.sol": {
+    "distance": 0.4783203601837158,
+    "embed_tokens": 1382
+  },
+  "curated_reentrancy_0xf015c35649c82f5467c9c74b7f28ee67665aad68.sol": {
+    "distance": 0.5727248191833496,
+    "embed_tokens": 381
+  },
+  "wild_safe_0272_0xafcbd4b0132febaaeeb9c8288e1e2a2bae63e21b.sol": {
+    "distance": 0.5072370171546936,
+    "embed_tokens": 1203
+  },
+  "curated_unchecked_low_level_calls_0x4b71ad9c1a84b9b643aa54fdd66e2dec96e8b152.sol": {
+    "distance": 0.5309605598449707,
+    "embed_tokens": 137
+  },
+  "curated_unchecked_low_level_calls_unchecked_return_value.sol": {
+    "distance": 0.3714902400970459,
+    "embed_tokens": 104
+  },
+  "curated_arithmetic_overflow_simple_add.sol": {
+    "distance": 0.41569745540618896,
+    "embed_tokens": 94
+  },
+  "curated_reentrancy_0x561eac93c92360949ab1f1403323e6db345cbf31.sol": {
+    "distance": 0.5559062957763672,
+    "embed_tokens": 401
+  },
+  "curated_time_manipulation_lottopollo.sol": {
+    "distance": 0.37923121452331543,
+    "embed_tokens": 223
+  },
+  "wild_safe_0700_0x5855d8aa8564e9dd795513cc22ca8d9e7c6bd037.sol": {
+    "distance": 0.4461682438850403,
+    "embed_tokens": 1310
+  },
+  "wild_safe_0742_0x3f45bd50104e9782d3d22986ef4a231fb87e99c8.sol": {
+    "distance": 0.4723619222640991,
+    "embed_tokens": 1356
+  },
+  "curated_unchecked_low_level_calls_0xbaa3de6504690efb064420d89e871c27065cdd52.sol": {
+    "distance": 0.46592503786087036,
+    "embed_tokens": 251
+  },
+  "curated_access_control_incorrect_constructor_name3.sol": {
+    "distance": 0.4212559461593628,
+    "embed_tokens": 136
+  },
+  "curated_unchecked_low_level_calls_0x39cfd754c85023648bf003bea2dd498c5612abfa.sol": {
+    "distance": 0.40769946575164795,
+    "embed_tokens": 458
+  },
+  "curated_reentrancy_0x627fa62ccbb1c1b04ffaecd72a53e37fc0e17839.sol": {
+    "distance": 0.4109363555908203,
+    "embed_tokens": 430
+  },
+  "curated_reentrancy_0x4e73b32ed6c35f570686b89848e5f39f20ecc106.sol": {
+    "distance": 0.5493362545967102,
+    "embed_tokens": 400
+  },
+  "curated_arithmetic_integer_overflow_add.sol": {
+    "distance": 0.3748667240142822,
+    "embed_tokens": 118
+  },
+  "wild_safe_0773_0x090b60abc45e2af60eb058a4c7f25574a1c6ae4a.sol": {
+    "distance": 0.42792588472366333,
+    "embed_tokens": 1454
+  },
+  "curated_unchecked_low_level_calls_0xe09b1ab8111c2729a76f16de96bc86a7af837928.sol": {
+    "distance": 0.5462019443511963,
+    "embed_tokens": 1487
+  },
+  "curated_unchecked_low_level_calls_0xf29ebe930a539a60279ace72c707cba851a57707.sol": {
+    "distance": 0.49471092224121094,
+    "embed_tokens": 129
+  },
+  "wild_safe_0265_0x8516b43a9b547e4692433340ca9f0a13b5d25d7f.sol": {
+    "distance": 0.5826768279075623,
+    "embed_tokens": 658
+  },
+  "curated_other_crypto_roulette.sol": {
+    "distance": 0.5053278207778931,
+    "embed_tokens": 417
+  },
+  "wild_safe_0284_0x8fd1e427396ddb511533cf9abdbebd0a7e08da35.sol": {
+    "distance": 0.4342203736305237,
+    "embed_tokens": 413
+  },
+  "curated_unchecked_low_level_calls_0xb620cee6b52f96f3c6b253e6eea556aa2d214a99.sol": {
+    "distance": 0.5315408706665039,
+    "embed_tokens": 771
+  },
+  "curated_unchecked_low_level_calls_0xa46edd6a9a93feec36576ee5048146870ea2c3ae.sol": {
+    "distance": 0.5013161897659302,
+    "embed_tokens": 139
+  },
+  "wild_safe_0314_0x2323aeb683637c15350382df63bf84ce45561aad.sol": {
+    "distance": 0.4273446798324585,
+    "embed_tokens": 1309
+  },
+  "wild_safe_0023_0x912fef2b95bed78c12faf7b33347532370d23a5d.sol": {
+    "distance": 0.5415202379226685,
+    "embed_tokens": 1386
+  },
+  "wild_safe_0233_0x99ed8fb173f6b447542d6037303b2c3b6738eeaa.sol": {
+    "distance": 0.5588365793228149,
+    "embed_tokens": 218
+  },
+  "curated_access_control_unprotected0.sol": {
+    "distance": 0.3731285333633423,
+    "embed_tokens": 173
+  },
+  "curated_unchecked_low_level_calls_0x7d09edb07d23acb532a82be3da5c17d9d85806b4.sol": {
+    "distance": 0.47820615768432617,
+    "embed_tokens": 1371
+  },
+  "wild_safe_0441_0xa2013d1688dafed6830220d73d66728be31d4c31.sol": {
+    "distance": 0.45098716020584106,
+    "embed_tokens": 1309
+  },
+  "wild_safe_0503_0x86f654cebb9bae068d0c4398d1e337b351e6523b.sol": {
+    "distance": 0.508905827999115,
+    "embed_tokens": 682
+  },
+  "wild_safe_0035_0xa8b2b20b21427d63b22bba99bb65126425666f4e.sol": {
+    "distance": 0.4180868864059448,
+    "embed_tokens": 1493
+  },
+  "curated_unchecked_low_level_calls_0x07f7ecb66d788ab01dc93b9b71a88401de7d0f2e.sol": {
+    "distance": 0.4743729829788208,
+    "embed_tokens": 1390
+  },
+  "wild_safe_0042_0x920b89c0b61ca7cf01ee58bca53670420001adf2.sol": {
+    "distance": 0.5050066113471985,
+    "embed_tokens": 974
+  },
+  "curated_reentrancy_reentrancy_bonus.sol": {
+    "distance": 0.3460569381713867,
+    "embed_tokens": 247
+  },
+  "curated_reentrancy_reentrancy_insecure.sol": {
+    "distance": 0.2915019392967224,
+    "embed_tokens": 163
+  },
+  "curated_unchecked_low_level_calls_0x0cbe050f75bc8f8c2d6c0d249fea125fd6e1acc9.sol": {
+    "distance": 0.45119351148605347,
+    "embed_tokens": 67
+  },
+  "wild_safe_0240_0xf8956d735f7a6ebb9f7a015a9396b227888b441c.sol": {
+    "distance": 0.5722044110298157,
+    "embed_tokens": 236
+  },
+  "wild_safe_0175_0x7d133a35e0c8f69e02af94acb16a9ea3d0d790d1.sol": {
+    "distance": 0.465734601020813,
+    "embed_tokens": 1451
+  },
+  "wild_safe_0566_0x0ee14f47320604d894fffffc8639772382937bee.sol": {
+    "distance": 0.3820606470108032,
+    "embed_tokens": 1485
+  },
+  "curated_unchecked_low_level_calls_king_of_the_ether_throne.sol": {
+    "distance": 0.6011119484901428,
+    "embed_tokens": 1415
+  },
+  "curated_reentrancy_0xaae1f51cf3339f18b6d3f3bdc75a5facd744b0b8.sol": {
+    "distance": 0.5410910248756409,
+    "embed_tokens": 402
+  },
+  "wild_safe_0445_0x6d081571b8dd296605d5914131937d7732e2087c.sol": {
+    "distance": 0.4156137704849243,
+    "embed_tokens": 1540
+  },
+  "curated_reentrancy_etherbank.sol": {
+    "distance": 0.42368340492248535,
+    "embed_tokens": 174
+  },
+  "wild_safe_0828_0x40607c8be5e35502b319b598350f4da745fb46af.sol": {
+    "distance": 0.4769054651260376,
+    "embed_tokens": 607
+  },
+  "curated_time_manipulation_timed_crowdsale.sol": {
+    "distance": 0.4738306403160095,
+    "embed_tokens": 120
+  },
+  "curated_unchecked_low_level_calls_0x3f2ef511aa6e75231e4deafc7a3d2ecab3741de2.sol": {
+    "distance": 0.525213360786438,
+    "embed_tokens": 178
+  },
+  "curated_reentrancy_simple_dao.sol": {
+    "distance": 0.5211575031280518,
+    "embed_tokens": 153
+  },
+  "curated_access_control_incorrect_constructor_name2.sol": {
+    "distance": 0.4243088960647583,
+    "embed_tokens": 136
+  },
+  "curated_arithmetic_BECToken.sol": {
+    "distance": 0.39652132987976074,
+    "embed_tokens": 1466
+  },
+  "curated_unchecked_low_level_calls_0x3a0e9acd953ffc0dd18d63603488846a6b8b2b01.sol": {
+    "distance": 0.41871148347854614,
+    "embed_tokens": 470
+  },
+  "curated_time_manipulation_roulette.sol": {
+    "distance": 0.4409114718437195,
+    "embed_tokens": 182
+  },
+  "wild_safe_0480_0x5ed786a050c866703e16ad621b9259553a1188a9.sol": {
+    "distance": 0.3978247046470642,
+    "embed_tokens": 1505
+  },
+  "wild_safe_0408_0x49ceb57714000f18f3749cf2d130e135f9c473a4.sol": {
+    "distance": 0.4493293762207031,
+    "embed_tokens": 1496
+  },
+  "curated_unchecked_low_level_calls_0x610495793564aed0f9c7fc48dc4c7c9151d34fd6.sol": {
+    "distance": 0.45812010765075684,
+    "embed_tokens": 172
+  },
+  "wild_safe_0048_0x4cd7d3962dae1ebb711441d0b106d66fa8adf2e8.sol": {
+    "distance": 0.3777116537094116,
+    "embed_tokens": 1393
+  },
+  "wild_safe_0839_0xb221ac6622ae5348375d0048dcff0049ebb97d89.sol": {
+    "distance": 0.5081171989440918,
+    "embed_tokens": 1303
+  },
+  "curated_denial_of_service_dos_address.sol": {
+    "distance": 0.47913581132888794,
+    "embed_tokens": 205
+  },
+  "curated_front_running_eth_tx_order_dependence_minimal.sol": {
+    "distance": 0.5173536539077759,
+    "embed_tokens": 192
+  },
+  "wild_safe_0156_0xb9701088afeaa12f323e4d619e2ff21621eb8640.sol": {
+    "distance": 0.5173434019088745,
+    "embed_tokens": 1218
+  },
+  "curated_reentrancy_0xb5e1b1ee15c6fa0e48fce100125569d430f1bd12.sol": {
+    "distance": 0.5272332429885864,
+    "embed_tokens": 332
+  },
+  "curated_access_control_multiowned_vulnerable.sol": {
+    "distance": 0.4245690703392029,
+    "embed_tokens": 366
+  },
+  "curated_unchecked_low_level_calls_0x89c1b3807d4c67df034fffb62f3509561218d30b.sol": {
+    "distance": 0.5655962824821472,
+    "embed_tokens": 1372
+  },
+  "curated_access_control_simple_suicide.sol": {
+    "distance": 0.35129374265670776,
+    "embed_tokens": 96
+  },
+  "curated_arithmetic_timelock.sol": {
+    "distance": 0.43240368366241455,
+    "embed_tokens": 199
+  },
+  "curated_unchecked_low_level_calls_0x958a8f594101d2c0485a52319f29b2647f2ebc06.sol": {
+    "distance": 0.4975946545600891,
+    "embed_tokens": 957
+  },
+  "wild_safe_0607_0x9ae3bbfb4586faec0d0fcf9505639c4eaac4d095.sol": {
+    "distance": 0.479255735874176,
+    "embed_tokens": 1563
+  },
+  "wild_safe_0515_0xf2b95d46e0e191115c5e9079c0c79a0105f36dd9.sol": {
+    "distance": 0.5836021900177002,
+    "embed_tokens": 1539
+  },
+  "wild_safe_0681_0xa18ed9da79ec3cb2cb4480315787db7c522d5911.sol": {
+    "distance": 0.4009959101676941,
+    "embed_tokens": 1424
+  },
+  "curated_arithmetic_integer_overflow_mapping_sym_1.sol": {
+    "distance": 0.386171817779541,
+    "embed_tokens": 119
+  },
+  "curated_unchecked_low_level_calls_0xe4eabdca81e31d9acbc4af76b30f532b6ed7f3bf.sol": {
+    "distance": 0.5605534315109253,
+    "embed_tokens": 164
+  },
+  "curated_reentrancy_spank_chain_payment.sol": {
+    "distance": 0.48134440183639526,
+    "embed_tokens": 1544
+  },
+  "curated_reentrancy_etherstore.sol": {
+    "distance": 0.4985371232032776,
+    "embed_tokens": 230
+  },
+  "curated_access_control_mapping_write.sol": {
+    "distance": 0.525804340839386,
+    "embed_tokens": 194
+  },
+  "wild_safe_0173_0x02b6700c0282a687d66f3e09723bed55f23d5b83.sol": {
+    "distance": 0.43552863597869873,
+    "embed_tokens": 1275
+  },
+  "wild_safe_0093_0x324a48ebcbb46e61993931ef9d35f6697cd2901b.sol": {
+    "distance": 0.44687026739120483,
+    "embed_tokens": 1327
+  },
+  "wild_safe_0085_0x9c0c8fcf7b4309113c147dd3d145e4902e7810c9.sol": {
+    "distance": 0.5277543067932129,
+    "embed_tokens": 1625
+  },
+  "curated_access_control_mycontract.sol": {
+    "distance": 0.379189670085907,
+    "embed_tokens": 128
+  },
+  "wild_safe_0853_0x582a079e8083eb38735f6fa8ed5d93e3c5e873fc.sol": {
+    "distance": 0.37511909008026123,
+    "embed_tokens": 1479
+  },
+  "wild_safe_0560_0x149b8c8e5c039d3e3c00203fcd24b0dd5596c4b2.sol": {
+    "distance": 0.4434659481048584,
+    "embed_tokens": 1211
+  },
+  "wild_safe_0096_0xb622fa46001b8ab78350ea25d6cf17349510102b.sol": {
+    "distance": 0.5255435109138489,
+    "embed_tokens": 719
+  },
+  "wild_safe_0815_0x52e2a7dbb799e402d33a36c6ecd5f0fc78c95031.sol": {
+    "distance": 0.4566698670387268,
+    "embed_tokens": 1350
+  },
+  "curated_arithmetic_integer_overflow_multitx_multifunc_feasible.sol": {
+    "distance": 0.42232751846313477,
+    "embed_tokens": 154
+  },
+  "wild_safe_0166_0x84c96d19de65b24301b210b92f65ee806d274565.sol": {
+    "distance": 0.5053461790084839,
+    "embed_tokens": 613
+  },
+  "curated_time_manipulation_ether_lotto.sol": {
+    "distance": 0.5228347778320312,
+    "embed_tokens": 392
+  },
+  "curated_access_control_rubixi.sol": {
+    "distance": 0.5514079332351685,
+    "embed_tokens": 1227
+  },
+  "curated_reentrancy_0xcead721ef5b11f1a7b530171aab69b16c5e66b6e.sol": {
+    "distance": 0.5601395964622498,
+    "embed_tokens": 381
+  },
+  "wild_safe_0322_0x96cd3fa86724f2f15d61b2a7faeb9e6cd0a0a587.sol": {
+    "distance": 0.4852745532989502,
+    "embed_tokens": 1111
+  },
+  "curated_unchecked_low_level_calls_lotto.sol": {
+    "distance": 0.5445969104766846,
+    "embed_tokens": 166
+  },
+  "wild_safe_0292_0x5ca381bbfb58f0092df149bd3d243b08b9a8386e.sol": {
+    "distance": 0.40417689085006714,
+    "embed_tokens": 1403
+  },
+  "wild_safe_0635_0xe769d988ceda1559aee07963e59e62bd730dbba6.sol": {
+    "distance": 0.4325835704803467,
+    "embed_tokens": 1480
+  },
+  "curated_unchecked_low_level_calls_0x8fd1e427396ddb511533cf9abdbebd0a7e08da35.sol": {
+    "distance": 0.4187973141670227,
+    "embed_tokens": 470
+  },
+  "curated_unchecked_low_level_calls_0x9d06cbafa865037a01d322d3f4222fa3e04e5488.sol": {
+    "distance": 0.5403786897659302,
+    "embed_tokens": 660
+  },
+  "curated_arithmetic_integer_overflow_mul.sol": {
+    "distance": 0.37182581424713135,
+    "embed_tokens": 119
+  },
+  "curated_access_control_parity_wallet_bug_2.sol": {
+    "distance": 0.4454345703125,
+    "embed_tokens": 1475
+  },
+  "wild_safe_0115_0x16a19f43832292dc41ce7fb500909723b1c3be69.sol": {
+    "distance": 0.5086170434951782,
+    "embed_tokens": 1404
+  },
+  "wild_safe_0563_0xc3b0f76d12de247103be16133620afcaf0f8e3c5.sol": {
+    "distance": 0.4554137587547302,
+    "embed_tokens": 1111
+  },
+  "wild_safe_0434_0x2cf5694906bdd80f33bac7cb80183f1c61bc5be2.sol": {
+    "distance": 0.41059786081314087,
+    "embed_tokens": 1506
+  },
+  "curated_access_control_wallet_02_refund_nosub.sol": {
+    "distance": 0.480329692363739,
+    "embed_tokens": 277
+  },
+  "curated_unchecked_low_level_calls_0x627fa62ccbb1c1b04ffaecd72a53e37fc0e17839.sol": {
+    "distance": 0.4111417531967163,
+    "embed_tokens": 431
+  },
+  "wild_safe_0185_0x73281c0c4325d714408712b7313d5b6e87bd00e7.sol": {
+    "distance": 0.44305264949798584,
+    "embed_tokens": 1397
+  },
+  "wild_safe_0140_0x68ec767a919e47aba34e5bec9d68354a59000b86.sol": {
+    "distance": 0.46832847595214844,
+    "embed_tokens": 950
+  },
+  "wild_safe_0782_0x54ecf8024088ce6d4895871e85d2d28f73f3fce8.sol": {
+    "distance": 0.4549926519393921,
+    "embed_tokens": 1489
+  },
+  "wild_safe_0455_0x44456721189001766a7157ed8f8727e819a58446.sol": {
+    "distance": 0.4878607392311096,
+    "embed_tokens": 793
+  },
+  "curated_reentrancy_reentrancy_simple.sol": {
+    "distance": 0.31655722856521606,
+    "embed_tokens": 192
+  },
+  "curated_arithmetic_integer_overflow_minimal.sol": {
+    "distance": 0.3643854856491089,
+    "embed_tokens": 120
+  },
+  "curated_bad_randomness_guess_the_random_number.sol": {
+    "distance": 0.4644920825958252,
+    "embed_tokens": 180
+  },
+  "curated_front_running_odds_and_evens.sol": {
+    "distance": 0.5530999898910522,
+    "embed_tokens": 300
+  },
+  "wild_safe_0748_0xdf1f581d348aa8caeebdb5f3c7235b4ad9ab648f.sol": {
+    "distance": 0.4887245297431946,
+    "embed_tokens": 554
+  },
+  "curated_other_open_address_lottery.sol": {
+    "distance": 0.5084436535835266,
+    "embed_tokens": 954
+  },
+  "curated_unchecked_low_level_calls_0xf2570186500a46986f3139f65afedc2afe4f445d.sol": {
+    "distance": 0.5547239184379578,
+    "embed_tokens": 166
+  },
+  "wild_safe_0141_0x64386613c1abc7a2ce3c00765f505c025d10b8b1.sol": {
+    "distance": 0.4775956869125366,
+    "embed_tokens": 1377
+  },
+  "curated_unchecked_low_level_calls_0x3e013fc32a54c4c5b6991ba539dcd0ec4355c859.sol": {
+    "distance": 0.5289262533187866,
+    "embed_tokens": 177
+  },
+  "curated_reentrancy_modifier_reentrancy.sol": {
+    "distance": 0.3874465823173523,
+    "embed_tokens": 342
+  },
+  "curated_bad_randomness_lucky_doubler.sol": {
+    "distance": 0.5064865350723267,
+    "embed_tokens": 1279
+  },
+  "curated_reentrancy_0x8c7777c45481dba411450c228cb692ac3d550344.sol": {
+    "distance": 0.4992542266845703,
+    "embed_tokens": 338
+  },
+  "curated_other_name_registrar.sol": {
+    "distance": 0.5796803832054138,
+    "embed_tokens": 224
+  },
+  "curated_unchecked_low_level_calls_0xe82f0742a71a02b9e9ffc142fdcb6eb1ed06fb87.sol": {
+    "distance": 0.5217640995979309,
+    "embed_tokens": 252
+  },
+  "wild_safe_0068_0xcd0bcc05a4ec46d9694bf184fd1cab694450d109.sol": {
+    "distance": 0.4737904667854309,
+    "embed_tokens": 869
+  },
+  "wild_safe_0354_0x4b77bde81ceaf137d883e43aa27cf767cd2f8141.sol": {
+    "distance": 0.5464963316917419,
+    "embed_tokens": 1351
+  },
+  "curated_unchecked_low_level_calls_0xf70d589d76eebdd7c12cc5eec99f8f6fa4233b9e.sol": {
+    "distance": 0.5271715521812439,
+    "embed_tokens": 167
+  },
+  "curated_unchecked_low_level_calls_0x84d9ec85c9c568eb332b7226a8f826d897e0a4a8.sol": {
+    "distance": 0.5432692766189575,
+    "embed_tokens": 715
+  },
+  "wild_safe_0264_0xf5aa54d121dfe0d5eeb37c83aed42238f4f2c5c6.sol": {
+    "distance": 0.5043178796768188,
+    "embed_tokens": 1391
+  },
+  "curated_unchecked_low_level_calls_0x19cf8481ea15427a98ba3cdd6d9e14690011ab10.sol": {
+    "distance": 0.474973201751709,
+    "embed_tokens": 1528
+  },
+  "wild_safe_0407_0x3125124e6e3744d52c38952081a4e8407708b30d.sol": {
+    "distance": 0.45546579360961914,
+    "embed_tokens": 1071
+  },
+  "wild_safe_0692_0x3b9f96f016f4eada9fa6f6e82b249809f0e4b9b2.sol": {
+    "distance": 0.4623907804489136,
+    "embed_tokens": 1176
+  },
+  "wild_safe_0308_0x6610576b9176bb3002d7cafc11305ad20a36078e.sol": {
+    "distance": 0.4942377209663391,
+    "embed_tokens": 591
+  },
+  "curated_unchecked_low_level_calls_0xb37f18af15bafb869a065b61fc83cfc44ed9cc27.sol": {
+    "distance": 0.4577717185020447,
+    "embed_tokens": 166
+  },
+  "curated_unchecked_low_level_calls_0x2972d548497286d18e92b5fa1f8f9139e5653fd2.sol": {
+    "distance": 0.5386462807655334,
+    "embed_tokens": 138
+  },
+  "wild_safe_0548_0x47b56408263cf1f9bdb93b930bf01c6c5935ebb4.sol": {
+    "distance": 0.5474585890769958,
+    "embed_tokens": 580
+  },
+  "curated_unchecked_low_level_calls_0x524960d55174d912768678d8c606b4d50b79d7b1.sol": {
+    "distance": 0.47790223360061646,
+    "embed_tokens": 203
+  },
+  "curated_reentrancy_0x96edbe868531bd23a6c05e9d0c424ea64fb1b78b.sol": {
+    "distance": 0.5880671739578247,
+    "embed_tokens": 464
+  },
+  "curated_unchecked_low_level_calls_0x663e4229142a27f00bafb5d087e1e730648314c3.sol": {
+    "distance": 0.43143975734710693,
+    "embed_tokens": 1371
+  },
+  "wild_safe_0065_0x9dd388607b439aec0cef9a5bf7864f44ac6bf3a0.sol": {
+    "distance": 0.41133880615234375,
+    "embed_tokens": 1460
+  },
+  "wild_safe_0348_0x5f52bf915b1f5e65b27c2c3ac45d100f54768af9.sol": {
+    "distance": 0.4703769087791443,
+    "embed_tokens": 1508
+  },
+  "curated_access_control_wallet_04_confused_sign.sol": {
+    "distance": 0.46341222524642944,
+    "embed_tokens": 249
+  },
+  "wild_safe_0588_0x6c5dc1dcda3d309a6e919e6d0965f197e0fc1913.sol": {
+    "distance": 0.5764492750167847,
+    "embed_tokens": 1418
+  }
+}

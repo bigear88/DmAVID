@@ -1,0 +1,1460 @@
+{
+  "curated_reentrancy_0x941d225236464a25eb18076df7da6a91d0f95e9e.sol": {
+    "vote": true,
+    "in_tokens": 892,
+    "out_tokens": 378,
+    "error": ""
+  },
+  "wild_safe_0824_0xd46883ddff92cc0474255f2f8134c63f8209171d.sol": {
+    "vote": true,
+    "in_tokens": 1830,
+    "out_tokens": 842,
+    "error": ""
+  },
+  "curated_arithmetic_integer_overflow_multitx_onefunc_feasible.sol": {
+    "vote": true,
+    "in_tokens": 466,
+    "out_tokens": 163,
+    "error": ""
+  },
+  "wild_safe_0451_0x139d415b5fd0981fbee78d0fa503168855b34652.sol": {
+    "vote": true,
+    "in_tokens": 2021,
+    "out_tokens": 949,
+    "error": ""
+  },
+  "curated_arithmetic_integer_overflow_1.sol": {
+    "vote": true,
+    "in_tokens": 495,
+    "out_tokens": 181,
+    "error": ""
+  },
+  "curated_reentrancy_0x01f8c4e3fa3edeb29e514cba738d87ce8c091d3f.sol": {
+    "vote": true,
+    "in_tokens": 1066,
+    "out_tokens": 465,
+    "error": ""
+  },
+  "curated_denial_of_service_send_loop.sol": {
+    "vote": true,
+    "in_tokens": 655,
+    "out_tokens": 257,
+    "error": ""
+  },
+  "curated_time_manipulation_governmental_survey.sol": {
+    "vote": true,
+    "in_tokens": 785,
+    "out_tokens": 322,
+    "error": ""
+  },
+  "wild_safe_0712_0x1d859ad24b62775dddb73e8990fedfd41a8e9a22.sol": {
+    "vote": true,
+    "in_tokens": 1701,
+    "out_tokens": 780,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_0xdb1c55f6926e7d847ddf8678905ad871a68199d2.sol": {
+    "vote": true,
+    "in_tokens": 701,
+    "out_tokens": 280,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_0xa1fceeff3acc57d257b917e30c4df661401d6431.sol": {
+    "vote": true,
+    "in_tokens": 593,
+    "out_tokens": 227,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_0xb0510d68f210b7db66e8c7c814f22680f2b8d1d6.sol": {
+    "vote": true,
+    "in_tokens": 1973,
+    "out_tokens": 916,
+    "error": ""
+  },
+  "wild_safe_0323_0x357d20bb068cfc3f78642df881d7856158f94f93.sol": {
+    "vote": true,
+    "in_tokens": 1703,
+    "out_tokens": 784,
+    "error": ""
+  },
+  "wild_safe_0006_0xc9b3b3c9f3ff68d5c75a651136c6ee2897c936aa.sol": {
+    "vote": true,
+    "in_tokens": 1707,
+    "out_tokens": 783,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_etherpot_lotto.sol": {
+    "vote": true,
+    "in_tokens": 1941,
+    "out_tokens": 906,
+    "error": ""
+  },
+  "curated_access_control_wallet_03_wrong_constructor.sol": {
+    "vote": true,
+    "in_tokens": 660,
+    "out_tokens": 257,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_mishandled.sol": {
+    "vote": true,
+    "in_tokens": 419,
+    "out_tokens": 137,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_0x78c2a1e91b52bca4130b6ed9edd9fbcfd4671c37.sol": {
+    "vote": true,
+    "in_tokens": 418,
+    "out_tokens": 2416,
+    "error": ""
+  },
+  "curated_front_running_FindThisHash.sol": {
+    "vote": true,
+    "in_tokens": 515,
+    "out_tokens": 186,
+    "error": ""
+  },
+  "wild_safe_0389_0x500f8b1ed860f37a3124994608cec1fef481ab8a.sol": {
+    "vote": true,
+    "in_tokens": 2130,
+    "out_tokens": 999,
+    "error": ""
+  },
+  "curated_arithmetic_token.sol": {
+    "vote": true,
+    "in_tokens": 565,
+    "out_tokens": 211,
+    "error": ""
+  },
+  "wild_safe_0479_0xdcf8bb5c9cb9b2846f240d063fe6ea880fda297b.sol": {
+    "vote": false,
+    "in_tokens": 2196,
+    "out_tokens": 1029,
+    "error": ""
+  },
+  "curated_reentrancy_0x7b368c4e805c3870b6c49a3f1f49f69af8662cf3.sol": {
+    "vote": true,
+    "in_tokens": 943,
+    "out_tokens": 400,
+    "error": ""
+  },
+  "curated_denial_of_service_auction.sol": {
+    "vote": true,
+    "in_tokens": 593,
+    "out_tokens": 225,
+    "error": ""
+  },
+  "wild_safe_0718_0x20c476bb4c7aa64f919278fb9c09e880583beb4c.sol": {
+    "vote": true,
+    "in_tokens": 927,
+    "out_tokens": 396,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_0x4a66ad0bca2d700f11e1f2fc2c106f7d3264504c.sol": {
+    "vote": true,
+    "in_tokens": 680,
+    "out_tokens": 270,
+    "error": ""
+  },
+  "wild_safe_0830_0x2edb2235bd850f72e417c2d191e7c305650d8d13.sol": {
+    "vote": true,
+    "in_tokens": 583,
+    "out_tokens": 221,
+    "error": ""
+  },
+  "wild_safe_0258_0x1ca8ddc12e6618d007740c2bca92d2e69d84bec5.sol": {
+    "vote": false,
+    "in_tokens": 2166,
+    "out_tokens": 1017,
+    "error": ""
+  },
+  "wild_safe_0007_0x25127edc1d0985c83186c8e3d1ea0f80dd360dfe.sol": {
+    "vote": false,
+    "in_tokens": 1703,
+    "out_tokens": 777,
+    "error": ""
+  },
+  "wild_safe_0266_0x6ed0e1c20bf3ff8384570de742cf98cd08f2a012.sol": {
+    "vote": false,
+    "in_tokens": 2093,
+    "out_tokens": 972,
+    "error": ""
+  },
+  "wild_safe_0785_0x3f6a224f0a6350dc9ccfee200e21b011a37957b1.sol": {
+    "vote": true,
+    "in_tokens": 2015,
+    "out_tokens": 937,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_0xb11b2fed6c9354f7aa2f658d3b4d7b31d8a13b77.sol": {
+    "vote": true,
+    "in_tokens": 684,
+    "out_tokens": 273,
+    "error": ""
+  },
+  "wild_safe_0152_0xfac1c7270bc5b0664e27e7f2e82281d564aedf4e.sol": {
+    "vote": true,
+    "in_tokens": 642,
+    "out_tokens": 253,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_0xbebbfe5b549f5db6e6c78ca97cac19d1fb03082c.sol": {
+    "vote": true,
+    "in_tokens": 677,
+    "out_tokens": 266,
+    "error": ""
+  },
+  "curated_reentrancy_reentrance.sol": {
+    "vote": true,
+    "in_tokens": 578,
+    "out_tokens": 218,
+    "error": ""
+  },
+  "wild_safe_0119_0x3d9c6c5a7b2b2744870166eac237bd6e366fa3ef.sol": {
+    "vote": false,
+    "in_tokens": 2344,
+    "out_tokens": 1111,
+    "error": ""
+  },
+  "curated_reentrancy_0x23a91059fdc9579a9fbd0edc5f2ea0bfdb70deb4.sol": {
+    "vote": true,
+    "in_tokens": 832,
+    "out_tokens": 348,
+    "error": ""
+  },
+  "curated_bad_randomness_random_number_generator.sol": {
+    "vote": true,
+    "in_tokens": 707,
+    "out_tokens": 281,
+    "error": ""
+  },
+  "wild_safe_0228_0xd4a293ae8bb9e0be12e99eb19d48239e8c83a136.sol": {
+    "vote": false,
+    "in_tokens": 2211,
+    "out_tokens": 1030,
+    "error": ""
+  },
+  "wild_safe_0283_0xecc3a47f5d0ac33db287d8f9debf03830853cbb9.sol": {
+    "vote": false,
+    "in_tokens": 2184,
+    "out_tokens": 1030,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_0xd2018bfaa266a9ec0a1a84b061640faa009def76.sol": {
+    "vote": true,
+    "in_tokens": 411,
+    "out_tokens": 138,
+    "error": ""
+  },
+  "wild_safe_0229_0xcc27ce64cf6f807cebfac616ccfe512641fa503d.sol": {
+    "vote": true,
+    "in_tokens": 501,
+    "out_tokens": 179,
+    "error": ""
+  },
+  "curated_arithmetic_tokensalechallenge.sol": {
+    "vote": true,
+    "in_tokens": 699,
+    "out_tokens": 282,
+    "error": ""
+  },
+  "wild_safe_0301_0x9eeab220e44410c16ac80c12830bc11af7dd5c6e.sol": {
+    "vote": false,
+    "in_tokens": 2165,
+    "out_tokens": 1014,
+    "error": ""
+  },
+  "curated_bad_randomness_etheraffle.sol": {
+    "vote": true,
+    "in_tokens": 2059,
+    "out_tokens": 982,
+    "error": ""
+  },
+  "curated_reentrancy_0x4320e6f8c05b27ab4707cd1f6d5ce6f3e4b3a5a1.sol": {
+    "vote": true,
+    "in_tokens": 1057,
+    "out_tokens": 454,
+    "error": ""
+  },
+  "curated_front_running_ERC20.sol": {
+    "vote": true,
+    "in_tokens": 2033,
+    "out_tokens": 948,
+    "error": ""
+  },
+  "curated_denial_of_service_dos_number.sol": {
+    "vote": true,
+    "in_tokens": 731,
+    "out_tokens": 298,
+    "error": ""
+  },
+  "wild_safe_0471_0x7273ae7182cc1d942f2a8805951f23f4f74e1797.sol": {
+    "vote": true,
+    "in_tokens": 1059,
+    "out_tokens": 458,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_0x806a6bd219f162442d992bdc4ee6eba1f2c5a707.sol": {
+    "vote": true,
+    "in_tokens": 462,
+    "out_tokens": 165,
+    "error": ""
+  },
+  "wild_safe_0127_0xef64c6b4f189d2053b8a00a23c725475fc509884.sol": {
+    "vote": false,
+    "in_tokens": 2206,
+    "out_tokens": 1048,
+    "error": ""
+  },
+  "curated_reentrancy_0xbe4041d55db380c5ae9d4a9b9703f1ed4e7e3888.sol": {
+    "vote": true,
+    "in_tokens": 1110,
+    "out_tokens": 487,
+    "error": ""
+  },
+  "wild_safe_0813_0x80623c126ce442980666ef38a72ec7b9e80f4706.sol": {
+    "vote": false,
+    "in_tokens": 2030,
+    "out_tokens": 941,
+    "error": ""
+  },
+  "curated_reentrancy_0x7a8721a9d64c74da899424c1b52acbf58ddc9782.sol": {
+    "vote": true,
+    "in_tokens": 923,
+    "out_tokens": 390,
+    "error": ""
+  },
+  "wild_safe_0765_0x90527aae61e861cd308560d19e25de66f918d747.sol": {
+    "vote": true,
+    "in_tokens": 2099,
+    "out_tokens": 988,
+    "error": ""
+  },
+  "wild_safe_0075_0x0a6f2d9d82baef6dd0f3a2f4679287680aad1fc0.sol": {
+    "vote": true,
+    "in_tokens": 1709,
+    "out_tokens": 784,
+    "error": ""
+  },
+  "wild_safe_0810_0xba4dbdb36d398586c4de0537e53d47b12ac86c73.sol": {
+    "vote": false,
+    "in_tokens": 1696,
+    "out_tokens": 780,
+    "error": ""
+  },
+  "curated_denial_of_service_dos_simple.sol": {
+    "vote": true,
+    "in_tokens": 475,
+    "out_tokens": 167,
+    "error": ""
+  },
+  "curated_reentrancy_reentrancy_dao.sol": {
+    "vote": true,
+    "in_tokens": 532,
+    "out_tokens": 198,
+    "error": ""
+  },
+  "wild_safe_0174_0x959225d25f645b9c66498ef99ce39911fc1dced9.sol": {
+    "vote": false,
+    "in_tokens": 1582,
+    "out_tokens": 717,
+    "error": ""
+  },
+  "curated_access_control_phishable.sol": {
+    "vote": true,
+    "in_tokens": 405,
+    "out_tokens": 129,
+    "error": ""
+  },
+  "curated_bad_randomness_smart_billions.sol": {
+    "vote": true,
+    "in_tokens": 2191,
+    "out_tokens": 1024,
+    "error": ""
+  },
+  "curated_arithmetic_insecure_transfer.sol": {
+    "vote": true,
+    "in_tokens": 482,
+    "out_tokens": 168,
+    "error": ""
+  },
+  "curated_arithmetic_overflow_single_tx.sol": {
+    "vote": true,
+    "in_tokens": 895,
+    "out_tokens": 378,
+    "error": ""
+  },
+  "curated_reentrancy_0x93c32845fae42c83a70e5f06214c8433665c2ab5.sol": {
+    "vote": true,
+    "in_tokens": 943,
+    "out_tokens": 400,
+    "error": ""
+  },
+  "curated_access_control_FibonacciBalance.sol": {
+    "vote": true,
+    "in_tokens": 1001,
+    "out_tokens": 428,
+    "error": ""
+  },
+  "wild_safe_0388_0x30ed9d2a07f4a79557c8e75ad4d95071a18af0bc.sol": {
+    "vote": false,
+    "in_tokens": 1991,
+    "out_tokens": 920,
+    "error": ""
+  },
+  "wild_safe_0436_0x43567eb78638a55bbe51e9f9fb5b2d7ad1f125aa.sol": {
+    "vote": true,
+    "in_tokens": 2161,
+    "out_tokens": 1020,
+    "error": ""
+  },
+  "curated_access_control_incorrect_constructor_name1.sol": {
+    "vote": true,
+    "in_tokens": 501,
+    "out_tokens": 178,
+    "error": ""
+  },
+  "wild_safe_0474_0x78c292d1445e6b9558bf42e8bc369271ded062ea.sol": {
+    "vote": true,
+    "in_tokens": 2029,
+    "out_tokens": 981,
+    "error": ""
+  },
+  "wild_safe_0257_0xb51088f5f37286b5c3462043200a0ce9aee71459.sol": {
+    "vote": false,
+    "in_tokens": 2143,
+    "out_tokens": 1002,
+    "error": ""
+  },
+  "curated_short_addresses_short_address_example.sol": {
+    "vote": true,
+    "in_tokens": 566,
+    "out_tokens": 215,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_0xe894d54dca59cb53fe9cbc5155093605c7068220.sol": {
+    "vote": true,
+    "in_tokens": 491,
+    "out_tokens": 175,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_0x52d2e0f9b01101a59b38a3d05c80b7618aeed984.sol": {
+    "vote": true,
+    "in_tokens": 558,
+    "out_tokens": 210,
+    "error": ""
+  },
+  "wild_safe_0790_0xb70010ea4aa80292bbc49a2c8fac361d3c7f32df.sol": {
+    "vote": false,
+    "in_tokens": 1945,
+    "out_tokens": 899,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_0xb7c5c5aa4d42967efe906e1b66cb8df9cebf04f7.sol": {
+    "vote": true,
+    "in_tokens": 500,
+    "out_tokens": 181,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_0xd5967fed03e85d1cce44cab284695b41bc675b5c.sol": {
+    "vote": true,
+    "in_tokens": 449,
+    "out_tokens": 154,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_0x5aa88d2901c68fda244f1d0584400368d2c8e739.sol": {
+    "vote": true,
+    "in_tokens": 530,
+    "out_tokens": 195,
+    "error": ""
+  },
+  "curated_bad_randomness_lottery.sol": {
+    "vote": true,
+    "in_tokens": 1069,
+    "out_tokens": 463,
+    "error": ""
+  },
+  "wild_safe_0184_0x9c78afb1b50170761fa2c842701e66e80e67d438.sol": {
+    "vote": true,
+    "in_tokens": 1980,
+    "out_tokens": 921,
+    "error": ""
+  },
+  "curated_reentrancy_0xb93430ce38ac4a6bb47fb1fc085ea669353fd89e.sol": {
+    "vote": true,
+    "in_tokens": 832,
+    "out_tokens": 348,
+    "error": ""
+  },
+  "curated_bad_randomness_blackjack.sol": {
+    "vote": true,
+    "in_tokens": 2594,
+    "out_tokens": 1227,
+    "error": ""
+  },
+  "wild_safe_0033_0x77550f6f32a5d809b899a1d661df31a1636db73a.sol": {
+    "vote": false,
+    "in_tokens": 1650,
+    "out_tokens": 756,
+    "error": ""
+  },
+  "curated_bad_randomness_old_blockhash.sol": {
+    "vote": true,
+    "in_tokens": 805,
+    "out_tokens": 330,
+    "error": ""
+  },
+  "curated_access_control_proxy.sol": {
+    "vote": true,
+    "in_tokens": 425,
+    "out_tokens": 141,
+    "error": ""
+  },
+  "curated_access_control_parity_wallet_bug_1.sol": {
+    "vote": true,
+    "in_tokens": 2020,
+    "out_tokens": 945,
+    "error": ""
+  },
+  "wild_safe_0655_0xe5cfc0f15116c51f6352411ee532aeabf719ef2f.sol": {
+    "vote": true,
+    "in_tokens": 1916,
+    "out_tokens": 887,
+    "error": ""
+  },
+  "wild_safe_0021_0x2fe0bc5ffb80a84739da913f0a393a4b0cce661b.sol": {
+    "vote": true,
+    "in_tokens": 2153,
+    "out_tokens": 1018,
+    "error": ""
+  },
+  "wild_safe_0142_0x57f854ba5baf019ec3a77f81c2966fd0d8905a38.sol": {
+    "vote": false,
+    "in_tokens": 2057,
+    "out_tokens": 954,
+    "error": ""
+  },
+  "curated_reentrancy_0x7541b76cb60f4c60af330c208b0623b7f54bf615.sol": {
+    "vote": true,
+    "in_tokens": 935,
+    "out_tokens": 396,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_0x4051334adc52057aca763453820cb0e045076ef3.sol": {
+    "vote": true,
+    "in_tokens": 452,
+    "out_tokens": 155,
+    "error": ""
+  },
+  "wild_safe_0811_0xbe8f09ab5b0dda98db12d39fd7e6e61ea4f5d21b.sol": {
+    "vote": true,
+    "in_tokens": 2306,
+    "out_tokens": 1102,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_0x70f9eddb3931491aab1aeafbc1e7f1ca2a012db4.sol": {
+    "vote": true,
+    "in_tokens": 365,
+    "out_tokens": 2415,
+    "error": ""
+  },
+  "curated_arithmetic_integer_overflow_benign_1.sol": {
+    "vote": true,
+    "in_tokens": 429,
+    "out_tokens": 143,
+    "error": ""
+  },
+  "curated_access_control_arbitrary_location_write_simple.sol": {
+    "vote": true,
+    "in_tokens": 676,
+    "out_tokens": 269,
+    "error": ""
+  },
+  "wild_safe_0286_0x24700a297960e8477ce3ca6c58b70a7af3410398.sol": {
+    "vote": false,
+    "in_tokens": 1593,
+    "out_tokens": 728,
+    "error": ""
+  },
+  "wild_safe_0485_0x95c166ab3f680b909233f954e4c9310f367a20b2.sol": {
+    "vote": false,
+    "in_tokens": 2148,
+    "out_tokens": 1017,
+    "error": ""
+  },
+  "wild_safe_0508_0x38ba2429cc9546b389cd36c4f09209846ac15a8d.sol": {
+    "vote": false,
+    "in_tokens": 1629,
+    "out_tokens": 750,
+    "error": ""
+  },
+  "wild_safe_0372_0x84684d48f9983bf959a2b4e88fb9393e90b9166f.sol": {
+    "vote": true,
+    "in_tokens": 2012,
+    "out_tokens": 937,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_0x7a4349a749e59a5736efb7826ee3496a2dfd5489.sol": {
+    "vote": true,
+    "in_tokens": 424,
+    "out_tokens": 142,
+    "error": ""
+  },
+  "curated_reentrancy_0xbaf51e761510c1a11bf48dd87c0307ac8a8c8a4f.sol": {
+    "vote": true,
+    "in_tokens": 856,
+    "out_tokens": 360,
+    "error": ""
+  },
+  "wild_safe_0057_0x03a2d646d36ffc371e04e840604c5ba46393dd26.sol": {
+    "vote": false,
+    "in_tokens": 1947,
+    "out_tokens": 900,
+    "error": ""
+  },
+  "curated_denial_of_service_list_dos.sol": {
+    "vote": true,
+    "in_tokens": 1931,
+    "out_tokens": 895,
+    "error": ""
+  },
+  "wild_safe_0836_0xb28f2d66e28a3cff06e2035757726409982a62f8.sol": {
+    "vote": true,
+    "in_tokens": 2015,
+    "out_tokens": 938,
+    "error": ""
+  },
+  "curated_reentrancy_reentrancy_cross_function.sol": {
+    "vote": true,
+    "in_tokens": 586,
+    "out_tokens": 227,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_0xec329ffc97d75fe03428ae155fc7793431487f63.sol": {
+    "vote": true,
+    "in_tokens": 2048,
+    "out_tokens": 959,
+    "error": ""
+  },
+  "wild_safe_0192_0xdd89da72119799b6faf621cde0aa697ee6353cb1.sol": {
+    "vote": true,
+    "in_tokens": 1999,
+    "out_tokens": 934,
+    "error": ""
+  },
+  "curated_reentrancy_0xf015c35649c82f5467c9c74b7f28ee67665aad68.sol": {
+    "vote": true,
+    "in_tokens": 935,
+    "out_tokens": 396,
+    "error": ""
+  },
+  "wild_safe_0272_0xafcbd4b0132febaaeeb9c8288e1e2a2bae63e21b.sol": {
+    "vote": true,
+    "in_tokens": 2014,
+    "out_tokens": 938,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_0x4b71ad9c1a84b9b643aa54fdd66e2dec96e8b152.sol": {
+    "vote": true,
+    "in_tokens": 449,
+    "out_tokens": 154,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_unchecked_return_value.sol": {
+    "vote": true,
+    "in_tokens": 389,
+    "out_tokens": 123,
+    "error": ""
+  },
+  "curated_arithmetic_overflow_simple_add.sol": {
+    "vote": true,
+    "in_tokens": 363,
+    "out_tokens": 109,
+    "error": ""
+  },
+  "curated_reentrancy_0x561eac93c92360949ab1f1403323e6db345cbf31.sol": {
+    "vote": true,
+    "in_tokens": 986,
+    "out_tokens": 425,
+    "error": ""
+  },
+  "curated_time_manipulation_lottopollo.sol": {
+    "vote": true,
+    "in_tokens": 621,
+    "out_tokens": 237,
+    "error": ""
+  },
+  "wild_safe_0700_0x5855d8aa8564e9dd795513cc22ca8d9e7c6bd037.sol": {
+    "vote": true,
+    "in_tokens": 2009,
+    "out_tokens": 950,
+    "error": ""
+  },
+  "wild_safe_0742_0x3f45bd50104e9782d3d22986ef4a231fb87e99c8.sol": {
+    "vote": true,
+    "in_tokens": 2036,
+    "out_tokens": 960,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_0xbaa3de6504690efb064420d89e871c27065cdd52.sol": {
+    "vote": true,
+    "in_tokens": 685,
+    "out_tokens": 274,
+    "error": ""
+  },
+  "curated_access_control_incorrect_constructor_name3.sol": {
+    "vote": true,
+    "in_tokens": 450,
+    "out_tokens": 155,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_0x39cfd754c85023648bf003bea2dd498c5612abfa.sol": {
+    "vote": true,
+    "in_tokens": 1098,
+    "out_tokens": 482,
+    "error": ""
+  },
+  "curated_reentrancy_0x627fa62ccbb1c1b04ffaecd72a53e37fc0e17839.sol": {
+    "vote": true,
+    "in_tokens": 1042,
+    "out_tokens": 453,
+    "error": ""
+  },
+  "curated_reentrancy_0x4e73b32ed6c35f570686b89848e5f39f20ecc106.sol": {
+    "vote": true,
+    "in_tokens": 984,
+    "out_tokens": 424,
+    "error": ""
+  },
+  "curated_arithmetic_integer_overflow_add.sol": {
+    "vote": true,
+    "in_tokens": 411,
+    "out_tokens": 133,
+    "error": ""
+  },
+  "wild_safe_0773_0x090b60abc45e2af60eb058a4c7f25574a1c6ae4a.sol": {
+    "vote": false,
+    "in_tokens": 2107,
+    "out_tokens": 979,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_0xe09b1ab8111c2729a76f16de96bc86a7af837928.sol": {
+    "vote": true,
+    "in_tokens": 2135,
+    "out_tokens": 996,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_0xf29ebe930a539a60279ace72c707cba851a57707.sol": {
+    "vote": true,
+    "in_tokens": 443,
+    "out_tokens": 154,
+    "error": ""
+  },
+  "wild_safe_0265_0x8516b43a9b547e4692433340ca9f0a13b5d25d7f.sol": {
+    "vote": true,
+    "in_tokens": 1495,
+    "out_tokens": 680,
+    "error": ""
+  },
+  "curated_other_crypto_roulette.sol": {
+    "vote": true,
+    "in_tokens": 1000,
+    "out_tokens": 430,
+    "error": ""
+  },
+  "wild_safe_0284_0x8fd1e427396ddb511533cf9abdbebd0a7e08da35.sol": {
+    "vote": true,
+    "in_tokens": 1006,
+    "out_tokens": 436,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_0xb620cee6b52f96f3c6b253e6eea556aa2d214a99.sol": {
+    "vote": true,
+    "in_tokens": 1703,
+    "out_tokens": 784,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_0xa46edd6a9a93feec36576ee5048146870ea2c3ae.sol": {
+    "vote": true,
+    "in_tokens": 453,
+    "out_tokens": 156,
+    "error": ""
+  },
+  "wild_safe_0314_0x2323aeb683637c15350382df63bf84ce45561aad.sol": {
+    "vote": true,
+    "in_tokens": 1993,
+    "out_tokens": 927,
+    "error": ""
+  },
+  "wild_safe_0023_0x912fef2b95bed78c12faf7b33347532370d23a5d.sol": {
+    "vote": true,
+    "in_tokens": 2079,
+    "out_tokens": 971,
+    "error": ""
+  },
+  "wild_safe_0233_0x99ed8fb173f6b447542d6037303b2c3b6738eeaa.sol": {
+    "vote": true,
+    "in_tokens": 617,
+    "out_tokens": 243,
+    "error": ""
+  },
+  "curated_access_control_unprotected0.sol": {
+    "vote": true,
+    "in_tokens": 523,
+    "out_tokens": 192,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_0x7d09edb07d23acb532a82be3da5c17d9d85806b4.sol": {
+    "vote": true,
+    "in_tokens": 2025,
+    "out_tokens": 950,
+    "error": ""
+  },
+  "wild_safe_0441_0xa2013d1688dafed6830220d73d66728be31d4c31.sol": {
+    "vote": true,
+    "in_tokens": 1919,
+    "out_tokens": 888,
+    "error": ""
+  },
+  "wild_safe_0503_0x86f654cebb9bae068d0c4398d1e337b351e6523b.sol": {
+    "vote": true,
+    "in_tokens": 1531,
+    "out_tokens": 699,
+    "error": ""
+  },
+  "wild_safe_0035_0xa8b2b20b21427d63b22bba99bb65126425666f4e.sol": {
+    "vote": true,
+    "in_tokens": 2139,
+    "out_tokens": 1015,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_0x07f7ecb66d788ab01dc93b9b71a88401de7d0f2e.sol": {
+    "vote": true,
+    "in_tokens": 2021,
+    "out_tokens": 944,
+    "error": ""
+  },
+  "wild_safe_0042_0x920b89c0b61ca7cf01ee58bca53670420001adf2.sol": {
+    "vote": true,
+    "in_tokens": 1953,
+    "out_tokens": 918,
+    "error": ""
+  },
+  "curated_reentrancy_reentrancy_bonus.sol": {
+    "vote": true,
+    "in_tokens": 667,
+    "out_tokens": 265,
+    "error": ""
+  },
+  "curated_reentrancy_reentrancy_insecure.sol": {
+    "vote": true,
+    "in_tokens": 494,
+    "out_tokens": 176,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_0x0cbe050f75bc8f8c2d6c0d249fea125fd6e1acc9.sol": {
+    "vote": true,
+    "in_tokens": 309,
+    "out_tokens": 84,
+    "error": ""
+  },
+  "wild_safe_0240_0xf8956d735f7a6ebb9f7a015a9396b227888b441c.sol": {
+    "vote": true,
+    "in_tokens": 643,
+    "out_tokens": 249,
+    "error": ""
+  },
+  "wild_safe_0175_0x7d133a35e0c8f69e02af94acb16a9ea3d0d790d1.sol": {
+    "vote": false,
+    "in_tokens": 2129,
+    "out_tokens": 996,
+    "error": ""
+  },
+  "wild_safe_0566_0x0ee14f47320604d894fffffc8639772382937bee.sol": {
+    "vote": false,
+    "in_tokens": 2185,
+    "out_tokens": 1033,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_king_of_the_ether_throne.sol": {
+    "vote": true,
+    "in_tokens": 2095,
+    "out_tokens": 983,
+    "error": ""
+  },
+  "curated_reentrancy_0xaae1f51cf3339f18b6d3f3bdc75a5facd744b0b8.sol": {
+    "vote": true,
+    "in_tokens": 986,
+    "out_tokens": 425,
+    "error": ""
+  },
+  "wild_safe_0445_0x6d081571b8dd296605d5914131937d7732e2087c.sol": {
+    "vote": false,
+    "in_tokens": 2241,
+    "out_tokens": 1053,
+    "error": ""
+  },
+  "curated_reentrancy_etherbank.sol": {
+    "vote": true,
+    "in_tokens": 512,
+    "out_tokens": 184,
+    "error": ""
+  },
+  "wild_safe_0828_0x40607c8be5e35502b319b598350f4da745fb46af.sol": {
+    "vote": false,
+    "in_tokens": 1389,
+    "out_tokens": 620,
+    "error": ""
+  },
+  "curated_time_manipulation_timed_crowdsale.sol": {
+    "vote": true,
+    "in_tokens": 423,
+    "out_tokens": 143,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_0x3f2ef511aa6e75231e4deafc7a3d2ecab3741de2.sol": {
+    "vote": true,
+    "in_tokens": 418,
+    "out_tokens": 2416,
+    "error": ""
+  },
+  "curated_reentrancy_simple_dao.sol": {
+    "vote": true,
+    "in_tokens": 485,
+    "out_tokens": 171,
+    "error": ""
+  },
+  "curated_access_control_incorrect_constructor_name2.sol": {
+    "vote": true,
+    "in_tokens": 446,
+    "out_tokens": 151,
+    "error": ""
+  },
+  "curated_arithmetic_BECToken.sol": {
+    "vote": false,
+    "in_tokens": 2197,
+    "out_tokens": 1024,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_0x3a0e9acd953ffc0dd18d63603488846a6b8b2b01.sol": {
+    "vote": true,
+    "in_tokens": 1122,
+    "out_tokens": 494,
+    "error": ""
+  },
+  "curated_time_manipulation_roulette.sol": {
+    "vote": true,
+    "in_tokens": 539,
+    "out_tokens": 197,
+    "error": ""
+  },
+  "wild_safe_0480_0x5ed786a050c866703e16ad621b9259553a1188a9.sol": {
+    "vote": false,
+    "in_tokens": 2207,
+    "out_tokens": 1028,
+    "error": ""
+  },
+  "wild_safe_0408_0x49ceb57714000f18f3749cf2d130e135f9c473a4.sol": {
+    "vote": false,
+    "in_tokens": 2155,
+    "out_tokens": 1014,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_0x610495793564aed0f9c7fc48dc4c7c9151d34fd6.sol": {
+    "vote": true,
+    "in_tokens": 518,
+    "out_tokens": 189,
+    "error": ""
+  },
+  "wild_safe_0048_0x4cd7d3962dae1ebb711441d0b106d66fa8adf2e8.sol": {
+    "vote": true,
+    "in_tokens": 2066,
+    "out_tokens": 961,
+    "error": ""
+  },
+  "wild_safe_0839_0xb221ac6622ae5348375d0048dcff0049ebb97d89.sol": {
+    "vote": true,
+    "in_tokens": 1863,
+    "out_tokens": 870,
+    "error": ""
+  },
+  "curated_denial_of_service_dos_address.sol": {
+    "vote": true,
+    "in_tokens": 582,
+    "out_tokens": 218,
+    "error": ""
+  },
+  "curated_front_running_eth_tx_order_dependence_minimal.sol": {
+    "vote": true,
+    "in_tokens": 560,
+    "out_tokens": 210,
+    "error": ""
+  },
+  "wild_safe_0156_0xb9701088afeaa12f323e4d619e2ff21621eb8640.sol": {
+    "vote": true,
+    "in_tokens": 1956,
+    "out_tokens": 924,
+    "error": ""
+  },
+  "curated_reentrancy_0xb5e1b1ee15c6fa0e48fce100125569d430f1bd12.sol": {
+    "vote": true,
+    "in_tokens": 846,
+    "out_tokens": 355,
+    "error": ""
+  },
+  "curated_access_control_multiowned_vulnerable.sol": {
+    "vote": true,
+    "in_tokens": 916,
+    "out_tokens": 387,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_0x89c1b3807d4c67df034fffb62f3509561218d30b.sol": {
+    "vote": true,
+    "in_tokens": 2095,
+    "out_tokens": 977,
+    "error": ""
+  },
+  "curated_access_control_simple_suicide.sol": {
+    "vote": true,
+    "in_tokens": 370,
+    "out_tokens": 112,
+    "error": ""
+  },
+  "curated_arithmetic_timelock.sol": {
+    "vote": true,
+    "in_tokens": 578,
+    "out_tokens": 220,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_0x958a8f594101d2c0485a52319f29b2647f2ebc06.sol": {
+    "vote": true,
+    "in_tokens": 2035,
+    "out_tokens": 944,
+    "error": ""
+  },
+  "wild_safe_0607_0x9ae3bbfb4586faec0d0fcf9505639c4eaac4d095.sol": {
+    "vote": false,
+    "in_tokens": 2257,
+    "out_tokens": 1054,
+    "error": ""
+  },
+  "wild_safe_0515_0xf2b95d46e0e191115c5e9079c0c79a0105f36dd9.sol": {
+    "vote": false,
+    "in_tokens": 2141,
+    "out_tokens": 995,
+    "error": ""
+  },
+  "wild_safe_0681_0xa18ed9da79ec3cb2cb4480315787db7c522d5911.sol": {
+    "vote": true,
+    "in_tokens": 2049,
+    "out_tokens": 1040,
+    "error": ""
+  },
+  "curated_arithmetic_integer_overflow_mapping_sym_1.sol": {
+    "vote": true,
+    "in_tokens": 417,
+    "out_tokens": 138,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_0xe4eabdca81e31d9acbc4af76b30f532b6ed7f3bf.sol": {
+    "vote": true,
+    "in_tokens": 419,
+    "out_tokens": 139,
+    "error": ""
+  },
+  "curated_reentrancy_spank_chain_payment.sol": {
+    "vote": true,
+    "in_tokens": 2139,
+    "out_tokens": 998,
+    "error": ""
+  },
+  "curated_reentrancy_etherstore.sol": {
+    "vote": true,
+    "in_tokens": 642,
+    "out_tokens": 256,
+    "error": ""
+  },
+  "curated_access_control_mapping_write.sol": {
+    "vote": true,
+    "in_tokens": 563,
+    "out_tokens": 207,
+    "error": ""
+  },
+  "wild_safe_0173_0x02b6700c0282a687d66f3e09723bed55f23d5b83.sol": {
+    "vote": true,
+    "in_tokens": 2006,
+    "out_tokens": 949,
+    "error": ""
+  },
+  "wild_safe_0093_0x324a48ebcbb46e61993931ef9d35f6697cd2901b.sol": {
+    "vote": true,
+    "in_tokens": 1923,
+    "out_tokens": 889,
+    "error": ""
+  },
+  "wild_safe_0085_0x9c0c8fcf7b4309113c147dd3d145e4902e7810c9.sol": {
+    "vote": false,
+    "in_tokens": 2321,
+    "out_tokens": 1099,
+    "error": ""
+  },
+  "curated_access_control_mycontract.sol": {
+    "vote": true,
+    "in_tokens": 440,
+    "out_tokens": 151,
+    "error": ""
+  },
+  "wild_safe_0853_0x582a079e8083eb38735f6fa8ed5d93e3c5e873fc.sol": {
+    "vote": false,
+    "in_tokens": 2183,
+    "out_tokens": 1017,
+    "error": ""
+  },
+  "wild_safe_0560_0x149b8c8e5c039d3e3c00203fcd24b0dd5596c4b2.sol": {
+    "vote": true,
+    "in_tokens": 1960,
+    "out_tokens": 920,
+    "error": ""
+  },
+  "wild_safe_0096_0xb622fa46001b8ab78350ea25d6cf17349510102b.sol": {
+    "vote": true,
+    "in_tokens": 1613,
+    "out_tokens": 744,
+    "error": ""
+  },
+  "wild_safe_0815_0x52e2a7dbb799e402d33a36c6ecd5f0fc78c95031.sol": {
+    "vote": true,
+    "in_tokens": 1984,
+    "out_tokens": 920,
+    "error": ""
+  },
+  "curated_arithmetic_integer_overflow_multitx_multifunc_feasible.sol": {
+    "vote": true,
+    "in_tokens": 484,
+    "out_tokens": 174,
+    "error": ""
+  },
+  "wild_safe_0166_0x84c96d19de65b24301b210b92f65ee806d274565.sol": {
+    "vote": true,
+    "in_tokens": 1404,
+    "out_tokens": 634,
+    "error": ""
+  },
+  "curated_time_manipulation_ether_lotto.sol": {
+    "vote": true,
+    "in_tokens": 970,
+    "out_tokens": 422,
+    "error": ""
+  },
+  "curated_access_control_rubixi.sol": {
+    "vote": true,
+    "in_tokens": 1795,
+    "out_tokens": 822,
+    "error": ""
+  },
+  "curated_reentrancy_0xcead721ef5b11f1a7b530171aab69b16c5e66b6e.sol": {
+    "vote": true,
+    "in_tokens": 935,
+    "out_tokens": 396,
+    "error": ""
+  },
+  "wild_safe_0322_0x96cd3fa86724f2f15d61b2a7faeb9e6cd0a0a587.sol": {
+    "vote": false,
+    "in_tokens": 1612,
+    "out_tokens": 732,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_lotto.sol": {
+    "vote": true,
+    "in_tokens": 514,
+    "out_tokens": 190,
+    "error": ""
+  },
+  "wild_safe_0292_0x5ca381bbfb58f0092df149bd3d243b08b9a8386e.sol": {
+    "vote": false,
+    "in_tokens": 2085,
+    "out_tokens": 982,
+    "error": ""
+  },
+  "wild_safe_0635_0xe769d988ceda1559aee07963e59e62bd730dbba6.sol": {
+    "vote": false,
+    "in_tokens": 2147,
+    "out_tokens": 1009,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_0x8fd1e427396ddb511533cf9abdbebd0a7e08da35.sol": {
+    "vote": true,
+    "in_tokens": 1116,
+    "out_tokens": 488,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_0x9d06cbafa865037a01d322d3f4222fa3e04e5488.sol": {
+    "vote": true,
+    "in_tokens": 1483,
+    "out_tokens": 670,
+    "error": ""
+  },
+  "curated_arithmetic_integer_overflow_mul.sol": {
+    "vote": true,
+    "in_tokens": 415,
+    "out_tokens": 135,
+    "error": ""
+  },
+  "curated_access_control_parity_wallet_bug_2.sol": {
+    "vote": true,
+    "in_tokens": 1980,
+    "out_tokens": 923,
+    "error": ""
+  },
+  "wild_safe_0115_0x16a19f43832292dc41ce7fb500909723b1c3be69.sol": {
+    "vote": false,
+    "in_tokens": 2081,
+    "out_tokens": 975,
+    "error": ""
+  },
+  "wild_safe_0563_0xc3b0f76d12de247103be16133620afcaf0f8e3c5.sol": {
+    "vote": true,
+    "in_tokens": 1907,
+    "out_tokens": 881,
+    "error": ""
+  },
+  "wild_safe_0434_0x2cf5694906bdd80f33bac7cb80183f1c61bc5be2.sol": {
+    "vote": false,
+    "in_tokens": 2184,
+    "out_tokens": 1016,
+    "error": ""
+  },
+  "curated_access_control_wallet_02_refund_nosub.sol": {
+    "vote": true,
+    "in_tokens": 730,
+    "out_tokens": 295,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_0x627fa62ccbb1c1b04ffaecd72a53e37fc0e17839.sol": {
+    "vote": true,
+    "in_tokens": 1044,
+    "out_tokens": 455,
+    "error": ""
+  },
+  "wild_safe_0185_0x73281c0c4325d714408712b7313d5b6e87bd00e7.sol": {
+    "vote": true,
+    "in_tokens": 2016,
+    "out_tokens": 938,
+    "error": ""
+  },
+  "wild_safe_0140_0x68ec767a919e47aba34e5bec9d68354a59000b86.sol": {
+    "vote": true,
+    "in_tokens": 2084,
+    "out_tokens": 973,
+    "error": ""
+  },
+  "wild_safe_0782_0x54ecf8024088ce6d4895871e85d2d28f73f3fce8.sol": {
+    "vote": false,
+    "in_tokens": 2076,
+    "out_tokens": 975,
+    "error": ""
+  },
+  "wild_safe_0455_0x44456721189001766a7157ed8f8727e819a58446.sol": {
+    "vote": true,
+    "in_tokens": 1735,
+    "out_tokens": 800,
+    "error": ""
+  },
+  "curated_reentrancy_reentrancy_simple.sol": {
+    "vote": true,
+    "in_tokens": 554,
+    "out_tokens": 204,
+    "error": ""
+  },
+  "curated_arithmetic_integer_overflow_minimal.sol": {
+    "vote": true,
+    "in_tokens": 417,
+    "out_tokens": 137,
+    "error": ""
+  },
+  "curated_bad_randomness_guess_the_random_number.sol": {
+    "vote": true,
+    "in_tokens": 538,
+    "out_tokens": 198,
+    "error": ""
+  },
+  "curated_front_running_odds_and_evens.sol": {
+    "vote": true,
+    "in_tokens": 773,
+    "out_tokens": 314,
+    "error": ""
+  },
+  "wild_safe_0748_0xdf1f581d348aa8caeebdb5f3c7235b4ad9ab648f.sol": {
+    "vote": false,
+    "in_tokens": 1299,
+    "out_tokens": 586,
+    "error": ""
+  },
+  "curated_other_open_address_lottery.sol": {
+    "vote": true,
+    "in_tokens": 2045,
+    "out_tokens": 951,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_0xf2570186500a46986f3139f65afedc2afe4f445d.sol": {
+    "vote": true,
+    "in_tokens": 508,
+    "out_tokens": 185,
+    "error": ""
+  },
+  "wild_safe_0141_0x64386613c1abc7a2ce3c00765f505c025d10b8b1.sol": {
+    "vote": false,
+    "in_tokens": 1991,
+    "out_tokens": 920,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_0x3e013fc32a54c4c5b6991ba539dcd0ec4355c859.sol": {
+    "vote": true,
+    "in_tokens": 530,
+    "out_tokens": 195,
+    "error": ""
+  },
+  "curated_reentrancy_modifier_reentrancy.sol": {
+    "vote": true,
+    "in_tokens": 862,
+    "out_tokens": 363,
+    "error": ""
+  },
+  "curated_bad_randomness_lucky_doubler.sol": {
+    "vote": true,
+    "in_tokens": 2059,
+    "out_tokens": 957,
+    "error": ""
+  },
+  "curated_reentrancy_0x8c7777c45481dba411450c228cb692ac3d550344.sol": {
+    "vote": true,
+    "in_tokens": 858,
+    "out_tokens": 361,
+    "error": ""
+  },
+  "curated_other_name_registrar.sol": {
+    "vote": true,
+    "in_tokens": 623,
+    "out_tokens": 240,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_0xe82f0742a71a02b9e9ffc142fdcb6eb1ed06fb87.sol": {
+    "vote": true,
+    "in_tokens": 684,
+    "out_tokens": 274,
+    "error": ""
+  },
+  "wild_safe_0068_0xcd0bcc05a4ec46d9694bf184fd1cab694450d109.sol": {
+    "vote": true,
+    "in_tokens": 1922,
+    "out_tokens": 899,
+    "error": ""
+  },
+  "wild_safe_0354_0x4b77bde81ceaf137d883e43aa27cf767cd2f8141.sol": {
+    "vote": true,
+    "in_tokens": 1897,
+    "out_tokens": 888,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_0xf70d589d76eebdd7c12cc5eec99f8f6fa4233b9e.sol": {
+    "vote": true,
+    "in_tokens": 393,
+    "out_tokens": 2416,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_0x84d9ec85c9c568eb332b7226a8f826d897e0a4a8.sol": {
+    "vote": true,
+    "in_tokens": 1584,
+    "out_tokens": 723,
+    "error": ""
+  },
+  "wild_safe_0264_0xf5aa54d121dfe0d5eeb37c83aed42238f4f2c5c6.sol": {
+    "vote": true,
+    "in_tokens": 1831,
+    "out_tokens": 856,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_0x19cf8481ea15427a98ba3cdd6d9e14690011ab10.sol": {
+    "vote": true,
+    "in_tokens": 2199,
+    "out_tokens": 1029,
+    "error": ""
+  },
+  "wild_safe_0407_0x3125124e6e3744d52c38952081a4e8407708b30d.sol": {
+    "vote": true,
+    "in_tokens": 1573,
+    "out_tokens": 727,
+    "error": ""
+  },
+  "wild_safe_0692_0x3b9f96f016f4eada9fa6f6e82b249809f0e4b9b2.sol": {
+    "vote": true,
+    "in_tokens": 2193,
+    "out_tokens": 1040,
+    "error": ""
+  },
+  "wild_safe_0308_0x6610576b9176bb3002d7cafc11305ad20a36078e.sol": {
+    "vote": true,
+    "in_tokens": 1355,
+    "out_tokens": 608,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_0xb37f18af15bafb869a065b61fc83cfc44ed9cc27.sol": {
+    "vote": true,
+    "in_tokens": 509,
+    "out_tokens": 185,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_0x2972d548497286d18e92b5fa1f8f9139e5653fd2.sol": {
+    "vote": true,
+    "in_tokens": 451,
+    "out_tokens": 155,
+    "error": ""
+  },
+  "wild_safe_0548_0x47b56408263cf1f9bdb93b930bf01c6c5935ebb4.sol": {
+    "vote": true,
+    "in_tokens": 1323,
+    "out_tokens": 587,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_0x524960d55174d912768678d8c606b4d50b79d7b1.sol": {
+    "vote": true,
+    "in_tokens": 579,
+    "out_tokens": 218,
+    "error": ""
+  },
+  "curated_reentrancy_0x96edbe868531bd23a6c05e9d0c424ea64fb1b78b.sol": {
+    "vote": true,
+    "in_tokens": 1121,
+    "out_tokens": 495,
+    "error": ""
+  },
+  "curated_unchecked_low_level_calls_0x663e4229142a27f00bafb5d087e1e730648314c3.sol": {
+    "vote": false,
+    "in_tokens": 2052,
+    "out_tokens": 955,
+    "error": ""
+  },
+  "wild_safe_0065_0x9dd388607b439aec0cef9a5bf7864f44ac6bf3a0.sol": {
+    "vote": true,
+    "in_tokens": 2168,
+    "out_tokens": 1012,
+    "error": ""
+  },
+  "wild_safe_0348_0x5f52bf915b1f5e65b27c2c3ac45d100f54768af9.sol": {
+    "vote": true,
+    "in_tokens": 2159,
+    "out_tokens": 1016,
+    "error": ""
+  },
+  "curated_access_control_wallet_04_confused_sign.sol": {
+    "vote": true,
+    "in_tokens": 670,
+    "out_tokens": 262,
+    "error": ""
+  },
+  "wild_safe_0588_0x6c5dc1dcda3d309a6e919e6d0965f197e0fc1913.sol": {
+    "vote": false,
+    "in_tokens": 2046,
+    "out_tokens": 962,
+    "error": ""
+  }
+}
