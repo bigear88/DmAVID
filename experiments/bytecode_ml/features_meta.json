@@ -1,0 +1,35 @@
+{
+  "experiment": "sprint8_features",
+  "timestamp": "2026-05-01T15:07:39.114931",
+  "n_contracts": 223,
+  "label_dist": {
+    "vuln": 138,
+    "safe": 85
+  },
+  "settings": {
+    "F1": {
+      "description": "1-gram opcode + TF-IDF",
+      "shape": [
+        223,
+        77
+      ],
+      "vocab_size": 77
+    },
+    "F2": {
+      "description": "1+2+3-gram opcode + TF-IDF (max_features=10000)",
+      "shape": [
+        223,
+        2069
+      ],
+      "vocab_size": 2069
+    },
+    "F3": {
+      "description": "F2 + opcode length + JUMP/JUMPI/JUMPDEST/LOG/CALL ratios",
+      "shape": [
+        223,
+        2076
+      ],
+      "extra_features": 7
+    }
+  }
+}

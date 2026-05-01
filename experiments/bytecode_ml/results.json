@@ -1,0 +1,215 @@
+{
+  "experiment": "sprint8_train_9_settings",
+  "timestamp": "2026-05-01T15:08:10.642013",
+  "n_train": 178,
+  "n_test": 45,
+  "settings": {
+    "F1_RF": {
+      "precision": 0.8571,
+      "recall": 0.8571,
+      "f1": 0.8571,
+      "accuracy": 0.8222,
+      "tp": 24,
+      "fp": 4,
+      "tn": 13,
+      "fn": 4,
+      "fpr": 0.2353,
+      "ci_low": 0.7499,
+      "ci_high": 0.9455,
+      "train_time_s": 2.29,
+      "infer_time_s_per_contract": 0.000806,
+      "best_hyperparameter": {
+        "max_depth": null,
+        "n_estimators": 100
+      }
+    },
+    "F1_GBoost": {
+      "precision": 0.8276,
+      "recall": 0.8571,
+      "f1": 0.8421,
+      "accuracy": 0.8,
+      "tp": 24,
+      "fp": 5,
+      "tn": 12,
+      "fn": 4,
+      "fpr": 0.2941,
+      "ci_low": 0.7308,
+      "ci_high": 0.9333,
+      "train_time_s": 1.74,
+      "infer_time_s_per_contract": 1.3e-05,
+      "best_hyperparameter": {
+        "learning_rate": 0.1,
+        "n_estimators": 300
+      }
+    },
+    "F1_SVM": {
+      "precision": 0.96,
+      "recall": 0.8571,
+      "f1": 0.9057,
+      "accuracy": 0.8889,
+      "tp": 24,
+      "fp": 1,
+      "tn": 16,
+      "fn": 4,
+      "fpr": 0.0588,
+      "ci_low": 0.8075,
+      "ci_high": 0.9804,
+      "train_time_s": 0.03,
+      "infer_time_s_per_contract": 1.2e-05,
+      "best_hyperparameter": {
+        "C": 10
+      }
+    },
+    "F2_RF": {
+      "precision": 0.9583,
+      "recall": 0.8214,
+      "f1": 0.8846,
+      "accuracy": 0.8667,
+      "tp": 23,
+      "fp": 1,
+      "tn": 16,
+      "fn": 5,
+      "fpr": 0.0588,
+      "ci_low": 0.7755,
+      "ci_high": 0.9643,
+      "train_time_s": 1.42,
+      "infer_time_s_per_contract": 0.001341,
+      "best_hyperparameter": {
+        "max_depth": null,
+        "n_estimators": 300
+      }
+    },
+    "F2_GBoost": {
+      "precision": 0.96,
+      "recall": 0.8571,
+      "f1": 0.9057,
+      "accuracy": 0.8889,
+      "tp": 24,
+      "fp": 1,
+      "tn": 16,
+      "fn": 4,
+      "fpr": 0.0588,
+      "ci_low": 0.8,
+      "ci_high": 0.9787,
+      "train_time_s": 1.92,
+      "infer_time_s_per_contract": 1.9e-05,
+      "best_hyperparameter": {
+        "learning_rate": 0.05,
+        "n_estimators": 100
+      }
+    },
+    "F2_SVM": {
+      "precision": 0.96,
+      "recall": 0.8571,
+      "f1": 0.9057,
+      "accuracy": 0.8889,
+      "tp": 24,
+      "fp": 1,
+      "tn": 16,
+      "fn": 4,
+      "fpr": 0.0588,
+      "ci_low": 0.8085,
+      "ci_high": 0.9787,
+      "train_time_s": 0.15,
+      "infer_time_s_per_contract": 0.000196,
+      "best_hyperparameter": {
+        "C": 10
+      }
+    },
+    "F3_RF": {
+      "precision": 0.9583,
+      "recall": 0.8214,
+      "f1": 0.8846,
+      "accuracy": 0.8667,
+      "tp": 23,
+      "fp": 1,
+      "tn": 16,
+      "fn": 5,
+      "fpr": 0.0588,
+      "ci_low": 0.7755,
+      "ci_high": 0.9643,
+      "train_time_s": 1.36,
+      "infer_time_s_per_contract": 0.00128,
+      "best_hyperparameter": {
+        "max_depth": null,
+        "n_estimators": 300
+      }
+    },
+    "F3_GBoost": {
+      "precision": 0.96,
+      "recall": 0.8571,
+      "f1": 0.9057,
+      "accuracy": 0.8889,
+      "tp": 24,
+      "fp": 1,
+      "tn": 16,
+      "fn": 4,
+      "fpr": 0.0588,
+      "ci_low": 0.8,
+      "ci_high": 0.9787,
+      "train_time_s": 4.51,
+      "infer_time_s_per_contract": 1.8e-05,
+      "best_hyperparameter": {
+        "learning_rate": 0.05,
+        "n_estimators": 100
+      }
+    },
+    "F3_SVM": {
+      "precision": 0.92,
+      "recall": 0.8214,
+      "f1": 0.8679,
+      "accuracy": 0.8444,
+      "tp": 23,
+      "fp": 2,
+      "tn": 15,
+      "fn": 5,
+      "fpr": 0.1176,
+      "ci_low": 0.7586,
+      "ci_high": 0.9546,
+      "train_time_s": 0.11,
+      "infer_time_s_per_contract": 0.000154,
+      "best_hyperparameter": {
+        "C": 10
+      }
+    }
+  },
+  "best_setting": {
+    "name": "F1_SVM",
+    "f1": 0.9057
+  },
+  "comparison_with_dmavid_on_test_subset": {
+    "dmavid_metrics_on_test": {
+      "precision": 0.963,
+      "recall": 0.9286,
+      "f1": 0.9455,
+      "accuracy": 0.9333,
+      "tp": 26,
+      "fp": 1,
+      "tn": 16,
+      "fn": 2,
+      "fpr": 0.0588,
+      "ci_low": 0.875,
+      "ci_high": 1.0
+    },
+    "best_bytecode_ml_metrics": {
+      "precision": 0.96,
+      "recall": 0.8571,
+      "f1": 0.9057,
+      "accuracy": 0.8889,
+      "tp": 24,
+      "fp": 1,
+      "tn": 16,
+      "fn": 4,
+      "fpr": 0.0588,
+      "ci_low": 0.8075,
+      "ci_high": 0.9804,
+      "train_time_s": 0.03,
+      "infer_time_s_per_contract": 1.2e-05,
+      "best_hyperparameter": {
+        "C": 10
+      }
+    },
+    "ci_overlap": true,
+    "interpretation": "DmAVID > bytecode_ML"
+  }
+}

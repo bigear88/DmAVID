@@ -1,0 +1,49 @@
+{
+  "experiment": "sprint8_bytecode_ml_exi",
+  "timestamp": "2026-05-01T15:08:28.776168",
+  "method": "bytecode_ml_F1_SVM",
+  "weights": {
+    "pattern_coverage": 25,
+    "root_cause": 30,
+    "attack_path": 25,
+    "repair_quality": 20
+  },
+  "metric_basis": {
+    "n_test_tp": 24,
+    "pattern_coverage_hit_count": 0,
+    "root_cause_correct_count": 0,
+    "attack_path_described_count": 0,
+    "repair_suggestions_count": 0,
+    "rationale": "bytecode-ML 為純二元分類器，無自然語言輸出欄位（reasoning / vulnerability_type / attack_path / repair）。實際掃描輸出皆為 0，故各指標為 0。"
+  },
+  "pattern_coverage": 0.0,
+  "root_cause_accuracy": 0.0,
+  "attack_path_coverage": 0.0,
+  "repair_quality_avg": 0.0,
+  "exi": 0.0,
+  "comparison": {
+    "dmavid_exi": 81.15,
+    "slither_exi": 26.44,
+    "codebert_exi": 0.0,
+    "bytecode_ml_exi": 0.0,
+    "ranking": [
+      {
+        "method": "DmAVID",
+        "exi": 81.15
+      },
+      {
+        "method": "Slither",
+        "exi": 26.44
+      },
+      {
+        "method": "CodeBERT",
+        "exi": 0.0
+      },
+      {
+        "method": "bytecode_ml",
+        "exi": 0.0
+      }
+    ]
+  },
+  "note": "bytecode-ML 與 CodeBERT 同為黑盒分類器，無自然語言解釋輸出，故 EXI = 0"
+}
