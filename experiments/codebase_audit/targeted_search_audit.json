@@ -1,0 +1,76 @@
+{
+  "audit": "targeted_search_strategy_existence_check",
+  "purpose": "驗證論文第伍章第一節第三段宣稱『Targeted-Search 策略新發現 3 個基線未偵測到的漏洞』",
+  "method": "(1) grep Targeted-Search 關鍵字；(2) 比對 EVMbench 各實驗 detected count；(3) 從 evmbench_enhanced 計算 sum(newly_found) 確認實際新發現數",
+  "search_results": {
+    "Targeted_Search_keyword_hits": 2,
+    "files_with_keyword": [
+      "scripts/22_evmbench_enhanced.py (line 7,109,111,167,221,225,228,230,265,266,275,308,315 — function targeted_search() 與 Stage 2 流程)",
+      "experiments/evmbench_enhanced/enhanced_results.json (stages 欄位含 'targeted_search'，per_audit 含 targeted_found / targeted_total / newly_found 欄位)"
+    ],
+    "verdict": "Targeted-Search 策略真實實作 ✓"
+  },
+  "evmbench_experiments_compared": [
+    {
+      "experiment": "evmbench_detect (baseline LLM+RAG)",
+      "detected_count": 3,
+      "total_gold": 39,
+      "detect_rate_pct": 7.69,
+      "source": "experiments/evmbench/evmbench_detect_results.json"
+    },
+    {
+      "experiment": "evmbench_hybrid (baseline + per-finding verify)",
+      "detected_count": 3,
+      "total_gold": 39,
+      "detect_rate_pct": 7.69,
+      "source": "experiments/evmbench/evmbench_hybrid_results.json"
+    },
+    {
+      "experiment": "evmbench_enhanced (per-finding SV + targeted-search)",
+      "detected_count": 12,
+      "total_gold": 39,
+      "detect_rate_pct": 30.77,
+      "newly_found_via_targeted_search": 2,
+      "newly_found_breakdown": [
+        {"audit_id": "2024-01-curves", "newly_found": 1, "targeted_total": 4},
+        {"audit_id": "2025-04-forte", "newly_found": 1, "targeted_total": 5}
+      ],
+      "source": "experiments/evmbench_enhanced/enhanced_results.json"
+    },
+    {
+      "experiment": "evmbench_reeval (post-adversarial round 2)",
+      "detected_count": 10,
+      "total_gold": 39,
+      "detect_rate_pct": 25.64,
+      "source": "experiments/evmbench_reeval/reeval_results.json"
+    },
+    {
+      "experiment": "evmbench_smart (interface summary + key module)",
+      "detected_count": 25,
+      "total_gold": 39,
+      "detect_rate_pct": 64.10,
+      "source": "experiments/evmbench_smart/smart_preprocess_results.json"
+    }
+  ],
+  "paper_claim": "Targeted-Search 策略新發現 3 個基線未偵測到的漏洞",
+  "actual_newly_found_via_targeted_search": 2,
+  "match_with_paper": false,
+  "discrepancy": "論文宣稱 +3，實算 +2（差 1 個）。Targeted-Search 函式真實存在於 scripts/22_evmbench_enhanced.py，且 enhanced_results.json sum(per_audit[*].newly_found) 經逐筆驗證為 2。",
+  "vuln_source_for_plus_3": "NOT FOUND (closest match is evmbench_enhanced newly_found=2)",
+  "alternative_interpretations_checked": {
+    "all_audits_newly_found_3": "FALSE — 只有 2 個 audit (2024-01-curves, 2025-04-forte) 各 newly_found=1，總和為 2",
+    "any_single_audit_newly_3": "FALSE — 無任何單一 audit 之 newly_found 達到 3",
+    "enhanced_minus_baseline_total": 9,
+    "reeval_minus_baseline_total": 7,
+    "smart_minus_baseline_total": 22,
+    "no_experiment_yields_exactly_3_via_targeted_search": true
+  },
+  "recommendation_for_paper": {
+    "option_A_correct_to_2": "建議：將「+3 個基線未偵測漏洞」改為「+2 個基線未偵測漏洞」(2024-01-curves 與 2025-04-forte 各 1)。實算真實值，可重現。",
+    "option_B_use_total_delta": "改為「Targeted-Search 與 per-finding Self-Verify 兩階段協同，將整體偵測率從 baseline 7.69% (3/39) 提升至 30.77% (12/39)」，避免單獨歸功 targeted-search。",
+    "option_C_reword_no_count": "改為「Targeted-Search 策略可針對基線未匹配之 gold vuln 主動發起搜尋，於 evmbench 子集中實證可成功補捉到先前漏掉之漏洞」，不寫具體數字。",
+    "preferred_option": "A — 數字真實可重現，誠實 disclose 為 +2 即可"
+  },
+  "computed_at": "2026-05-03T00:00:00",
+  "data_source": "DmAVID repo @ commit b2fea50 (master)"
+}

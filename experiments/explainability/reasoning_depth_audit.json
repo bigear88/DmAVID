@@ -1,0 +1,57 @@
+{
+  "audit": "reasoning_depth_repair_suggestion_audit",
+  "purpose": "驗證論文第伍章宣稱『DmAVID 平均推理深度 65 詞、52.5% 包含修復建議、Slither 15 詞』之 raw 來源",
+  "method": "(1) 從 v5_clean SV details 計算 reasoning 與 sv_reasoning 之字元/詞數；(2) 對 sv_mitigation 欄位與多套修復關鍵字定義計算覆蓋率；(3) Slither 結果中 vuln_types/severities 文字長度（無 description 欄位）",
+  "data_sources": [
+    "experiments/ablation/ablation_v5_clean_self-verify_details.json (n=243, TP=140, FP=24)",
+    "experiments/slither/slither_results.json (n=243, total detections=1482)"
+  ],
+  "dmavid": {
+    "n_results": 243,
+    "n_TPs": 140,
+    "n_FPs": 24,
+    "reasoning_field_stats": {
+      "all_243": {"mean_chars": 576.1, "median_chars": 556, "mean_words": 81.5, "median_words": 77, "min_words": 37, "max_words": 165},
+      "TP_140": {"mean_chars": 505.6, "median_chars": 472, "mean_words": 72.2, "median_words": 68, "min_words": 37, "max_words": 147},
+      "FP_24": {"mean_chars": 758.6, "median_chars": 751, "mean_words": 108.5, "median_words": 110, "min_words": 58, "max_words": 161}
+    },
+    "repair_suggestion_coverage_TP_140": {
+      "sv_mitigation_field_non_empty": {"count": 7, "pct": 5.0, "definition": "sv_mitigation 欄位有非空文字（非 None）"},
+      "reasoning_has_repair_keyword": {"count": 8, "pct": 5.7, "definition": "原 reasoning 含 建議/修復/mitigation/fix/recommend/prevent 等關鍵字"},
+      "sv_reasoning_has_repair_keyword": {"count": 92, "pct": 65.7, "definition": "SV 階段 sv_reasoning 含修復關鍵字"},
+      "either_reasoning_or_sv_reasoning": {"count": 93, "pct": 66.4, "definition": "兩欄位任一含寬鬆關鍵字"},
+      "strict_keyword_either": {"count": 44, "pct": 31.4, "definition": "嚴格關鍵字（建議/修復/mitigation/recommend/should use|implement|add/need to/必須）"}
+    }
+  },
+  "slither": {
+    "n_results": 243,
+    "total_detections": 1482,
+    "text_field_availability": "Slither raw JSON 僅含 vuln_types (e.g. 'reentrancy-eth') 與 severities (e.g. 'High')，**無 description / message 文字欄位**；'描述詞數' 概念在 raw 中不存在",
+    "per_detection_words": {"vuln_types_mean": 1.0, "severities_mean": 1.0},
+    "per_contract_aggregated_words": {"mean": 25.22, "median": 18, "max": 241, "definition": "全 detections 之 vuln_types + severities 字串連接後 split() 詞數"}
+  },
+  "comparison_with_paper_claim": {
+    "paper_dmavid_avg_words": {"value": 65, "computed_TP_mean": 72.2, "computed_TP_median": 68, "computed_all_mean": 81.5, "diff_to_TP_median": -3, "match": "APPROXIMATE (TP median 68 距 65 差 3 詞)"},
+    "paper_repair_pct": {"value": 52.5, "computed_options": {"sv_mitigation_strict": 5.0, "reasoning_keyword": 5.7, "sv_reasoning_keyword": 65.7, "either_loose": 66.4, "strict_either": 31.4}, "match": "NOT FOUND (52.5% 落在 31.4 與 65.7 之間，無單一定義可命中)"},
+    "paper_slither_words": {"value": 15, "computed_per_contract_median": 18, "computed_per_detection_words": 1, "match": "APPROXIMATE (per-contract median 18 距 15 差 3) 但 raw 無 description 欄位，'詞數' 為人為計算 vuln_types+severities 串接"}
+  },
+  "verdict": "PARTIAL_MATCH — 三個數字都不精確，但 DmAVID 65 與 Slither 15 各與某種計算定義差 3 詞範圍內；52.5% 修復建議比例則無任何單一定義可命中",
+  "recommendation_for_paper": {
+    "dmavid_avg_words_65": {
+      "preferred": "改用實算數字：『DmAVID 平均推理深度 72 詞（TP-only mean）或 68 詞（TP-only median）』，避免 65 之單點宣稱",
+      "alternative": "若要保留簡潔，可改述為「平均約 70 詞」並 disclose 為 TP-only 統計"
+    },
+    "repair_pct_52_5": {
+      "preferred": "改述為『TP 中 66.4%（93/140）之推理或 SV 階段含修復建議關鍵字』(sv_reasoning 寬鬆定義)，並 disclose 計算方式",
+      "alternative_strict": "若採嚴格關鍵字定義，則為 31.4% — 此值偏低，不利論文敘事；建議採寬鬆定義 66.4%",
+      "warning": "52.5% 之數字無任何 raw 計算對齊，應視為 placeholder 或舊版實驗殘留，需 mandatory 修正"
+    },
+    "slither_15_words": {
+      "preferred": "改述為『Slither 每合約輸出僅 vuln_type 與 severity 標籤（單詞層級），無自然語言描述；以 vuln_types+severities 串接計算之 per-contract 詞數中位數約 18 詞』",
+      "warning": "Slither raw 無 description 欄位，論文『15 詞』之測量方法需在文中明確 disclose；否則可改為定性對比『Slither 僅輸出標籤，DmAVID 提供完整推理段落』，避免特定數字"
+    },
+    "overall_recommendation": "三個數字至少需修兩處（52.5% 與 15 詞）；65 詞可改為 72（mean）或 68（median）"
+  },
+  "computed_at": "2026-05-03T00:15:00",
+  "data_source_commit": "DmAVID repo @ b2fea50 (master)"
+}

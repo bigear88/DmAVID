@@ -1,0 +1,64 @@
+{
+  "audit": "top10_defi_vuln_coverage_in_TPs",
+  "purpose": "驗證論文第伍章第一節第四段宣稱『DmAVID LLM+RAG 管線在 140 個 TP 合約中覆蓋 90% 的 Top-10 DeFi 漏洞模式』",
+  "method": "(1) 從 v5_clean SV details 過濾 ground_truth=True AND final_verdict=True (n=140 TPs)；(2) 統計每筆 TP 之 vulnerability_types 與 category；(3) 對 Top-10 候選清單逐項檢查是否有任一 TP 命中",
+  "data_source": "experiments/ablation/ablation_v5_clean_self-verify_details.json",
+  "n_TPs_total": 140,
+  "top10_vuln_types": [
+    "reentrancy",
+    "integer_overflow_arithmetic",
+    "access_control",
+    "unchecked_low_level_calls",
+    "denial_of_service",
+    "bad_randomness",
+    "front_running",
+    "time_manipulation",
+    "short_addresses",
+    "flash_loan_price_oracle_manipulation"
+  ],
+  "covered_types": [
+    {"type": "reentrancy", "tp_category_count": 31, "vuln_type_hits": 63, "match_keywords": ["REENTRANCY"]},
+    {"type": "integer_overflow_arithmetic", "tp_category_count": 13, "vuln_type_hits": 13, "match_keywords": ["INTEGER_OVERFLOW"]},
+    {"type": "access_control", "tp_category_count": 18, "vuln_type_hits": 25, "match_keywords": ["ACCESS_CONTROL", "ACCESS CONTROL"]},
+    {"type": "unchecked_low_level_calls", "tp_category_count": 51, "vuln_type_hits": 75, "match_keywords": ["UNCHECKED_CALL", "UNCHECKED CALL", "UNCHECKED LOW-LEVEL CALL"]},
+    {"type": "denial_of_service", "tp_category_count": 6, "vuln_type_hits": 8, "match_keywords": ["DENIAL_OF_SERVICE"]},
+    {"type": "bad_randomness", "tp_category_count": 8, "vuln_type_hits": 8, "match_keywords": ["BAD_RANDOMNESS", "BAD RANDOMNESS"]},
+    {"type": "front_running", "tp_category_count": 4, "vuln_type_hits": 4, "match_keywords": ["FRONT_RUNNING", "FRONT-RUNNING / TRANSACTION ORDER DEPENDENCE"]},
+    {"type": "time_manipulation", "tp_category_count": 5, "vuln_type_hits": 5, "match_keywords": ["TIME_MANIPULATION"]},
+    {"type": "short_addresses", "tp_category_count": 1, "vuln_type_hits": 1, "match_keywords": ["SHORT_ADDRESSES"]}
+  ],
+  "uncovered_types": [
+    {
+      "type": "flash_loan_price_oracle_manipulation",
+      "reason": "SmartBugs Curated 資料集本身不含 flash_loan / price_oracle 類別（只有 10 個 SWC-aligned 類別），故 TP 中無此類型 — 此為資料集限制，非模型缺陷"
+    }
+  ],
+  "coverage_count": 9,
+  "coverage_pct": 90.0,
+  "match_with_paper": true,
+  "additional_stats": {
+    "avg_vuln_types_per_TP": 1.48,
+    "total_vuln_type_entries": 207,
+    "tp_category_distribution": {
+      "unchecked_low_level_calls": 51,
+      "reentrancy": 31,
+      "access_control": 18,
+      "arithmetic": 13,
+      "bad_randomness": 8,
+      "denial_of_service": 6,
+      "time_manipulation": 5,
+      "front_running": 4,
+      "other": 3,
+      "short_addresses": 1
+    },
+    "n_unique_vuln_types_emitted_by_LLM": 18
+  },
+  "verdict": "PAPER_CLAIM_VERIFIED",
+  "verdict_detail": "140 個 TP 合約中對 Top-10 DeFi 漏洞模式之覆蓋率為 9/10 = 90.0%，與論文宣稱完全一致。唯一未覆蓋類別為 flash_loan/price_oracle_manipulation，此為 SmartBugs 資料集設計範圍限制（資料集只含 SWC-aligned 10 類），非模型偵測能力缺陷。",
+  "recommendation_for_paper": {
+    "main_claim": "保留現狀 — 90% 覆蓋率宣稱可重現於 v5_clean SV details，無需修改",
+    "suggested_clarification": "建議補一句註明：『未覆蓋類別 flash_loan / price_oracle_manipulation 屬 SmartBugs Curated 資料集設計範圍之外（該資料集聚焦 SWC-aligned 10 類），非 DmAVID 偵測能力之上限』，避免 reviewer 質疑為何 100% 不可達"
+  },
+  "computed_at": "2026-05-03T00:10:00",
+  "data_source_commit": "DmAVID repo @ b2fea50 (master)"
+}

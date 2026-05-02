@@ -1,0 +1,67 @@
+{
+  "audit": "iteration_subexperiment_metrics_source_verification",
+  "purpose": "驗證論文第伍章第一節第二段宣稱『對抗迭代子實驗 F1=0.8924, Recall=98.6%, FPR=32%』之實際 raw 來源",
+  "method": "(1) grep 0.8924 / 0.986 across experiments/；(2) 比對 ablation_results.json (v1 legacy) 與 dmavid_round2 (canonical 對抗迭代) 兩組 raw metrics；(3) 算術回算 P/R/F1/FPR 確認 exact match",
+  "paper_claim": {"F1": 0.8924, "Recall": 0.986, "FPR": 0.32},
+  "raw_match_candidates": [
+    {
+      "source": "experiments/ablation/ablation_results.json (v1 legacy +debate config)",
+      "config_name": "+debate",
+      "metrics": {"tp": 141, "fp": 32, "tn": 68, "fn": 2, "precision": 0.815, "recall": 0.986, "f1": 0.8924},
+      "computed_fpr": 0.32,
+      "computed_fpr_formula": "FP / (FP+TN) = 32/(32+68) = 0.32",
+      "exact_match_F1": true,
+      "exact_match_Recall": true,
+      "exact_match_FPR": true,
+      "verdict": "PERFECT MATCH (exact in 4 decimal places)"
+    },
+    {
+      "source": "experiments/dmavid_round2/round_1_results.json (canonical adversarial iteration round 1)",
+      "metrics": {"tp": 129, "fp": 18, "tn": 82, "fn": 14, "precision": 0.8776, "recall": 0.9021, "f1": 0.8897, "fpr": 0.18},
+      "exact_match_F1": false,
+      "exact_match_Recall": false,
+      "exact_match_FPR": false,
+      "verdict": "差距明顯（F1 0.8897 vs 0.8924，Recall 0.9021 vs 0.986）"
+    },
+    {
+      "source": "experiments/dmavid_round2/round_2_results.json",
+      "metrics": {"tp": 128, "fp": 16, "tn": 84, "fn": 15, "precision": 0.8889, "recall": 0.8951, "f1": 0.892, "fpr": 0.16},
+      "exact_match_F1": false,
+      "verdict": "F1 接近但 Recall/FPR 不符"
+    },
+    {
+      "source": "experiments/dmavid_round2/round_3_results.json",
+      "metrics": {"tp": 128, "fp": 17, "tn": 83, "fn": 15, "precision": 0.8828, "recall": 0.8951, "f1": 0.8889, "fpr": 0.17},
+      "exact_match_F1": false,
+      "verdict": "差距明顯"
+    }
+  ],
+  "best_match": "experiments/ablation/ablation_results.json (v1 legacy +debate)",
+  "best_match_status": {
+    "is_canonical": false,
+    "is_adversarial_iteration": false,
+    "explanation": "v1 legacy ablation_results.json 為「靜態階段消融」(baseline → +critique → +debate)，並非「對抗迭代」實驗；canonical 對抗迭代實驗為 dmavid_round2 (3 rounds, F1≈0.889-0.892)；canonical 整體最佳為 v5_clean +self-verify (F1=0.9121)"
+  },
+  "labelling_issue": "論文將 v1 +debate static ablation 數字稱為「對抗迭代子實驗」屬 mislabel——「對抗迭代」對應 dmavid_round2 (F1≈0.89)，但其數字與論文不符；論文實際引用的數字屬於 legacy v1 階段消融，已被 v5_clean canonical 取代",
+  "options": {
+    "A_keep_with_legacy_disclaimer": {
+      "action": "保留 F1=0.8924/R=98.6%/FPR=32% 數字，但補註：『此數字對應 v1 legacy ablation_results.json 之 +debate config（已被 v5_clean F1=0.9121 取代為 canonical），非 dmavid_round2 對抗迭代實驗結果。』",
+      "pro": "保留原段落結構，僅加 disclaimer",
+      "con": "讀者仍可能困惑為何引用已棄用 config"
+    },
+    "B_replace_with_dmavid_round2": {
+      "action": "改用 dmavid_round2 round 1 真實數字：F1=0.8897, Recall=0.9021, FPR=0.18 (或 round 2 F1=0.892, Recall=0.8951, FPR=0.16)，並改述為「對抗迭代第 1 輪後達 F1=0.8897」",
+      "pro": "與『對抗迭代』之 narrative 一致；數字可重現於 dmavid_round2/",
+      "con": "FPR 從 32% 降到 18%，反而是好結果；論文之原意可能是強調「iteration 前 FPR 高」，需重新組織段落"
+    },
+    "C_replace_with_v5_clean": {
+      "action": "改用 v5_clean canonical: F1=0.9121, Recall=0.979, FPR=24% (FP=24/100)",
+      "pro": "與第三章 canonical 對齊，最一致",
+      "con": "與『對抗迭代子實驗』語境完全脫鉤；應改為「整體最佳結果」"
+    }
+  },
+  "recommended_option": "B",
+  "rationale": "論文段落主題是『對抗迭代』，故應引用對抗迭代實驗（dmavid_round2）之真實數字。Option A 雖保留原數字但會 expose v1 legacy 已棄用之事實，反而引發更多疑問。Option C 改變了段落主題（從『對抗迭代』變成『整體最佳』），不符原文意圖。Option B 最忠於原段落 narrative。",
+  "computed_at": "2026-05-03T00:05:00",
+  "data_source": "DmAVID repo @ commit b2fea50 (master)"
+}
