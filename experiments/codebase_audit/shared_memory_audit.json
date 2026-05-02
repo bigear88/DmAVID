@@ -1,0 +1,65 @@
+{
+  "audit": "shared_memory_components_implementation_audit",
+  "purpose": "驗證論文第參章 [207] 段「五代理透過共享記憶體（Shared Memory）進行協作，包含 ChromaDB 向量知識庫、Evidence Store 證據庫、Iteration Metrics 迭代指標追蹤以及 Tool Registry 工具註冊表」之 4 元件是否在 codebase 中實作",
+  "method": "grep + ls + 檔案內容檢視；對每元件搜尋預期之 class name / dir name / collection name / API symbol",
+  "components": {
+    "chromadb_vector_kb": {
+      "implemented": true,
+      "evidence": "ChromaDB collection 'vuln_knowledge' 在 8 個 script 中使用；data/chroma_kb/ 含實體 sqlite + parquet 持久化；build_knowledge_base.py 建立 KB 並以 OpenAI text-embedding-3-small (1536-d) 嵌入",
+      "files": [
+        "scripts/build_knowledge_base.py:35,117",
+        "scripts/06_run_hybrid.py:63",
+        "scripts/09_run_evmbench_detect.py:81",
+        "scripts/10_run_evmbench_hybrid.py:83",
+        "scripts/10_run_evmbench_hybrid_3modes.py:76",
+        "scripts/45_coordinator_ablation.py:345-346",
+        "scripts/16_vuln_intel_collector.py",
+        "data/chroma_kb/"
+      ]
+    },
+    "evidence_store": {
+      "implemented": false,
+      "evidence": "全 repo grep evidence_store / EvidenceStore / evidence_db / register_evidence / store_evidence 結果為 0；無 evidence/ 目錄，無 evidence_db.json，無集中 evidence 抽象層；推論：證據資料散落在 multi-agent log（experiments/*_details.json 之 reasoning 欄位）與 iteration_history JSON 之內，但無獨立 EvidenceStore 模組或統一 read/write API",
+      "files": [],
+      "search_terms_with_zero_hits": ["evidence_store", "EvidenceStore", "evidence_db", "register_evidence", "store_evidence"]
+    },
+    "iteration_metrics": {
+      "implemented": true,
+      "evidence": "scripts/14_adversarial_loop.py 定義 RoundMetrics dataclass（含 round_num/f1_score/precision/recall/false_positive_rate/tokens_used/cost_usd/new_patterns_added/fn_count/fp_count/timestamp），透過 save_iteration_history() 持久化到 experiments/iteration_history/；目錄含 10 個 history_*.json + 10 個 f1_progression_*.json（2026-03-12 跑出之 5 次實驗紀錄）",
+      "files": [
+        "scripts/14_adversarial_loop.py:520-559 (save_iteration_history + generate_f1_progression_data)",
+        "scripts/20_generate_round2_charts.py",
+        "experiments/iteration_history/ (10 history + 10 progression JSON)",
+        "experiments/dmavid_round2/round2_progression.json"
+      ]
+    },
+    "tool_registry": {
+      "implemented": false,
+      "evidence": "全 repo grep tool_registry / ToolRegistry / register_tool / TOOL_REGISTRY 結果為 0；亦無 class.*Registry / AVAILABLE_TOOLS / TOOLS dict 等替代結構；tools/ 目錄存在但僅含 apply_thesis_corrections.py 與 validate_thesis_tables.py（論文校稿用，非 agent tool）；Slither / Mythril / Foundry 等外部分析器以 subprocess 形式 ad-hoc 在各 script 中呼叫，無集中註冊或 capability 查詢抽象層",
+      "files": [],
+      "search_terms_with_zero_hits": ["tool_registry", "ToolRegistry", "register_tool", "TOOL_REGISTRY", "AVAILABLE_TOOLS"],
+      "tools_dir_actual_content": ["tools/apply_thesis_corrections.py (論文校稿)", "tools/validate_thesis_tables.py (論文校稿)"]
+    }
+  },
+  "summary": {
+    "implemented_count": 2,
+    "not_implemented_count": 2,
+    "implemented_components": ["chromadb_vector_kb", "iteration_metrics"],
+    "missing_components": ["evidence_store", "tool_registry"]
+  },
+  "recommendation_for_paper": {
+    "evidence_store": {
+      "option_a_delete": "建議：直接刪除「Evidence Store 證據庫」之表述。論文目前無 EvidenceStore 抽象，符合 multi-agent 證據資料散落於 reasoning 欄位之實況。",
+      "option_b_rename": "若要保留概念，可改述為「multi-agent 推理紀錄（散見於各 agent 之 reasoning/sv_reasoning/critique 欄位之 JSON 紀錄）」，避免暗示有獨立 store 模組。",
+      "option_c_implement": "若要保留原句，需新增 src/evidence_store.py 與統一 read/write API，並重跑 5-agent 流程使其寫入。實作成本：中（~半天 + 重跑 ablation）"
+    },
+    "tool_registry": {
+      "option_a_delete": "建議：刪除「Tool Registry 工具註冊表」之表述。論文目前以 subprocess + 直呼方式整合 Slither/Mythril/Foundry，無集中註冊抽象。",
+      "option_b_rename": "若要保留概念，可改述為「外部分析器整合（Slither / Mythril / Foundry 之 subprocess 呼叫）」，誠實描述實作型態。",
+      "option_c_implement": "若要保留原句，需新增 src/tool_registry.py（dict 形式之 tool name → callable 對映）並 refactor 既有 script。實作成本：中等"
+    },
+    "preferred_paper_revision": "建議改寫 [207] 段為：『五代理透過共享記憶體（Shared Memory）進行協作，目前已實作之共享元件包含：(1) ChromaDB 向量知識庫（vuln_knowledge collection，39 entries，OpenAI text-embedding-3-small 1536-d），與 (2) Iteration Metrics 迭代指標追蹤（experiments/iteration_history/，記錄各 round 之 F1/precision/recall/tokens/patterns_added）。多 agent 推理證據以 JSON reasoning 欄位散見於各 agent 輸出（暫無獨立 EvidenceStore 抽象）；外部工具（Slither/Mythril/Foundry）以 subprocess 形式直接呼叫（暫無集中 ToolRegistry）。』"
+  },
+  "computed_at": "2026-05-02T23:30:00",
+  "data_source": "DmAVID repo @ commit 2af904a (master)"
+}
