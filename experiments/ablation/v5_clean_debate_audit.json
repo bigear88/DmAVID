@@ -1,0 +1,33 @@
+{
+  "audit": "v5_clean_critique+debate_no_op_verification",
+  "purpose": "驗證 +critique+debate config 之 debate 階段是否實際觸發",
+  "method": "逐筆比對 critique_details vs critique+debate_details 之 predicted/confidence/reasoning/vulnerability_types；檢查 debate_flipped 旗標、tokens_used、debate_summary",
+  "findings": {
+    "debate_flipped_true_count": 0,
+    "debate_flipped_false_count": 243,
+    "diff_predicted_vulnerable": 0,
+    "diff_confidence": 0,
+    "diff_reasoning": 0,
+    "diff_vulnerability_types": 0,
+    "metrics_match": {
+      "tp": 143,
+      "fp": 88,
+      "tn": 12,
+      "fn": 0,
+      "f1": 0.7647,
+      "identical_to_critique_only": true
+    },
+    "debate_summary_field": null,
+    "summary_tokens_zero": true,
+    "details_tokens_inherit_from_critique": 643722
+  },
+  "interpretation": "Debate 階段從未觸發。可能原因：critique 階段已將所有 predicted=False 樣本翻轉為 True（FP=88, FN=0），不存在分歧候選符合 debate 之 disagreement triggering 條件。details json 之 tokens_used 為 critique 階段沿用值，非 debate 新增。",
+  "implication_for_paper": "v41 docx 主結果（F1=0.9121）由 v5_clean +self-verify config 提供，未引用 +critique+debate F1=0.7647，故論文無需修改。Legacy +critique/+debate config 與現行 5-agent 設計（Coordinator/Teacher/Student/Red Team/Blue Team）不直接對應，未列入論文 stage ablation 表。",
+  "data_sources": [
+    "experiments/ablation/ablation_v5_clean_critique_details.json",
+    "experiments/ablation/ablation_v5_clean_critique+debate_details.json",
+    "experiments/ablation/ablation_v5_clean_results.json"
+  ],
+  "computed_at": "2026-05-02T20:34:27.787235",
+  "audit_by": "claude-code-cli + cowork cross-verification"
+}
