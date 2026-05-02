@@ -1,0 +1,104 @@
+{
+  "experiment": "metadata_only_ablation_paper_494_audit",
+  "purpose": "驗證論文第肆章 [494] 段「移除 @vulnerable_at_lines 後 RF F1 從 0.9857 降至 0.9550」之數字來源",
+  "method": "與 scripts/40_fairness_ablation_full.py S1 Naive 完全對齊：143 vuln + 100 wild safe（seed=42），TF-IDF(max=500) + 19 維結構特徵 + RF(n=100, seed=42)，StratifiedKFold(5, seed=42)",
+  "sample_stats": {
+    "n_total": 243,
+    "n_vuln": 143,
+    "n_safe": 100,
+    "total_at_vulnerable_at_lines_lines": 143,
+    "total_metadata_3field_lines": 426,
+    "contracts_with_at_vulnerable_at_lines": 143
+  },
+  "results": {
+    "A_baseline": {
+      "label": "A_baseline_no_strip",
+      "precision": 1.0,
+      "precision_std": 0.0,
+      "recall": 0.9648,
+      "recall_std": 0.0226,
+      "f1": 0.9819,
+      "f1_std": 0.0117,
+      "accuracy": 0.9793,
+      "accuracy_std": 0.0132
+    },
+    "B_strip_vulnerable_at_lines_only": {
+      "label": "B_strip_at_vulnerable_at_lines_only",
+      "precision": 1.0,
+      "precision_std": 0.0,
+      "recall": 0.9579,
+      "recall_std": 0.0147,
+      "f1": 0.9784,
+      "f1_std": 0.0077,
+      "accuracy": 0.9753,
+      "accuracy_std": 0.0085
+    },
+    "C_strip_metadata_header": {
+      "label": "C_strip_source_author_vulnlines",
+      "precision": 0.9583,
+      "precision_std": 0.0125,
+      "recall": 0.9579,
+      "recall_std": 0.0147,
+      "f1": 0.958,
+      "f1_std": 0.0088,
+      "accuracy": 0.9506,
+      "accuracy_std": 0.0102
+    }
+  },
+  "drop_pct": {
+    "B_minus_A": 0.36,
+    "C_minus_A": 2.43
+  },
+  "paper_claim": {
+    "baseline_f1": 0.9857,
+    "after_strip_f1": 0.955,
+    "drop_pct": 3.1
+  },
+  "fairness_ablation_reference": {
+    "S1_RF_f1": 0.9819,
+    "S3_RF_f1": 0.8722,
+    "S1_to_S3_drop_pct": 11.17
+  },
+  "computed_at": "2026-05-02T23:14:41.328225",
+  "seed": 42,
+  "data_source": "data/dataset_1000.json",
+  "alignment_check": {
+    "paper_baseline_vs_A_f1": {
+      "paper": 0.9857,
+      "actual": 0.9819,
+      "diff": -0.0038,
+      "match": true
+    },
+    "paper_after_strip_vs_B_f1": {
+      "paper": 0.955,
+      "actual": 0.9784,
+      "diff": 0.0234,
+      "match": false
+    },
+    "paper_after_strip_vs_C_f1": {
+      "paper": 0.955,
+      "actual": 0.958,
+      "diff": 0.003,
+      "match": true
+    },
+    "paper_drop_vs_B_drop_pct": {
+      "paper": 3.1,
+      "actual": 0.36,
+      "diff": -2.74,
+      "match": false
+    },
+    "paper_drop_vs_C_drop_pct": {
+      "paper": 3.1,
+      "actual": 2.43,
+      "diff": -0.67,
+      "match": false
+    }
+  },
+  "verdict": "F1_VALUES_APPROX_MATCH_BUT_DROP_PCT_DIVERGES",
+  "verdict_detail": "Closest match: C (strip metadata header) F1=0.9580 (paper 0.955, diff +0.0030); baseline A F1=0.9819 (paper 0.9857, diff -0.0038). Drop A→C = 2.43% (paper 3.1%). 論文文字描述「移除 @vulnerable_at_lines」對應之最小操作（B 只移該行）僅 drop 0.36%，不符 3.1%；唯有移除整個 metadata header（C, 含 @source/@author/@vulnerable_at_lines 三行）才會接近 3.1% 之降幅。建議論文文字校正為「移除 SmartBugs metadata header（@source / @author / @vulnerable_at_lines）」。",
+  "recommendation": {
+    "option_a_use_actual_metadata_only": "改用 metadata-only 實算數字：baseline F1=0.9819 → strip @vulnerable_at_lines F1=0.9784（降幅 0.36%），或 strip metadata header F1=0.9580（降幅 2.43%）",
+    "option_b_use_fairness_ablation_S1_to_S3": "改用 S1→S3 完整 strip-comments 數字：F1 0.9819 → 0.8722（降幅 11.17%），但需文字改為「移除所有註解（含 metadata）」",
+    "option_c_drop_sentence": "刪除此句，只保留 (1) 檔名洩漏 + (3) 風格差異"
+  }
+}
