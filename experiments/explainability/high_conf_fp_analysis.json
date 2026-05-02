@@ -1,0 +1,74 @@
+{
+  "total_fp": 24,
+  "high_conf_fp": 0,
+  "high_conf_fp_ratio": 0.0,
+  "threshold_tau": 0.95,
+  "fp_conf_stats": {
+    "n": 24,
+    "mean": 0.9,
+    "median": 0.9,
+    "min": 0.9,
+    "max": 0.9
+  },
+  "tp_conf_stats": {
+    "n": 140,
+    "mean": 0.9279,
+    "median": 0.9,
+    "min": 0.9,
+    "max": 1.0
+  },
+  "tn_conf_stats": {
+    "n": 76,
+    "mean": 0.9164,
+    "median": 0.9,
+    "min": 0.9,
+    "max": 1.0
+  },
+  "fn_conf_stats": {
+    "n": 3,
+    "mean": 0.9167,
+    "median": 0.9,
+    "min": 0.9,
+    "max": 0.95
+  },
+  "fp_conf_buckets": {
+    "0.9": 24
+  },
+  "tp_conf_buckets": {
+    "0.9": 95,
+    "0.95": 12,
+    "1.0": 33
+  },
+  "tn_conf_buckets": {
+    "0.9": 53,
+    "0.95": 21,
+    "1.0": 2
+  },
+  "fn_conf_buckets": {
+    "0.9": 2,
+    "0.95": 1
+  },
+  "multi_tau_high_conf_fp": {
+    "tau_0.90": {
+      "high_conf_fp": 24,
+      "ratio_pct": 100.0
+    },
+    "tau_0.95": {
+      "high_conf_fp": 0,
+      "ratio_pct": 0.0
+    },
+    "tau_0.99": {
+      "high_conf_fp": 0,
+      "ratio_pct": 0.0
+    },
+    "tau_1.00": {
+      "high_conf_fp": 0,
+      "ratio_pct": 0.0
+    }
+  },
+  "confidence_granularity_note": "LLM 自評 confidence 僅輸出離散值 {0.8, 0.9, 0.95, 1.0}，連續門檻細粒度受限",
+  "interpretation": "高信心 FP 比例代表 Self-Verify Confidence Threshold 機制無法捕捉之循環依賴邊界",
+  "data_source": "ablation_v5_clean_self-verify_details.json",
+  "verdict_rule": "sv_verdict 優先；為 None 時 fallback 到 predicted_vulnerable",
+  "computed_at": "2026-05-02T10:12:48.786909"
+}
