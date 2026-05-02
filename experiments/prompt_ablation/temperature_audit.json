@@ -1,0 +1,33 @@
+{
+  "audit": "prompt_ablation_temperature_verification",
+  "purpose": "驗證論文第肆章 [126] 段宣稱『四個 Prompt 變體 (V1–V4) 共用 temperature=0.1, seed=42』之實作對齊；並標記與第三章 canonical T=0.0 之差異",
+  "method": "(1) 讀 scripts/32_prompt_variants_ablation.py 之 client.chat.completions.create 呼叫；(2) grep run.log 是否記錄 temperature；(3) 讀 V1–V4 results JSON 之 metadata 欄位",
+  "script_path": "scripts/32_prompt_variants_ablation.py",
+  "script_temperature": 0.1,
+  "script_seed": 42,
+  "script_evidence": {
+    "line_173": "temperature=0.1,",
+    "line_175": "seed=42,",
+    "line_8_docstring": "設計：四個變體共用同一資料集、同一模型、同一 seed=42、同一 temperature=0.1",
+    "line_51": "random.seed(42)"
+  },
+  "log_temperature": null,
+  "log_evidence": "experiments/prompt_ablation/run.log 共 1041 行；header 段僅記錄 Model / Dataset / Variants / Limit / 樣本數，未獨立打印 temperature 值（grep -i 'temperature' = 0 hits）",
+  "json_metadata_temperature": null,
+  "json_metadata_evidence": "V1–V4 results JSON 之 top-level keys = [variant, description, model, timestamp, system_prompt, user_template, metrics, results]，無 temperature/seed 欄位",
+  "consistency_check": "match_with_partial_disclosure_gap",
+  "consistency_detail": "腳本 hardcoded temperature=0.1 與論文 [126] 宣稱一致 ✓；惟 run.log 與 JSON metadata 均未持久化此參數，未來重現須仰賴 script source。建議在 run.log header 與每個 results JSON 加入 'temperature' 與 'seed' 欄位。",
+  "cross_chapter_temperature_inconsistency": {
+    "chapter_3_canonical": 0.0,
+    "chapter_4_prompt_ablation": 0.1,
+    "issue": "第三章 RAG/Self-Verify 主管線採 T=0.0 以提升 deterministic 重現；第四章 prompt ablation V1–V4 採 T=0.1。兩值不同但論文未明示，可能造成讀者誤以為 prompt ablation 結果可直接與第三章 baseline 對齊比較。",
+    "severity": "low (兩個實驗目的不同，T=0.1 vs T=0.0 對 gpt-4.1-mini 在 vulnerability detection 任務上之預期效能差距通常 <1pp，但仍應 disclose)"
+  },
+  "recommendation_for_paper": {
+    "main_claim_status": "論文 [126] 宣稱 T=0.1 與 script 對齊正確，無需修改 T 值",
+    "suggested_disclosure_addition": "建議於 [126] 段或第肆章開頭補一句 disclosure：『註：Prompt 變體消融為 V1 開發階段早期實驗，採 T=0.1；第參章 RAG/Self-Verify 主管線統一改為 T=0.0 以提升 deterministic 重現性。兩者解碼參數不同，故 prompt ablation 之 V1_baseline F1 不可直接與第參章 LLM+RAG baseline F1 對齊比較。』",
+    "reproducibility_improvement": "建議未來 rerun 時於 run.log header 與 V*_results.json 內加入 'temperature': 0.1, 'seed': 42 欄位，避免 reviewer 需 trace source code 才能確認解碼參數"
+  },
+  "computed_at": "2026-05-02T23:45:00",
+  "data_source": "DmAVID repo @ commit 9ad4898 (master)"
+}
