@@ -1,0 +1,242 @@
+{
+  "version": "v52_llm_judge_safe_noise",
+  "timestamp": "2026-05-03T21:21:04.882115",
+  "n_strict_flagged": 16,
+  "n_total_safe": 100,
+  "judge_model": "gpt-4.1-mini",
+  "judge_temperature": 0.0,
+  "judgments": [
+    {
+      "id": "wild_safe_0004_0x04666cdf77621dbee1b21988739dd3c12620a719.sol",
+      "filename": "0x04666cdf77621dbee1b21988739dd3c12620a719.sol",
+      "n_high": 1,
+      "n_medium": 6,
+      "known_high_detectors": [
+        "reentrancy-eth",
+        "unchecked-send"
+      ],
+      "verdict": "TRUE_POSITIVE",
+      "confidence": 0.9,
+      "exploitability": "high",
+      "key_finding": "reentrancy-eth",
+      "reasoning": "The fallback function sends ETH to admin and owner using send() without checking the return value, which can cause silent failures. Additionally, the fallback function updates user balances before sending ETH, allowing a reentrancy attack to manipulate balances or drain funds."
+    },
+    {
+      "id": "wild_safe_0008_0xfaa5f725d1c4ca57d285c0ab885d437c555e954d.sol",
+      "filename": "0xfaa5f725d1c4ca57d285c0ab885d437c555e954d.sol",
+      "n_high": 1,
+      "n_medium": 9,
+      "known_high_detectors": [],
+      "verdict": "FALSE_POSITIVE",
+      "confidence": 0.9,
+      "exploitability": "none",
+      "key_finding": "unrecognized high-severity finding",
+      "reasoning": "No recognized high-severity Slither detectors were triggered, and the single unrecognized high-severity finding lacks context or evidence of an exploitable vulnerability. The contract uses common patterns with access control modifiers and no obvious critical flaws in the provided snippet."
+    },
+    {
+      "id": "wild_safe_0010_0x36b350411c831e799454e9048d46a56ccb18f5c2.sol",
+      "filename": "0x36b350411c831e799454e9048d46a56ccb18f5c2.sol",
+      "n_high": 1,
+      "n_medium": 2,
+      "known_high_detectors": [
+        "unchecked-transfer"
+      ],
+      "verdict": "TRUE_POSITIVE",
+      "confidence": 0.9,
+      "exploitability": "medium",
+      "key_finding": "unchecked-transfer",
+      "reasoning": "The contract calls an external ERC20 token's transfer function without checking its return value, which can lead to silent failures if the token does not revert on failure but returns false instead. This can cause the release function to emit events and mark tokens as released even if the transfer failed, potentially locking tokens or causing inconsistent state."
+    },
+    {
+      "id": "wild_safe_0013_0xd2cd43c4f6a6fa7bdfa44ee5bc486bae34f9a2aa.sol",
+      "filename": "0xd2cd43c4f6a6fa7bdfa44ee5bc486bae34f9a2aa.sol",
+      "n_high": 1,
+      "n_medium": 4,
+      "known_high_detectors": [
+        "arbitrary-send-erc20"
+      ],
+      "verdict": "FALSE_POSITIVE",
+      "confidence": 0.9,
+      "exploitability": "none",
+      "key_finding": "arbitrary-send-erc20",
+      "reasoning": "The arbitrary-send-erc20 finding typically flags any ERC20 token transfer to an address that could be attacker-controlled. However, in this crowdsale contract, token transfers are part of the normal flow to investors or designated addresses, and the contract uses owner-only or controlled mechanisms for token distribution. There is no indication that an attacker can arbitrarily trigger token transfers to themselves without proper authorization."
+    },
+    {
+      "id": "wild_safe_0024_0x76ffe3007de1a6b7c18ebd5e227153e880a270e2.sol",
+      "filename": "0x76ffe3007de1a6b7c18ebd5e227153e880a270e2.sol",
+      "n_high": 1,
+      "n_medium": 2,
+      "known_high_detectors": [
+        "unchecked-transfer"
+      ],
+      "verdict": "TRUE_POSITIVE",
+      "confidence": 0.9,
+      "exploitability": "medium",
+      "key_finding": "unchecked-transfer",
+      "reasoning": "The contract calls an external ERC20 token's transfer function without checking its return value, which can lead to silent failures if the token does not revert on failure but returns false instead. This can cause the release function to emit an event and mark tokens as released even if the transfer failed, potentially locking tokens indefinitely or causing inconsistent state."
+    },
+    {
+      "id": "wild_safe_0030_0x77d4447a3f042d3c88fae21b28d52b905d6c3dfc.sol",
+      "filename": "0x77d4447a3f042d3c88fae21b28d52b905d6c3dfc.sol",
+      "n_high": 1,
+      "n_medium": 18,
+      "known_high_detectors": [],
+      "verdict": "FALSE_POSITIVE",
+      "confidence": 0.9,
+      "exploitability": "none",
+      "key_finding": "unrecognized high-severity finding",
+      "reasoning": "Slither did not report any known high-severity detectors, and the single unrecognized high-severity finding lacks context or details. The provided code shows standard access control patterns with proper modifiers restricting sensitive functions to the creator or authorized addresses, minimizing exploitability."
+    },
+    {
+      "id": "wild_safe_0048_0x32a44d9d49a05f9049cd7f8eb0e3d19c90dd2421.sol",
+      "filename": "0x32a44d9d49a05f9049cd7f8eb0e3d19c90dd2421.sol",
+      "n_high": 3,
+      "n_medium": 0,
+      "known_high_detectors": [
+        "unchecked-transfer"
+      ],
+      "verdict": "TRUE_POSITIVE",
+      "confidence": 0.9,
+      "exploitability": "medium",
+      "key_finding": "unchecked-transfer",
+      "reasoning": "The contract calls the external Dragon token's transfer function without checking the return value, which can lead to silent failures and loss of funds if the token does not revert on failure but returns false instead. This is a common and exploitable issue in ERC20 interactions."
+    },
+    {
+      "id": "wild_safe_0052_0x16058bbd3e684b30ed92810b27a3a18b62184232.sol",
+      "filename": "0x16058bbd3e684b30ed92810b27a3a18b62184232.sol",
+      "n_high": 1,
+      "n_medium": 2,
+      "known_high_detectors": [
+        "unchecked-transfer"
+      ],
+      "verdict": "FALSE_POSITIVE",
+      "confidence": 0.95,
+      "exploitability": "none",
+      "key_finding": "unchecked-transfer",
+      "reasoning": "The contract does not perform any external ERC20 token transfers; it implements its own token logic internally without calling external token contracts. Therefore, the unchecked ERC20 transfer return value warning is a false positive as no such external transfer calls exist in the code."
+    },
+    {
+      "id": "wild_safe_0054_0x5a245f7c1eca52effdbf354747f46d8089a8a12b.sol",
+      "filename": "0x5a245f7c1eca52effdbf354747f46d8089a8a12b.sol",
+      "n_high": 1,
+      "n_medium": 2,
+      "known_high_detectors": [
+        "unchecked-transfer"
+      ],
+      "verdict": "TRUE_POSITIVE",
+      "confidence": 0.9,
+      "exploitability": "medium",
+      "key_finding": "unchecked-transfer",
+      "reasoning": "The contract calls an external ERC20 token's transfer function without checking its return value, which can lead to silent failures if the token does not revert on failure but returns false instead. This can cause the release function to emit an event and mark tokens as released even if the transfer failed, potentially locking tokens indefinitely or misleading the contract state."
+    },
+    {
+      "id": "wild_safe_0073_0xaf565efd37ff1c3b66975d0c1a25462b829091a5.sol",
+      "filename": "0xaf565efd37ff1c3b66975d0c1a25462b829091a5.sol",
+      "n_high": 1,
+      "n_medium": 2,
+      "known_high_detectors": [
+        "unchecked-transfer"
+      ],
+      "verdict": "TRUE_POSITIVE",
+      "confidence": 0.9,
+      "exploitability": "medium",
+      "key_finding": "unchecked-transfer",
+      "reasoning": "The contract calls an external ERC20 token's transfer function without checking its return value, which can lead to silent failures if the token does not revert on failure but returns false instead. This can cause the release function to emit an event and mark tokens as released even if the transfer failed, potentially locking tokens indefinitely or misleading the contract state."
+    },
+    {
+      "id": "wild_safe_0077_0x1ab3edefecf4834903e3a02a8e0e5995f59ef7aa.sol",
+      "filename": "0x1ab3edefecf4834903e3a02a8e0e5995f59ef7aa.sol",
+      "n_high": 1,
+      "n_medium": 1,
+      "known_high_detectors": [
+        "arbitrary-send-eth"
+      ],
+      "verdict": "FALSE_POSITIVE",
+      "confidence": 0.9,
+      "exploitability": "none",
+      "key_finding": "arbitrary-send-eth",
+      "reasoning": "The contract's send function transfers ETH to addresses provided by the caller, but it requires the caller to supply the ETH beforehand and checks that the total amount to send does not exceed the contract balance. There is no arbitrary ETH sending to attacker-controlled addresses without prior funding, so this is expected behavior, not a vulnerability."
+    },
+    {
+      "id": "wild_safe_0080_0x1be6ff0d69f43f401cd2ff0cbc200d2f7ecee452.sol",
+      "filename": "0x1be6ff0d69f43f401cd2ff0cbc200d2f7ecee452.sol",
+      "n_high": 1,
+      "n_medium": 10,
+      "known_high_detectors": [
+        "arbitrary-send-erc20"
+      ],
+      "verdict": "FALSE_POSITIVE",
+      "confidence": 0.9,
+      "exploitability": "none",
+      "key_finding": "arbitrary-send-erc20",
+      "reasoning": "The reported arbitrary ERC20 send corresponds to standard ERC20 transfer functions that require the sender to have sufficient balance and do not allow arbitrary token transfers to attacker-controlled addresses without authorization. The code uses standard checks and SafeMath, preventing unauthorized token transfers."
+    },
+    {
+      "id": "wild_safe_0094_0xa1997e5476538e841cdf0a5d0990bf09a4932675.sol",
+      "filename": "0xa1997e5476538e841cdf0a5d0990bf09a4932675.sol",
+      "n_high": 1,
+      "n_medium": 1,
+      "known_high_detectors": [
+        "arbitrary-send-eth"
+      ],
+      "verdict": "FALSE_POSITIVE",
+      "confidence": 0.9,
+      "exploitability": "none",
+      "key_finding": "arbitrary-send-eth",
+      "reasoning": "The arbitrary ETH send finding is due to transfers to ctry_[rID_][id].owner and lastplayer addresses, but these are controlled by legitimate users who must have previously interacted with the contract. The contract restricts calls to humans only and does not allow attacker-controlled arbitrary addresses to receive ETH unexpectedly. The transfers are part of normal game logic and not exploitable."
+    },
+    {
+      "id": "wild_safe_0095_0x9a2e9235f7a7ac7b899e5f3208fbb13c6985171a.sol",
+      "filename": "0x9a2e9235f7a7ac7b899e5f3208fbb13c6985171a.sol",
+      "n_high": 1,
+      "n_medium": 2,
+      "known_high_detectors": [
+        "arbitrary-send-eth",
+        "unchecked-send"
+      ],
+      "verdict": "TRUE_POSITIVE",
+      "confidence": 0.9,
+      "exploitability": "medium",
+      "key_finding": "unchecked-send",
+      "reasoning": "The contract uses low-level send() calls to transfer ETH without checking the return value, which can cause silent failures and potential loss of funds. Additionally, ETH is sent to addresses controlled by bidders, which could be attacker-controlled, enabling arbitrary ETH sends. These patterns represent real risks in the contract's reward distribution and jackpot mechanisms."
+    },
+    {
+      "id": "wild_safe_0096_0x282cb0a611280ff5887ca122911a0ca6b841cb03.sol",
+      "filename": "0x282cb0a611280ff5887ca122911a0ca6b841cb03.sol",
+      "n_high": 3,
+      "n_medium": 0,
+      "known_high_detectors": [
+        "shadowing-state"
+      ],
+      "verdict": "FALSE_POSITIVE",
+      "confidence": 0.95,
+      "exploitability": "none",
+      "key_finding": "shadowing-state",
+      "reasoning": "The high-severity finding is about state variable shadowing where UWTCToken redeclares name, symbol, and decimals that are also declared in BasicToken. This is a known pattern to override inherited variables in Solidity and does not introduce a security vulnerability by itself. The contract correctly initializes these variables and uses them as intended without conflicting logic or access control issues."
+    },
+    {
+      "id": "wild_safe_0098_0x238a542d17cd9e38ea232949e3816cf30161b77c.sol",
+      "filename": "0x238a542d17cd9e38ea232949e3816cf30161b77c.sol",
+      "n_high": 1,
+      "n_medium": 11,
+      "known_high_detectors": [
+        "unchecked-transfer"
+      ],
+      "verdict": "FALSE_POSITIVE",
+      "confidence": 0.95,
+      "exploitability": "none",
+      "key_finding": "unchecked-transfer",
+      "reasoning": "The high-severity finding about unchecked ERC20 transfer return values does not apply here because the provided code is an ERC20 token implementation itself, not a contract calling an external token's transfer function. The transfer functions implemented return bool and handle state changes internally, so no unchecked external call exists."
+    }
+  ],
+  "summary": {
+    "n_true_positive": 7,
+    "n_false_positive": 9,
+    "n_ambiguous": 0,
+    "slither_strict_noise_upper_bound": 0.16,
+    "verified_safe_label_noise": 0.07,
+    "slither_fp_rate_on_flagged": 0.5625
+  },
+  "interpretation": "16 個 flagged 中 7 個被 GPT-4.1-mini 確認為真實漏洞，verified safe label noise = 7.0%。建議第伍章研究限制章節揭露此偏差，並說明對 F1 估值之影響。",
+  "cost_usd": 0.013054
+}
