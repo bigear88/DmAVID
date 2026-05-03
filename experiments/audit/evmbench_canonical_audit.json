@@ -1,0 +1,102 @@
+{
+  "audit": "evmbench_detect_rate_disambiguation",
+  "purpose": "釐清第伍章 3 處 EVMbench 偵測率引用之 canonical 對應（30.77% 兩處、25.64% 一處）",
+  "method": "枚舉 6 個 EVMbench 實驗 raw json，對每個版本標註 detect_rate / 配置 / canonical 屬性，再判定論文 3 處引用是否各自對齊",
+  "experiments_summary": [
+    {
+      "name": "evmbench_detect (baseline LLM+RAG)",
+      "detect_rate": 7.69,
+      "detected": 3,
+      "total_gold": 39,
+      "config": "純 LLM+RAG，無強化",
+      "canonical_for": "EVMbench baseline canonical",
+      "source": "experiments/evmbench/evmbench_detect_results.json"
+    },
+    {
+      "name": "evmbench_hybrid (Slither+LLM+RAG, no SV)",
+      "detect_rate": 7.69,
+      "detected": 3,
+      "total_gold": 39,
+      "config": "Slither pre-filter + LLM+RAG",
+      "canonical_for": "Hybrid baseline，與純 LLM+RAG 相同 detect 數",
+      "source": "experiments/evmbench/evmbench_hybrid_results.json"
+    },
+    {
+      "name": "evmbench_hybrid_3modes (3 strategy comparison)",
+      "detect_rate": null,
+      "config": "三種 hybrid 模式對比，逐筆未匯總",
+      "canonical_for": "exploratory",
+      "source": "experiments/evmbench/evmbench_hybrid_3modes_results.json"
+    },
+    {
+      "name": "evmbench_enhanced (per-finding SV + Targeted-Search)",
+      "detect_rate": 30.77,
+      "detected": 12,
+      "total_gold": 39,
+      "config": "per-finding Self-Verify + Stage 2 Targeted-Search 對未匹配 gold 主動搜尋（newly_found=2）",
+      "canonical_for": "**EVMbench 主強化結果**（Sprint 4 加固管線）",
+      "source": "experiments/evmbench_enhanced/enhanced_results.json"
+    },
+    {
+      "name": "evmbench_reeval (post-adversarial)",
+      "detect_rate": 25.64,
+      "detected": 10,
+      "total_gold": 39,
+      "config": "對抗迭代（dmavid_round2 增加 KB pattern）後對 EVMbench 重評；不含 enhanced 之 targeted-search 階段",
+      "canonical_for": "**對抗迭代後 EVMbench 跨資料集泛化驗證**",
+      "source": "experiments/evmbench_reeval/reeval_results.json"
+    },
+    {
+      "name": "evmbench_smart (interface summary + key module deep analysis)",
+      "detect_rate": 64.10,
+      "detected": 25,
+      "total_gold": 39,
+      "config": "Smart preprocessing（介面摘要 + 關鍵模組深度分析），改前處理而非後處理",
+      "canonical_for": "EVMbench 探索性最佳結果（未列入主管線，因 preprocessing 額外計算成本未量化）",
+      "source": "experiments/evmbench_smart/smart_preprocess_results.json"
+    }
+  ],
+  "paper_mentions": [
+    {
+      "location": "第伍章第一節第三段",
+      "current_value_pct": 30.77,
+      "current_wording": "DmAVID 增強偵測達 30.77%（12/39）",
+      "best_match": "evmbench_enhanced (per-finding SV + Targeted-Search)",
+      "is_appropriate": true,
+      "note": "對應 enhanced 主強化結果，正確 ✓"
+    },
+    {
+      "location": "第伍章第二節第六段",
+      "current_value_pct": 30.77,
+      "current_wording": "EVMbench 跨資料集驗證實驗之偵測率大幅下降至 30.77%",
+      "best_match": "evmbench_enhanced",
+      "is_appropriate": true,
+      "note": "與 (a) 同來源，正確 ✓"
+    },
+    {
+      "location": "第伍章第二節第七段",
+      "current_value_pct": 25.64,
+      "current_wording": "EVMbench 偵測率僅為 25.64%（用於 F1 對稱成本論述）",
+      "best_match": "evmbench_reeval (post-adversarial)",
+      "is_appropriate": "yes_but_easily_confused",
+      "note": "對應 reeval (post-adversarial 對 EVMbench 重評)，數字 raw 對齊；但論文未明示為 reeval 子實驗，與 (a)(b) 之 30.77% 並列會讓 reviewer 誤以為 narrative 不一致。**問題不在數字錯誤，在於缺乏 disclosure**"
+    }
+  ],
+  "all_mentions_individually_correct": true,
+  "remaining_issue": "第二節同段內出現 30.77% 與 25.64% 兩個 EVMbench 數字，未明示對應不同實驗（enhanced vs reeval），易造成 reviewer 困惑或質疑數字不一致",
+  "recommendation": "B",
+  "recommendation_detail": {
+    "option_A_unify_to_30_77": "全部統一為 enhanced 30.77%。優點：單一 narrative。缺點：失去『對抗迭代後重評 reeval』訊息（25.64%），且 enhanced 與 reeval 是不同強化路線（強化 prompting vs 強化 KB），合併會 misrepresent。**不建議**。",
+    "option_B_keep_25_64_with_disclosure": "保留 25.64% 但在第七段補註：『此 25.64% 為對抗迭代後對 EVMbench 之重評（reeval 子實驗），與第三段 enhanced 30.77%（per-finding SV + Targeted-Search 強化路線）為不同強化策略；兩者並非矛盾，而是反映 KB-augmentation 與 prompting-enhancement 兩條路徑之差異』。**建議採用**。",
+    "option_C_explicit_each": "依場景並列引用 baseline 7.69% / enhanced 30.77% / reeval 25.64% / smart 64.10% 並 disclose 每個對應實驗。優點：完整透明。缺點：論述變繁雜，可能干擾主 narrative。可作為附錄表呈現。"
+  },
+  "proposed_paper_revisions": {
+    "first_para3_keep": "保留現狀『DmAVID 增強偵測達 30.77%（12/39）』，可選擇性加 footnote『對應 evmbench_enhanced，含 per-finding Self-Verify 與 Targeted-Search 兩階段』",
+    "second_para6_keep": "保留現狀，與 para3 相同 footnote",
+    "second_para7_revise": "將『EVMbench 偵測率僅為 25.64%』改為：『對抗迭代後重評（reeval 子實驗）EVMbench 偵測率為 25.64%（10/39），略低於前述 enhanced 路線之 30.77%；兩者代表不同強化策略（KB augmentation vs prompting enhancement），均符合 F1 對稱成本之預期』",
+    "optional_appendix_table": "可在附錄補一個 EVMbench 全實驗對照表（baseline / hybrid / enhanced / reeval / smart 五行），明示各 detect_rate 與配置差異"
+  },
+  "verdict": "All 3 mentions are individually raw-correct; recommend disclosure footnote on para 7 to prevent reviewer confusion about the 30.77% vs 25.64% gap",
+  "computed_at": "2026-05-03T00:35:00",
+  "data_source_commit": "DmAVID repo @ 0a419ea (master)"
+}

@@ -1,0 +1,122 @@
+{
+  "audit": "fpr_canonical_disambiguation",
+  "purpose": "釐清第伍章 3 處 FPR 引用之 canonical 對應，並建議是否統一",
+  "method": "從 7 個 raw json 抽出每個實驗之 FPR (=FP/(FP+TN), N_safe=100)，標註配置差異與 canonical 屬性",
+  "fpr_values_summary": [
+    {
+      "value": 0.16,
+      "experiment": "dmavid_round2 round 2 post-verify",
+      "metrics": {"tp": 128, "fp": 16, "tn": 84, "fn": 15, "f1": 0.892},
+      "config": "對抗迭代 round 2 (post per-finding SV)",
+      "canonical_for": "iteration sub-experiment round 2",
+      "source": "experiments/dmavid_round2/round_2_results.json"
+    },
+    {
+      "value": 0.17,
+      "experiment": "dmavid_round2 round 3 post-verify",
+      "metrics": {"tp": 128, "fp": 17, "tn": 83, "fn": 15, "f1": 0.8889},
+      "config": "對抗迭代 round 3",
+      "canonical_for": "iteration sub-experiment round 3",
+      "source": "experiments/dmavid_round2/round_3_results.json"
+    },
+    {
+      "value": 0.18,
+      "experiment": "dmavid_round2 round 1 post-verify",
+      "metrics": {"tp": 129, "fp": 18, "tn": 82, "fn": 14, "f1": 0.8897, "recall": 0.9021},
+      "config": "對抗迭代 round 1",
+      "canonical_for": "對抗迭代主結果（章內已引用）",
+      "source": "experiments/dmavid_round2/round_1_results.json"
+    },
+    {
+      "value": 0.24,
+      "experiment": "v5_clean +self-verify",
+      "metrics": {"tp": 140, "fp": 24, "tn": 76, "fn": 3, "f1": 0.9121, "recall": 0.979, "precision": 0.8537},
+      "config": "LLM+RAG + Three-Class Self-Verify (UNCERTAIN preserves baseline)",
+      "canonical_for": "**整體 FINAL canonical** (表 3-1 row 3 / 第三章主結果)",
+      "source": "experiments/ablation/ablation_v5_clean_self-verify_details.json"
+    },
+    {
+      "value": 0.26,
+      "experiment": "v5_clean baseline / llm_rag_results",
+      "metrics": {"tp": 140, "fp": 26, "tn": 74, "fn": 3, "f1": 0.9061, "precision": 0.8434, "recall": 0.979},
+      "config": "純 LLM+RAG（無 Self-Verify）",
+      "canonical_for": "LLM+RAG baseline canonical（兩 raw 完全一致）",
+      "source": "experiments/llm_rag/llm_rag_results.json + experiments/ablation/ablation_v5_clean_baseline_details.json"
+    },
+    {
+      "value": 0.27,
+      "experiment": "hybrid + SV (early hybrid pipeline)",
+      "metrics": {"tp": 137, "fp": 27, "tn": 73, "fn": 6, "f1": 0.8925},
+      "config": "Slither + LLM+RAG + Self-Verify",
+      "canonical_for": "early hybrid pipeline（已被 v5_clean +SV 取代）",
+      "source": "experiments/hybrid/self_verify_results.json (hybrid_metrics)"
+    },
+    {
+      "value": 0.30,
+      "experiment": "hybrid_results (Slither+LLM+RAG, no SV)",
+      "metrics": {"tp": 127, "fp": 30, "tn": 70, "fn": 16, "f1": 0.8467},
+      "config": "Slither + LLM+RAG（無 SV）",
+      "canonical_for": "Hybrid baseline canonical",
+      "source": "experiments/hybrid/hybrid_results.json"
+    },
+    {
+      "value": 0.31,
+      "experiment": "dmavid_round2 pre-verify / hybrid SV baseline",
+      "metrics": {"tp": 140, "fp": 31, "tn": 69, "fn": 3, "f1": 0.8917},
+      "config": "Slither + LLM+RAG（pre per-finding SV，等同 hybrid+1額外 FP）",
+      "canonical_for": "iteration pre-verify reference",
+      "source": "experiments/dmavid_round2/round_*_results.json (pre_verify_metrics)"
+    }
+  ],
+  "paper_mentions": [
+    {
+      "location": "第伍章第一節第二段",
+      "current_value_pct": 18,
+      "best_match": "dmavid_round2 round 1 post-verify",
+      "is_appropriate": true,
+      "note": "對應對抗迭代 round 1 真實 raw，已修正後正確"
+    },
+    {
+      "location": "第伍章第二節第三段 (Hybrid)",
+      "current_value_pct": 30,
+      "best_match": "hybrid_results.json (Slither+LLM+RAG)",
+      "is_appropriate": true,
+      "note": "對應 Hybrid (no SV) baseline，正確"
+    },
+    {
+      "location": "第伍章第二節第三段 (LLM+RAG)",
+      "current_value_pct": 26,
+      "best_match": "llm_rag_results / v5_clean baseline",
+      "is_appropriate": true,
+      "note": "對應純 LLM+RAG，正確"
+    },
+    {
+      "location": "第伍章表 3-1 row 3 (v5_clean +SV)",
+      "current_value_pct": 24,
+      "best_match": "v5_clean +self-verify (canonical FINAL)",
+      "is_appropriate": true,
+      "note": "對應 canonical，正確"
+    }
+  ],
+  "all_mentions_individually_correct": true,
+  "remaining_issue": "雖然 4 處 FPR 各自 raw 對齊，但同章列出 18% / 24% / 26% / 30% 4 個值，reviewer 難以一眼判斷哪個是 canonical FINAL",
+  "recommendation": "C_add_FPR_summary_table",
+  "recommendation_detail": {
+    "option_A_unify_to_24": "全章統一為 v5_clean canonical FPR=24%。優點：單一基準。缺點：失去『對抗迭代降至 18%』與『Hybrid 30%』之比較訊息，narrative 受損。不建議。",
+    "option_B_inline_footnote_each": "每個 FPR 數字加 inline footnote 標註對應實驗。優點：原文不大改。缺點：footnote 冗餘，可讀性下降。",
+    "option_C_add_summary_table": "第伍章前段補一個 FPR 對照表（建議放在第一節結尾或第二節開頭），統整 4 處引用之來源；正文保留各自數字並引用『詳見 FPR 對照表』。優點：reviewer 一眼看清，narrative 不受損。建議採用。"
+  },
+  "proposed_paper_unified_text": {
+    "fpr_table_caption": "表 X-Y　DmAVID 各管線階段之 FPR 對照（SmartBugs 243，N_safe=100）",
+    "fpr_table_rows": [
+      {"pipeline": "Slither + LLM+RAG（Hybrid）", "fpr": "30% (30/100)", "f1": 0.8467, "scope": "第二節第三段"},
+      {"pipeline": "純 LLM+RAG（baseline）", "fpr": "26% (26/100)", "f1": 0.9061, "scope": "第二節第三段"},
+      {"pipeline": "LLM+RAG + Self-Verify（canonical FINAL）", "fpr": "24% (24/100)", "f1": 0.9121, "scope": "表 3-1 row 3 / 全章主結果"},
+      {"pipeline": "對抗迭代 round 1 post-verify", "fpr": "18% (18/100)", "f1": 0.8897, "scope": "第一節第二段（iter sub-exp）"}
+    ],
+    "table_footnote": "註：所有 FPR 之分母為 SmartBugs Curated 100 個 safe 合約樣本；canonical FINAL 為 +Self-Verify 之 24%，其餘為對照場景。"
+  },
+  "verdict": "All 4 FPR mentions are individually correct and traceable to raw; recommend a章首對照表 to remove reviewer confusion",
+  "computed_at": "2026-05-03T00:30:00",
+  "data_source_commit": "DmAVID repo @ 0a419ea (master)"
+}

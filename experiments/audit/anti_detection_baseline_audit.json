@@ -1,0 +1,61 @@
+{
+  "audit": "anti_detection_5vs4_baseline_disambiguation",
+  "purpose": "釐清第伍章兩處反偵測敘述基準不一致：第一節第一段『5/5 = 100%』vs 第三節第八段『4 種混淆 100%』",
+  "data_source": "experiments/anti_detection/anti_detection_results.json",
+  "raw_data": {
+    "techniques_tested": 4,
+    "total": 5,
+    "caught": 5,
+    "evaded": 0,
+    "detection_rate": 1.0,
+    "evasion_rate": 0.0,
+    "includes_original": true,
+    "original_contract": "DEP_BANK (reentrancy)",
+    "techniques": [
+      {"name": "original", "detected": true, "confidence": 0.9, "is_obfuscation": false},
+      {"name": "variable_rename", "detected": true, "confidence": 0.9, "is_obfuscation": true},
+      {"name": "decoy_guard", "detected": true, "confidence": 0.9, "is_obfuscation": true},
+      {"name": "split_function", "detected": true, "confidence": 0.9, "is_obfuscation": true},
+      {"name": "add_complexity", "detected": true, "confidence": 0.95, "is_obfuscation": true}
+    ]
+  },
+  "interpretation_options": {
+    "5_of_5": {
+      "definition": "1 個原始合約 + 4 個混淆變體共 5 份，全部偵測成功 (5/5 = 100%)",
+      "raw_consistent": true,
+      "narrative_emphasis": "完整測試覆蓋（含基線控制組）"
+    },
+    "4_of_4": {
+      "definition": "4 種對抗混淆技術（不含 original），全部成功偵測 (4/4 = 100%)",
+      "raw_consistent": true,
+      "narrative_emphasis": "純對抗 robustness 評估"
+    }
+  },
+  "paper_mentions": [
+    {
+      "location": "第伍章第一節第一段",
+      "wording": "4 種程式碼混淆技術...（5/5 = 100% 捕獲率）",
+      "issue": "技術數 (4) 與分母 (5) 不一致，5/5 暗示包含 original，但前文只說 4 種混淆",
+      "is_self_consistent": false
+    },
+    {
+      "location": "第伍章第三節第八段",
+      "wording": "目前測試的 4 種混淆技術全部被捕獲（100%）",
+      "issue": "與第一節第一段使用不同分母（4 vs 5），同章內不一致",
+      "is_self_consistent": true
+    }
+  ],
+  "recommendation": "C",
+  "recommendation_detail": {
+    "option_A_unify_5_of_5": "全章統一為 5/5。優點：原段落結構不動。缺點：分母 5 含 original，與『混淆技術』的語意有落差（4 種混淆+1 原始）。",
+    "option_B_unify_4_of_4": "全章統一為 4/4。優點：純對抗 robustness 語意清晰。缺點：放棄『含 original 對照組之全覆蓋』敘事優勢。",
+    "option_C_explicit_both": "兩處都明示『1 原始 + 4 混淆』結構，避免歧義。建議統一表述為：『在 1 個原始合約 + 4 個混淆變體（變數重命名、假防禦、函式拆分、複雜度增加）共 5 份合約之測試中，DmAVID 全部成功偵測（5/5 = 100%；其中 4 種對抗混淆變體之偵測率為 4/4 = 100%）』。優點：消除歧義、保留兩種敘事優勢、reviewer 不會質疑。"
+  },
+  "proposed_unified_wording": {
+    "first_occurrence_長": "DmAVID 對 1 個原始 reentrancy 合約 + 4 種程式碼混淆變體（變數重命名、假防禦守衛、函式拆分、複雜度增加）共 5 份合約進行反偵測測試，全部成功偵測（5/5 = 100% 捕獲率；其中 4 種混淆變體之 robustness 偵測率為 4/4 = 100%）。",
+    "subsequent_simplified": "於反偵測實驗（Section X.Y），DmAVID 對 4 種混淆變體之 robustness 偵測率為 4/4 = 100%（詳見前述 5/5 全覆蓋結果）。"
+  },
+  "verdict": "Both numbers are raw-consistent; option C disambiguation recommended for thesis-internal consistency",
+  "computed_at": "2026-05-03T00:25:00",
+  "data_source_commit": "DmAVID repo @ 0a419ea (master)"
+}
