@@ -63,10 +63,13 @@
     "pattern_coverage_note": "CodeBERT 為黑箱二元分類器，無 reasoning 輸出",
     "root_cause": 0.0,
     "root_cause_note": "CodeBERT 不輸出漏洞類型",
-    "attack_path": 0.0,
-    "attack_path_note": "CodeBERT 既有實驗未涵蓋 EVMbench post-cutoff audits",
+    "attack_path": 0.3333,
+    "attack_path_note": "Lenient contract-level mapping on EVMbench 10 audits (13/39); see experiments/codebert_baseline/codebert_evmbench_results.json",
     "repair_quality_avg_1to5": 0.0,
     "repair_quality_note": "CodeBERT 無修復建議輸出",
-    "exi": 0.0
+    "exi": 8.33,
+    "attack_path_source": "experiments/codebert_baseline/codebert_evmbench_results.json",
+    "attack_path_definition": "lenient_contract_level",
+    "exi_old": 0.0
   }
 }

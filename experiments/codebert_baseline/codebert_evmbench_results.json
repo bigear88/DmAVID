@@ -1,0 +1,2659 @@
+{
+  "experiment": "codebert_evmbench_inference_v50_lock",
+  "model_checkpoint": "microsoft/codebert-base (fine-tuned in-memory, not persisted)",
+  "fine_tune_config": {
+    "epochs": 3,
+    "batch_size": 8,
+    "learning_rate": 2e-05,
+    "max_seq_len": 512,
+    "seed": 42,
+    "strip_leaky_comments": true,
+    "train_size": 194,
+    "smartbugs_test_f1_sanity": 0.918
+  },
+  "evmbench_audits_total": 10,
+  "gold_findings_total": 39,
+  "detect_definition": "lenient: contract-level binary prediction maps to all gold findings whose patch_path_mapping target matches that contract path",
+  "detected_findings": 13,
+  "detect_rate": 0.3333,
+  "per_audit": [
+    {
+      "audit_id": "2024-01-curves",
+      "contracts_scanned": 5,
+      "gold_findings": 4,
+      "predicted_vulnerable_contracts": 4,
+      "detected_findings": 2
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contracts_scanned": 75,
+      "gold_findings": 5,
+      "predicted_vulnerable_contracts": 71,
+      "detected_findings": 2
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contracts_scanned": 201,
+      "gold_findings": 2,
+      "predicted_vulnerable_contracts": 80,
+      "detected_findings": 1
+    },
+    {
+      "audit_id": "2024-07-basin",
+      "contracts_scanned": 32,
+      "gold_findings": 2,
+      "predicted_vulnerable_contracts": 26,
+      "detected_findings": 2
+    },
+    {
+      "audit_id": "2024-01-renft",
+      "contracts_scanned": 34,
+      "gold_findings": 6,
+      "predicted_vulnerable_contracts": 23,
+      "detected_findings": 0
+    },
+    {
+      "audit_id": "2024-06-size",
+      "contracts_scanned": 39,
+      "gold_findings": 4,
+      "predicted_vulnerable_contracts": 27,
+      "detected_findings": 3
+    },
+    {
+      "audit_id": "2024-08-phi",
+      "contracts_scanned": 20,
+      "gold_findings": 6,
+      "predicted_vulnerable_contracts": 9,
+      "detected_findings": 0
+    },
+    {
+      "audit_id": "2024-12-secondswap",
+      "contracts_scanned": 15,
+      "gold_findings": 3,
+      "predicted_vulnerable_contracts": 11,
+      "detected_findings": 0
+    },
+    {
+      "audit_id": "2025-04-forte",
+      "contracts_scanned": 3,
+      "gold_findings": 5,
+      "predicted_vulnerable_contracts": 2,
+      "detected_findings": 1
+    },
+    {
+      "audit_id": "2026-01-tempo-stablecoin-dex",
+      "contracts_scanned": 2,
+      "gold_findings": 2,
+      "predicted_vulnerable_contracts": 2,
+      "detected_findings": 2
+    }
+  ],
+  "raw_predictions": [
+    {
+      "audit_id": "2024-01-curves",
+      "contract_path": "data/evmbench_repos/2024-01-curves/contracts/Curves.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.5678
+    },
+    {
+      "audit_id": "2024-01-curves",
+      "contract_path": "data/evmbench_repos/2024-01-curves/contracts/CurvesERC20.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8397
+    },
+    {
+      "audit_id": "2024-01-curves",
+      "contract_path": "data/evmbench_repos/2024-01-curves/contracts/CurvesERC20Factory.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.9282
+    },
+    {
+      "audit_id": "2024-01-curves",
+      "contract_path": "data/evmbench_repos/2024-01-curves/contracts/FeeSplitter.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3974
+    },
+    {
+      "audit_id": "2024-01-curves",
+      "contract_path": "data/evmbench_repos/2024-01-curves/contracts/Security.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.9597
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/L1/ITaikoL1.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8847
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/L1/TaikoData.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.9076
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/L1/TaikoErrors.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.5107
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/L1/TaikoEvents.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.6774
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/L1/TaikoL1.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.6803
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/L1/TaikoToken.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.4869
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/L1/gov/TaikoGovernor.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.5375
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/L1/gov/TaikoTimelockController.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8594
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/L1/hooks/AssignmentHook.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.7039
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/L1/hooks/IHook.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.9369
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/L1/libs/LibDepositing.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.832
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/L1/libs/LibProposing.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.646
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/L1/libs/LibProving.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.5276
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/L1/libs/LibUtils.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.847
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/L1/libs/LibVerifying.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.6924
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/L1/provers/GuardianProver.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.7572
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/L1/provers/Guardians.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.7429
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/L1/tiers/DevnetTierProvider.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8838
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/L1/tiers/ITierProvider.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8289
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/L1/tiers/MainnetTierProvider.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8938
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/L1/tiers/TestnetTierProvider.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8768
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/L2/CrossChainOwned.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.7575
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/L2/Lib1559Math.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8981
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/L2/TaikoL2.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.599
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/L2/TaikoL2EIP1559Configurable.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.9168
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/automata-attestation/AutomataDcapV3Attestation.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.464
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/automata-attestation/interfaces/IAttestation.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8366
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/automata-attestation/interfaces/ISigVerifyLib.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.596
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/automata-attestation/utils/Asn1Decode.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.1564
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/automata-attestation/utils/BytesUtils.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.5965
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/automata-attestation/utils/RsaVerify.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8118
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/automata-attestation/utils/SHA1.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8997
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/automata-attestation/utils/SigVerifyLib.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8717
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/automata-attestation/utils/X509DateUtils.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8695
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/bridge/Bridge.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.5995
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/bridge/IBridge.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8169
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/common/AddressManager.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.5481
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/common/AddressResolver.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.5484
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/common/EssentialContract.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.6599
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/common/IAddressManager.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.9065
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/common/IAddressResolver.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.9076
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/libs/Lib4844.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.7319
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/libs/LibAddress.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.647
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/libs/LibMath.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.6681
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/libs/LibTrieProof.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.7358
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/signal/ISignalService.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.603
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/signal/LibSignals.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.9105
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/signal/SignalService.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.4967
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/team/TimelockTokenPool.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.7628
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/team/airdrop/ERC20Airdrop.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.7198
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/team/airdrop/ERC20Airdrop2.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8348
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/team/airdrop/ERC721Airdrop.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8287
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/team/airdrop/MerkleClaimable.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.7139
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/thirdparty/nomad-xyz/ExcessivelySafeCall.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8642
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/thirdparty/optimism/Bytes.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.9273
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/thirdparty/optimism/rlp/RLPReader.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.7089
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/thirdparty/optimism/rlp/RLPWriter.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8017
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/thirdparty/optimism/trie/MerkleTrie.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.5678
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/thirdparty/optimism/trie/SecureMerkleTrie.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.7206
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/thirdparty/solmate/LibFixedPointMath.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.9064
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/tokenvault/BaseNFTVault.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.6555
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/tokenvault/BaseVault.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.7831
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/tokenvault/BridgedERC1155.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.635
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/tokenvault/BridgedERC20.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.7641
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/tokenvault/BridgedERC20Base.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.7002
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/tokenvault/BridgedERC721.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.6083
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/tokenvault/ERC1155Vault.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.5948
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/tokenvault/ERC20Vault.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.6214
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/tokenvault/ERC721Vault.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.7556
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/tokenvault/IBridgedERC20.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8631
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/tokenvault/LibBridgedToken.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.6786
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/tokenvault/adapters/USDCAdapter.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.6151
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/verifiers/GuardianVerifier.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.9081
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/verifiers/IVerifier.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8981
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "contract_path": "data/evmbench_repos/2024-03-taiko/packages/protocol/contracts/verifiers/SgxVerifier.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.5837
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/audits/internal/analysis/contracts/GovernorOLA-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3883
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/audits/internal/analysis/contracts/OLA-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.4608
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/audits/internal/analysis/contracts/Timelock-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.4024
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/audits/internal/analysis/contracts/VotingEscrow-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.1015
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/audits/internal/analysis/contracts/buOLA-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.1877
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/audits/internal10/analysis/contracts/GuardCM-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.2906
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/audits/internal10/analysis/contracts/ProcessBridgedDataArbitrum-flatten.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.6581
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/audits/internal10/analysis/contracts/ProcessBridgedDataGnosis-flatten.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.6581
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/audits/internal10/analysis/contracts/ProcessBridgedDataOptimism-flatten.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.6581
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/audits/internal10/analysis/contracts/ProcessBridgedDataPolygon-flatten.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.6581
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/audits/internal10/analysis/contracts/ProcessBridgedDataWormhole-flatten.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.6581
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/audits/internal12/analysis/contracts/VoteWeighting-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.1489
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/audits/internal12/analysis2/contracts/VoteWeighting-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.1466
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/audits/internal2/analysis/contracts/DeploymentFactory-flatten.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.5643
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/audits/internal2/analysis/contracts/GovernorOLAS-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.4239
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/audits/internal2/analysis/contracts/OLAS-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.4467
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/audits/internal2/analysis/contracts/Timelock-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3228
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/audits/internal2/analysis/contracts/buOLAS-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.1941
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/audits/internal2/analysis/contracts/veOLAS-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.1197
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/audits/internal2/analysis/contracts/wveOLAS-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.219
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/audits/internal3/analysis/contracts/FxGovernorTunnel.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.2193
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/audits/internal4/analysis/contracts/HomeMediator.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.2413
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/audits/internal5/analysis/contracts/GovernorOLAS-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.1321
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/audits/internal5/analysis/contracts/Timelock-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.1604
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/audits/internal5/analysis/contracts/cur/GovernorOLAS-cur-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.4239
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/audits/internal5/analysis/contracts/cur/Timelock-cur-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3228
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/audits/internal6/analysis/contracts/GuardCM-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.132
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/audits/internal7/analysis/contracts/BridgedERC20-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.4715
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/audits/internal7/analysis/contracts/FxERC20ChildTunnel-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.2247
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/audits/internal7/analysis/contracts/FxERC20RootTunnel-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.2077
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/audits/internal8/analysis/contracts/GuardCM-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.1425
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/audits/internal9/analysis/contracts/OptimismMessenger-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.2331
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/audits/internal9/analysis/contracts/WormholeMessenger-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3417
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/contracts/DeploymentFactory.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8082
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/contracts/GovernorOLAS.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.4035
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/contracts/OLAS.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.7325
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/contracts/Timelock.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.9033
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/contracts/VoteWeighting.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.1468
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/contracts/bridges/BridgeMessenger.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8526
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/contracts/bridges/BridgedERC20.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8147
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/contracts/bridges/FxERC20ChildTunnel.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.2745
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/contracts/bridges/FxERC20RootTunnel.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3396
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/contracts/bridges/FxGovernorTunnel.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.2152
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/contracts/bridges/HomeMediator.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.2348
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/contracts/bridges/OptimismMessenger.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.7342
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/contracts/bridges/WormholeMessenger.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8068
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/contracts/buOLAS.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.2638
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/contracts/interfaces/IBridgeErrors.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8321
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/contracts/interfaces/IERC20.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.4387
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/contracts/interfaces/IErrors.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.773
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/contracts/multisigs/GuardCM.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.2174
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/contracts/multisigs/VerifyData.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.9363
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/contracts/multisigs/bridge_verifier/ProcessBridgedDataArbitrum.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.459
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/contracts/multisigs/bridge_verifier/ProcessBridgedDataGnosis.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.4869
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/contracts/multisigs/bridge_verifier/ProcessBridgedDataOptimism.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.4745
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/contracts/multisigs/bridge_verifier/ProcessBridgedDataPolygon.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.5893
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/contracts/multisigs/bridge_verifier/ProcessBridgedDataWormhole.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.4219
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/contracts/multisigs/bridge_verifier/VerifyBridgedData.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.777
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/contracts/veOLAS.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3941
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/governance/contracts/wveOLAS.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.2341
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/audits/internal/analysis/contracts/AgentRegistry-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.313
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/audits/internal/analysis/contracts/ComponentRegistry-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.313
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/audits/internal/analysis/contracts/GenericManager-flatten.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.5523
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/audits/internal/analysis/contracts/GenericRegistry-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.275
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/audits/internal/analysis/contracts/RegistriesManager-flatten.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.5951
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/audits/internal/analysis/contracts/ServiceManager-flatten.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.5951
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/audits/internal/analysis/contracts/ServiceRegistry-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3003
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/audits/internal/analysis/contracts/UnitRegistry-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3003
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/audits/internal2/analysis/contracts/OperatorWhitelist-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3027
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/audits/internal2/analysis/contracts/ServiceManagerToken-flatten.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.6074
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/audits/internal2/analysis/contracts/ServiceRegistryTokenUtility-flatten.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.6074
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/audits/internal3/analysis/contracts/ServiceManagerToken-flatten.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.6074
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/audits/internal4/analysis/contracts/GnosisSafeSameAddressMultisig-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3744
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/audits/internal4/analysis/contracts/ServiceStakingBase-flatten.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.605
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/audits/internal4/analysis/contracts/ServiceStakingNativeToken-flatten.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.605
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/audits/internal4/analysis/contracts/ServiceStakingToken-flatten.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.605
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/audits/internal5/analysis/contracts/StakingActivityChecker-flatten.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8167
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/audits/internal5/analysis/contracts/StakingBase-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3794
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/audits/internal5/analysis/contracts/StakingFactory-flatten.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.9415
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/audits/internal5/analysis/contracts/StakingNativeToken-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3794
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/audits/internal5/analysis/contracts/StakingProxy-flatten.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.9415
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/audits/internal5/analysis/contracts/StakingToken-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3794
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/audits/internal5/analysis/contracts/StakingVerifier-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.4012
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/audits/internal5/analysis2/contracts/StakingActivityChecker-flatten.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8286
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/audits/internal5/analysis2/contracts/StakingBase-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3806
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/audits/internal5/analysis2/contracts/StakingFactory-flatten.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.9413
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/audits/internal5/analysis2/contracts/StakingVerifier-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3384
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/contracts/AgentRegistry.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.9163
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/contracts/ComponentRegistry.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.9006
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/contracts/GenericManager.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.931
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/contracts/GenericRegistry.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.7266
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/contracts/RegistriesManager.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8363
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/contracts/ServiceManager.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.7925
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/contracts/ServiceManagerToken.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.4039
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/contracts/ServiceRegistry.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3119
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/contracts/ServiceRegistryL2.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3368
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/contracts/ServiceRegistryTokenUtility.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.2203
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/contracts/UnitRegistry.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.7038
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/contracts/flatten/AgentRegistry-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.38
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/contracts/flatten/ComponentRegistry-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.38
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/contracts/flatten/GenericManager-flatten.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.6068
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/contracts/flatten/GenericRegistry-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.38
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/contracts/flatten/RegistriesManager-flatten.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.6068
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/contracts/flatten/ServiceManager-flatten.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.6068
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/contracts/flatten/ServiceRegistry-flatten-generic.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3801
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/contracts/flatten/ServiceRegistry-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3801
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/contracts/flatten/ServiceRegistryL2-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3801
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/contracts/flatten/UnitRegistry-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3801
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/contracts/interfaces/IErrorsRegistries.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.6069
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/contracts/interfaces/IMultisig.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.9377
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/contracts/interfaces/IRegistry.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.4989
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/contracts/interfaces/IService.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.4311
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/contracts/interfaces/IServiceTokenUtility.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.4328
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/contracts/interfaces/IToken.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.4074
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/contracts/multisigs/GnosisSafeMultisig.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.6398
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/contracts/multisigs/GnosisSafeSameAddressMultisig.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3744
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/contracts/scribble/ServiceRegistryAnnotated.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3133
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/contracts/staking/StakingActivityChecker.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8286
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/contracts/staking/StakingBase.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.6391
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/contracts/staking/StakingFactory.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.2062
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/contracts/staking/StakingNativeToken.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8944
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/contracts/staking/StakingProxy.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.9413
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/contracts/staking/StakingToken.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.2766
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/contracts/staking/StakingVerifier.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.2985
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/contracts/utils/HashCheckpoint.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.7873
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/contracts/utils/OperatorSignedHashes.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.1797
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/contracts/utils/OperatorWhitelist.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.2828
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/contracts/utils/SafeTransferLib.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8687
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/integrations/solana/contracts/ServiceRegistrySolana.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3307
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/registries/integrations/solana/contracts/SystemInstruction.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.6084
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/audits/internal/analysis/contracts/Depository-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.1945
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/audits/internal/analysis/contracts/Dispenser-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.428
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/audits/internal/analysis/contracts/DonatorBlacklist-flatten.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.6436
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/audits/internal/analysis/contracts/GenericBondCalculator-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.0986
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/audits/internal/analysis/contracts/GenericTokenomics-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.4493
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/audits/internal/analysis/contracts/Tokenomics-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.1225
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/audits/internal/analysis/contracts/TokenomicsConstants-flatten.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.917
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/audits/internal/analysis/contracts/TokenomicsProxy-flatten.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.9526
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/audits/internal/analysis/contracts/Treasury-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.1944
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/audits/internal3/analysis/contracts/Depository.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.4553
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/audits/internal4/analysis/contracts/ArbitrumDepositProcessorL1-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3141
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/audits/internal4/analysis/contracts/ArbitrumTargetDispenserL2-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3016
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/audits/internal4/analysis/contracts/DefaultDepositProcessorL1-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3141
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/audits/internal4/analysis/contracts/DefaultTargetDispenserL2-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3016
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/audits/internal4/analysis/contracts/Dispenser-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3399
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/audits/internal4/analysis/contracts/EthereumDepositProcessor-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.4681
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/audits/internal4/analysis/contracts/GnosisDepositProcessorL1-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3143
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/audits/internal4/analysis/contracts/GnosisTargetDispenserL2-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3015
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/audits/internal4/analysis/contracts/OptimismDepositProcessorL1-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3143
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/audits/internal4/analysis/contracts/OptimismTargetDispenserL2-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3015
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/audits/internal4/analysis/contracts/PolygonDepositProcessorL1-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3143
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/audits/internal4/analysis/contracts/PolygonTargetDispenserL2-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3015
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/audits/internal4/analysis/contracts/TokenomicsConstants-flatten.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8686
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/audits/internal4/analysis/contracts/WormholeDepositProcessorL1-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3143
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/audits/internal4/analysis/contracts/WormholeTargetDispenserL2-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3015
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/audits/internal4/analysis2/contracts/ArbitrumDepositProcessorL1-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.4604
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/audits/internal4/analysis2/contracts/DefaultDepositProcessorL1-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.4604
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/audits/internal4/analysis2/contracts/DefaultTargetDispenserL2-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3913
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/audits/internal4/analysis2/contracts/Dispenser-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3611
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/audits/internal4/analysis2/contracts/EthereumDepositProcessor-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3342
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/audits/internal4/analysis2/contracts/GnosisDepositProcessor-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.4604
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/audits/internal4/analysis2/contracts/GnosisTargetDispenserL2-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3913
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/audits/internal4/analysis2/contracts/OptimismDepositProcessorL1-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.4604
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/audits/internal4/analysis2/contracts/OptimismTargetDispenserL2-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3913
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/audits/internal4/analysis2/contracts/PolygonDepositProcessorL1-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.4604
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/audits/internal4/analysis2/contracts/PolygonTargetDispenserL2-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3913
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/audits/internal4/analysis2/contracts/TokenomicsConstants-flatten.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8481
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/audits/internal4/analysis2/contracts/WormholeDepositProcessorL1-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.4338
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/audits/internal4/analysis2/contracts/WormholeTargetDispenserL2-flatten.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3913
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/contracts/Depository.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3165
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/contracts/Dispenser.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3611
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/contracts/DonatorBlacklist.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.6271
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/contracts/GenericBondCalculator.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.7513
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/contracts/Tokenomics.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.1426
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/contracts/TokenomicsConstants.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8472
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/contracts/TokenomicsProxy.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.9421
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/contracts/Treasury.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.2482
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/contracts/interfaces/IBridgeErrors.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.484
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/contracts/interfaces/IDonatorBlacklist.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8966
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/contracts/interfaces/IErrorsTokenomics.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.4552
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/contracts/interfaces/IGenericBondCalculator.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8582
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/contracts/interfaces/IOLAS.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.91
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/contracts/interfaces/IServiceRegistry.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8682
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/contracts/interfaces/IToken.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.5289
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/contracts/interfaces/ITokenomics.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.777
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/contracts/interfaces/ITreasury.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.743
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/contracts/interfaces/IUniswapV2Pair.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.5939
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/contracts/interfaces/IVotingEscrow.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8949
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/contracts/staking/ArbitrumDepositProcessorL1.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.5655
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/contracts/staking/ArbitrumTargetDispenserL2.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.7216
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/contracts/staking/DefaultDepositProcessorL1.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3393
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/contracts/staking/DefaultTargetDispenserL2.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.1611
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/contracts/staking/EthereumDepositProcessor.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3342
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/contracts/staking/GnosisDepositProcessorL1.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.5561
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/contracts/staking/GnosisTargetDispenserL2.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.7073
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/contracts/staking/OptimismDepositProcessorL1.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.6359
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/contracts/staking/OptimismTargetDispenserL2.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.6827
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/contracts/staking/PolygonDepositProcessorL1.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.5636
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/contracts/staking/PolygonTargetDispenserL2.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.5895
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/contracts/staking/WormholeDepositProcessorL1.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.6538
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "contract_path": "data/evmbench_repos/2024-05-olas/tokenomics/contracts/staking/WormholeTargetDispenserL2.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.6093
+    },
+    {
+      "audit_id": "2024-07-basin",
+      "contract_path": "data/evmbench_repos/2024-07-basin/src/Aquifer.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8641
+    },
+    {
+      "audit_id": "2024-07-basin",
+      "contract_path": "data/evmbench_repos/2024-07-basin/src/Well.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.4484
+    },
+    {
+      "audit_id": "2024-07-basin",
+      "contract_path": "data/evmbench_repos/2024-07-basin/src/WellUpgradeable.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.6824
+    },
+    {
+      "audit_id": "2024-07-basin",
+      "contract_path": "data/evmbench_repos/2024-07-basin/src/functions/ConstantProduct.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.4797
+    },
+    {
+      "audit_id": "2024-07-basin",
+      "contract_path": "data/evmbench_repos/2024-07-basin/src/functions/ConstantProduct2.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.4545
+    },
+    {
+      "audit_id": "2024-07-basin",
+      "contract_path": "data/evmbench_repos/2024-07-basin/src/functions/ProportionalLPToken.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8663
+    },
+    {
+      "audit_id": "2024-07-basin",
+      "contract_path": "data/evmbench_repos/2024-07-basin/src/functions/ProportionalLPToken2.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.775
+    },
+    {
+      "audit_id": "2024-07-basin",
+      "contract_path": "data/evmbench_repos/2024-07-basin/src/functions/Stable2.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.6483
+    },
+    {
+      "audit_id": "2024-07-basin",
+      "contract_path": "data/evmbench_repos/2024-07-basin/src/functions/StableLUT/Stable2LUT1.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.9264
+    },
+    {
+      "audit_id": "2024-07-basin",
+      "contract_path": "data/evmbench_repos/2024-07-basin/src/interfaces/IAquifer.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.654
+    },
+    {
+      "audit_id": "2024-07-basin",
+      "contract_path": "data/evmbench_repos/2024-07-basin/src/interfaces/IBeanstalkWellFunction.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8264
+    },
+    {
+      "audit_id": "2024-07-basin",
+      "contract_path": "data/evmbench_repos/2024-07-basin/src/interfaces/ILookupTable.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.7776
+    },
+    {
+      "audit_id": "2024-07-basin",
+      "contract_path": "data/evmbench_repos/2024-07-basin/src/interfaces/IMultiFlowPumpWellFunction.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.6139
+    },
+    {
+      "audit_id": "2024-07-basin",
+      "contract_path": "data/evmbench_repos/2024-07-basin/src/interfaces/IWell.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.227
+    },
+    {
+      "audit_id": "2024-07-basin",
+      "contract_path": "data/evmbench_repos/2024-07-basin/src/interfaces/IWellErrors.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8971
+    },
+    {
+      "audit_id": "2024-07-basin",
+      "contract_path": "data/evmbench_repos/2024-07-basin/src/interfaces/IWellFunction.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.463
+    },
+    {
+      "audit_id": "2024-07-basin",
+      "contract_path": "data/evmbench_repos/2024-07-basin/src/interfaces/pumps/ICumulativePump.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8432
+    },
+    {
+      "audit_id": "2024-07-basin",
+      "contract_path": "data/evmbench_repos/2024-07-basin/src/interfaces/pumps/IInstantaneousPump.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.9282
+    },
+    {
+      "audit_id": "2024-07-basin",
+      "contract_path": "data/evmbench_repos/2024-07-basin/src/interfaces/pumps/IMultiFlowPumpErrors.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8888
+    },
+    {
+      "audit_id": "2024-07-basin",
+      "contract_path": "data/evmbench_repos/2024-07-basin/src/interfaces/pumps/IPump.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8595
+    },
+    {
+      "audit_id": "2024-07-basin",
+      "contract_path": "data/evmbench_repos/2024-07-basin/src/libraries/ABDKMathQuad.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.9058
+    },
+    {
+      "audit_id": "2024-07-basin",
+      "contract_path": "data/evmbench_repos/2024-07-basin/src/libraries/LibBytes.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.9409
+    },
+    {
+      "audit_id": "2024-07-basin",
+      "contract_path": "data/evmbench_repos/2024-07-basin/src/libraries/LibBytes16.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.9565
+    },
+    {
+      "audit_id": "2024-07-basin",
+      "contract_path": "data/evmbench_repos/2024-07-basin/src/libraries/LibClone.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.9103
+    },
+    {
+      "audit_id": "2024-07-basin",
+      "contract_path": "data/evmbench_repos/2024-07-basin/src/libraries/LibContractInfo.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8324
+    },
+    {
+      "audit_id": "2024-07-basin",
+      "contract_path": "data/evmbench_repos/2024-07-basin/src/libraries/LibLastReserveBytes.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.93
+    },
+    {
+      "audit_id": "2024-07-basin",
+      "contract_path": "data/evmbench_repos/2024-07-basin/src/libraries/LibMath.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.7356
+    },
+    {
+      "audit_id": "2024-07-basin",
+      "contract_path": "data/evmbench_repos/2024-07-basin/src/libraries/LibWellConstructor.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.5667
+    },
+    {
+      "audit_id": "2024-07-basin",
+      "contract_path": "data/evmbench_repos/2024-07-basin/src/libraries/LibWellUpgradeableConstructor.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.5624
+    },
+    {
+      "audit_id": "2024-07-basin",
+      "contract_path": "data/evmbench_repos/2024-07-basin/src/pumps/MultiFlowPump.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3801
+    },
+    {
+      "audit_id": "2024-07-basin",
+      "contract_path": "data/evmbench_repos/2024-07-basin/src/utils/Clone.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8632
+    },
+    {
+      "audit_id": "2024-07-basin",
+      "contract_path": "data/evmbench_repos/2024-07-basin/src/utils/ClonePlus.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.873
+    },
+    {
+      "audit_id": "2024-01-renft",
+      "contract_path": "data/evmbench_repos/2024-01-renft/smart-contracts/src/Create2Deployer.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.9182
+    },
+    {
+      "audit_id": "2024-01-renft",
+      "contract_path": "data/evmbench_repos/2024-01-renft/smart-contracts/src/Kernel.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.5346
+    },
+    {
+      "audit_id": "2024-01-renft",
+      "contract_path": "data/evmbench_repos/2024-01-renft/smart-contracts/src/examples/restricted-selector/Game.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3166
+    },
+    {
+      "audit_id": "2024-01-renft",
+      "contract_path": "data/evmbench_repos/2024-01-renft/smart-contracts/src/examples/restricted-selector/RestrictedSelectorHook.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.5364
+    },
+    {
+      "audit_id": "2024-01-renft",
+      "contract_path": "data/evmbench_repos/2024-01-renft/smart-contracts/src/examples/revenue-share/ERC1155RewardHook.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.459
+    },
+    {
+      "audit_id": "2024-01-renft",
+      "contract_path": "data/evmbench_repos/2024-01-renft/smart-contracts/src/examples/revenue-share/ERC20RewardHook.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.5163
+    },
+    {
+      "audit_id": "2024-01-renft",
+      "contract_path": "data/evmbench_repos/2024-01-renft/smart-contracts/src/examples/upgrades/GuardPolicyUpgrade.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8547
+    },
+    {
+      "audit_id": "2024-01-renft",
+      "contract_path": "data/evmbench_repos/2024-01-renft/smart-contracts/src/examples/upgrades/PaymentEscrowModuleUpgrade.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.9207
+    },
+    {
+      "audit_id": "2024-01-renft",
+      "contract_path": "data/evmbench_repos/2024-01-renft/smart-contracts/src/examples/upgrades/StopPolicyUpgrade.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8026
+    },
+    {
+      "audit_id": "2024-01-renft",
+      "contract_path": "data/evmbench_repos/2024-01-renft/smart-contracts/src/examples/upgrades/StorageModuleUpgrade.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.9394
+    },
+    {
+      "audit_id": "2024-01-renft",
+      "contract_path": "data/evmbench_repos/2024-01-renft/smart-contracts/src/examples/whitelisted-fulfillment/WhitelistedFulfillmentHook.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.7067
+    },
+    {
+      "audit_id": "2024-01-renft",
+      "contract_path": "data/evmbench_repos/2024-01-renft/smart-contracts/src/interfaces/IHook.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.7287
+    },
+    {
+      "audit_id": "2024-01-renft",
+      "contract_path": "data/evmbench_repos/2024-01-renft/smart-contracts/src/interfaces/ISafe.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.2203
+    },
+    {
+      "audit_id": "2024-01-renft",
+      "contract_path": "data/evmbench_repos/2024-01-renft/smart-contracts/src/interfaces/ISip5.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.9337
+    },
+    {
+      "audit_id": "2024-01-renft",
+      "contract_path": "data/evmbench_repos/2024-01-renft/smart-contracts/src/interfaces/IZone.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.7324
+    },
+    {
+      "audit_id": "2024-01-renft",
+      "contract_path": "data/evmbench_repos/2024-01-renft/smart-contracts/src/libraries/Errors.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.4687
+    },
+    {
+      "audit_id": "2024-01-renft",
+      "contract_path": "data/evmbench_repos/2024-01-renft/smart-contracts/src/libraries/Events.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.5519
+    },
+    {
+      "audit_id": "2024-01-renft",
+      "contract_path": "data/evmbench_repos/2024-01-renft/smart-contracts/src/libraries/KernelUtils.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.299
+    },
+    {
+      "audit_id": "2024-01-renft",
+      "contract_path": "data/evmbench_repos/2024-01-renft/smart-contracts/src/libraries/RentalConstants.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3177
+    },
+    {
+      "audit_id": "2024-01-renft",
+      "contract_path": "data/evmbench_repos/2024-01-renft/smart-contracts/src/libraries/RentalStructs.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.4456
+    },
+    {
+      "audit_id": "2024-01-renft",
+      "contract_path": "data/evmbench_repos/2024-01-renft/smart-contracts/src/libraries/RentalUtils.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.5659
+    },
+    {
+      "audit_id": "2024-01-renft",
+      "contract_path": "data/evmbench_repos/2024-01-renft/smart-contracts/src/modules/PaymentEscrow.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.4468
+    },
+    {
+      "audit_id": "2024-01-renft",
+      "contract_path": "data/evmbench_repos/2024-01-renft/smart-contracts/src/modules/Storage.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.5864
+    },
+    {
+      "audit_id": "2024-01-renft",
+      "contract_path": "data/evmbench_repos/2024-01-renft/smart-contracts/src/packages/Accumulator.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.9211
+    },
+    {
+      "audit_id": "2024-01-renft",
+      "contract_path": "data/evmbench_repos/2024-01-renft/smart-contracts/src/packages/Reclaimer.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.7545
+    },
+    {
+      "audit_id": "2024-01-renft",
+      "contract_path": "data/evmbench_repos/2024-01-renft/smart-contracts/src/packages/Signer.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.7039
+    },
+    {
+      "audit_id": "2024-01-renft",
+      "contract_path": "data/evmbench_repos/2024-01-renft/smart-contracts/src/packages/Zone.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.7575
+    },
+    {
+      "audit_id": "2024-01-renft",
+      "contract_path": "data/evmbench_repos/2024-01-renft/smart-contracts/src/policies/Admin.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.7149
+    },
+    {
+      "audit_id": "2024-01-renft",
+      "contract_path": "data/evmbench_repos/2024-01-renft/smart-contracts/src/policies/Create.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3332
+    },
+    {
+      "audit_id": "2024-01-renft",
+      "contract_path": "data/evmbench_repos/2024-01-renft/smart-contracts/src/policies/Factory.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.4268
+    },
+    {
+      "audit_id": "2024-01-renft",
+      "contract_path": "data/evmbench_repos/2024-01-renft/smart-contracts/src/policies/Guard.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3118
+    },
+    {
+      "audit_id": "2024-01-renft",
+      "contract_path": "data/evmbench_repos/2024-01-renft/smart-contracts/src/policies/Stop.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.5107
+    },
+    {
+      "audit_id": "2024-01-renft",
+      "contract_path": "data/evmbench_repos/2024-01-renft/smart-contracts/src/proxy/Proxiable.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8911
+    },
+    {
+      "audit_id": "2024-01-renft",
+      "contract_path": "data/evmbench_repos/2024-01-renft/smart-contracts/src/proxy/Proxy.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.9307
+    },
+    {
+      "audit_id": "2024-06-size",
+      "contract_path": "data/evmbench_repos/2024-06-size/src/Size.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.394
+    },
+    {
+      "audit_id": "2024-06-size",
+      "contract_path": "data/evmbench_repos/2024-06-size/src/SizeStorage.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.454
+    },
+    {
+      "audit_id": "2024-06-size",
+      "contract_path": "data/evmbench_repos/2024-06-size/src/SizeView.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3235
+    },
+    {
+      "audit_id": "2024-06-size",
+      "contract_path": "data/evmbench_repos/2024-06-size/src/SizeViewData.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.6228
+    },
+    {
+      "audit_id": "2024-06-size",
+      "contract_path": "data/evmbench_repos/2024-06-size/src/interfaces/IMulticall.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.9133
+    },
+    {
+      "audit_id": "2024-06-size",
+      "contract_path": "data/evmbench_repos/2024-06-size/src/interfaces/ISize.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.4361
+    },
+    {
+      "audit_id": "2024-06-size",
+      "contract_path": "data/evmbench_repos/2024-06-size/src/interfaces/ISizeAdmin.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.9224
+    },
+    {
+      "audit_id": "2024-06-size",
+      "contract_path": "data/evmbench_repos/2024-06-size/src/interfaces/ISizeView.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.2717
+    },
+    {
+      "audit_id": "2024-06-size",
+      "contract_path": "data/evmbench_repos/2024-06-size/src/interfaces/IWETH.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8595
+    },
+    {
+      "audit_id": "2024-06-size",
+      "contract_path": "data/evmbench_repos/2024-06-size/src/libraries/AccountingLibrary.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.7256
+    },
+    {
+      "audit_id": "2024-06-size",
+      "contract_path": "data/evmbench_repos/2024-06-size/src/libraries/CapsLibrary.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8463
+    },
+    {
+      "audit_id": "2024-06-size",
+      "contract_path": "data/evmbench_repos/2024-06-size/src/libraries/DepositTokenLibrary.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.532
+    },
+    {
+      "audit_id": "2024-06-size",
+      "contract_path": "data/evmbench_repos/2024-06-size/src/libraries/Errors.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.2586
+    },
+    {
+      "audit_id": "2024-06-size",
+      "contract_path": "data/evmbench_repos/2024-06-size/src/libraries/Events.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.2614
+    },
+    {
+      "audit_id": "2024-06-size",
+      "contract_path": "data/evmbench_repos/2024-06-size/src/libraries/LoanLibrary.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3374
+    },
+    {
+      "audit_id": "2024-06-size",
+      "contract_path": "data/evmbench_repos/2024-06-size/src/libraries/Math.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.1458
+    },
+    {
+      "audit_id": "2024-06-size",
+      "contract_path": "data/evmbench_repos/2024-06-size/src/libraries/Multicall.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.9006
+    },
+    {
+      "audit_id": "2024-06-size",
+      "contract_path": "data/evmbench_repos/2024-06-size/src/libraries/OfferLibrary.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.5964
+    },
+    {
+      "audit_id": "2024-06-size",
+      "contract_path": "data/evmbench_repos/2024-06-size/src/libraries/RiskLibrary.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8526
+    },
+    {
+      "audit_id": "2024-06-size",
+      "contract_path": "data/evmbench_repos/2024-06-size/src/libraries/YieldCurveLibrary.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.6216
+    },
+    {
+      "audit_id": "2024-06-size",
+      "contract_path": "data/evmbench_repos/2024-06-size/src/libraries/actions/BuyCreditLimit.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8784
+    },
+    {
+      "audit_id": "2024-06-size",
+      "contract_path": "data/evmbench_repos/2024-06-size/src/libraries/actions/BuyCreditMarket.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.5844
+    },
+    {
+      "audit_id": "2024-06-size",
+      "contract_path": "data/evmbench_repos/2024-06-size/src/libraries/actions/Claim.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8378
+    },
+    {
+      "audit_id": "2024-06-size",
+      "contract_path": "data/evmbench_repos/2024-06-size/src/libraries/actions/Compensate.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.6532
+    },
+    {
+      "audit_id": "2024-06-size",
+      "contract_path": "data/evmbench_repos/2024-06-size/src/libraries/actions/Deposit.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.7465
+    },
+    {
+      "audit_id": "2024-06-size",
+      "contract_path": "data/evmbench_repos/2024-06-size/src/libraries/actions/Initialize.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3971
+    },
+    {
+      "audit_id": "2024-06-size",
+      "contract_path": "data/evmbench_repos/2024-06-size/src/libraries/actions/Liquidate.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.7437
+    },
+    {
+      "audit_id": "2024-06-size",
+      "contract_path": "data/evmbench_repos/2024-06-size/src/libraries/actions/LiquidateWithReplacement.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.5711
+    },
+    {
+      "audit_id": "2024-06-size",
+      "contract_path": "data/evmbench_repos/2024-06-size/src/libraries/actions/Repay.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8485
+    },
+    {
+      "audit_id": "2024-06-size",
+      "contract_path": "data/evmbench_repos/2024-06-size/src/libraries/actions/SelfLiquidate.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.7977
+    },
+    {
+      "audit_id": "2024-06-size",
+      "contract_path": "data/evmbench_repos/2024-06-size/src/libraries/actions/SellCreditLimit.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.9035
+    },
+    {
+      "audit_id": "2024-06-size",
+      "contract_path": "data/evmbench_repos/2024-06-size/src/libraries/actions/SellCreditMarket.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.5728
+    },
+    {
+      "audit_id": "2024-06-size",
+      "contract_path": "data/evmbench_repos/2024-06-size/src/libraries/actions/SetUserConfiguration.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.9325
+    },
+    {
+      "audit_id": "2024-06-size",
+      "contract_path": "data/evmbench_repos/2024-06-size/src/libraries/actions/UpdateConfig.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.7104
+    },
+    {
+      "audit_id": "2024-06-size",
+      "contract_path": "data/evmbench_repos/2024-06-size/src/libraries/actions/Withdraw.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8254
+    },
+    {
+      "audit_id": "2024-06-size",
+      "contract_path": "data/evmbench_repos/2024-06-size/src/oracle/IPriceFeed.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8311
+    },
+    {
+      "audit_id": "2024-06-size",
+      "contract_path": "data/evmbench_repos/2024-06-size/src/oracle/PriceFeed.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.6076
+    },
+    {
+      "audit_id": "2024-06-size",
+      "contract_path": "data/evmbench_repos/2024-06-size/src/token/NonTransferrableScaledToken.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.354
+    },
+    {
+      "audit_id": "2024-06-size",
+      "contract_path": "data/evmbench_repos/2024-06-size/src/token/NonTransferrableToken.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.2277
+    },
+    {
+      "audit_id": "2024-08-phi",
+      "contract_path": "data/evmbench_repos/2024-08-phi/src/Cred.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3329
+    },
+    {
+      "audit_id": "2024-08-phi",
+      "contract_path": "data/evmbench_repos/2024-08-phi/src/PhiFactory.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3781
+    },
+    {
+      "audit_id": "2024-08-phi",
+      "contract_path": "data/evmbench_repos/2024-08-phi/src/abstract/Claimable.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.5951
+    },
+    {
+      "audit_id": "2024-08-phi",
+      "contract_path": "data/evmbench_repos/2024-08-phi/src/abstract/CreatorRoyaltiesControl.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.6944
+    },
+    {
+      "audit_id": "2024-08-phi",
+      "contract_path": "data/evmbench_repos/2024-08-phi/src/abstract/RewardControl.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.6099
+    },
+    {
+      "audit_id": "2024-08-phi",
+      "contract_path": "data/evmbench_repos/2024-08-phi/src/art/PhiNFT1155.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.351
+    },
+    {
+      "audit_id": "2024-08-phi",
+      "contract_path": "data/evmbench_repos/2024-08-phi/src/curve/BondingCurve.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.38
+    },
+    {
+      "audit_id": "2024-08-phi",
+      "contract_path": "data/evmbench_repos/2024-08-phi/src/interfaces/IBondingCurve.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.652
+    },
+    {
+      "audit_id": "2024-08-phi",
+      "contract_path": "data/evmbench_repos/2024-08-phi/src/interfaces/IContributeRewards.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.4856
+    },
+    {
+      "audit_id": "2024-08-phi",
+      "contract_path": "data/evmbench_repos/2024-08-phi/src/interfaces/ICreatorRoyaltiesControl.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8925
+    },
+    {
+      "audit_id": "2024-08-phi",
+      "contract_path": "data/evmbench_repos/2024-08-phi/src/interfaces/ICred.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.4551
+    },
+    {
+      "audit_id": "2024-08-phi",
+      "contract_path": "data/evmbench_repos/2024-08-phi/src/interfaces/ICuratorRewardsDistributor.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.2902
+    },
+    {
+      "audit_id": "2024-08-phi",
+      "contract_path": "data/evmbench_repos/2024-08-phi/src/interfaces/IOwnable.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.5104
+    },
+    {
+      "audit_id": "2024-08-phi",
+      "contract_path": "data/evmbench_repos/2024-08-phi/src/interfaces/IPhiFactory.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.763
+    },
+    {
+      "audit_id": "2024-08-phi",
+      "contract_path": "data/evmbench_repos/2024-08-phi/src/interfaces/IPhiNFT1155.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.311
+    },
+    {
+      "audit_id": "2024-08-phi",
+      "contract_path": "data/evmbench_repos/2024-08-phi/src/interfaces/IPhiNFT1155Ownable.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.7109
+    },
+    {
+      "audit_id": "2024-08-phi",
+      "contract_path": "data/evmbench_repos/2024-08-phi/src/interfaces/IPhiRewards.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.6144
+    },
+    {
+      "audit_id": "2024-08-phi",
+      "contract_path": "data/evmbench_repos/2024-08-phi/src/interfaces/IRewards.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3509
+    },
+    {
+      "audit_id": "2024-08-phi",
+      "contract_path": "data/evmbench_repos/2024-08-phi/src/reward/CuratorRewardsDistributor.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.4699
+    },
+    {
+      "audit_id": "2024-08-phi",
+      "contract_path": "data/evmbench_repos/2024-08-phi/src/reward/PhiRewards.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.4321
+    },
+    {
+      "audit_id": "2024-12-secondswap",
+      "contract_path": "data/evmbench_repos/2024-12-secondswap/contracts/SecondSwap_Artifact_Testing_Purposes.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8029
+    },
+    {
+      "audit_id": "2024-12-secondswap",
+      "contract_path": "data/evmbench_repos/2024-12-secondswap/contracts/SecondSwap_Marketplace.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.6695
+    },
+    {
+      "audit_id": "2024-12-secondswap",
+      "contract_path": "data/evmbench_repos/2024-12-secondswap/contracts/SecondSwap_MarketplaceSetting.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.6584
+    },
+    {
+      "audit_id": "2024-12-secondswap",
+      "contract_path": "data/evmbench_repos/2024-12-secondswap/contracts/SecondSwap_StepVesting.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.6193
+    },
+    {
+      "audit_id": "2024-12-secondswap",
+      "contract_path": "data/evmbench_repos/2024-12-secondswap/contracts/SecondSwap_VestingDeployer.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.4824
+    },
+    {
+      "audit_id": "2024-12-secondswap",
+      "contract_path": "data/evmbench_repos/2024-12-secondswap/contracts/SecondSwap_VestingManager.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.5199
+    },
+    {
+      "audit_id": "2024-12-secondswap",
+      "contract_path": "data/evmbench_repos/2024-12-secondswap/contracts/SecondSwap_Whitelist.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.6049
+    },
+    {
+      "audit_id": "2024-12-secondswap",
+      "contract_path": "data/evmbench_repos/2024-12-secondswap/contracts/SecondSwap_WhitelistDeployer.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.9332
+    },
+    {
+      "audit_id": "2024-12-secondswap",
+      "contract_path": "data/evmbench_repos/2024-12-secondswap/contracts/TestToken.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.5121
+    },
+    {
+      "audit_id": "2024-12-secondswap",
+      "contract_path": "data/evmbench_repos/2024-12-secondswap/contracts/USDT.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.9482
+    },
+    {
+      "audit_id": "2024-12-secondswap",
+      "contract_path": "data/evmbench_repos/2024-12-secondswap/contracts/interface/IERC20.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8353
+    },
+    {
+      "audit_id": "2024-12-secondswap",
+      "contract_path": "data/evmbench_repos/2024-12-secondswap/contracts/interface/SecondSwap_IMarketplaceSetting.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.49
+    },
+    {
+      "audit_id": "2024-12-secondswap",
+      "contract_path": "data/evmbench_repos/2024-12-secondswap/contracts/interface/SecondSwap_IVestingManager.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.39
+    },
+    {
+      "audit_id": "2024-12-secondswap",
+      "contract_path": "data/evmbench_repos/2024-12-secondswap/contracts/interface/SecondSwap_IWhitelist.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.8535
+    },
+    {
+      "audit_id": "2024-12-secondswap",
+      "contract_path": "data/evmbench_repos/2024-12-secondswap/contracts/interface/SecondSwap_Vesting.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.3348
+    },
+    {
+      "audit_id": "2025-04-forte",
+      "contract_path": "data/evmbench_repos/2025-04-forte/src/Float128.sol",
+      "pred": 0,
+      "prob_vulnerable": 0.481
+    },
+    {
+      "audit_id": "2025-04-forte",
+      "contract_path": "data/evmbench_repos/2025-04-forte/src/Ln.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.6398
+    },
+    {
+      "audit_id": "2025-04-forte",
+      "contract_path": "data/evmbench_repos/2025-04-forte/src/Types.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.7865
+    },
+    {
+      "audit_id": "2026-01-tempo-stablecoin-dex",
+      "contract_path": "data/evmbench_repos/2026-01-tempo-stablecoin-dex/contracts/MockTIP20.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.9531
+    },
+    {
+      "audit_id": "2026-01-tempo-stablecoin-dex",
+      "contract_path": "data/evmbench_repos/2026-01-tempo-stablecoin-dex/contracts/StablecoinDEX.sol",
+      "pred": 1,
+      "prob_vulnerable": 0.7475
+    }
+  ],
+  "computed_at": "2026-05-03T11:06:38.651261",
+  "data_source_commit": "DmAVID repo @ 4ea52dd (master)",
+  "over_prediction_caveat": {
+    "total_contracts_scanned": 426,
+    "total_predicted_vulnerable": 255,
+    "vuln_prediction_rate_on_evmbench": 0.5986,
+    "smartbugs_test_baseline_vuln_pred_rate": 0.6531,
+    "interpretation": "CodeBERT 在 EVMbench 全部 contracts 上預測 vulnerable 比例為 59.9%（255/426），遠高於 SmartBugs test 之 baseline 65.3%（32/49，且測試集本身就含 60% vuln）。鑑於 EVMbench 為大型真實審計合約（multi-contract repo，多數合約並非攻擊目標），CodeBERT 之 33.33% detect_rate 應視為『lenient lower bound』而非真實 robust 偵測能力——若以更嚴格的 contract-level F1（須計算每個 audit 之 vuln contract precision），實際表現可能更低。",
+    "implication_for_paper": "CodeBERT 在 EVMbench 之 33.33% lenient detect_rate 高於 DmAVID enhanced 30.77%，但 CodeBERT 為過度預測（59.9% scanned contracts 被標 vulnerable），此 detect 屬於『亂槍打鳥』命中；DmAVID 之 30.77% 則為精確命中（per-finding self-verify + targeted-search 路徑明確）。EXI 框架仍應反映：CodeBERT pattern_coverage / root_cause / repair_quality 皆為 0（黑箱），唯 attack_path 因 lenient binary mapping 機制可達 0.3333；EXI 總分 8.33 仍遠低於 DmAVID 81.15 與 Slither 26.44。"
+  }
+}
