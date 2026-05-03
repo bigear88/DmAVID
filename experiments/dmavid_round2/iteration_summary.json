@@ -1,0 +1,231 @@
+{
+  "version": "v50_narrative_lock",
+  "v5_clean_baseline_f1": 0.9061,
+  "v5_clean_sv_f1": 0.9121,
+  "rounds": [
+    {
+      "round": 1,
+      "f1": 0.8897,
+      "precision": 0.8776,
+      "recall": 0.9021,
+      "fpr": 0.18,
+      "tp": 129,
+      "fp": 18,
+      "fn": 14,
+      "tn": 82,
+      "delta_vs_baseline": -0.0164,
+      "delta_vs_sv": -0.0224,
+      "pre_verify": {
+        "tp": 140,
+        "fp": 31,
+        "tn": 69,
+        "fn": 3,
+        "precision": 0.8187,
+        "recall": 0.979,
+        "f1": 0.8917,
+        "fpr": 0.31,
+        "total_samples": 243
+      },
+      "cost_usd": {
+        "total_tokens": 522915,
+        "total_cost_usd": 5.2292,
+        "budget_usd": 50.0,
+        "budget_remaining_usd": 44.7708,
+        "per_stage": {
+          "teacher": {
+            "tokens": 5687,
+            "cost_usd": 0.0569
+          },
+          "student": {
+            "tokens": 436024,
+            "cost_usd": 4.3602
+          },
+          "red_team": {
+            "tokens": 1500,
+            "cost_usd": 0.015
+          },
+          "blue_team": {
+            "tokens": 4527,
+            "cost_usd": 0.0453
+          },
+          "self_verify": {
+            "tokens": 68161,
+            "cost_usd": 0.6816
+          },
+          "student_challenge": {
+            "tokens": 7016,
+            "cost_usd": 0.0702
+          }
+        }
+      }
+    },
+    {
+      "round": 2,
+      "f1": 0.892,
+      "precision": 0.8889,
+      "recall": 0.8951,
+      "fpr": 0.16,
+      "tp": 128,
+      "fp": 16,
+      "fn": 15,
+      "tn": 84,
+      "delta_vs_baseline": -0.0141,
+      "delta_vs_sv": -0.0201,
+      "pre_verify": {
+        "tp": 140,
+        "fp": 29,
+        "tn": 71,
+        "fn": 3,
+        "precision": 0.8284,
+        "recall": 0.979,
+        "f1": 0.8974,
+        "fpr": 0.29,
+        "total_samples": 243
+      },
+      "cost_usd": {
+        "total_tokens": 1043693,
+        "total_cost_usd": 10.4369,
+        "budget_usd": 50.0,
+        "budget_remaining_usd": 39.5631,
+        "per_stage": {
+          "teacher": {
+            "tokens": 10075,
+            "cost_usd": 0.1008
+          },
+          "student": {
+            "tokens": 872597,
+            "cost_usd": 8.726
+          },
+          "red_team": {
+            "tokens": 3000,
+            "cost_usd": 0.03
+          },
+          "blue_team": {
+            "tokens": 9277,
+            "cost_usd": 0.0928
+          },
+          "self_verify": {
+            "tokens": 136095,
+            "cost_usd": 1.3609
+          },
+          "student_challenge": {
+            "tokens": 12649,
+            "cost_usd": 0.1265
+          }
+        }
+      }
+    },
+    {
+      "round": 3,
+      "f1": 0.8889,
+      "precision": 0.8828,
+      "recall": 0.8951,
+      "fpr": 0.17,
+      "tp": 128,
+      "fp": 17,
+      "fn": 15,
+      "tn": 83,
+      "delta_vs_baseline": -0.0172,
+      "delta_vs_sv": -0.0232,
+      "pre_verify": {
+        "tp": 140,
+        "fp": 31,
+        "tn": 69,
+        "fn": 3,
+        "precision": 0.8187,
+        "recall": 0.979,
+        "f1": 0.8917,
+        "fpr": 0.31,
+        "total_samples": 243
+      },
+      "cost_usd": {
+        "total_tokens": 1566271,
+        "total_cost_usd": 15.6627,
+        "budget_usd": 50.0,
+        "budget_remaining_usd": 34.3373,
+        "per_stage": {
+          "teacher": {
+            "tokens": 15161,
+            "cost_usd": 0.1516
+          },
+          "student": {
+            "tokens": 1308920,
+            "cost_usd": 13.0892
+          },
+          "red_team": {
+            "tokens": 4500,
+            "cost_usd": 0.045
+          },
+          "blue_team": {
+            "tokens": 13880,
+            "cost_usd": 0.1388
+          },
+          "self_verify": {
+            "tokens": 204751,
+            "cost_usd": 2.0475
+          },
+          "student_challenge": {
+            "tokens": 19059,
+            "cost_usd": 0.1906
+          }
+        }
+      }
+    }
+  ],
+  "convergence_pattern": "stable_oscillate (max delta < 0.005)",
+  "f1_range": [
+    0.8889,
+    0.892
+  ],
+  "f1_mean": 0.8902,
+  "best_round": 2,
+  "max_inter_round_delta": 0.0031,
+  "0.8917_source_investigation": {
+    "found_in_raw": true,
+    "candidate_sources": [
+      {
+        "source": "dmavid_round2/round_1_results.json:pre_verify_metrics",
+        "value": 0.8917,
+        "config": "Slither+LLM+RAG (pre per-finding Self-Verify)",
+        "raw": {
+          "tp": 140,
+          "fp": 31,
+          "tn": 69,
+          "fn": 3
+        }
+      },
+      {
+        "source": "dmavid_round2/round_3_results.json:pre_verify_metrics",
+        "value": 0.8917,
+        "config": "Slither+LLM+RAG (pre per-finding Self-Verify)",
+        "raw": {
+          "tp": 140,
+          "fp": 31,
+          "tn": 69,
+          "fn": 3
+        }
+      },
+      {
+        "source": "ablation_results.json (legacy v1) config=+debate",
+        "value": 0.8924,
+        "config": "v1 legacy ablation stage",
+        "raw": {
+          "tp": 141,
+          "fp": 32
+        }
+      }
+    ],
+    "verdict": "0.8917 對應 dmavid_round2 round_1 與 round_3 之 pre_verify_metrics（Slither+LLM+RAG，pre per-finding SV）；論文將此 pre-iter 起始 F1 誤標為『3 輪迭代後』之結果，造成『提升至 0.8897』的內部矛盾（實際上 0.8897 是 round 1 post-verify F1，比 0.8917 略低，是 SV 階段移除部分 TP 的代價）。"
+  },
+  "suggested_narrative_for_paper": "對抗式迭代實驗（dmavid_round2）共執行 3 輪 Red Team↔Blue Team 攻防，F1 在 [0.8889, 0.892] 區間波動（round 1=0.8897, round 2=0.892, round 3=0.8889；Recall 介於 0.8951–0.9021, FPR 0.16–0.18）。3 輪平均 F1 (0.8902) 略低於 v5_clean Self-Verify 之 0.9121，顯示在 SmartBugs Curated 設定下單階段 Self-Verify 已逼近本框架之表現上限；對抗迭代之主要價值體現於 process-level robustness（詳見表 4-37 反偵測 4/4=100%）與 explainability 深化（推理深度中位數 68 詞），而非最終 F1 點估計之提升。",
+  "alternative_narratives": [
+    "3 輪對抗迭代之 F1 分別為 0.8897 / 0.892 / 0.8889（best round=2），平均 0.8902，與 v5_clean Self-Verify (F1=0.9121) 相比小幅下降 0.0219；迭代過程中 Recall 維持 0.8951–0.9021、FPR 由 pre-iter 0.31 降至 0.16–0.18，FP-recall trade-off 朝降 FP 方向收斂，代表迭代之 Blue Team 防禦策略偏向保守，犧牲少量 Recall（從 0.979 降至約 0.90）以換取 FP 大幅減少（自 31 降至 16-18）。",
+    "對抗迭代於 dmavid_round2 三輪後達成 F1=0.8897 (round 1) / 0.892 (round 2) / 0.8889 (round 3)，3 輪 F1 區間 [0.8889, 0.892] 顯示已進入穩定振盪相（最大 inter-round delta 0.0031）；與 v5_clean Self-Verify 主管線 F1=0.9121 相比，對抗迭代未在 SmartBugs Curated 上取得進一步點估計提升，其貢獻應由 robustness 與可解釋性等過程性指標衡量。"
+  ],
+  "ch5_para_2130_2131_replacement": {
+    "remove_original": "「3 輪對抗迭代後 F1 從 0.8917 提升至 0.8897」(內部矛盾：0.8897 < 0.8917；且 0.8917 對應 pre-iter Slither+LLM+RAG，非對抗迭代結果)",
+    "replace_with": "對抗式迭代實驗（dmavid_round2）共執行 3 輪 Red Team↔Blue Team 攻防，F1 在 [0.8889, 0.892] 區間波動（round 1=0.8897, round 2=0.892, round 3=0.8889；Recall 介於 0.8951–0.9021, FPR 0.16–0.18）。3 輪平均 F1 (0.8902) 略低於 v5_clean Self-Verify 之 0.9121，顯示在 SmartBugs Curated 設定下單階段 Self-Verify 已逼近本框架之表現上限；對抗迭代之主要價值體現於 process-level robustness（詳見表 4-37 反偵測 4/4=100%）與 explainability 深化（推理深度中位數 68 詞），而非最終 F1 點估計之提升。"
+  },
+  "computed_at": "2026-05-03T10:55:15.735115",
+  "data_source_commit": "DmAVID repo @ ab36da5 (master)"
+}

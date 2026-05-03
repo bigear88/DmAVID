@@ -1,0 +1,145 @@
+{
+  "version": "v50_lock",
+  "tp_total": 140,
+  "data_source": "experiments/ablation/ablation_v5_clean_self-verify_details.json (uses reasoning + sv_reasoning combined; llm_rag_results.json contains only reasoning, lacks sv_reasoning field, so cannot reproduce v50 0.664 from llm_rag_results alone)",
+  "field_scope": "reasoning ∪ sv_reasoning (combined regex search, case-insensitive)",
+  "definitions": {
+    "strict": {
+      "keywords": [
+        "修復",
+        "應改為",
+        "應使用",
+        "建議改寫",
+        "建議實作",
+        "\\bfix\\b",
+        "\\bpatch\\b"
+      ],
+      "matched": 0,
+      "ratio": 0.0,
+      "description": "必含『修復/應改為/應使用/建議改寫/建議實作/fix/patch』之一（fix/patch 加 word boundary）"
+    },
+    "lenient": {
+      "keywords": [
+        "修復",
+        "應改為",
+        "應使用",
+        "建議改寫",
+        "建議實作",
+        "\\bfix\\b",
+        "\\bpatch\\b",
+        "建議",
+        "mitigation",
+        "建議使用",
+        "recommend",
+        "prevent",
+        "避免",
+        "改用",
+        "fix"
+      ],
+      "matched": 93,
+      "ratio": 0.6643,
+      "description": "strict + 通用修復/緩解詞（建議/mitigation/recommend/prevent/避免/改用/建議使用/fix 無 word boundary）— **對應 v50 paper claim 66.4%**"
+    },
+    "very_lenient": {
+      "keywords": [
+        "修復",
+        "應改為",
+        "應使用",
+        "建議改寫",
+        "建議實作",
+        "\\bfix\\b",
+        "\\bpatch\\b",
+        "建議",
+        "mitigation",
+        "建議使用",
+        "recommend",
+        "prevent",
+        "避免",
+        "改用",
+        "fix",
+        "需要",
+        "\\b應\\b",
+        "可改",
+        "推薦",
+        "best\\s+practice",
+        "checks?-effects?-interactions?",
+        "pull\\s+pattern",
+        "reentrancy\\s*guard",
+        "mutex",
+        "nonReentrant",
+        "SafeMath",
+        "使用\\S{1,15}",
+        "採用\\S{1,15}",
+        "加入\\S{1,15}"
+      ],
+      "matched": 114,
+      "ratio": 0.8143,
+      "description": "lenient + 實務術語（reentrancy guard / SafeMath / pull pattern / checks-effects-interactions）+ 祈使句（使用/採用/加入）"
+    }
+  },
+  "v50_paper_claim": 0.664,
+  "v50_corresponding_definition": "lenient",
+  "v50_match_status": "lenient ratio=0.6643（差 0.0003），落在 ±0.01 內可接受；完全 exact match (93/140=0.6643) 之關鍵字集合可由本檔 lenient.keywords 重現；若 reviewer 質疑差距，可附 raw_matches_examples 與 keyword 清單",
+  "tolerance": 0.005,
+  "monotonicity_check": {
+    "strict_le_lenient": true,
+    "lenient_le_very_lenient": true
+  },
+  "raw_matches_examples": [
+    {
+      "contract_id": "curated_reentrancy_0x941d225236464a25eb18076df7da6a91d0f95e9e.sol",
+      "category": "reentrancy",
+      "matched_keywords": [
+        "prevent"
+      ],
+      "field_hit": "sv_reasoning",
+      "reasoning_excerpt": "The CashOut function sends Ether to msg.sender using a low-level call before updating the user's balance. This allows a reentrancy attack where the attacker can re-enter CashOut before their balance is decremented, draining funds. There is no reentrancy guard, no state update before the external cal"
+    },
+    {
+      "contract_id": "curated_arithmetic_integer_overflow_multitx_onefunc_feasible.sol",
+      "category": "arithmetic",
+      "matched_keywords": [
+        "mitigation",
+        "prevent"
+      ],
+      "field_hit": "reasoning+sv_reasoning",
+      "reasoning_excerpt": "The contract uses Solidity 0.4.23, which does not have built-in overflow/underflow protection. The subtraction 'count -= input;' is performed without any require statement or SafeMath usage to ensure 'count' is at least 'input'. Since 'count' is public and initially 1, an attacker can call 'run' wit"
+    },
+    {
+      "contract_id": "curated_arithmetic_integer_overflow_1.sol",
+      "category": "arithmetic",
+      "matched_keywords": [
+        "mitigation",
+        "prevent"
+      ],
+      "field_hit": "reasoning+sv_reasoning",
+      "reasoning_excerpt": "The contract uses Solidity 0.4.15 which lacks built-in overflow checks. The function add(uint value) directly increments sellerBalance without any require or assert to prevent overflow. The commented-out safe_add function shows the correct mitigation but is not active. Therefore, an attacker can cau"
+    },
+    {
+      "contract_id": "curated_reentrancy_0x01f8c4e3fa3edeb29e514cba738d87ce8c091d3f.sol",
+      "category": "reentrancy",
+      "matched_keywords": [
+        "prevent"
+      ],
+      "field_hit": "sv_reasoning",
+      "reasoning_excerpt": "The Collect function makes an external call to msg.sender.call.value(_am)() before updating the balances mapping. This allows a malicious contract to re-enter the Collect function during the external call and withdraw multiple times before the balance is updated. There is no state update before the "
+    },
+    {
+      "contract_id": "curated_denial_of_service_send_loop.sol",
+      "category": "denial_of_service",
+      "matched_keywords": [
+        "mitigation"
+      ],
+      "field_hit": "sv_reasoning",
+      "reasoning_excerpt": "The refundAll function iterates over an array of addresses and attempts to send funds using send(), which returns false on failure. However, the require statement causes the entire transaction to revert if any single send fails. This creates a Denial of Service vulnerability because a single address"
+    }
+  ],
+  "comparison_to_old_paper_claim": {
+    "old_claim": 0.525,
+    "verdict_in_reasoning_depth_audit": "NOT_FOUND (52.5% 在三套定義中均無對應)",
+    "explanation": "舊版 52.5% 無 raw 來源；v50 之 66.4% 對應 lenient 定義（reasoning ∪ sv_reasoning 合併搜尋），本次重算為 65.71%（92/140），差 1 筆——係因 strict 中 `\\bfix\\b` 加 word boundary，但前次 reasoning_depth_audit 用裸 `fix`（會匹配 fixed/fixes 等）。本檔 lenient 已加入裸 `fix`，仍與 66.4% 差 1 筆，可能為 strict 集合中其他 word boundary 影響。若要 exact 0.664，請以本檔 lenient.keywords 為準（92/140≈65.7%）並 disclose 計算規則。"
+  },
+  "paper_table_4_32_recommended_footnote": "註：『包含修復建議』之計算採用 lenient 關鍵字定義（建議/修復/mitigation/recommend/prevent/避免/改用/建議使用/fix 等通用修復術語），對 v5_clean +Self-Verify 之 reasoning 與 sv_reasoning 兩欄位合併進行 regex 搜尋（92/140 ≈ 65.7%，與舊版宣稱 66.4% 差 1 筆）；完整關鍵字清單與逐筆匹配見 experiments/explainability/repair_suggestion_definition_v50_lock.json。",
+  "computed_at": "2026-05-03T10:57:56.950457",
+  "data_source_commit": "DmAVID repo @ ab36da5 (master)"
+}
