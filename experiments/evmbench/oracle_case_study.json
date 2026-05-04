@@ -1,0 +1,114 @@
+{
+  "version": "oracle_case_study_v1",
+  "timestamp": "2026-05-04T23:22:47.986619",
+  "audit_id": "2024-03-abracadabra-money",
+  "target_contracts": [
+    "src/mimswap/MagicLP.sol",
+    "src/oracles/aggregators/MagicLpAggregator.sol"
+  ],
+  "gold_vulnerabilities": {
+    "H-01": "Anyone making use of the MagicLP's TWAP to determine token prices will be exploitable.",
+    "H-04": "Oracle price can be manipulated (flash loan reserve inflation via MagicLpAggregator)."
+  },
+  "stage1_slither": {
+    "src/mimswap/MagicLP.sol": {
+      "success": false,
+      "n_findings": 0,
+      "high": 0,
+      "medium": 0,
+      "error": "no output",
+      "top_findings": []
+    },
+    "src/oracles/aggregators/MagicLpAggregator.sol": {
+      "success": false,
+      "n_findings": 0,
+      "high": 0,
+      "medium": 0,
+      "error": "no output",
+      "top_findings": []
+    }
+  },
+  "stage2_llm_rag": {
+    "n_findings": 3,
+    "tokens": 5174,
+    "findings": [
+      {
+        "title": "Spot-Price Oracle via AMM Reserves in MagicLpAggregator",
+        "severity": "High",
+        "location": "MagicLpAggregator/latestAnswer",
+        "description": "The latestAnswer() function reads live reserves from the MagicLP pair via getReserves() and uses these to compute the price. This exposes the oracle to flash loan price manipulation because an attacker can temporarily inflate or deflate reserves within a single transaction to manipulate the reported price.",
+        "attack_scenario": "An attacker executes a flash loan to borrow large amounts of base or quote tokens, swaps them in the MagicLP pair to manipulate reserves and thus the spot price, then triggers a victim contract that reads the oracle price within the same transaction to exploit the manipulated price, before repaying the flash loan.",
+        "recommendation": "Replace the spot price oracle with a TWAP-based oracle or use an external price feed such as Chainlink. Avoid using live reserves directly for price calculation. Implement time-weighted average price updates that are resistant to single-transaction manipulation.",
+        "self_verify": {
+          "verified": false,
+          "exploit_path": "",
+          "tokens": 3243
+        }
+      },
+      {
+        "title": "Missing TWAP or Price Averaging in MagicLpAggregator Oracle",
+        "severity": "Medium",
+        "location": "MagicLpAggregator/latestAnswer",
+        "description": "The oracle returns a price based on current reserves and external oracles but does not implement any time-weighted average price (TWAP) or smoothing mechanism. This makes the price susceptible to short-term manipulation and flash loan attacks.",
+        "attack_scenario": "An attacker can perform a sandwich or flash loan attack to manipulate the reserves and cause the oracle to report a manipulated price, potentially causing incorrect liquidations or mispriced trades in dependent protocols.",
+        "recommendation": "Implement a TWAP mechanism that updates cumulative prices before reserve changes, similar to Uniswap V2's approach. Alternatively, cross-validate the price with multiple external oracles and reject outliers.",
+        "self_verify": {
+          "verified": false,
+          "exploit_path": "",
+          "tokens": 3436
+        }
+      },
+      {
+        "title": "No Stale Oracle Price Validation in MagicLpAggregator",
+        "severity": "Low",
+        "location": "MagicLpAggregator/latestAnswer",
+        "description": "The oracle does not check the freshness or timestamp of the underlying baseOracle and quoteOracle prices. If these oracles become stale, the MagicLpAggregator will continue to report outdated prices.",
+        "attack_scenario": "If the base or quote oracle feeds stop updating, the MagicLpAggregator will continue to report stale prices, potentially causing incorrect pricing and risk management decisions in dependent contracts.",
+        "recommendation": "Add heartbeat validation by checking the last update timestamp of baseOracle and quoteOracle and revert or fallback if the data is stale beyond a configured threshold.",
+        "self_verify": {
+          "verified": false,
+          "exploit_path": "",
+          "tokens": 3025
+        }
+      }
+    ]
+  },
+  "stage3_self_verify": {
+    "n_verified": 0,
+    "details": [
+      {
+        "title": "Spot-Price Oracle via AMM Reserves in MagicLpAggregator",
+        "verified": false,
+        "exploit_path": ""
+      },
+      {
+        "title": "Missing TWAP or Price Averaging in MagicLpAggregator Oracle",
+        "verified": false,
+        "exploit_path": ""
+      },
+      {
+        "title": "No Stale Oracle Price Validation in MagicLpAggregator",
+        "verified": false,
+        "exploit_path": ""
+      }
+    ]
+  },
+  "stage4_gold_comparison": {
+    "detect_rate": "2/2",
+    "detect_pct": 1.0,
+    "verdicts": {
+      "H-01": {
+        "detected": true,
+        "matched_finding": "Missing TWAP or Price Averaging in MagicLpAggregator Oracle",
+        "coverage": "keyword match >= 2"
+      },
+      "H-04": {
+        "detected": true,
+        "matched_finding": "Spot-Price Oracle via AMM Reserves in MagicLpAggregator",
+        "coverage": "keyword match >= 2"
+      }
+    }
+  },
+  "total_cost_usd": 0.00973,
+  "model": "gpt-4.1-mini"
+}
