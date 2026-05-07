@@ -26,7 +26,7 @@ Stage 4: DmAVID 多代理迭代         → Teacher/Student/Red Team/Blue Team �
 | LLM Base | 0.7474 | 59.9% | 99.3% | 95.0% | SmartBugs 243 |
 | **LLM+RAG** | **0.9061** | **84.3%** | **97.9%** | **26.0%** | SmartBugs 243 |
 | **+Self-Verify** | **0.9121** | **85.4%** | **97.9%** | **24.0%** | SmartBugs 243 |
-| DmAVID Enhanced | 20.51% detect | 100% | 20.5% | 0% | EVMbench 39 |
+| DmAVID Enhanced | 30.77% detect (12/39) | 100% | 30.8% | 0% | EVMbench 39 |
 
 ---
 
@@ -68,7 +68,7 @@ DmAVID/
 │   ├── llm_rag/                      # LLM+RAG 結果 (F1=0.9061)
 │   ├── hybrid/                       # Self-Verify 結果 (F1=0.9121)
 │   ├── dmavid_round2/            # DmAVID 迭代結果
-│   ├── evmbench_enhanced/            # EVMbench 增強偵測 (20.51%)
+│   ├── evmbench_enhanced/            # EVMbench 增強偵測 (30.77%, 12/39)
 │   ├── traditional_ml/              # 傳統 ML 基線 (RF/LR/GB/SVM)
 │   ├── defi_real_world/             # DeFiHackLabs 測試
 │   ├── style_balanced/              # 風格平衡消融
@@ -145,7 +145,7 @@ DmAVID/
 傳統 ML (RF F1=0.993) 學到的是**資料集風格差異**，而非漏洞語意：
 - Top TF-IDF 特徵：totalSupply, allowance, indexed (ERC20 特徵)
 - 移除標注後 RF 仍達 0.955
-- EVMbench 真實場景：傳統工具 0%，DmAVID 20.51%
+- EVMbench 真實場景：傳統工具 0%，DmAVID 30.77% (12/39)
 
 ### 2. 分階段消融
 
