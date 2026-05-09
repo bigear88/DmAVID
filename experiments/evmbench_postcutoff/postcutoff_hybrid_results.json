@@ -1,0 +1,227 @@
+{
+  "experiment": "evmbench_postcutoff_hybrid",
+  "description": "Post-cutoff validation using Hybrid (LLM+RAG) pipeline \u2014 reproduces thesis Section 5",
+  "model": "gpt-4.1-mini",
+  "pipeline": "Hybrid (LLM+RAG + ChromaDB RAG + LLM judge per gold vuln, 60K char truncation)",
+  "total_audits": 8,
+  "total_gold": 17,
+  "total_detected": 0,
+  "detect_rate": 0.0,
+  "thesis_expected": "11.76% (2/17)",
+  "per_audit": [
+    {
+      "audit_id": "2025-04-forte",
+      "gold_count": 5,
+      "found_count": 0,
+      "detected": 0,
+      "score": 0.0,
+      "tokens_detect": 15949,
+      "found_vulns": [],
+      "judge_results": [
+        {
+          "vuln_id": "H-01",
+          "vuln_title": "Early 72-digit adjustment in sqrt will lead to incorrect result exponent calculation",
+          "detected": false,
+          "reasoning": "The audit report contains no findings related to the early 72-digit adjustment in sqrt or incorrect exponent calculation, thus it does not identify the specified vulnerability."
+        },
+        {
+          "vuln_id": "H-02",
+          "vuln_title": "Square root function silently accepts invalid non-positive inputs",
+          "detected": false,
+          "reasoning": "The audit report contains no findings and thus does not identify the root cause, vulnerable code, or impact related to the sqrt function stopping execution on zero input."
+        },
+        {
+          "vuln_id": "H-03",
+          "vuln_title": "Natural logarithm function silently accepts invalid non-positive inputs",
+          "detected": false,
+          "reasoning": "The audit report contains no findings, so it does not identify the root cause, vulnerable code, or impact related to the ln() function accepting invalid non-positive inputs."
+        },
+        {
+          "vuln_id": "H-04",
+          "vuln_title": "Unwrapping while equating inside the eq function fails to account for the set L_MATISSA_FLAG",
+          "detected": false,
+          "reasoning": "The audit report contains no findings, so it does not identify the root cause, vulnerable code, or exploit scenario related to the unwrapping issue in the eq function."
+        },
+        {
+          "vuln_id": "H-05",
+          "vuln_title": "Precision loss in toPackedFloat function when mantissa is in range (MAX_M_DIGIT_NUMBER, MIN_L_DIGIT_NUMBER)",
+          "detected": false,
+          "reasoning": "The audit report contains no findings related to precision loss in toPackedFloat or the mantissa size determination logic, thus it does not detect the specified HIGH severity vulnerability."
+        }
+      ]
+    },
+    {
+      "audit_id": "2026-01-tempo-stablecoin-dex",
+      "gold_count": 2,
+      "found_count": 0,
+      "detected": 0,
+      "score": 0.0,
+      "tokens_detect": 4112,
+      "found_vulns": [],
+      "judge_results": [
+        {
+          "vuln_id": "H-02",
+          "vuln_title": "Missing authorization in cancel() allows anyone to cancel any order",
+          "detected": false,
+          "reasoning": "The audit report contains no findings related to missing authorization in cancel(), and thus does not identify the root cause, vulnerable code, or exploit scenario described in the target vulnerability."
+        },
+        {
+          "vuln_id": "H-04",
+          "vuln_title": "Integer underflow in balance subtraction allows draining DEX liquidity",
+          "detected": false,
+          "reasoning": "The audit report contains no findings or mentions of the integer underflow vulnerability in balance subtraction, thus it does not detect the specified high severity issue."
+        }
+      ]
+    },
+    {
+      "audit_id": "2025-01-liquid-ron",
+      "gold_count": 1,
+      "found_count": 5,
+      "detected": 0,
+      "score": 0.0,
+      "tokens_detect": 10211,
+      "found_vulns": [
+        "Incorrect onlyOperator Modifier Logic Allowing Unauthorized Access",
+        "Division Rounding Error in _convertToAssets Leading to Asset Miscalculation",
+        "Reentrancy Risk in _withdrawRONTo with External Call After State Changes",
+        "LiquidProxy harvest Function Calls claimRewards Incorrectly Causing Potential Logic Errors",
+        "Missing Access Control on pruneValidatorList Function"
+      ],
+      "judge_results": [
+        {
+          "vuln_id": "H-01",
+          "vuln_title": "The calculation of totalAssets() could be wrong if operatorFeeAmount > 0, this can cause potential loss for the new depositors",
+          "detected": false,
+          "reasoning": "The audit report findings do not mention or address the incorrect calculation of totalAssets() related to operatorFeeAmount causing potential loss for new depositors; none of the findings describe this specific fee accounting issue or its impact."
+        }
+      ]
+    },
+    {
+      "audit_id": "2025-04-virtuals",
+      "gold_count": 4,
+      "found_count": 4,
+      "detected": 0,
+      "score": 0.0,
+      "tokens_detect": 14229,
+      "found_vulns": [
+        "Block Gas Limit Denial of Service in AgentRewardV2 _prepareAgentsRewards",
+        "Block Gas Limit Denial of Service in AgentRewardV2 distributeRewardsForAgents",
+        "Block Gas Limit Denial of Service in AgentRewardV3 distributeRewards",
+        "Denial of Service via Unexpected Revert in Token Transfers in AgentInference prompt functions"
+      ],
+      "judge_results": [
+        {
+          "vuln_id": "H-01",
+          "vuln_title": "Lack of access control in AgentNftV2::addValidator() enables unauthorized validator injection and causes reward accounting inconsistencies",
+          "detected": false,
+          "reasoning": "The audit report findings focus exclusively on denial of service issues related to gas limits and token transfer reverts, and do not mention the lack of access control in AgentNftV2::addValidator() or the validator injection and reward accounting inconsistencies described in the target vulnerability."
+        },
+        {
+          "vuln_id": "H-03",
+          "vuln_title": "Public ServiceNft::updateImpact call leads to cascading issue",
+          "detected": false,
+          "reasoning": "The audit report findings focus exclusively on block gas limit denial of service and token transfer reverts in AgentReward and AgentInference contracts, with no mention or analysis of the ServiceNft::updateImpact function or cascading issues related to it."
+        },
+        {
+          "vuln_id": "H-04",
+          "vuln_title": "Public ContributionNft::mint leads to cascading issues / loss of funds",
+          "detected": false,
+          "reasoning": "The audit report findings focus exclusively on denial of service issues related to block gas limits and token transfer reverts, and do not mention or identify the unguarded ContributionNft::mint function or the ability for proposers to mint NFTs with incorrect parameters leading to cascading issues or loss of funds."
+        },
+        {
+          "vuln_id": "H-05",
+          "vuln_title": "ValidatorRegistry::validatorScore/getPastValidatorScore allows validator to earn full rewards without actually engaging with the protocol",
+          "detected": false,
+          "reasoning": "The audit report findings focus exclusively on denial of service issues related to gas limits and token transfer reverts, and do not mention or identify the validatorScore initialization flaw allowing validators to earn full rewards without participation."
+        }
+      ]
+    },
+    {
+      "audit_id": "2025-05-blackhole",
+      "gold_count": 1,
+      "found_count": 4,
+      "detected": 0,
+      "score": 0.0,
+      "tokens_detect": 14588,
+      "found_vulns": [
+        "Block Timestamp Dependence for Critical Logic in Bribe Contract",
+        "Block Timestamp Dependence for Critical Logic in MinterUpgradeable Contract",
+        "Block Timestamp Dependence for Reward Distribution Timing in GaugeExtraRewarder",
+        "Block Timestamp Dependence for Deadline Checks in GlobalRouter"
+      ],
+      "judge_results": [
+        {
+          "vuln_id": "H-02",
+          "vuln_title": "Reward token in GaugeFactoryCL can be drained by anyone",
+          "detected": false,
+          "reasoning": "The audit report findings focus exclusively on block.timestamp manipulation vulnerabilities in various contracts, and do not mention or address the lack of access control in GaugeFactoryCL.createGauge that allows reward token draining."
+        }
+      ]
+    },
+    {
+      "audit_id": "2025-06-panoptic",
+      "gold_count": 2,
+      "found_count": 5,
+      "detected": 0,
+      "score": 0.0,
+      "tokens_detect": 8749,
+      "found_vulns": [
+        "Missing Access Control on Fee Wallet Setter",
+        "Missing Access Control on Manager and Accountant Setters",
+        "Manager Has Arbitrary Call Control Over Vault Funds",
+        "Division Rounding Errors in Withdrawal and Deposit Calculations",
+        "Potential Underflow in Basis and Shares Accounting"
+      ],
+      "judge_results": [
+        {
+          "vuln_id": "H-01",
+          "vuln_title": "The poolExposure for token1 is erroneously calculated as shortPremium - longPremium;",
+          "detected": false,
+          "reasoning": "The audit report findings focus on access control, arbitrary call control, rounding errors, and underflow issues, but do not mention or identify the incorrect calculation of poolExposure1 involving shortPremium and longPremium as described in the target vulnerability."
+        },
+        {
+          "vuln_id": "H-02",
+          "vuln_title": "NAV calculation inconsistency due to underlying token position in pool configuration",
+          "detected": false,
+          "reasoning": "The audit report does not mention the NAV calculation inconsistency or the underlying token position issue in pool configuration; it focuses on access control, arbitrary calls, rounding errors, and underflow risks unrelated to the described NAV logic flaw."
+        }
+      ]
+    },
+    {
+      "audit_id": "2026-01-tempo-feeamm",
+      "gold_count": 1,
+      "found_count": 1,
+      "detected": 0,
+      "score": 0.0,
+      "tokens_detect": 2497,
+      "found_vulns": [
+        "AMM LP Token Price Manipulation via Reserve-Based Pricing"
+      ],
+      "judge_results": [
+        {
+          "vuln_id": "H-01",
+          "vuln_title": "Reentrancy in burn allows stablecoin pool drainage",
+          "detected": false,
+          "reasoning": "The audit report identifies a high severity issue related to reserve-based price manipulation, which is a different mechanism and exploit scenario than the reentrancy vulnerability in burn() caused by external token transfers before state updates."
+        }
+      ]
+    },
+    {
+      "audit_id": "2026-01-tempo-mpp-streams",
+      "gold_count": 1,
+      "found_count": 0,
+      "detected": 0,
+      "score": 0.0,
+      "tokens_detect": 4210,
+      "found_vulns": [],
+      "judge_results": [
+        {
+          "vuln_id": "H-03",
+          "vuln_title": "Authorized signer validation bypass via zero address signature recovery",
+          "detected": false,
+          "reasoning": "The audit report contains no findings addressing the zero address authorizedSigner or the ecrecover behavior leading to signature validation bypass, thus it does not detect the specified vulnerability."
+        }
+      ]
+    }
+  ]
+}
