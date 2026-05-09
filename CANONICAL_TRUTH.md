@@ -168,3 +168,37 @@ The canonical Self-Verify result is the v5_clean three-class run (F1=0.9121).
 2. If the thesis disagrees, the thesis is wrong.
 3. Run `tools/validate_thesis_tables.py` to auto-check all chapter docx files against this canonical set.
 4. After fixing the thesis, re-run the validator to confirm 0 mismatches.
+
+---
+
+## G. EVMbench Post-Cutoff Validation (8 audits, 2025-01 to 2026-01)
+
+Source of truth: `experiments/evmbench_postcutoff/postcutoff_results.json`
+Generated: 2026-05-09
+Script: `scripts/31_postcutoff_validation.py`
+
+This section validates generalization to audits published **after the model knowledge cutoff**.
+8 audits used (3 excluded due to missing source repos: next-generation, thorwallet, sequence).
+
+| audit_id | gold | detected | score | source |
+|---|---|---|---|---|
+| 2025-04-forte | 5 | 0 | 0.00 | existing (evmbench_smart) |
+| 2026-01-tempo-stablecoin-dex | 2 | 2 | 1.00 | existing (evmbench_smart) |
+| 2025-01-liquid-ron | 1 | 1 | 1.00 | new (postcutoff run) |
+| 2025-04-virtuals | 4 | 3 | 0.75 | new (postcutoff run) |
+| 2025-05-blackhole | 1 | 1 | 1.00 | new (postcutoff run) |
+| 2025-06-panoptic | 2 | 2 | 1.00 | new (postcutoff run) |
+| 2026-01-tempo-feeamm | 1 | 1 | 1.00 | new (postcutoff run) |
+| 2026-01-tempo-mpp-streams | 1 | 0 | 0.00 | new (postcutoff run) |
+| **TOTAL** | **17** | **10** | **58.82%** | |
+
+### Summary
+- 8 post-cutoff audits validated (2025-01 to 2026-01)
+- 10/17 gold vulnerabilities detected = **58.82% post-cutoff detect rate**
+- Tokens (new runs only): 33,552
+- Model: gpt-4.1-mini, same smart_preprocess strategy as section B FINAL
+
+### Notes
+- forte (0/5) and tempo-mpp-streams (0/1) are the two failures
+- liquid-ron, blackhole, panoptic, tempo-feeamm: 100% detection
+- virtuals: 3/4 (75%) — H-04 not detected

@@ -1,0 +1,140 @@
+{
+  "experiment": "evmbench_postcutoff_validation",
+  "description": "Post-cutoff generalization: 8 audits from 2025-01 to 2026-01",
+  "model": "gpt-4.1-mini",
+  "total_audits": 8,
+  "total_gold": 17,
+  "total_detected": 10,
+  "detect_rate": 0.5882,
+  "total_tokens_new": 33552,
+  "existing_audits": [
+    "2025-04-forte",
+    "2026-01-tempo-stablecoin-dex"
+  ],
+  "new_audits": [
+    "2025-01-liquid-ron",
+    "2025-04-virtuals",
+    "2025-05-blackhole",
+    "2025-06-panoptic",
+    "2026-01-tempo-feeamm",
+    "2026-01-tempo-mpp-streams"
+  ],
+  "missing_repo": [
+    "2025-01-next-generation",
+    "2025-02-thorwallet",
+    "2025-10-sequence"
+  ],
+  "per_audit": [
+    {
+      "audit_id": "2025-04-forte",
+      "gold_count": 5,
+      "found_count": 0,
+      "detected": 0,
+      "score": 0.0,
+      "tokens": 6079,
+      "found_vulns": []
+    },
+    {
+      "audit_id": "2026-01-tempo-stablecoin-dex",
+      "gold_count": 2,
+      "found_count": 4,
+      "detected": 2,
+      "score": 1.0,
+      "tokens": 3337,
+      "found_vulns": [
+        "Reentrancy in withdraw function",
+        "Missing Access Control on emergencyWithdraw function",
+        "Precision Loss and Price Manipulation due to Fixed Price Deviation and 18-decimal Price Representation",
+        "Integer Overflow/Underflow in balances and totalDeposits updates"
+      ]
+    },
+    {
+      "audit_id": "2025-01-liquid-ron",
+      "gold_count": 1,
+      "found_count": 7,
+      "detected": 1,
+      "score": 1.0,
+      "tokens": 7573,
+      "found_vulns": [
+        "Incorrect onlyOperator Modifier Logic Allowing Unauthorized Access",
+        "Reentrancy Risk in _withdrawRONTo with External Call Before State Update",
+        "Unchecked Return Value in Low-Level Call in RonHelper._withdrawRONTo",
+        "Potential Reentrancy via Harvest Functions Calling External Contracts Without Reentrancy Guard",
+        "Unprotected Escrow Deposit Function Allowing Unauthorized Calls",
+        "Missing Access Control on fetchOperatorFee Function",
+        "Unchecked Loop Over Dynamic Arrays in MockRonStaking.bulkUndelegate Leading to Potential DoS"
+      ]
+    },
+    {
+      "audit_id": "2025-04-virtuals",
+      "gold_count": 4,
+      "found_count": 7,
+      "detected": 3,
+      "score": 0.75,
+      "tokens": 7293,
+      "found_vulns": [
+        "Reentrancy Risk in Reward Claim Functions Despite noReentrant Modifier",
+        "Unchecked Return Values in External Calls During Token Swaps",
+        "Missing Access Control on Critical Fund Withdrawal Functions",
+        "Potential Integer Overflow/Underflow in Custom Arithmetic or unchecked Blocks",
+        "Unbounded Loop Over Dynamic Arrays in Reward Claiming Functions",
+        "Potential Oracle Manipulation via Router Price Queries in AgentTax",
+        "Missing Access Control on AgentToken addInitialLiquidity Function"
+      ]
+    },
+    {
+      "audit_id": "2025-05-blackhole",
+      "gold_count": 1,
+      "found_count": 6,
+      "detected": 1,
+      "score": 1.0,
+      "tokens": 7397,
+      "found_vulns": [
+        "Missing Access Control on Critical Administrative Functions",
+        "Reentrancy in Bribe Contract's External Calls",
+        "Unchecked Return Values on Low-Level Calls",
+        "Potential Denial of Service via Unbounded Loop Over Dynamic Arrays",
+        "Use of tx.origin for Authentication (Potential Access Control Bypass)",
+        "Integer Overflow/Underflow in unchecked blocks or Type Casting"
+      ]
+    },
+    {
+      "audit_id": "2025-06-panoptic",
+      "gold_count": 2,
+      "found_count": 5,
+      "detected": 2,
+      "score": 1.0,
+      "tokens": 5487,
+      "found_vulns": [
+        "Missing Access Control on Manager-Only Functions",
+        "Potential Reentrancy via External Calls in executeWithdrawal or executeDeposit",
+        "Oracle Price Manipulation Leading to Incorrect NAV Calculation",
+        "Unchecked Return Values on Low-Level Calls in manage Function",
+        "Precision Loss and Truncation in Epoch State Accounting"
+      ]
+    },
+    {
+      "audit_id": "2026-01-tempo-feeamm",
+      "gold_count": 1,
+      "found_count": 4,
+      "detected": 1,
+      "score": 1.0,
+      "tokens": 3258,
+      "found_vulns": [
+        "Reentrancy in burn() function due to external token transfers before state update",
+        "Missing Access Control on mint() and burn() functions",
+        "Unchecked return values of ERC20 transfer and transferFrom calls",
+        "Integer truncation and overflow risks due to unchecked casts and arithmetic"
+      ]
+    },
+    {
+      "audit_id": "2026-01-tempo-mpp-streams",
+      "gold_count": 1,
+      "found_count": 0,
+      "detected": 0,
+      "score": 0.0,
+      "tokens": 2544,
+      "found_vulns": []
+    }
+  ]
+}

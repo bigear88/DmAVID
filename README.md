@@ -26,7 +26,8 @@ Stage 4: DmAVID 多代理迭代         → Teacher/Student/Red Team/Blue Team �
 | LLM Base | 0.7474 | 59.9% | 99.3% | 95.0% | SmartBugs 243 |
 | **LLM+RAG** | **0.9061** | **84.3%** | **97.9%** | **26.0%** | SmartBugs 243 |
 | **+Self-Verify** | **0.9121** | **85.4%** | **97.9%** | **24.0%** | SmartBugs 243 |
-| DmAVID Enhanced | 30.77% detect (12/39) | 100% | 30.8% | 0% | EVMbench 39 |
+| DmAVID Enhanced (中間) | 30.77% detect (12/39) | 100% | 30.8% | 0% | EVMbench 10 |
+| **DmAVID Smart Preprocess (FINAL)** | **64.10% detect (25/39)** | 100% | 64.1% | 0% | EVMbench 10 |
 
 ---
 
@@ -68,7 +69,8 @@ DmAVID/
 │   ├── llm_rag/                      # LLM+RAG 結果 (F1=0.9061)
 │   ├── hybrid/                       # Self-Verify 結果 (F1=0.9121)
 │   ├── dmavid_round2/            # DmAVID 迭代結果
-│   ├── evmbench_enhanced/            # EVMbench 增強偵測 (30.77%, 12/39)
+│   ├── evmbench_enhanced/            # EVMbench 增強偵測 (30.77%, 12/39, 中間結果)
+│   ├── evmbench_smart/               # EVMbench 智能預處理 (64.10%, 25/39, FINAL)
 │   ├── traditional_ml/              # 傳統 ML 基線 (RF/LR/GB/SVM)
 │   ├── defi_real_world/             # DeFiHackLabs 測試
 │   ├── style_balanced/              # 風格平衡消融
@@ -145,7 +147,7 @@ DmAVID/
 傳統 ML (RF F1=0.993) 學到的是**資料集風格差異**，而非漏洞語意：
 - Top TF-IDF 特徵：totalSupply, allowance, indexed (ERC20 特徵)
 - 移除標注後 RF 仍達 0.955
-- EVMbench 真實場景：傳統工具 0%，DmAVID 30.77% (12/39)
+- EVMbench 真實場景：傳統工具 0%，DmAVID 30.77% (12/39, Enhanced) → **64.10% (25/39, Smart Preprocess FINAL)**
 
 ### 2. 分階段消融
 
@@ -208,7 +210,9 @@ python scripts/23_traditional_ml_baseline.py
 python scripts/26_explainability_metrics.py
 
 # 5. EVMbench 泛化測試
-python scripts/22_evmbench_enhanced.py
+python scripts/22_evmbench_enhanced.py    # Enhanced (30.77%, 12/39)
+python scripts/30_evmbench_smart_preprocess.py  # Smart preprocess FINAL (64.10%, 25/39)
+python scripts/31_postcutoff_validation.py      # Post-cutoff 8 audits (58.82%, 10/17)
 ```
 
 ---
