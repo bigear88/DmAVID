@@ -184,3 +184,4 @@ SPRINT2_CLAUDE_CODE_PROMPT.md
 SPRINT3_CLAUDE_CODE_PROMPT.md
 THESIS_DIFF_REPORT.md
 evmbench_results_summary.md
+experiments/explainability/ctc_checkpoint*.json
