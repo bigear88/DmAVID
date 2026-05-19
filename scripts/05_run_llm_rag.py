@@ -22,18 +22,13 @@ MODEL = os.environ.get("DMAVID_MODEL", "gpt-4.1-mini")
 
 
 
-def strip_answer_comments(code: str) -> str:
-    """Remove SmartBugs answer-revealing markers before LLM analysis."""
-    # // <yes> <report> CATEGORY lines reveal vulnerability location and type
-    code = re.sub(r'\s*//\s*<(?:yes|no)>[^
-]*', '', code)
-    # @vulnerable_at_lines: N in header reveals which lines are vulnerable
-    code = re.sub(r'[^
-]*@vulnerable_at_lines:[^
-]*
-?', '', code)
-    return code
 
+def strip_answer_comments(code):
+    """Remove SmartBugs answer-revealing markers before LLM analysis."""
+    import re as _re
+    code = _re.sub(r'[^\n]*<(?:yes|no)>[^\n]*', '', code)
+    code = _re.sub(r'[^\n]*@vulnerable_at_lines:[^\n]*\n?', '', code)
+    return code
 # ============================================================
 # RAG Knowledge Base: Vulnerability patterns and examples
 # ============================================================

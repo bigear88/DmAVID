@@ -109,16 +109,11 @@ SOLC_VERSIONS = {
 
 
 
-def strip_answer_comments(code: str) -> str:
+def strip_answer_comments(code):
     """Remove SmartBugs answer-revealing markers before LLM analysis."""
-    # // <yes> <report> CATEGORY lines reveal vulnerability location and type
-    code = re.sub(r'\s*//\s*<(?:yes|no)>[^
-]*', '', code)
-    # @vulnerable_at_lines: N in header reveals which lines are vulnerable
-    code = re.sub(r'[^
-]*@vulnerable_at_lines:[^
-]*
-?', '', code)
+    import re as _re
+    code = _re.sub(r'[^\n]*<(?:yes|no)>[^\n]*', '', code)
+    code = _re.sub(r'[^\n]*@vulnerable_at_lines:[^\n]*\n?', '', code)
     return code
 
 # ============================================================
