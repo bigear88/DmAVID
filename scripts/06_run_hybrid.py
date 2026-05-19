@@ -993,7 +993,7 @@ def hybrid_decision(
         # - alpha parameter = confidence threshold for triggering verification
         # - FP mean conf=0.738, TP mean conf=0.904 → sweet spot around 0.85-0.9
         verify_threshold = alpha  # Reuse alpha as verification confidence threshold
-        if s1["predicted_vulnerable"] and s1["confidence"] < verify_threshold:
+        if s1["predicted_vulnerable"] and s1["confidence"] <= verify_threshold:
             # LOW confidence vulnerable → high FP risk → verify via exploit path
             verify = run_exploit_verification(code, s1["vulnerability_types"], llm_client)
             if verify["exploit_constructable"]:

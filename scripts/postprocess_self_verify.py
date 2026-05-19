@@ -10,6 +10,7 @@ Reference: PoCo (arXiv:2511.02780), Heimdallr (arXiv:2601.17833)
 """
 
 import os
+import re
 import sys
 import json
 import time
@@ -209,7 +210,7 @@ def main():
 
         # Only verify vulnerable predictions (optionally filtered by confidence)
         should_verify = stage1_pred_vuln
-        if args.conf_threshold and stage1_conf >= args.conf_threshold:
+        if args.conf_threshold and stage1_conf > args.conf_threshold:
             should_verify = False  # High confidence → skip verification
 
         if should_verify:
@@ -219,7 +220,9 @@ def main():
             filepath = filepath_map.get(contract_id) or filename_map.get(r.get("filename", ""), "")
             try:
                 with open(filepath, "r", encoding="utf-8", errors="ignore") as f:
-                    code = f.read()
+                    raw = f.read()
+                code = re.sub(r'[^\n]*<(?:yes|no)>[^\n]*', '', raw)
+                code = re.sub(r'[^\n]*@vulnerable_at_lines:[^\n]*\n?', '', code)
             except Exception as e:
                 code = f"// ERROR loading source: {e}"
 
