@@ -107,6 +107,20 @@ SOLC_VERSIONS = {
 }
 
 
+
+
+def strip_answer_comments(code: str) -> str:
+    """Remove SmartBugs answer-revealing markers before LLM analysis."""
+    # // <yes> <report> CATEGORY lines reveal vulnerability location and type
+    code = re.sub(r'\s*//\s*<(?:yes|no)>[^
+]*', '', code)
+    # @vulnerable_at_lines: N in header reveals which lines are vulnerable
+    code = re.sub(r'[^
+]*@vulnerable_at_lines:[^
+]*
+?', '', code)
+    return code
+
 # ============================================================
 # RAG Module: ChromaDB Knowledge Base + Context Builder
 # ============================================================
@@ -1138,7 +1152,7 @@ def main():
     for i, contract in enumerate(sample):
         try:
             with open(contract["filepath"], "r", encoding="utf-8", errors="ignore") as f:
-                code = f.read()
+                code = strip_answer_comments(f.read())
         except Exception:
             continue
 
