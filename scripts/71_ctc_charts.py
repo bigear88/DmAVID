@@ -57,7 +57,7 @@ def load_per_sample():
         cl  = rec.get("clarity")
         if all(v is not None for v in [c, t, cl]):
             by_contract[cid][m] = {"correctness": c, "thoroughness": t, "clarity": cl,
-                                    "ctc_avg": round((c + t + cl) / 3, 3)}
+                                    "ctc_avg": round(c * 0.6 + t * 0.3 + cl * 0.1, 3)}
     return by_contract
 
 
@@ -83,7 +83,7 @@ def chart_grouped_bar(summary):
                     f"{v:.2f}", ha="center", va="bottom", fontsize=8)
 
     ax.set_xlabel("CTC Dimension", fontsize=12)
-    ax.set_ylabel("Score (1–5)", fontsize=12)
+    ax.set_ylabel("Score (1–10)", fontsize=12)
     ax.set_title("CTC Explainability Evaluation\n(Li et al., Smart-LLaMA-DPO, ISSTA 2025)",
                  fontsize=12, fontweight="bold")
     ax.set_xticks(x)
@@ -205,7 +205,7 @@ def chart_wilcoxon(by_contract):
     ax.legend(handles=[mpatches.Patch(color="#2196F3", label="DmAVID")] + patches, fontsize=10)
     ax.set_xticks(x)
     ax.set_xticklabels([r["comparison"] for r in results], fontsize=10)
-    ax.set_ylabel("Mean CTC Average (1–5)", fontsize=11)
+    ax.set_ylabel("Mean CTC Score (1–10)", fontsize=11)
     ax.set_ylim(0, 12)
     ax.set_title("Wilcoxon Signed-Rank Test\n(DmAVID vs Baselines, one-tailed p<0.05)",
                  fontsize=11, fontweight="bold")

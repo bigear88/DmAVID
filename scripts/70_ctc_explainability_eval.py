@@ -165,7 +165,7 @@ def summarise(done, vuln, tasks, judge, model):
     }
     for m, dims in ms.items():
         c, t, cl = avg(dims["correctness"]), avg(dims["thoroughness"]), avg(dims["clarity"])
-        ctc = round((c + t + cl) / 3, 3) if all(v is not None for v in [c, t, cl]) else None
+        ctc = round(c * 0.6 + t * 0.3 + cl * 0.1, 3) if all(v is not None for v in [c, t, cl]) else None
         out["per_method"][m] = {
             "n": len(dims["correctness"]),
             "correctness": c, "thoroughness": t, "clarity": cl, "ctc_avg": ctc
@@ -174,7 +174,7 @@ def summarise(done, vuln, tasks, judge, model):
         out["per_category"][cat] = {}
         for m, dims in methods.items():
             c, t, cl = avg(dims["correctness"]), avg(dims["thoroughness"]), avg(dims["clarity"])
-            ctc = round((c + t + cl) / 3, 3) if all(v is not None for v in [c, t, cl]) else None
+            ctc = round(c * 0.6 + t * 0.3 + cl * 0.1, 3) if all(v is not None for v in [c, t, cl]) else None
             out["per_category"][cat][m] = {
                 "n": len(dims["correctness"]),
                 "correctness": c, "thoroughness": t, "clarity": cl, "ctc_avg": ctc
