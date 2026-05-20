@@ -52,32 +52,26 @@ def build_exploit_prompt(sample: Dict[str, Any]) -> str:
     vuln_str = ", ".join(vuln_types) if vuln_types else "a potential vulnerability"
     stage1_reason = sample.get("reasoning", "")[:1500]
 
-    prompt = f"""
-You previously analyzed the following Ethereum smart contract and classified it as VULNERABLE due to {vuln_str}.
+    prompt = f"""You previously analyzed the following Ethereum smart contract and classified it as VULNERABLE due to {vuln_str}.
 
-Now act as a red-team security researcher and provide a CONCRETE exploit path that demonstrates how the vulnerability can be triggered in practice.
-
-Your answer MUST follow this structure:
-
-1. Required Preconditions:
-   - Describe the initial on-chain state, balances, roles, and any necessary setup.
-
-2. Transaction Sequence:
-   - A step-by-step sequence of function calls or transactions.
-   - For each step, specify: caller, target function, key parameters, and relevant state changes.
-
-3. Expected Outcome:
-   - Describe the final on-chain state that proves the exploit succeeded
-     (e.g., stolen funds, broken invariant, locked funds, privilege escalation).
+Now act as a red-team security researcher. Attempt to construct a CONCRETE exploit path.
 
 Constraints:
-- The exploit path MUST be logically consistent with the provided reasoning and typical EVM execution.
-- If you CANNOT construct a valid and logically consistent exploit path, explicitly state:
-  "Upon review, a concrete exploit path cannot be constructed, and the initial assessment may be a false positive."
+- If the contract has proper mitigations (ReentrancyGuard, SafeMath, onlyOwner, require checks, Solidity >=0.8), acknowledge them.
+- Be honest: if you CANNOT construct a valid exploit path, set exploit_constructable to false.
 
 Previous reasoning from your earlier audit:
-\"\"\"{stage1_reason}\"\"\"
-"""
+\"\"\"{ stage1_reason }\"\"\"\n
+Respond in JSON ONLY (no markdown fence):
+{{
+  "exploit_constructable": true/false,
+  "preconditions": "...",
+  "transaction_sequence": ["step1", "step2"],
+  "expected_outcome": "...",
+  "mitigations_found": ["..."],
+  "confidence": 0.0-1.0,
+  "reasoning": "..."
+}}"""
     return prompt.strip()
 
 
@@ -102,9 +96,22 @@ def call_exploit_verifier(code: str, sample: Dict[str, Any], max_retries: int = 
             elapsed = time.time() - start
             content = resp.choices[0].message.content.strip()
             usage = resp.usage.total_tokens if resp.usage else 0
+            # Parse JSON; fall back to text heuristic if not parseable
+            json_match = re.search(r"{[\s\S]*}", content)
+            exploit_constructable = None
+            parsed_conf = 0.5
+            if json_match:
+                try:
+                    parsed = json.loads(json_match.group())
+                    exploit_constructable = parsed.get("exploit_constructable", True)
+                    parsed_conf = float(parsed.get("confidence", 0.5))
+                except Exception:
+                    pass
             return {
                 "success": True,
                 "text": content,
+                "exploit_constructable": exploit_constructable,
+                "confidence": parsed_conf,
                 "time": elapsed,
                 "tokens": usage,
                 "error": None,
@@ -228,7 +235,10 @@ def main():
 
             vres = call_exploit_verifier(code, r)
             if vres["success"]:
-                hybrid_pred_vuln = decide_from_exploit_text(vres["text"])
+                if vres.get("exploit_constructable") is not None:
+                    hybrid_pred_vuln = bool(vres["exploit_constructable"])
+                else:
+                    hybrid_pred_vuln = decide_from_exploit_text(vres["text"])
                 verify_reason = vres["text"][:800]
                 t_verify = vres["time"]
                 tok_verify = vres["tokens"]

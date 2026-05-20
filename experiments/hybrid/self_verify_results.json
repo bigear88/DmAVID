@@ -22,17 +22,17 @@
     "total": 243,
     "tp": 131,
     "fn": 12,
-    "fp": 24,
-    "tn": 76,
-    "precision": 0.8452,
+    "fp": 17,
+    "tn": 83,
+    "precision": 0.8851,
     "recall": 0.9161,
-    "f1": 0.8792,
-    "fpr": 0.24,
-    "specificity": 0.76
+    "f1": 0.9003,
+    "fpr": 0.17,
+    "specificity": 0.83
   },
   "verified_count": 136,
-  "flipped_count": 9,
-  "total_verify_tokens": 255333,
+  "flipped_count": 16,
+  "total_verify_tokens": 214335,
   "samples": [
     {
       "contract_id": "curated_reentrancy_0x941d225236464a25eb18076df7da6a91d0f95e9e.sol",
@@ -42,9 +42,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses a low-level call (msg.sender.call.value(_am)()) in the CashOut function without proper reentrancy protection. The external call is made before updating the user's balance, which matc",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The ETH_FUND contract is deployed with a valid Log contract address.\n   - The attacker has an externally owned account (EOA) and a malicious contract (AttackerContract)",
-      "time_verify": 11.719,
-      "tokens_verify": 1419,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must have a positive balance in the ETH_FUND contract by depositing more than 1 ether. The contract must hold sufficient ether to co",
+      "time_verify": 11.317,
+      "tokens_verify": 1126,
       "error": ""
     },
     {
@@ -68,9 +68,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract performs a subtraction on 'count' without any underflow check (count -= input) and uses Solidity 0.4.23 which does not have built-in overflow/underflow protection. According to the RAG co",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n- The contract is deployed freshly, so `initialized == 0` and `count == 1`.\n- No special roles or permissions are required; any address can call `run`.\n\n2. Transaction Seque",
-      "time_verify": 6.135,
-      "tokens_verify": 810,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The contract must be deployed and the 'run' function called at least once to set 'initialized' to 1. The 'count' variable is initially 1 and can ",
+      "time_verify": 9.738,
+      "tokens_verify": 788,
       "error": ""
     },
     {
@@ -94,9 +94,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract performs addition on sellerBalance without any overflow checks or use of SafeMath, matching the vulnerable pattern of integer overflow described in the RAG context. The commented-out safe",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract `Overflow` is deployed on-chain.\n   - The initial `sellerBalance` is 0 (default).\n   - No special roles or permissions are required; any address can call `",
-      "time_verify": 11.972,
-      "tokens_verify": 769,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must be able to call the add(uint value) function multiple times with carefully chosen large values to cause an integer overflow on ",
+      "time_verify": 7.013,
+      "tokens_verify": 733,
       "error": ""
     },
     {
@@ -107,9 +107,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The Collect function uses a low-level call (msg.sender.call.value(_am)()) without checking the return value explicitly with require, which matches the UNCHECKED_CALL pattern. Additionally, the externa",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n- The PERSONAL_BANK contract is deployed and initialized (intitalized == true).\n- The LogFile contract is deployed and its address set in PERSONAL_BANK.\n- The attacker has d",
-      "time_verify": 6.876,
-      "tokens_verify": 1304,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must have deposited at least MinSum (default 1 ether) into the PERSONAL_BANK contract to have a positive balance eligible for withdr",
+      "time_verify": 10.333,
+      "tokens_verify": 1205,
       "error": ""
     },
     {
@@ -159,9 +159,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses low-level calls (adr.call.value(msg.value)(data)) without checking the return value, matching the UNCHECKED_CALL pattern which can silently fail. Additionally, the GetFreebie functio",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n- The contract `FreeEth` is deployed with an initial balance of at least some Ether (e.g., 5 Ether).\n- The `Owner` is the deployer address (let's call it `Owner`).\n- An atta",
-      "time_verify": 12.476,
-      "tokens_verify": 1413,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must deploy a malicious contract with a fallback function that reenters the FreeEth contract's GetFreebie function during the transf",
+      "time_verify": 7.655,
+      "tokens_verify": 1020,
       "error": ""
     },
     {
@@ -172,9 +172,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses low-level call (contract_address.call) inside a loop without checking the return value, matching the UNCHECKED_CALL vulnerability pattern from the RAG context. This can cause silent ",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The AirDropContract is deployed on-chain.\n   - The caller (msg.sender) has an allowance set on the token contract at `contract_address` to transfer tokens on their beha",
-      "time_verify": 15.932,
-      "tokens_verify": 1087,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must have an ERC20 token balance and approval set for the AirDropContract to spend tokens on their behalf. The token contract must i",
+      "time_verify": 7.385,
+      "tokens_verify": 933,
       "error": ""
     },
     {
@@ -185,9 +185,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses low-level call.value() without checking the return value in fundPuppets() and Puppet fallback function, matching the UNCHECKED_CALL pattern from the RAG context. This can cause silen",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The Splitter contract is deployed by the owner (attacker).\n   - The Splitter contract has 4 Puppet contracts deployed and stored in `puppets` array.\n   - The `extra` ma",
-      "time_verify": 8.586,
-      "tokens_verify": 1961,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"Attacker must gain control over at least one extra[] address in the Splitter contract, either by being the owner (to call setExtra) or by comprom",
+      "time_verify": 10.791,
+      "tokens_verify": 1644,
       "error": ""
     },
     {
@@ -210,10 +210,10 @@
       "stage1_pred_vuln": true,
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses low-level calls such as ERC20 token transfers (knc.transfer, omg.transfer) and owner.transfer(value) without checking the return values, matching the UNCHECKED_CALL pattern from the ",
-      "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract DTF is deployed with the owner address set.\n   - The contract holds a positive ETH balance (e.g., from users sending ETH to mint DTF tokens).\n   - The owne",
-      "time_verify": 20.364,
-      "tokens_verify": 2985,
+      "hybrid_pred_vuln": false,
+      "verify_reason": "{\n  \"exploit_constructable\": false,\n  \"preconditions\": \"The contract owner must be compromised or colluding; attacker must control a malicious ERC20 token contract to attempt reentrancy.\",\n  \"transact",
+      "time_verify": 8.089,
+      "tokens_verify": 2899,
       "error": ""
     },
     {
@@ -224,9 +224,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses low-level calls via 'send' without checking the return value (e.g., 'winner.send(subpot);' and 'msg.sender.send(msg.value-value);'), matching the UNCHECKED_CALL pattern from the RAG ",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract is deployed and currently in a round with some pot accumulated (e.g., some players have bought tickets).\n   - The current block number is sufficiently high",
-      "time_verify": 8.491,
-      "tokens_verify": 2369,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must be able to participate in a round by purchasing tickets and be the winner of a subpot. The contract must hold a pot large enoug",
+      "time_verify": 9.096,
+      "tokens_verify": 2206,
       "error": ""
     },
     {
@@ -250,9 +250,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses send() to transfer Ether after resetting the user's balance, which is a safer pattern than sending before resetting. However, the send() return value is not checked, so the withdrawa",
       "hybrid_pred_vuln": false,
-      "verify_reason": "1. Required Preconditions:\n   - The contract `SendBack` is deployed on-chain.\n   - At least one user (attacker) has a positive balance recorded in `userBalances`.\n   - The attacker has previously depo",
-      "time_verify": 9.091,
-      "tokens_verify": 1074,
+      "verify_reason": "{\n  \"exploit_constructable\": false,\n  \"preconditions\": \"The attacker must have a positive balance in userBalances mapping.\",\n  \"transaction_sequence\": [\n    \"step1: Attacker deposits Ether to increase",
+      "time_verify": 5.828,
+      "tokens_verify": 753,
       "error": ""
     },
     {
@@ -263,9 +263,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses multiple external calls with transfer() and low-level call() without proper state updates or checks. In redeem(), Owner.transfer(this.balance) is called before msg.sender.transfer(th",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract `WhaleGiveaway1` is deployed with an initial balance (e.g., funded by some users or the owner).\n   - The attacker has an address with a fallback function t",
-      "time_verify": 12.012,
-      "tokens_verify": 1463,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must deploy a malicious contract with a fallback function that reenters the redeem() function of WhaleGiveaway1 during the msg.sende",
+      "time_verify": 7.024,
+      "tokens_verify": 1092,
       "error": ""
     },
     {
@@ -276,9 +276,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract attempts to transfer a fixed 1000 ether to msg.sender upon solving the hash. There is no check on the contract's balance before transfer, which can cause the call to fail and revert if th",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract FindThisHash is deployed with some initial ether balance, but less than 1000 ether (e.g., 10 ether).\n   - The constant hash is set to a specific value.\n   ",
-      "time_verify": 7.533,
-      "tokens_verify": 855,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The contract must have less than 1000 ether balance, either initially deployed with insufficient funds or drained by prior transactions.\",\n  \"tra",
+      "time_verify": 5.51,
+      "tokens_verify": 805,
       "error": ""
     },
     {
@@ -328,9 +328,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The Collect function makes an external call using msg.sender.call.value(_am)() without first updating the user's balance, allowing reentrancy attacks as described in the REENTRANCY pattern. Additional",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n- The W_WALLET contract is deployed and funded by at least one user.\n- The attacker has deployed a malicious contract (AttackerContract) that:\n  - Has a fallback function th",
-      "time_verify": 8.472,
-      "tokens_verify": 1370,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must have deposited at least MinSum (1 ether) into the contract and have an unlockTime that has passed. The attacker must deploy a m",
+      "time_verify": 27.412,
+      "tokens_verify": 1099,
       "error": ""
     },
     {
@@ -354,9 +354,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses a low-level call to send ether to ADDRESS_EIFP2_CONTRACT without checking the return value properly (it uses if(!call.value()) revert(), which is acceptable but low-level call is ris",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n- The contract `X3ProfitMainFundTransfer` is deployed and holds some ether balance (e.g., 1 ether).\n- The `ADDRESS_EIFP2_CONTRACT` (0xf85D337017D9e6600a433c5036E0D18EdD0380f",
-      "time_verify": 12.597,
-      "tokens_verify": 1844,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must deploy a malicious contract at ADDRESS_EIFP2_CONTRACT or control that address to trigger the fallback function with msg.sender ",
+      "time_verify": 9.835,
+      "tokens_verify": 1294,
       "error": ""
     },
     {
@@ -367,9 +367,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses low-level call (caddress.call) inside a loop without checking the return value, matching the UNCHECKED_CALL vulnerability pattern from the RAG context. This can cause silent failures",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract EBU is deployed with:\n     - `from` = 0x9797055B68C5DadDE6b3c7d5D80C9CFE2eecE6c9 (hardcoded)\n     - `caddress` = 0x1f844685f7Bf86eFcc0e74D8642c54A257111923",
-      "time_verify": 12.791,
-      "tokens_verify": 1608,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must be able to call the transfer function from the hardcoded address 0x9797055B68C5DadDE6b3c7d5D80C9CFE2eecE6c9 (the 'from' address",
+      "time_verify": 14.424,
+      "tokens_verify": 1055,
       "error": ""
     },
     {
@@ -380,9 +380,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The multisend function calls ERC20.transfer without checking the return value, matching the UNCHECKED_CALL pattern where unchecked low-level calls can silently fail. This can lead to unexpected behavi",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n- The Airdropper contract is deployed on-chain.\n- The attacker controls an ERC20 token contract at address _tokenAddr that implements the ERC20 interface but has a non-stand",
-      "time_verify": 7.325,
-      "tokens_verify": 978,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must control or influence the token contract at _tokenAddr to have a transfer function that can fail silently or behave maliciously.",
+      "time_verify": 7.746,
+      "tokens_verify": 979,
       "error": ""
     },
     {
@@ -445,9 +445,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The Proxy contract uses a non-standard onlyOwner modifier that does not revert on failure, allowing unauthorized calls to transferOwner and proxy functions (ACCESS_CONTROL). The proxy function perform",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n- The DepositProxy contract is deployed and has received some Ether deposits from various users.\n- At least one user (attacker) has deposited more than 0.5 ether, so Deposit",
-      "time_verify": 15.825,
-      "tokens_verify": 1657,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"Attacker deploys DepositProxy contract and calls Vault() to set themselves as DepositProxy.Owner. Attacker deposits >0.5 ether to have a balance ",
+      "time_verify": 10.244,
+      "tokens_verify": 1114,
       "error": ""
     },
     {
@@ -458,9 +458,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses tx.origin for authentication in Play(), which is a known anti-pattern and flagged in the RAG context under Access Control vulnerabilities. The Play() function transfers the entire co",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n- The contract is deployed and funded with some Ether (e.g., 10 Ether) by any user.\n- The questionSender is set by calling StartGame with a question and response, which sets",
-      "time_verify": 9.906,
-      "tokens_verify": 1492,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"An attacker deploys a contract to interact with Q_GAME. The game has been started by a legitimate questionSender with a known response hash. The ",
+      "time_verify": 8.859,
+      "tokens_verify": 1106,
       "error": ""
     },
     {
@@ -471,9 +471,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The Proxy contract's onlyOwner modifier uses a lowercase 'Owner' variable that is set at declaration, but VaultProxy redeclares 'Owner' without access control on its withdraw function, allowing unauth",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n- The VaultProxy contract is deployed and funded with some Ether.\n- The initial Owner in Proxy is the deployer (let's call this address A).\n- The VaultProxy's own Owner vari",
-      "time_verify": 14.819,
-      "tokens_verify": 1578,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"An attacker deploys or interacts with the VaultProxy contract after deployment. The attacker is not the original Owner set in Proxy but can call ",
+      "time_verify": 12.178,
+      "tokens_verify": 1130,
       "error": ""
     },
     {
@@ -510,9 +510,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses a low-level call (msg.sender.call.value(_am)()) without checking the return value explicitly with require, which matches the UNCHECKED_CALL pattern. More critically, the external cal",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The PrivateBank contract is deployed with a valid Log contract address.\n   - The PrivateBank contract holds some ether deposited by one or more honest users.\n   - The a",
-      "time_verify": 9.843,
-      "tokens_verify": 1197,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"Attacker must deploy a malicious contract with a fallback function that calls CashOut on the PrivateBank contract to re-enter before the balance ",
+      "time_verify": 9.038,
+      "tokens_verify": 1039,
       "error": ""
     },
     {
@@ -562,9 +562,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses low-level call in the Command function (adr.call.value(msg.value)(data)) without checking the return value, matching the UNCHECKED_CALL pattern from the RAG context. This can cause s",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n- The contract `Pie` is deployed, with the deployer as the initial `Owner`.\n- The contract has a positive balance, funded by any address sending ether to it.\n- The attacker ",
-      "time_verify": 14.571,
-      "tokens_verify": 1204,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"Attacker must send more than 1 ether to the Get() function and have a fallback function that reenters the Get() function upon receiving ether.\",\n",
+      "time_verify": 13.306,
+      "tokens_verify": 1018,
       "error": ""
     },
     {
@@ -575,9 +575,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses an unchecked low-level call in the Collect function: 'msg.sender.call.value(_am);' without checking the return value, matching the UNCHECKED_CALL vulnerability pattern from the RAG c",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n- The contract SIMPLE_PIGGY_BANK is deployed by the creator address.\n- The contract balance is funded by multiple users, including the attacker.\n- The attacker has deposited",
-      "time_verify": 7.567,
-      "tokens_verify": 1096,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"Attacker must have a balance in the contract equal to or greater than MinSum (1 ether).\",\n  \"transaction_sequence\": [\n    \"Deploy a malicious con",
+      "time_verify": 7.227,
+      "tokens_verify": 810,
       "error": ""
     },
     {
@@ -587,10 +587,10 @@
       "stage1_pred_vuln": true,
       "stage1_conf": 0.9,
       "stage1_reason": "The sell() function performs an external call via msg.sender.transfer() before updating the user's balance, which matches the REENTRANCY vulnerable pattern in the RAG context. Although transfer() forw",
-      "hybrid_pred_vuln": false,
-      "verify_reason": "1. Required Preconditions:\n- The contract `TokenSaleChallenge` is deployed with exactly 1 ether sent to its constructor.\n- The contract's balance is initially 1 ether.\n- The attacker address has previ",
-      "time_verify": 9.128,
-      "tokens_verify": 1151,
+      "hybrid_pred_vuln": true,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"Attacker must deploy a malicious contract that can receive ether and reenter the sell() function during the transfer call. The attacker must have",
+      "time_verify": 18.568,
+      "tokens_verify": 1011,
       "error": ""
     },
     {
@@ -614,9 +614,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract makes multiple external calls via transfer() to user addresses (e.g., winningAddress.transfer(prize), contestants[i].addr.transfer(pricePerTicket), msg.sender.transfer(refund)) without us",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract is deployed, and the deployer is the feeAddress.\n   - A raffle is ongoing (raffleId = N), with some tickets sold to various participants.\n   - The attacker",
-      "time_verify": 12.153,
-      "tokens_verify": 2212,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must be able to participate as a contestant by buying at least one ticket. The attacker must deploy a malicious contract with a fall",
+      "time_verify": 7.877,
+      "tokens_verify": 2029,
       "error": ""
     },
     {
@@ -627,9 +627,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The Collect function performs an external call using msg.sender.call.value(_am)() before updating the balances mapping, which matches the Reentrancy vulnerability pattern from the RAG context. This al",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n- The ACCURAL_DEPOSIT contract is deployed and initialized (intitalized == true).\n- The LogFile contract is deployed and its address set in ACCURAL_DEPOSIT.\n- The attacker d",
-      "time_verify": 8.866,
-      "tokens_verify": 1354,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must have deposited at least MinSum (1 ether by default) into the ACCURAL_DEPOSIT contract to have a positive balance eligible for w",
+      "time_verify": 7.952,
+      "tokens_verify": 1163,
       "error": ""
     },
     {
@@ -679,9 +679,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses low-level call (adr.call.value(msg.value)(data)) without checking the return value, matching the UNCHECKED_CALL pattern which can silently fail. Additionally, the GetPie function mak",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract is deployed by an EOA (Externally Owned Account) who becomes the initial Owner.\n   - The contract has some Ether balance (e.g., from previous deposits or f",
-      "time_verify": 25.328,
-      "tokens_verify": 1616,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"Attacker deploys a malicious contract with a fallback function that reenters the Pie contract's GetPie function. The attacker must send more than",
+      "time_verify": 12.88,
+      "tokens_verify": 1097,
       "error": ""
     },
     {
@@ -705,9 +705,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses a low-level call (msg.sender.call.value(_am)()) without checking the return value properly and updates the balance only after the call succeeds. This pattern matches the REENTRANCY v",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n- The MONEY_BOX contract is deployed and initialized:\n  - `SetMinSum` has been called with a minimum sum (e.g., 1 ether).\n  - `SetLogFile` has been called with the address o",
-      "time_verify": 9.568,
-      "tokens_verify": 1535,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"Attacker must have deposited at least MinSum into the contract and have a positive balance with an unlockTime that has passed. The contract must ",
+      "time_verify": 10.608,
+      "tokens_verify": 1122,
       "error": ""
     },
     {
@@ -718,9 +718,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses low-level call in transfer function: assert(_to.call.value(0)(bytes4(keccak256(_custom_fallback)), msg.sender, _value, _data)); While the call is wrapped in assert, which reverts on ",
       "hybrid_pred_vuln": false,
-      "verify_reason": "Upon review, a concrete exploit path cannot be constructed, and the initial assessment may be a false positive.\n\n---\n\n### Explanation:\n\nThe previously flagged \"unchecked call\" vulnerability relates to",
-      "time_verify": 4.399,
-      "tokens_verify": 4932,
+      "verify_reason": "{\n  \"exploit_constructable\": false,\n  \"preconditions\": \"N/A\",\n  \"transaction_sequence\": [],\n  \"expected_outcome\": \"No exploit can be constructed that leverages unchecked call or reentrancy to steal to",
+      "time_verify": 16.375,
+      "tokens_verify": 4827,
       "error": ""
     },
     {
@@ -731,9 +731,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses tx.origin for access control in the onlyOwner modifier, which is a known anti-pattern and vulnerable to phishing attacks (ACCESS_CONTROL). The CashOut function performs an external c",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n- The PrivateDeposit contract is deployed, and its owner is set to an EOA (Externally Owned Account) controlled by the attacker or a victim.\n- The attacker has a funded acco",
-      "time_verify": 12.017,
-      "tokens_verify": 1515,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"Attacker must have some initial ether deposited in the contract to have a positive balance in balances mapping.\",\n  \"transaction_sequence\": [\n   ",
+      "time_verify": 9.08,
+      "tokens_verify": 1170,
       "error": ""
     },
     {
@@ -783,9 +783,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract contains a function ifillArray that pushes 350 addresses into a dynamic array repeatedly until the array length reaches 1500, then resets it. This unbounded growth and large loop can lead",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract `DosOneFunc` is deployed on-chain.\n   - The `listAddresses` array is initially empty (length = 0).\n   - No special roles or permissions are required; any a",
-      "time_verify": 12.721,
-      "tokens_verify": 1274,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must be able to call the ifillArray() function repeatedly on the deployed contract.\",\n  \"transaction_sequence\": [\n    \"Call ifillArr",
+      "time_verify": 7.958,
+      "tokens_verify": 804,
       "error": ""
     },
     {
@@ -796,9 +796,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract performs an external call (msg.sender.call.value) before updating the user's credit balance, which matches the vulnerable pattern for reentrancy described in the RAG context. The safe pat",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n- The contract `ReentrancyDAO` is deployed and has a positive `balance`.\n- Attacker address has deposited some Ether into the contract, so `credit[attacker] > 0`.\n- The atta",
-      "time_verify": 7.753,
-      "tokens_verify": 1008,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must have a positive credit balance in the contract by depositing Ether first.\",\n  \"transaction_sequence\": [\n    \"1. Attacker deploy",
+      "time_verify": 7.487,
+      "tokens_verify": 752,
       "error": ""
     },
     {
@@ -822,9 +822,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses tx.origin for authentication in the withdrawAll function, which is a known anti-pattern and vulnerable to phishing attacks as per the ACCESS_CONTROL pattern in the RAG context. Prope",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract `Phishable` is deployed with the `owner` address set to a victim's externally owned account (EOA).\n   - The contract holds some Ether balance (e.g., 10 ETH",
-      "time_verify": 7.962,
-      "tokens_verify": 847,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must lure the owner of the Phishable contract to interact with a malicious contract controlled by the attacker.\",\n  \"transaction_seq",
+      "time_verify": 7.21,
+      "tokens_verify": 699,
       "error": ""
     },
     {
@@ -835,9 +835,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses external calls such as msg.sender.transfer(_amount) in coldStore and payWallet functions without fully visible state updates before the call, which matches the reentrancy risk patter",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n\n- The contract is deployed with the deployer as `owner` and `animator`.\n- The contract has a positive ETH balance sufficient to pay out wallet balances.\n- There exists at l",
-      "time_verify": 14.899,
-      "tokens_verify": 7674,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must have a wallet balance > 0 in the contract and be able to call payWallet(). The contract owner must have previously funded the c",
+      "time_verify": 15.797,
+      "tokens_verify": 7269,
       "error": ""
     },
     {
@@ -848,9 +848,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract performs subtraction and addition on balances without using SafeMath or explicit overflow/underflow checks on addition. Although it checks that the sender has enough balance before subtra",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n- The contract is deployed on-chain.\n- An attacker controls an address `A` with a very large balance close to the maximum uint256 value (2^256 - 1).\n- Another address `B` ex",
-      "time_verify": 18.356,
-      "tokens_verify": 1472,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"An attacker controls an address with a balance greater than zero. The recipient address's balance is close to the maximum uint256 value (2^256 - ",
+      "time_verify": 4.069,
+      "tokens_verify": 716,
       "error": ""
     },
     {
@@ -874,9 +874,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The Collect function makes an external call using msg.sender.call.value(_am)() before updating the user's balance, which matches the REENTRANCY vulnerable pattern from the RAG context. Additionally, t",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n- The X_WALLET contract is deployed with a valid Log contract address.\n- The attacker has an externally owned account (EOA) and deploys a malicious contract (AttackerContrac",
-      "time_verify": 13.578,
-      "tokens_verify": 1509,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must have deposited at least MinSum (1 ether) into the contract and have a balance >= MinSum. The unlockTime for the attacker's acco",
+      "time_verify": 12.808,
+      "tokens_verify": 1185,
       "error": ""
     },
     {
@@ -887,9 +887,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses delegatecall to an external fibonacciLibrary without verifying the library's trustworthiness, which can lead to arbitrary code execution and state corruption. The withdraw function u",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The vulnerable contract `FibonacciBalance` is deployed with the address of the legitimate `FibonacciLib` library.\n   - The contract has a positive Ether balance (e.g., ",
-      "time_verify": 23.291,
-      "tokens_verify": 1839,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"Attacker must deploy a malicious library contract with a function matching the signature setFibonacci(uint256) that overwrites storage variables ",
+      "time_verify": 8.005,
+      "tokens_verify": 1231,
       "error": ""
     },
     {
@@ -965,9 +965,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses tx.origin for initial balance assignment in the constructor, which is a known anti-pattern and flagged in the ACCESS_CONTROL context as vulnerable. Using tx.origin for authentication",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract `MyToken` is deployed on-chain.\n   - The deployer address is `A`.\n   - Upon deployment, the constructor sets `balances[tx.origin] = 10000`.\n   - Since `tx.",
-      "time_verify": 14.556,
-      "tokens_verify": 1508,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"An attacker must lure the original token holder (the address assigned 10000 tokens at contract deployment via tx.origin) to interact with a malic",
+      "time_verify": 7.292,
+      "tokens_verify": 907,
       "error": ""
     },
     {
@@ -978,9 +978,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses low-level call (caddress.call) inside a loop without checking the return value, matching the UNCHECKED_CALL pattern from the RAG context. This can cause silent failures and unexpecte",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract `airDrop` is deployed on-chain.\n   - There exists an ERC20 token contract at address `caddress` that implements `transferFrom(address from, address to, uin",
-      "time_verify": 6.791,
-      "tokens_verify": 1074,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"An attacker controls the 'from' address with sufficient token allowance granted to this contract, and can supply a large _tos array with maliciou",
+      "time_verify": 10.024,
+      "tokens_verify": 840,
       "error": ""
     },
     {
@@ -991,9 +991,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses low-level call in getTokens() without checking the return value, matching the UNCHECKED_CALL pattern from the RAG context. Also, withdrawTokens() and withdrawEther() perform external",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n- The EtherGet contract is deployed, with the deployer as the owner.\n- The EtherGet contract holds some ERC20 tokens (i.e., the contract's token balance > 0).\n- The EtherGet",
-      "time_verify": 14.384,
-      "tokens_verify": 1137,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must deploy a malicious contract with a fallback function that triggers reentrancy by calling withdrawEther() or withdrawTokens() on",
+      "time_verify": 8.834,
+      "tokens_verify": 875,
       "error": ""
     },
     {
@@ -1030,9 +1030,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses low-level call caddress.call(...) inside a loop without checking the return value, matching the UNCHECKED_CALL pattern from the RAG context. This can cause silent failures. Additiona",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract `demo` is deployed on-chain.\n   - The caller has no special role or privilege; the `transfer` function is public.\n   - The `caddress` parameter points to a",
-      "time_verify": 6.733,
-      "tokens_verify": 1097,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"An attacker controls or can influence the _tos array passed to the transfer function and can provide a malicious contract address as caddress tha",
+      "time_verify": 5.553,
+      "tokens_verify": 816,
       "error": ""
     },
     {
@@ -1043,9 +1043,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses low-level call in the Command function without checking the return value (UNCHECKED_CALL), which can silently fail and cause unexpected behavior. Additionally, the Command function m",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n- The contract `MultiplicatorX3` is deployed with an initial balance of some Ether (e.g., 10 ETH).\n- The `Owner` address is controlled by the attacker (or the attacker has c",
-      "time_verify": 9.191,
-      "tokens_verify": 1246,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"Attacker must be the Owner of the contract to call Command function; attacker controls a malicious contract to receive calls and reenter.\",\n  \"tr",
+      "time_verify": 8.547,
+      "tokens_verify": 819,
       "error": ""
     },
     {
@@ -1056,9 +1056,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses block.number modulo 2 as the randomness source to determine if a bet is won, which is a predictable and exploitable pattern as described in the BAD_RANDOMNESS context. The contract i",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n- The contract is deployed on-chain by the organizer (attacker or user).\n- The contract has a positive ether balance to pay out winning bets (e.g., the organizer has funded ",
-      "time_verify": 7.383,
-      "tokens_verify": 1317,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must be able to send transactions to the contract and observe the current block number before making a bet.\",\n  \"transaction_sequenc",
+      "time_verify": 13.01,
+      "tokens_verify": 1100,
       "error": ""
     },
     {
@@ -1082,9 +1082,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses a low-level call msg.sender.call.value(_am)() without checking the return value explicitly with require, which matches the UNCHECKED_CALL pattern. Additionally, the external call is ",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n- The PrivateBank contract is deployed with a valid Log contract address.\n- The attacker has an externally owned account (EOA) and a malicious contract deployed.\n- The attac",
-      "time_verify": 12.568,
-      "tokens_verify": 1253,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"Attacker must have deposited at least 1 ether into the PrivateBank contract to have a positive balance.\",\n  \"transaction_sequence\": [\n    \"1. Att",
+      "time_verify": 6.525,
+      "tokens_verify": 956,
       "error": ""
     },
     {
@@ -1095,9 +1095,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses low-level calls via msg.sender.send() to transfer Ether without checking the return value properly (pattern: if (!msg.sender.send(...)) throw;). This is an example of unchecked call ",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The BlackJack contract must hold a sufficient Ether balance to pay out winnings (e.g., several ether).\n   - The attacker must have an externally owned account (EOA) or ",
-      "time_verify": 14.159,
-      "tokens_verify": 3399,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must be able to deploy a malicious contract with a fallback function that reenters the BlackJack contract during the Ether send call",
+      "time_verify": 9.932,
+      "tokens_verify": 3238,
       "error": ""
     },
     {
@@ -1134,9 +1134,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses delegatecall in the forward function without any access control or validation on the callee address. According to the RAG context and general best practices, delegatecall can be very",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The Proxy contract is deployed on-chain.\n   - The deployer address is the initial owner (stored in the `owner` variable).\n   - The Proxy contract holds some Ether or va",
-      "time_verify": 6.69,
-      "tokens_verify": 878,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must be able to call the forward function on the Proxy contract. There is no access control on the forward function, so any external",
+      "time_verify": 10.567,
+      "tokens_verify": 746,
       "error": ""
     },
     {
@@ -1147,9 +1147,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses low-level calls (e.g., _to.call.value(_value)(_data)) without checking the return value properly, which matches the UNCHECKED_CALL pattern from the RAG context. This can cause silent",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - Deploy the Wallet contract with at least two owners (Owner1 and Owner2) and a multisig requirement of 2 (m_required = 2).\n   - Fund the Wallet contract with sufficient ",
-      "time_verify": 18.449,
-      "tokens_verify": 5481,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"Attacker controls an owner account or can trick an owner to initiate a transaction. The contract has a daily limit and multi-owner confirmation m",
+      "time_verify": 21.333,
+      "tokens_verify": 5035,
       "error": ""
     },
     {
@@ -1173,9 +1173,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses low-level calls with .send() in the fallback function without proper handling of failure beyond revert, which matches the UNCHECKED_CALL pattern from the RAG context. Specifically, t",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract QPay is deployed and fully set up by the owner:\n     - `SetupQPY` has been called by the owner with:\n       - `_DistribFundsReceiverAddress` set to a contr",
-      "time_verify": 7.988,
-      "tokens_verify": 3548,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The contract's fallback function is active with IsDistribRunning set to true, and the _DistribFundsReceiverAddress is set to a contract address t",
+      "time_verify": 17.829,
+      "tokens_verify": 3442,
       "error": ""
     },
     {
@@ -1199,9 +1199,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The Collect function makes an external call using msg.sender.call.value(_am)() without first updating the user's balance, which matches the REENTRANCY vulnerable pattern where external calls precede s",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n- The U_BANK contract is deployed and funded with sufficient Ether to cover withdrawals.\n- The Log contract is deployed, and its address is passed to U_BANK constructor.\n- T",
-      "time_verify": 12.824,
-      "tokens_verify": 1508,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must have deposited at least MinSum (2 ether) into the contract and have an account with a positive balance and unlockTime in the pa",
+      "time_verify": 14.149,
+      "tokens_verify": 1118,
       "error": ""
     },
     {
@@ -1212,9 +1212,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses low-level call (caddress.call) inside a loop without checking the return value, matching the UNCHECKED_CALL pattern from the RAG context. This can cause silent failures. Additionally",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract `airdrop` is deployed on-chain.\n   - There is an ERC20 token contract deployed at address `caddress` that implements `transferFrom(address from, address to",
-      "time_verify": 9.783,
-      "tokens_verify": 1082,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must control a malicious token contract deployed at an address passed as caddress, and call the transfer function with a list of rec",
+      "time_verify": 5.652,
+      "tokens_verify": 743,
       "error": ""
     },
     {
@@ -1225,9 +1225,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses wallet.send(msg.value) in forwardFunds() without checking the return value properly; it uses 'if (!wallet.send(msg.value)) { throw; }' which is an older pattern but effectively rever",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The Crowdsale contract is deployed and active (current block timestamp `now` is between `startTime` and `endTime`).\n   - The `wallet` address is set to a contract addre",
-      "time_verify": 7.331,
-      "tokens_verify": 1991,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The wallet address (0x7F9C7AA8A7F467DD5641BA81B218aADd6883e038) is a smart contract that rejects or reverts on receiving Ether or uses more than ",
+      "time_verify": 12.545,
+      "tokens_verify": 1923,
       "error": ""
     },
     {
@@ -1238,9 +1238,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses low-level calls (adr.call.value(msg.value)(data)) without checking the return value, matching the UNCHECKED_CALL pattern which can silently fail. Additionally, the GetHoneyFromJar fu",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n- The contract `HomeyJar` is deployed, and the deployer is the initial `Owner`.\n- The contract has a positive balance of Ether (e.g., several ethers deposited by users).\n- A",
-      "time_verify": 26.187,
-      "tokens_verify": 1460,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"Attacker deploys a malicious contract with a fallback function that reenters the HomeyJar contract's GetHoneyFromJar function during the transfer",
+      "time_verify": 11.366,
+      "tokens_verify": 1154,
       "error": ""
     },
     {
@@ -1264,9 +1264,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract allows anyone to call PushBonusCode, PopBonusCode, and UpdateBonusCodeAt without access control, enabling arbitrary modification of the bonusCodes array. The PopBonusCode function decreas",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract `Wallet` is deployed on-chain.\n   - The deployer address is set as `owner`.\n   - The `bonusCodes` array is initially empty (`length == 0`).\n   - No special",
-      "time_verify": 8.567,
-      "tokens_verify": 1202,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker needs to be able to call the public functions PushBonusCode, PopBonusCode, and UpdateBonusCodeAt. No ownership or access control is ",
+      "time_verify": 13.662,
+      "tokens_verify": 969,
       "error": ""
     },
     {
@@ -1316,9 +1316,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The fallback function uses fundsWallet.transfer(msg.value) which is a safe pattern for sending Ether (checked call). However, the approveAndCall function uses a low-level call to _spender.call(...) wi",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n- The PiecesofEight contract is deployed with the deployer as fundsWallet holding the initial token supply (90,000,000,000,000,000 tokens).\n- Attacker has an externally owne",
-      "time_verify": 8.096,
-      "tokens_verify": 2417,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"Attacker deploys a malicious contract implementing receiveApproval that performs a reentrant call back into PiecesofEight.approveAndCall or other",
+      "time_verify": 12.068,
+      "tokens_verify": 2261,
       "error": ""
     },
     {
@@ -1329,9 +1329,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses low-level call in the Command function without checking the return value, matching the UNCHECKED_CALL pattern which can silently fail. Additionally, in GetFreebie, the contract trans",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract WhaleGiveaway1 is deployed with an initial balance of some Ether (e.g., 10 ETH).\n   - The Owner is the deployer address (EOA).\n   - An attacker controls a ",
-      "time_verify": 13.772,
-      "tokens_verify": 1207,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must deploy a malicious contract with a fallback function that calls back into WhaleGiveaway1's GetFreebie function to exploit reent",
+      "time_verify": 14.564,
+      "tokens_verify": 1218,
       "error": ""
     },
     {
@@ -1342,9 +1342,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses a low-level call (msg.sender.call.value(_am)()) without checking the return value explicitly with require, which matches the UNCHECKED_CALL pattern. Additionally, the external call i",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n- The ETH_VAULT contract is deployed with a valid Log contract address.\n- The attacker has an externally owned account (EOA) with some initial ETH balance to fund deposits a",
-      "time_verify": 9.884,
-      "tokens_verify": 1262,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"Attacker must have deposited more than 1 ether into the ETH_VAULT contract to have a positive balance.\",\n  \"transaction_sequence\": [\n    \"1. Atta",
+      "time_verify": 10.274,
+      "tokens_verify": 1018,
       "error": ""
     },
     {
@@ -1368,9 +1368,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses multiple low-level calls via .send() without checking return values, which matches the UNCHECKED_CALL vulnerability pattern from the RAG context. This can cause silent failures and u",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract is deployed by the corruptElite with some initial profitFromCrash (msg.value > 0).\n   - There is at least one creditor in creditorAddresses and creditorAmo",
-      "time_verify": 7.257,
-      "tokens_verify": 2143,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must be a creditor who has lent at least 1 ether to the contract and is present in the creditorAddresses array. The attacker must ha",
+      "time_verify": 13.318,
+      "tokens_verify": 1921,
       "error": ""
     },
     {
@@ -1406,10 +1406,10 @@
       "stage1_pred_vuln": true,
       "stage1_conf": 0.9,
       "stage1_reason": "The Owned contract's execute function performs a low-level call (_dst.call.value(_value)(_data)) without checking the return value, matching the UNCHECKED_CALL vulnerability pattern from the RAG conte",
-      "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The TokenSender contract is deployed by an EOA (externally owned account) who becomes the owner of TokenSender (and Owned).\n   - The TokenSender contract holds a suffic",
-      "time_verify": 13.207,
-      "tokens_verify": 2082,
+      "hybrid_pred_vuln": false,
+      "verify_reason": "{\n  \"exploit_constructable\": false,\n  \"preconditions\": \"Attacker must be the owner of the contract or gain control of the owner's private key.\",\n  \"transaction_sequence\": [],\n  \"expected_outcome\": \"No",
+      "time_verify": 9.429,
+      "tokens_verify": 1562,
       "error": ""
     },
     {
@@ -1433,9 +1433,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The Collect function makes an external call using msg.sender.call.value(_am)() without first updating the user's balance, which matches the REENTRANCY vulnerable pattern where external calls precede s",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n\n- The MY_BANK contract is deployed with a valid Log contract address.\n- The attacker has deployed a malicious contract (AttackerContract) that:\n  - Has a fallback function ",
-      "time_verify": 11.3,
-      "tokens_verify": 1434,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"Attacker must have deposited at least MinSum (1 ether) into the MY_BANK contract and have a balance unlocked (now > unlockTime).\",\n  \"transaction",
+      "time_verify": 8.949,
+      "tokens_verify": 1072,
       "error": ""
     },
     {
@@ -1446,9 +1446,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses a low-level call in approveAndCall without checking the return value properly, which matches the UNCHECKED_CALL pattern from the RAG context. The call to _spender.call(...) is follow",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The SLC token contract is deployed at a known address.\n   - The attacker has a non-zero balance of SLC tokens (e.g., attacker holds 1,000 SLC tokens).\n   - The attacker",
-      "time_verify": 16.053,
-      "tokens_verify": 2340,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"Attacker controls a malicious contract implementing receiveApproval(address,uint256,address,bytes) that calls back into SLC.approveAndCall or oth",
+      "time_verify": 5.033,
+      "tokens_verify": 2058,
       "error": ""
     },
     {
@@ -1459,9 +1459,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses low-level call caddress.call(...) inside a loop without checking the return value, matching the UNCHECKED_CALL pattern from the RAG context. This can cause silent failures. Additiona",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract `airPort` is deployed on-chain.\n   - An ERC20 token contract exists at address `caddress` that implements `transferFrom(address from, address to, uint256 v",
-      "time_verify": 6.733,
-      "tokens_verify": 1021,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker controls or can influence the _tos array passed to the transfer function, including addresses of contracts with fallback functions t",
+      "time_verify": 7.567,
+      "tokens_verify": 886,
       "error": ""
     },
     {
@@ -1471,10 +1471,10 @@
       "stage1_pred_vuln": true,
       "stage1_conf": 0.9,
       "stage1_reason": "The function callnotchecked(address) performs a low-level call without checking the return value, matching the UNCHECKED_CALL vulnerability pattern from the RAG context. This can lead to silent failur",
-      "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - Deploy the ReturnValue contract on the Ethereum network.\n   - Have a malicious contract deployed at an address `maliciousCallee` that implements a fallback function whi",
-      "time_verify": 8.376,
-      "tokens_verify": 877,
+      "hybrid_pred_vuln": false,
+      "verify_reason": "{\n  \"exploit_constructable\": false,\n  \"preconditions\": \"An attacker would need to exploit the unchecked call in callnotchecked(address) to cause harm or gain advantage.\",\n  \"transaction_sequence\": [],",
+      "time_verify": 5.762,
+      "tokens_verify": 607,
       "error": ""
     },
     {
@@ -1485,9 +1485,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract performs an addition operation on 'balance' without any overflow checks or use of SafeMath, matching the vulnerable pattern for integer overflow in the RAG context. Since Solidity 0.4.25 ",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract `Overflow_Add` is deployed on-chain.\n   - The initial state is `balance = 1` (as per the contract initialization).\n   - No special roles or permissions are",
-      "time_verify": 5.423,
-      "tokens_verify": 824,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The contract is compiled with Solidity 0.4.25 which does not have built-in overflow protection. The balance variable is a uint (uint256) initiali",
+      "time_verify": 6.036,
+      "tokens_verify": 610,
       "error": ""
     },
     {
@@ -1498,9 +1498,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses a low-level call (msg.sender.call.value(_am)()) without checking the return value properly beyond the if condition, which is a risky pattern (UNCHECKED_CALL). More critically, the ex",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n- The BANK_SAFE contract is deployed and initialized:\n  - `SetMinSum` has been called with a positive value (e.g., 1 ether).\n  - `SetLogFile` has been called with the addres",
-      "time_verify": 8.594,
-      "tokens_verify": 1393,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must have deposited at least MinSum amount into the BANK_SAFE contract to have a non-zero balance eligible for withdrawal.\",\n  \"tran",
+      "time_verify": 8.068,
+      "tokens_verify": 1115,
       "error": ""
     },
     {
@@ -1511,9 +1511,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses unchecked low-level calls via msg.sender.send() and leader.send() without verifying the return values, which matches the UNCHECKED_CALL vulnerability pattern from the RAG context. Ad",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n- The contract is deployed and has some Ether balance (e.g., from previous plays or direct funding).\n- The `leader` address is set to some initial address (or zero address i",
-      "time_verify": 20.777,
-      "tokens_verify": 1517,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"Attacker must be able to call the draw() function and send at least 1 ether to become the leader. The attacker can manipulate the block.timestamp",
+      "time_verify": 11.821,
+      "tokens_verify": 899,
       "error": ""
     },
     {
@@ -1536,10 +1536,10 @@
       "stage1_pred_vuln": true,
       "stage1_conf": 0.9,
       "stage1_reason": "The contract makes external calls to token.transfer and user.user.transfer (Ether) inside loops without updating state variables before the calls, which matches the REENTRANCY vulnerability pattern fr",
-      "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract is deployed with a valid ERC20 token address and a bonusRate.\n   - The attacker has deposited tokens into the contract, creating at least one contribution ",
-      "time_verify": 23.471,
-      "tokens_verify": 4156,
+      "hybrid_pred_vuln": false,
+      "verify_reason": "{\n  \"exploit_constructable\": false,\n  \"preconditions\": \"Attacker must be a user with contributions and be able to receive tokens or Ether. The contract owner must call the multi-send or withdrawal fun",
+      "time_verify": 8.374,
+      "tokens_verify": 3698,
       "error": ""
     },
     {
@@ -1550,9 +1550,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The Proxy contract's proxy() function performs a low-level call without checking the return value, matching the UNCHECKED_CALL risk pattern. The VaultProxy contract has two Owner variables (one in Pro",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n- The VaultProxy contract is deployed and has some Ether balance.\n- The initial Owner in Proxy is the deployer (say Attacker A).\n- The VaultProxy's own Owner variable is ini",
-      "time_verify": 22.195,
-      "tokens_verify": 1685,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"Attacker controls an externally owned account (EOA) and can deploy a malicious contract. The attacker can send transactions to the VaultProxy con",
+      "time_verify": 17.91,
+      "tokens_verify": 1222,
       "error": ""
     },
     {
@@ -1562,10 +1562,10 @@
       "stage1_pred_vuln": true,
       "stage1_conf": 0.9,
       "stage1_reason": "The contract attempts to set the owner in a function named 'Constructor' instead of a proper constructor, so the owner variable remains uninitialized (zero address). The onlyowner modifier relies on t",
-      "hybrid_pred_vuln": false,
-      "verify_reason": "1. Required Preconditions:\n   - The contract `Missing` is deployed on-chain.\n   - The `owner` variable is never initialized because the function named `Constructor` is not a valid constructor in Solid",
-      "time_verify": 19.947,
-      "tokens_verify": 1017,
+      "hybrid_pred_vuln": true,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The contract is deployed as-is on Ethereum with no owner initialized because the function named 'Constructor' is not a proper constructor in Soli",
+      "time_verify": 12.925,
+      "tokens_verify": 775,
       "error": ""
     },
     {
@@ -1576,9 +1576,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses low-level calls (token.call and _addr.call.value) without checking return values, matching the UNCHECKED_CALL pattern which can lead to silent failures. The WithdrawToHolder function",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract TokenBank has been deployed and initialized by calling initTokenBank() by the deployer (owner).\n   - The owner address is set to the deployer.\n   - At leas",
-      "time_verify": 15.308,
-      "tokens_verify": 1812,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"Attacker must be able to become the owner or exploit weak access control to call onlyOwner functions. Attacker must have a balance in Holders map",
+      "time_verify": 11.053,
+      "tokens_verify": 1343,
       "error": ""
     },
     {
@@ -1589,9 +1589,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses low-level calls (token.call and _addr.call.value) without checking the return value properly, which matches the UNCHECKED_CALL pattern and can lead to silent failures. Additionally, ",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract `TokenBank` is deployed and initialized by calling `initTokenBank()` by the deployer (who becomes the `owner`).\n   - At least one user (e.g., Alice) has de",
-      "time_verify": 18.816,
-      "tokens_verify": 1811,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"Attacker is not the owner but can interact with the contract; the contract owner uses the onlyOwner modifier which uses 'if' instead of 'require'",
+      "time_verify": 13.833,
+      "tokens_verify": 1158,
       "error": ""
     },
     {
@@ -1602,9 +1602,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The Collect function makes an external call using msg.sender.call.value(_am)() before updating the user's balance, which matches the Reentrancy vulnerability pattern from the RAG context. Additionally",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n- The PRIVATE_ETH_CELL contract is deployed and initialized:\n  - MinSum is set to a positive value (e.g., 1 ether).\n  - LogFile contract is deployed and its address set in P",
-      "time_verify": 6.724,
-      "tokens_verify": 1340,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must deploy a malicious contract that can receive ETH and has a fallback function that calls back into the vulnerable contract's Col",
+      "time_verify": 17.742,
+      "tokens_verify": 1194,
       "error": ""
     },
     {
@@ -1615,9 +1615,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract increments 'count' by 'input' without any overflow checks, matching the vulnerable pattern of arithmetic operations without validation. According to the RAG context, safe patterns require",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract `IntegerOverflowAdd` is deployed on-chain.\n   - The initial value of `count` is 1 (as set in the contract).\n   - No special roles or permissions are requir",
-      "time_verify": 6.348,
-      "tokens_verify": 741,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The contract is deployed with an initial count value of 1. The attacker can call the run function with a large input value that causes the uint25",
+      "time_verify": 5.805,
+      "tokens_verify": 662,
       "error": ""
     },
     {
@@ -1627,10 +1627,10 @@
       "stage1_pred_vuln": true,
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses low-level calls such as owner.send(msg.value) in forwardFunds() without checking the return value properly (it uses throw on failure, which is acceptable in Solidity 0.4.12 but less ",
-      "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The PCNCrowdsale contract is deployed and owned by an EOA (externally owned account) or a contract.\n   - The crowdsale is started (`started == true`).\n   - The PCNCrowd",
-      "time_verify": 9.742,
-      "tokens_verify": 3995,
+      "hybrid_pred_vuln": false,
+      "verify_reason": "{\n  \"exploit_constructable\": false,\n  \"preconditions\": \"The attacker must be able to send ETH to the crowdsale contract and the owner address must be a contract capable of reentrancy.\",\n  \"transaction",
+      "time_verify": 8.313,
+      "tokens_verify": 3628,
       "error": ""
     },
     {
@@ -1641,9 +1641,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses low-level call in wager(): whale.call.value(donate_amount)(bytes4(keccak256(\"donate()\"))); without checking the return value, matching the UNCHECKED_CALL pattern from the RAG context",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The FiftyFlip contract is deployed with a `whale` address set to a malicious contract controlled by the attacker.\n   - The FiftyFlip contract has sufficient ETH balance",
-      "time_verify": 15.877,
-      "tokens_verify": 4298,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must be a contract with a payable fallback or donate() function that can be called by the FiftyFlip contract. The attacker must be a",
+      "time_verify": 17.685,
+      "tokens_verify": 3860,
       "error": ""
     },
     {
@@ -1654,9 +1654,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses a low-level call 'target.call.value(msg.value)()' without checking the return value, matching the UNCHECKED_CALL vulnerability pattern from the RAG context. Additionally, the contrac",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract B is deployed on-chain with the deployer as the owner.\n   - The contract B holds some ETH balance (initially zero, but can receive ETH).\n   - The address `",
-      "time_verify": 10.37,
-      "tokens_verify": 1094,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must deploy a malicious contract at the target address (0xC8A60C51967F4022BF9424C337e9c6F0bD220E1C) that implements a fallback funct",
+      "time_verify": 5.858,
+      "tokens_verify": 805,
       "error": ""
     },
     {
@@ -1680,9 +1680,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses msg.sender.transfer(this.balance) without any state update before the transfer, which is a low-level call that can fail silently if the recipient is a contract with a fallback that c",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The CryptoRoulette contract is deployed and funded with some Ether (e.g., 1 Ether).\n   - The contract's secretNumber is set to some value between 1 and 20.\n   - The att",
-      "time_verify": 13.922,
-      "tokens_verify": 1510,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"Attacker deploys a malicious contract with a fallback function that consumes more than 2300 gas or reverts. The attacker must send at least 0.1 e",
+      "time_verify": 13.363,
+      "tokens_verify": 1327,
       "error": ""
     },
     {
@@ -1693,9 +1693,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses low-level calls (token.call and _addr.call.value) without checking the return values, matching the UNCHECKED_CALL pattern from the RAG context. This can cause silent failures. Additi",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The TokenBank contract is deployed and initialized by the owner calling `initTokenBank()`.\n   - The owner address is set correctly.\n   - At least one user (victim) has ",
-      "time_verify": 10.81,
-      "tokens_verify": 1573,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"Attacker must be the contract owner or gain ownership by exploiting the ownership transfer mechanism. The attacker deploys a malicious contract w",
+      "time_verify": 10.368,
+      "tokens_verify": 1171,
       "error": ""
     },
     {
@@ -1706,9 +1706,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses low-level calls (firstTarget.call.value, secondTarget.call.value, owner.call.value) without checking return values, matching the UNCHECKED_CALL pattern from the RAG context, which ca",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract is deployed at a known address.\n   - Because the constructor is incorrectly named `DranMe` (missing the \"i\"), the `owner` variable is never set during depl",
-      "time_verify": 20.89,
-      "tokens_verify": 2176,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"An attacker must deploy or interact with the contract as a player by paying at least 0.02 ether to become approved. The attacker must exploit the",
+      "time_verify": 12.842,
+      "tokens_verify": 1732,
       "error": ""
     },
     {
@@ -1719,9 +1719,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses low-level call caddress.call(...) inside a loop without checking the return value, matching the UNCHECKED_CALL pattern from the RAG context. This can cause silent failures and unexpe",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract EBU is deployed on-chain.\n   - There exists an ERC20 token contract at address `caddress` that implements the standard `transferFrom(address from, address ",
-      "time_verify": 8.333,
-      "tokens_verify": 1071,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must control or influence one of the recipient addresses (_tos) to be a malicious contract that reverts or consumes excessive gas up",
+      "time_verify": 7.432,
+      "tokens_verify": 779,
       "error": ""
     },
     {
@@ -1745,9 +1745,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The fallback payable function uses fundsWallet.transfer(msg.value) which is a safe pattern for sending Ether, but the approveAndCall function uses a low-level call to _spender.call(...) without checki",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n- The SkyHub token contract is deployed and initialized by the deployer (fundsWallet).\n- The deployer holds the entire initial token supply (100,000,000 * 10^18 tokens).\n- T",
-      "time_verify": 10.608,
-      "tokens_verify": 2810,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must deploy a malicious contract implementing receiveApproval(address,uint256,address,bytes) that calls back into the SkyHub token's",
+      "time_verify": 9.272,
+      "tokens_verify": 2555,
       "error": ""
     },
     {
@@ -1758,9 +1758,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses an old Solidity style with throw for error handling and does not use require or revert, which is less safe. The transfer function lacks event emission and does not return a boolean, ",
       "hybrid_pred_vuln": false,
-      "verify_reason": "Upon review, a concrete exploit path cannot be constructed, and the initial assessment may be a false positive.\n\nExplanation:\n\n1. The contract\u2019s `transfer` function does not make any external calls; i",
-      "time_verify": 3.078,
-      "tokens_verify": 835,
+      "verify_reason": "{\n  \"exploit_constructable\": false,\n  \"preconditions\": \"None specific; the contract is a simple token with no external calls or payable functions.\",\n  \"transaction_sequence\": [],\n  \"expected_outcome\":",
+      "time_verify": 4.856,
+      "tokens_verify": 850,
       "error": ""
     },
     {
@@ -1783,10 +1783,10 @@
       "stage1_pred_vuln": true,
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses low-level calls to transfer ETH to the whale in donateToWhale() and loseWager() functions without checking the return value (whale.call.value(amount)(bytes4(keccak256(\"donate()\")))).",
-      "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract PoCGame is deployed with:\n     - `owner` set to deployer address.\n     - `whale` set to an attacker-controlled contract address.\n     - `betLimit` set to 0",
-      "time_verify": 14.217,
-      "tokens_verify": 2601,
+      "hybrid_pred_vuln": false,
+      "verify_reason": "{\n  \"exploit_constructable\": false,\n  \"preconditions\": \"The attacker must be able to interact with the contract as a player and the whale address must be a contract that can receive calls.\",\n  \"transa",
+      "time_verify": 7.083,
+      "tokens_verify": 1966,
       "error": ""
     },
     {
@@ -1810,9 +1810,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses an external call in approveAndCall to spender.receiveApproval without any reentrancy guard or state update after the call, which can lead to reentrancy issues as per the REENTRANCY p",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n- The PigxToken contract is deployed with an initial supply assigned to an attacker-controlled address (Attacker).\n- The attacker has a non-zero token balance (e.g., 1000 to",
-      "time_verify": 12.637,
-      "tokens_verify": 1799,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"An attacker deploys a malicious contract implementing the tokenRecipient interface with a receiveApproval function that calls back into the PigxT",
+      "time_verify": 9.158,
+      "tokens_verify": 1398,
       "error": ""
     },
     {
@@ -1835,10 +1835,10 @@
       "stage1_pred_vuln": true,
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses low-level calls to transfer ETH to the whale in donateToWhale() and loseWager() functions via whale.call.value(amount)(bytes4(keccak256(\"donate()\"))). These calls do not check the re",
-      "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract PoCGame is deployed with:\n     - `owner` set to the deployer.\n     - `whale` set to an attacker-controlled contract address.\n     - `betLimit` set to 0.01 ",
-      "time_verify": 12.106,
-      "tokens_verify": 2638,
+      "hybrid_pred_vuln": false,
+      "verify_reason": "{\n  \"exploit_constructable\": false,\n  \"preconditions\": \"The attacker must be able to interact with the contract as a real user (msg.sender == tx.origin), the contract must be open to public (openToPub",
+      "time_verify": 6.559,
+      "tokens_verify": 2028,
       "error": ""
     },
     {
@@ -1848,10 +1848,10 @@
       "stage1_pred_vuln": true,
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses a low-level call 'destinationWallet.transfer(weiAmount);' without checking for success. According to the RAG context, unchecked low-level calls like address.send() or address.call() ",
-      "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract `ImpLoot` is deployed with a valid `destinationWallet` address controlled by the contract owner.\n   - At least one loot template ID (e.g., `lootTemplateId ",
-      "time_verify": 33.661,
-      "tokens_verify": 1976,
+      "hybrid_pred_vuln": false,
+      "verify_reason": "{\n  \"exploit_constructable\": false,\n  \"preconditions\": \"Attacker must be able to call buy() with a valid lootTemplateId and send exact weiAmount matching the template price.\",\n  \"transaction_sequence\"",
+      "time_verify": 3.909,
+      "tokens_verify": 1489,
       "error": ""
     },
     {
@@ -1888,9 +1888,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses a low-level call 'a.call()' without checking the return value, matching the 'Unchecked Call' vulnerability pattern from the RAG context. This can cause silent failures and unexpected",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract `Caller` is deployed on-chain.\n   - The attacker controls an address `A` that is a contract with a fallback function.\n   - The attacker has no special role",
-      "time_verify": 7.382,
-      "tokens_verify": 702,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The contract is deployed on Ethereum network. The attacker controls a malicious contract with a fallback function that can consume excessive gas ",
+      "time_verify": 4.802,
+      "tokens_verify": 601,
       "error": ""
     },
     {
@@ -1901,9 +1901,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract defines an onlyOwner modifier but implements it incorrectly by requiring msg.sender != owner instead of msg.sender == owner, effectively allowing anyone except the owner to call withdraw.",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract is deployed on-chain.\n   - The contract has a non-zero balance, accumulated from users calling adopt() and paying ether.\n   - The owner address is set (not",
-      "time_verify": 7.285,
-      "tokens_verify": 877,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The contract is deployed with an owner address set to the deployer. The contract holds some ether balance from users adopting pets.\",\n  \"transact",
+      "time_verify": 5.994,
+      "tokens_verify": 798,
       "error": ""
     },
     {
@@ -1914,9 +1914,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses .send() for Ether transfers in distributeTokenToAddress and distributeTokenToAddressesAndAmounts functions, checking the return value with require, which is a safe pattern against un",
       "hybrid_pred_vuln": false,
-      "verify_reason": "Upon review, a concrete exploit path cannot be constructed, and the initial assessment may be a false positive.\n\nExplanation:\n\n- The contract uses `.send()` for Ether transfers in `distributeTokenToAd",
-      "time_verify": 4.573,
-      "tokens_verify": 3188,
+      "verify_reason": "{\n  \"exploit_constructable\": false,\n  \"preconditions\": \"The attacker would need to be the contract owner or gain ownership to call distribution functions.\",\n  \"transaction_sequence\": [],\n  \"expected_o",
+      "time_verify": 13.404,
+      "tokens_verify": 3144,
       "error": ""
     },
     {
@@ -1940,9 +1940,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses multiple calls to address.send() without checking the return value (e.g., msg.sender.send(valuePaid), currentMonarch.etherAddress.send(compensation), wizardAddress.send(amount)), whi",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract is deployed and initialized by the wizard (wizardAddress).\n   - The current monarch is not the wizard (i.e., some user has claimed the throne).\n   - The cu",
-      "time_verify": 8.904,
-      "tokens_verify": 2805,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"An attacker deploys a malicious contract with a fallback function that reverts or consumes all gas when receiving Ether. The current monarch is a",
+      "time_verify": 10.271,
+      "tokens_verify": 2560,
       "error": ""
     },
     {
@@ -1953,9 +1953,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract DEP_BANK uses a low-level call (msg.sender.call.value(_am)()) in the Collect function without first updating the user's balance, which is a classic reentrancy vulnerability pattern as des",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The DEP_BANK contract is deployed and initialized:\n     - `MinSum` is set to a positive value (e.g., 1 ether).\n     - `LogFile` contract is deployed and linked via `Set",
-      "time_verify": 10.636,
-      "tokens_verify": 1403,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must deploy a malicious contract that can receive Ether and re-enter the DEP_BANK contract's Collect function during the external ca",
+      "time_verify": 7.25,
+      "tokens_verify": 1187,
       "error": ""
     },
     {
@@ -2005,9 +2005,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses block.timestamp for critical logic to determine if the sale is finished. According to the RAG context, relying on block.timestamp can be manipulated by miners within a small range, w",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract `TimedCrowdsale` is deployed on the Ethereum blockchain.\n   - The current block timestamp is just before the sale finish time, i.e., slightly less than 154",
-      "time_verify": 8.685,
-      "tokens_verify": 907,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must be a miner or have influence over the block timestamp within the allowed miner timestamp manipulation range.\",\n  \"transaction_s",
+      "time_verify": 6.083,
+      "tokens_verify": 678,
       "error": ""
     },
     {
@@ -2018,9 +2018,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The redeem() function makes two consecutive transfers: first Owner.transfer(this.balance) then msg.sender.transfer(this.balance) without updating any state or using reentrancy guards, which matches th",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n- The WhaleGiveaway2 contract has a non-zero balance of Ether (e.g., 10 ether) deposited by any user or the Owner.\n- The Owner is the original deployer address (let's call i",
-      "time_verify": 13.329,
-      "tokens_verify": 1298,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"Attacker must send at least 0.999001 ether in a call to redeem(). Attacker must have a fallback function that reenters redeem() during the transf",
+      "time_verify": 8.705,
+      "tokens_verify": 1021,
       "error": ""
     },
     {
@@ -2044,9 +2044,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract attempts to set the owner in a function named 'missing' instead of a proper constructor. Since the Solidity version is 0.4.24, constructors must have the same name as the contract. This m",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract `Missing` is deployed on-chain.\n   - Since the function `missing()` is not a constructor (constructor name must match contract name in Solidity 0.4.24), th",
-      "time_verify": 7.917,
-      "tokens_verify": 859,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The contract is deployed without calling the 'missing' function, so the 'owner' variable remains the zero address (0x0). The fallback function is",
+      "time_verify": 609.123,
+      "tokens_verify": 830,
       "error": ""
     },
     {
@@ -2070,9 +2070,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses low-level calls (token.call and _addr.call.value) without checking the return values, matching the UNCHECKED_CALL pattern from the RAG context, which can lead to silent failures. The",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n- The TokenBank contract is deployed and initialized by an attacker or owner calling initTokenBank(), setting owner = attacker address and MinDeposit = 1 ether.\n- The attack",
-      "time_verify": 7.686,
-      "tokens_verify": 1490,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"An attacker must have deposited ether exceeding MinDeposit to have a positive balance in Holders mapping. The attacker deploys a malicious contra",
+      "time_verify": 12.739,
+      "tokens_verify": 1308,
       "error": ""
     },
     {
@@ -2083,9 +2083,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses a fallback function to accept bets and pays out winners by transferring the entire contract balance to the winner. The payout occurs via msg.sender.transfer(this.balance) without upd",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n- The Roulette contract is deployed and initially funded with some Ether (e.g., 100 Ether).\n- The contract\u2019s pastBlockTime is set to 0 initially.\n- The attacker has at least",
-      "time_verify": 9.252,
-      "tokens_verify": 1055,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must be able to control or influence the miner or be the miner themselves to manipulate block timestamps or transaction ordering.\",\n",
+      "time_verify": 6.923,
+      "tokens_verify": 898,
       "error": ""
     },
     {
@@ -2122,9 +2122,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses a low-level call in sendMoney without checking the return value, matching the UNCHECKED_CALL pattern from the RAG context. This can cause silent failures. Additionally, the external ",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n- The SimpleWallet contract is deployed with an initial owner (EOA or contract).\n- The SimpleWallet contract has a positive ETH balance (e.g., funded by sending ETH to it).\n",
-      "time_verify": 7.674,
-      "tokens_verify": 1086,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must be the owner of the SimpleWallet contract or have control over the owner account to call sendMoney. The target contract must ha",
+      "time_verify": 8.669,
+      "tokens_verify": 904,
       "error": ""
     },
     {
@@ -2161,9 +2161,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract contains a function emptyCreditors() that resets the creditorAddresses array only if its length is greater than 1500. Since the addCreditors() function adds 350 addresses per call, the ar",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract is deployed on-chain with an empty `creditorAddresses` array.\n   - No special roles or permissions are required; any address can call the functions.\n   - T",
-      "time_verify": 8.363,
-      "tokens_verify": 1027,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"An attacker can call addCreditors() multiple times to increase the creditorAddresses array length beyond 1500.\",\n  \"transaction_sequence\": [\n    ",
+      "time_verify": 6.228,
+      "tokens_verify": 854,
       "error": ""
     },
     {
@@ -2174,9 +2174,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract lacks explicit access control modifiers on critical functions like claimReward, allowing anyone to call it. Although setReward checks msg.sender == owner, claimReward does not, which is a",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract is deployed by an address (let's call it Owner).\n   - Owner calls setReward() with some ETH value (e.g., 1 ETH), so `reward` is set to 1 ETH.\n   - `claimed",
-      "time_verify": 6.067,
-      "tokens_verify": 977,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must be able to call claimReward before the legitimate owner calls setReward again. The contract must hold a non-zero reward balance",
+      "time_verify": 8.99,
+      "tokens_verify": 786,
       "error": ""
     },
     {
@@ -2200,9 +2200,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses a low-level call (msg.sender.call.value(_am)()) without checking the return value explicitly with require, which matches the UNCHECKED_CALL pattern. Additionally, the external call i",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n- The Private_Bank contract is deployed at a known address, with a valid Log contract deployed and its address passed to Private_Bank constructor.\n- The attacker has an exte",
-      "time_verify": 13.156,
-      "tokens_verify": 1306,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"Attacker must have deposited more than 1 ether to the Private_Bank contract to have a positive balance. The contract's CashOut function uses a lo",
+      "time_verify": 7.898,
+      "tokens_verify": 1010,
       "error": ""
     },
     {
@@ -2226,9 +2226,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses multiple low-level calls (e.g., msg.sender.call.value(), SGX_ADDRESS.send(), callbackAddr.call.gas()) without checking their return values, matching the UNCHECKED_CALL pattern from t",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract is deployed and active (killswitch == false).\n   - The attacker has an existing request with requestId = X, created by calling `request()` with a fee >= MI",
-      "time_verify": 16.806,
-      "tokens_verify": 3459,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"Attacker deploys a malicious contract with a fallback function that reenters the TownCrier contract during refund or callback calls. The attacker",
+      "time_verify": 8.549,
+      "tokens_verify": 2995,
       "error": ""
     },
     {
@@ -2252,9 +2252,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses Solidity 0.4.10 without SafeMath, and the increaseLockTime function increments lockTime[msg.sender] by an unchecked _secondsToIncrease, which can cause integer overflow as per the IN",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n- The attacker has an Ethereum account with some ETH.\n- The contract is deployed and has no special roles; any user can call deposit, increaseLockTime, and withdraw.\n- The a",
-      "time_verify": 15.031,
-      "tokens_verify": 1024,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must have deposited some Ether into the contract to have a non-zero balance and an initial lockTime set.\",\n  \"transaction_sequence\":",
+      "time_verify": 12.382,
+      "tokens_verify": 926,
       "error": ""
     },
     {
@@ -2265,9 +2265,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The Owned contract's execute function performs a low-level call (_dst.call.value(_value)(_data)) without checking the return value, matching the UNCHECKED_CALL pattern from the RAG context. This can c",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The Marriage contract is deployed and owned by an EOA (Externally Owned Account) attacker.\n   - The attacker controls the owner address.\n   - The Marriage contract has ",
-      "time_verify": 32.302,
-      "tokens_verify": 2156,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must be the owner of the contract or gain ownership by exploiting the ownership transfer mechanism (e.g., by calling changeOwner and",
+      "time_verify": 10.921,
+      "tokens_verify": 1754,
       "error": ""
     },
     {
@@ -2317,9 +2317,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract performs a subtraction on a mapping value without any underflow check (map[k] -= v;). According to the RAG context, this matches the vulnerable pattern where arithmetic operations are don",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n- The contract is deployed on-chain.\n- The mapping `map` is initially empty, so for any key `k`, `map[k]` is 0 by default.\n- No special roles or permissions are required; th",
-      "time_verify": 5.647,
-      "tokens_verify": 808,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker can call the init function with any key k and a value v greater than the current map[k] value (which is zero by default). The contra",
+      "time_verify": 4.53,
+      "tokens_verify": 640,
       "error": ""
     },
     {
@@ -2330,9 +2330,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses low-level call in the Command function without checking the return value, matching the UNCHECKED_CALL pattern which can silently fail. Additionally, the GetFreebie function makes ext",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract `Honey` is deployed and holds some Ether balance.\n   - The `Owner` is the deployer address initially.\n   - An attacker controls an externally owned account",
-      "time_verify": 16.211,
-      "tokens_verify": 1304,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"Attacker must deploy a malicious contract with a fallback function that reenters the Honey contract's GetFreebie function. The attacker must send",
+      "time_verify": 11.608,
+      "tokens_verify": 1033,
       "error": ""
     },
     {
@@ -2342,10 +2342,10 @@
       "stage1_pred_vuln": true,
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses low-level call in approveAndCall without checking the return value (unchecked call), which can silently fail as per UNCHECKED_CALL pattern. Also, the approveAndCall function makes an",
-      "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - Deploy the HumanStandardToken contract with an initial supply assigned to an attacker-controlled address (Attacker).\n   - Deploy the LedgerChannel contract.\n   - Attack",
-      "time_verify": 10.438,
-      "tokens_verify": 9869,
+      "hybrid_pred_vuln": false,
+      "verify_reason": "{\n  \"exploit_constructable\": false,\n  \"preconditions\": \"The contract uses Solidity 0.4.23, which lacks built-in overflow checks. However, the approveAndCall function uses a low-level call with require",
+      "time_verify": 14.605,
+      "tokens_verify": 9445,
       "error": ""
     },
     {
@@ -2446,10 +2446,10 @@
       "stage1_pred_vuln": true,
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses owner.transfer(msg.value) in the createTokens() function without checking the return value of the transfer call. According to the RAG context, unchecked low-level calls like transfer",
-      "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract is deployed with the owner set to 0x338f229e87931f883982eab0e3cfab2f055cc04c.\n   - The initial total supply is 100,000,000 tokens assigned to the owner.\n  ",
-      "time_verify": 9.84,
-      "tokens_verify": 2203,
+      "hybrid_pred_vuln": false,
+      "verify_reason": "{\n  \"exploit_constructable\": false,\n  \"preconditions\": \"Attacker must send Ether to the contract fallback function to buy tokens.\",\n  \"transaction_sequence\": [\n    \"Attacker calls fallback function wi",
+      "time_verify": 7.233,
+      "tokens_verify": 1881,
       "error": ""
     },
     {
@@ -2473,9 +2473,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The sell() function makes an external call to msg.sender.transfer(amount * sellPrice) after updating balances, which is a safe pattern against reentrancy as state is updated before the call. However, ",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract `MyAdvancedToken` is deployed by an owner address (Owner).\n   - The owner has a large token balance (initialSupply or minted tokens).\n   - The contract hol",
-      "time_verify": 19.286,
-      "tokens_verify": 3649,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must have some tokens to sell and the contract must hold enough Ether to pay for the sellPrice * amount. The attacker must also be a",
+      "time_verify": 8.27,
+      "tokens_verify": 2975,
       "error": ""
     },
     {
@@ -2486,9 +2486,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract performs arithmetic subtraction on 'count' without any checks for underflow. According to the RAG context, arithmetic operations without SafeMath or explicit checks in Solidity versions <",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract is deployed on-chain.\n   - The `initialized` state variable is initially 0.\n   - The `count` state variable is initially 1.\n   - No special roles or permis",
-      "time_verify": 10.411,
-      "tokens_verify": 800,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The contract must be deployed and the init() function must be called to set initialized to 1.\",\n  \"transaction_sequence\": [\n    \"Call init() to s",
+      "time_verify": 6.265,
+      "tokens_verify": 700,
       "error": ""
     },
     {
@@ -2498,10 +2498,10 @@
       "stage1_pred_vuln": true,
       "stage1_conf": 0.9,
       "stage1_reason": "The fallback function uses creator.transfer(amountRaised) without checking the return value, matching the UNCHECKED_CALL pattern which can silently fail. Also, the external call to creator.transfer ha",
-      "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract MamaBearToken is deployed with the deployer as `creator`.\n   - The creator address is a smart contract with a fallback function that calls back into the Ma",
-      "time_verify": 8.16,
-      "tokens_verify": 1660,
+      "hybrid_pred_vuln": false,
+      "verify_reason": "{\n  \"exploit_constructable\": false,\n  \"preconditions\": \"The attacker must be able to deploy a malicious contract as the creator address or trick the creator to be a contract with a fallback function t",
+      "time_verify": 7.247,
+      "tokens_verify": 1369,
       "error": ""
     },
     {
@@ -2512,9 +2512,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses block.timestamp for randomness (TIME_MANIPULATION), which miners can manipulate to influence the outcome. Additionally, it performs external calls (bank.transfer and msg.sender.trans",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract is deployed with the deployer as the `bank` address.\n   - The contract's initial `pot` is 0.\n   - The attacker has an externally owned account (EOA) with e",
-      "time_verify": 10.446,
-      "tokens_verify": 1247,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"Attacker must deploy a malicious contract with a fallback function that calls EtherLotto.play() again to trigger reentrancy. The attacker must se",
+      "time_verify": 4.273,
+      "tokens_verify": 1021,
       "error": ""
     },
     {
@@ -2538,9 +2538,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The Collect function makes an external call using msg.sender.call.value(_am)() before updating the user's balance, which matches the REENTRANCY vulnerable pattern from the RAG context. Additionally, t",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n- The WALLET contract is deployed with a valid Log contract address.\n- The attacker has an externally owned account (EOA) and deploys a malicious contract (Attacker) that wi",
-      "time_verify": 17.952,
-      "tokens_verify": 1360,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must have deposited at least MinSum (1 ether) into the contract and have an unlockTime that has passed, so they can call Collect. Th",
+      "time_verify": 10.306,
+      "tokens_verify": 1072,
       "error": ""
     },
     {
@@ -2564,9 +2564,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses .send() to transfer Ether without checking the return value, which can lead to failed transfers and potential denial of service. Additionally, the state variable 'payedOut' is update",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract has a non-zero balance, funded by previous participants or deposits.\n   - The `winner` address is set to an attacker-controlled contract address.\n   - The ",
-      "time_verify": 9.424,
-      "tokens_verify": 1148,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The contract has a winner address set and a winAmount greater than zero. The winner address is a malicious contract that implements a fallback fu",
+      "time_verify": 9.642,
+      "tokens_verify": 944,
       "error": ""
     },
     {
@@ -2603,9 +2603,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses low-level calls (token.call and _addr.call.value) without checking return values, matching the UNCHECKED_CALL pattern which can lead to silent failures. The WithdrawToHolder function",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n- The TokenBank contract is deployed and initialized by calling initTokenBank() by the deployer (owner).\n- The MinDeposit is set to 1 ether.\n- At least one user (victim) has",
-      "time_verify": 10.379,
-      "tokens_verify": 1453,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"Attacker must be able to deploy a malicious contract and become a holder with a balance in the TokenBank by depositing at least MinDeposit (1 eth",
+      "time_verify": 8.811,
+      "tokens_verify": 1283,
       "error": ""
     },
     {
@@ -2616,9 +2616,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses low-level calls (c.call and owner2.send) without checking return values, which matches the UNCHECKED_CALL pattern and can lead to silent failures. The withdraw function sends Ether t",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract `Delta` is deployed with:\n     - `owner` set to 0x788c45dd60ae4dbe5055b5ac02384d5dc84677b0\n     - `owner2` set to 0x0C6561edad2017c01579Fd346a58197ea01A0Cf",
-      "time_verify": 13.989,
-      "tokens_verify": 1967,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must be able to send Ether to the contract and have control over an address that can receive Ether and execute fallback code. The ex",
+      "time_verify": 11.89,
+      "tokens_verify": 1529,
       "error": ""
     },
     {
@@ -2629,9 +2629,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract multiplies 'count' by 'input' without any overflow check, matching the vulnerable pattern from the RAG context where multiplication occurs without overflow protection. The safe pattern re",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract `IntegerOverflowMul` is deployed on-chain.\n   - The initial value of `count` is 2 (as set in the contract).\n   - No special roles or permissions are requir",
-      "time_verify": 4.23,
-      "tokens_verify": 690,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The contract is compiled with Solidity 0.4.19, which does not have built-in overflow checks. The 'count' variable is public and initially set to ",
+      "time_verify": 5.305,
+      "tokens_verify": 646,
       "error": ""
     },
     {
@@ -2642,9 +2642,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses low-level calls such as `_to.call.value(_value)(_data)` and `m_txs[_h].to.call.value(m_txs[_h].value)(m_txs[_h].data)` without checking the return value properly, instead relying on ",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The WalletLibrary contract is deployed and initialized with at least two owners (e.g., Owner1 and Owner2).\n   - The required number of confirmations (m_required) is set",
-      "time_verify": 8.46,
-      "tokens_verify": 4608,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"Attacker must be an owner of the wallet contract (msg.sender is an owner). The wallet has a daily limit set and multiple owners with a multisig r",
+      "time_verify": 9.554,
+      "tokens_verify": 4492,
       "error": ""
     },
     {
@@ -2667,10 +2667,10 @@
       "stage1_pred_vuln": true,
       "stage1_conf": 0.9,
       "stage1_reason": "The splitFunds() function uses low-level .transfer() calls to send Ether to two hardcoded addresses without checking the return value. According to the RAG context, unchecked low-level calls like addr",
-      "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract is deployed, and the deployer is the owner.\n   - The contract holds some Ether balance (e.g., from users calling deposit() or sending Ether directly).\n   -",
-      "time_verify": 16.105,
-      "tokens_verify": 2327,
+      "hybrid_pred_vuln": false,
+      "verify_reason": "{\n  \"exploit_constructable\": false,\n  \"preconditions\": \"Attacker must be a non-owner user with some Ether balance to interact with the contract.\",\n  \"transaction_sequence\": [],\n  \"expected_outcome\": \"",
+      "time_verify": 6.666,
+      "tokens_verify": 1668,
       "error": ""
     },
     {
@@ -2706,10 +2706,10 @@
       "stage1_pred_vuln": true,
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses low-level calls without checking return values, e.g., token.call(...) in WithdrawToken and _addr.call.value(...)() in WithdrawToHolder, matching UNCHECKED_CALL risk patterns. This ca",
-      "hybrid_pred_vuln": false,
-      "verify_reason": "1. Required Preconditions:\n   - The contract TokenBank is deployed and initialized by calling initTokenBank() by an address (let's call it deployer).\n   - The deployer is the initial owner.\n   - At le",
-      "time_verify": 18.987,
-      "tokens_verify": 1786,
+      "hybrid_pred_vuln": true,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"Attacker must deploy a malicious contract with a fallback function that performs reentrant calls. The attacker must be able to deposit more than ",
+      "time_verify": 12.154,
+      "tokens_verify": 1334,
       "error": ""
     },
     {
@@ -2811,9 +2811,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses address.send() without checking the return value properly in andTheWinnerIs() and getProfit(), matching the UNCHECKED_CALL pattern from the RAG context. This can cause silent failure",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n- The contract is deployed and funded with at least 3.6 ether (to pay out 1.8 ether twice).\n- The owner address is set (deployer).\n- No players currently in the game (tot ==",
-      "time_verify": 15.171,
-      "tokens_verify": 1659,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"An attacker must deploy a malicious contract capable of reentering the OddsAndEvens contract during the send() call in andTheWinnerIs(). The atta",
+      "time_verify": 15.463,
+      "tokens_verify": 1102,
       "error": ""
     },
     {
@@ -2850,9 +2850,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract performs an external call inside a loop without any gas limit or checks, matching the Denial of Service pattern from the RAG context (External call in loop). This can cause the transactio",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n- The contract `RealOldFuckMaker` is deployed at some address.\n- The address stored in `fuck` (0xc63e7b1DEcE63A77eD7E4Aeef5efb3b05C81438D) is a contract that implements the ",
-      "time_verify": 12.392,
-      "tokens_verify": 1378,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must control or influence the contract at address 0xc63e7b1DEcE63A77eD7E4Aeef5efb3b05C81438D to have a malicious fallback or giveBlo",
+      "time_verify": 6.343,
+      "tokens_verify": 911,
       "error": ""
     },
     {
@@ -2876,9 +2876,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses low-level call in the Command function without checking the return value (UNCHECKED_CALL), which can silently fail and cause unexpected behavior. Additionally, the Command function m",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract `MultiplicatorX4` is deployed by an address we call Owner.\n   - The contract holds some Ether balance, for example 10 ETH.\n   - The attacker is the Owner (",
-      "time_verify": 10.003,
-      "tokens_verify": 1324,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must be the Owner of the contract to call the Command function, as it requires msg.sender == Owner. The contract is written in Solid",
+      "time_verify": 8.781,
+      "tokens_verify": 958,
       "error": ""
     },
     {
@@ -2889,9 +2889,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The ModifierEntrancy contract uses a modifier supportsToken that calls an external contract (msg.sender) before updating state. The attack contract exploits this by re-entering airDrop() during the su",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - Deploy the `ModifierEntrancy` contract. Initially, `tokenBalance` mapping is empty, so all addresses have zero balance.\n   - Deploy the `attack` contract.\n   - The atta",
-      "time_verify": 13.424,
-      "tokens_verify": 1264,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker deploys the attack contract and then calls attack.call() with the address of the ModifierEntrancy contract. The attack contract must",
+      "time_verify": 5.952,
+      "tokens_verify": 996,
       "error": ""
     },
     {
@@ -2902,9 +2902,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses .send() for external calls to pay users and the owner without checking the return value or updating state before the call, which matches the reentrancy risk pattern of external call ",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract is deployed by an owner address (Owner).\n   - The contract has at least one unpaid entry with a payout pending.\n   - The attacker has an externally owned a",
-      "time_verify": 10.348,
-      "tokens_verify": 2400,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must have a contract capable of receiving Ether and reentering the LuckyDoubler contract during the payout send call. The contract m",
+      "time_verify": 19.519,
+      "tokens_verify": 2127,
       "error": ""
     },
     {
@@ -2915,9 +2915,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses a low-level call (msg.sender.call.value(_am)()) without checking the return value explicitly with require, which matches the UNCHECKED_CALL pattern. Additionally, the external call i",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n- The ETH_VAULT contract is deployed with a valid Log contract address.\n- The attacker has deployed a malicious contract (AttackerContract) that implements a fallback functi",
-      "time_verify": 7.472,
-      "tokens_verify": 1256,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must have deposited some ether into the ETH_VAULT contract to have a positive balance. The attacker must deploy a malicious contract",
+      "time_verify": 17.152,
+      "tokens_verify": 1017,
       "error": ""
     },
     {
@@ -2927,10 +2927,10 @@
       "stage1_pred_vuln": true,
       "stage1_conf": 0.8,
       "stage1_reason": "The contract requires 'unlocked' to be true to allow registrations, but the require(unlocked) check is placed after state updates (resolve and registeredNameRecord mappings). This means state changes ",
-      "hybrid_pred_vuln": false,
-      "verify_reason": "1. Required Preconditions:\n   - The contract is deployed and initially locked (`unlocked == false`).\n   - No names are registered yet (`resolve` and `registeredNameRecord` mappings are empty).\n   - At",
-      "time_verify": 5.772,
-      "tokens_verify": 948,
+      "hybrid_pred_vuln": true,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The contract is deployed with unlocked initially set to false (locked state). The attacker can call the register function while the contract is l",
+      "time_verify": 6.802,
+      "tokens_verify": 855,
       "error": ""
     },
     {
@@ -2940,10 +2940,10 @@
       "stage1_pred_vuln": true,
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses low-level call in the Command function without checking the return value, matching the UNCHECKED_CALL pattern which can silently fail. Additionally, in GetFreebie, the contract trans",
-      "hybrid_pred_vuln": false,
-      "verify_reason": "1. Required Preconditions:\n- The contract `Freebie` is deployed on-chain.\n- The deployer address is set as `Owner`.\n- The contract has some Ether balance (e.g., 10 ether) funded by any address.\n- An a",
-      "time_verify": 16.073,
-      "tokens_verify": 1425,
+      "hybrid_pred_vuln": true,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"Attacker deploys a malicious contract with a fallback function that reenters the Freebie contract's GetFreebie function. The attacker must send m",
+      "time_verify": 9.019,
+      "tokens_verify": 1020,
       "error": ""
     },
     {
@@ -2967,9 +2967,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The withdraw() function makes an external call to msg.sender.transfer(_dividends) before updating the contract's state variables (payoutsTo_ and referralBalance_ are updated before the call, but the t",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract StrongKek is deployed and funded with some ETH.\n   - The attacker address (EOA) has purchased tokens, so it has a positive token balance and dividends.\n   ",
-      "time_verify": 16.539,
-      "tokens_verify": 6998,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must hold tokens and have accrued dividends/referralBalance_ to withdraw. The attacker must deploy a malicious contract with a fallb",
+      "time_verify": 9.404,
+      "tokens_verify": 6452,
       "error": ""
     },
     {
@@ -2980,9 +2980,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses low-level call in the Command function without checking the return value, matching the UNCHECKED_CALL pattern which can silently fail. Additionally, in GetFreebie, the contract trans",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract WhaleGiveaway2 is deployed and holds some Ether balance (e.g., > 0).\n   - The Owner is the deployer address initially.\n   - An attacker controls an externa",
-      "time_verify": 10.859,
-      "tokens_verify": 1322,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must be able to send more than 1 ether to the GetFreebie function and have a fallback function that triggers reentrancy. The contrac",
+      "time_verify": 6.9,
+      "tokens_verify": 982,
       "error": ""
     },
     {
@@ -2993,9 +2993,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The Owned contract's execute function performs a low-level call (_dst.call.value(_value)(_data)) without checking the return value, matching the UNCHECKED_CALL vulnerability pattern from the RAG conte",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The WedIndex contract is deployed on-chain.\n   - The deployer address is the initial owner of the contract.\n   - The attacker is an external address that is not the own",
-      "time_verify": 9.041,
-      "tokens_verify": 1653,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"Attacker must be the current owner of the Owned/WedIndex contract or gain ownership by calling changeOwner and then acceptOwnership.\",\n  \"transac",
+      "time_verify": 6.642,
+      "tokens_verify": 1415,
       "error": ""
     },
     {
@@ -3006,9 +3006,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses external calls such as _customerAddress.transfer(_dividends) in the withdraw() function without updating state variables before the call, which matches the REENTRANCY risk pattern fr",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract is deployed and funded with some initial ether.\n   - The attacker address holds tokens and has accrued dividends (i.e., myDividends(true) > 0).\n   - The at",
-      "time_verify": 10.924,
-      "tokens_verify": 6966,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must have a non-zero token balance and accrued dividends to withdraw. The contract must hold sufficient Ether to pay dividends. The ",
+      "time_verify": 11.702,
+      "tokens_verify": 6756,
       "error": ""
     },
     {
@@ -3019,9 +3019,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses Solidity 0.4.11, which lacks built-in overflow checks, but it partially uses SafeMath in StandardToken while daoPOLSKAtokens uses unchecked arithmetic in transfer and transferFrom, r",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract is deployed and initialized with the owner and migrationMaster set to the deployer.\n   - The funding phase is active (`funding == true`).\n   - The owner ha",
-      "time_verify": 14.77,
-      "tokens_verify": 5198,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must be the owner of the contract or have control over the owner account to call sendTokenAw. The attacker must have a StandardToken",
+      "time_verify": 12.154,
+      "tokens_verify": 4683,
       "error": ""
     },
     {
@@ -3058,9 +3058,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract performs arithmetic operations on balances without using SafeMath or explicit overflow/underflow checks. For example, in transferFrom, balances[_to] is incremented before balances[_from] ",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract is deployed by an attacker (address Attacker) who initially holds the entire totalSupply of tokens.\n   - The totalSupply is set to a value that allows over",
-      "time_verify": 30.114,
-      "tokens_verify": 1971,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"An attacker controls an address with zero or low balance and has been approved to spend tokens from a victim address with a large balance and all",
+      "time_verify": 7.805,
+      "tokens_verify": 1328,
       "error": ""
     },
     {
@@ -3071,9 +3071,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses a low-level call in sendMoney() without checking the return value, matching the UNCHECKED_CALL pattern from the RAG context. This can cause silent failures. Additionally, the externa",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n- The SimpleWallet contract is deployed by an EOA (Externally Owned Account), which becomes the owner.\n- The contract has a positive balance (e.g., 10 ether) funded by sendi",
-      "time_verify": 7.786,
-      "tokens_verify": 1074,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must be the owner of the contract or have control over the owner's private key, since all sensitive functions are protected by onlyO",
+      "time_verify": 8.391,
+      "tokens_verify": 899,
       "error": ""
     },
     {
@@ -3084,9 +3084,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses low-level call caddress.call(...) inside a loop without checking the return value, matching the UNCHECKED_CALL pattern from the RAG context. This can cause silent failures. Additiona",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract `demo` is deployed on-chain.\n   - The `transfer` function is publicly callable by anyone.\n   - The `caddress` parameter points to an ERC20 token contract o",
-      "time_verify": 6.019,
-      "tokens_verify": 1015,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker controls at least one address in the _tos array and the corresponding token contract at caddress implements transferFrom. The token ",
+      "time_verify": 5.941,
+      "tokens_verify": 711,
       "error": ""
     },
     {
@@ -3097,9 +3097,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract lacks explicit access control on critical functions like approve and transferFrom, allowing any caller to transfer tokens on behalf of others if allowances are set. Additionally, the tran",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract is deployed, and the deployer (let's call this address `Deployer`) holds the entire totalSupply of 100,000,000,000,000,000 IFX tokens.\n   - Another user, `",
-      "time_verify": 14.637,
-      "tokens_verify": 1931,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"An attacker must have an allowance set by a victim (token holder) via approve, and the victim must have a sufficient token balance. The attacker ",
+      "time_verify": 6.781,
+      "tokens_verify": 1309,
       "error": ""
     },
     {
@@ -3110,9 +3110,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses low-level call() without proper checking of return values or handling failures. Specifically, contract_address.call(\"register\", \"CentraToken\") is called without checking the return v",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n   - The contract Centra4 is deployed at a known address.\n   - The address `contract_address = 0x96a65609a7b84e8842732deb08f56c3e21ac6f8a` is a contract that exposes:\n     -",
-      "time_verify": 12.483,
-      "tokens_verify": 1305,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must deploy or control a contract at address 0x96a65609a7b84e8842732deb08f56c3e21ac6f8a that implements the 'register' and 'transfer",
+      "time_verify": 11.37,
+      "tokens_verify": 921,
       "error": ""
     },
     {
@@ -3123,9 +3123,9 @@
       "stage1_conf": 0.9,
       "stage1_reason": "The contract uses a low-level call (msg.sender.call.value(_am)()) without proper checks and updates the user's balance only after the call succeeds. This matches the REENTRANCY pattern where external ",
       "hybrid_pred_vuln": true,
-      "verify_reason": "1. Required Preconditions:\n\n- The PENNY_BY_PENNY contract is deployed and initialized:\n  - `MinSum` is set to a non-zero value (e.g., 1 ether).\n  - `LogFile` contract is deployed and its address set i",
-      "time_verify": 10.82,
-      "tokens_verify": 1641,
+      "verify_reason": "{\n  \"exploit_constructable\": true,\n  \"preconditions\": \"The attacker must have a balance in the contract greater than or equal to MinSum and the amount they want to withdraw, and the unlockTime must ha",
+      "time_verify": 9.971,
+      "tokens_verify": 1136,
       "error": ""
     },
     {

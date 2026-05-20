@@ -1013,11 +1013,27 @@ def hybrid_decision(
             final_confidence = s1["confidence"]
             final_reasoning = f"HighConf({s1['confidence']:.2f}>={verify_threshold}), trusted"
         else:
-            # LLM says safe → passthrough (preserves TN)
-            decision_path = "validate_safe_passthrough"
-            final_vulnerable = False
-            final_confidence = s1["confidence"]
-            final_reasoning = s1["reasoning"]
+            # LLM says safe → check if Slither disagrees strongly
+            if len(filtered_high_med) >= 2:
+                # Slither found ≥2 High/Med alerts → Stage 2 re-evaluation
+                s2 = run_stage2(code, filtered_findings, s1["confidence"], llm_client)
+                if s2.get("success") and s2.get("predicted_vulnerable"):
+                    decision_path = "validate_slither_override"
+                    final_vulnerable = True
+                    final_confidence = s2["confidence"]
+                    final_reasoning = f"SafeOverride: Slither({len(filtered_high_med)} H/M) → {s2['reasoning'][:120]}"
+                    stage2_result = s2
+                    stage2_triggered += 1
+                else:
+                    decision_path = "validate_safe_passthrough"
+                    final_vulnerable = False
+                    final_confidence = s1["confidence"]
+                    final_reasoning = s1["reasoning"]
+            else:
+                decision_path = "validate_safe_passthrough"
+                final_vulnerable = False
+                final_confidence = s1["confidence"]
+                final_reasoning = s1["reasoning"]
 
     elif strategy == "slither_first":
         # ═══ Strategy D: Slither-First Informed (GPTScan-style) ═══
@@ -1098,7 +1114,7 @@ def main():
     parser = argparse.ArgumentParser(description="DmAVID Hybrid Framework")
     parser.add_argument("--strategy", choices=["ensemble", "dual_role", "evidence", "slither_first", "validate", "all"],
                         default="validate", help="Fusion strategy (default: validate)")
-    parser.add_argument("--alpha", type=float, default=0.9, help="For validate: confidence threshold; for ensemble: LLM weight")
+    parser.add_argument("--alpha", type=float, default=0.75, help="For validate: confidence threshold; for ensemble: LLM weight")
     args = parser.parse_args()
 
     strategy = args.strategy
