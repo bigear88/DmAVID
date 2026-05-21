@@ -1,0 +1,98 @@
+{
+  "experiment": "CodeBERT Length-Fair Ablation",
+  "timestamp": "2026-05-21T22:08:59.712879",
+  "arms": {
+    "D": {
+      "arm": "D",
+      "description": "純長度分類器 (無 GPU)",
+      "sub_results": [
+        {
+          "method": "Length < 1950",
+          "f1": 0.9091,
+          "tp": 25,
+          "fp": 1,
+          "tn": 19,
+          "fn": 4
+        },
+        {
+          "method": "LogReg (length)",
+          "f1": 0.8529
+        },
+        {
+          "method": "GBM (length)",
+          "f1": 0.875
+        }
+      ],
+      "best_length_only_f1": 0.9090909090909091,
+      "n_train": 194,
+      "n_test": 49
+    },
+    "E": {
+      "arm": "E",
+      "description": "隨機基線",
+      "majority_class_f1": 0.7409,
+      "random_prior_f1_mean": 0.5847,
+      "class_prior": 0.5885
+    },
+    "A": {
+      "arm": "A",
+      "description": "原版 strip_comments (reproduce 0.918)",
+      "n_total": 243,
+      "n_train": 194,
+      "n_test": 49,
+      "n_vuln": 143,
+      "n_safe": 100,
+      "length_ratio": 6.89,
+      "tp": 28,
+      "fp": 4,
+      "tn": 16,
+      "fn": 1,
+      "precision": 0.875,
+      "recall": 0.9655,
+      "f1": 0.918,
+      "f1_ci_low": 0.84,
+      "f1_ci_high": 0.9831,
+      "train_time_seconds": 10.39
+    },
+    "B": {
+      "arm": "B",
+      "description": "長度匹配 [500-10000] 子集 (n=172)",
+      "n_total": 172,
+      "n_train": 137,
+      "n_test": 35,
+      "n_vuln": 92,
+      "n_safe": 80,
+      "length_ratio": 2.92,
+      "tp": 18,
+      "fp": 2,
+      "tn": 14,
+      "fn": 1,
+      "precision": 0.9,
+      "recall": 0.9474,
+      "f1": 0.9231,
+      "f1_ci_low": 0.8275,
+      "f1_ci_high": 1.0,
+      "train_time_seconds": 6.43
+    },
+    "C": {
+      "arm": "C",
+      "description": "固定窗口 1024 chars (中間截取)",
+      "n_total": 243,
+      "n_train": 194,
+      "n_test": 49,
+      "n_vuln": 143,
+      "n_safe": 100,
+      "length_ratio": 1.29,
+      "tp": 27,
+      "fp": 1,
+      "tn": 19,
+      "fn": 2,
+      "precision": 0.9643,
+      "recall": 0.931,
+      "f1": 0.9474,
+      "f1_ci_low": 0.8814,
+      "f1_ci_high": 1.0,
+      "train_time_seconds": 10.58
+    }
+  }
+}

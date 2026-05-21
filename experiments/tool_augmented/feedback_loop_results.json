@@ -1,0 +1,1324 @@
+{
+  "experiment": "feedback_loop",
+  "timestamp": "2026-05-21T22:35:24.626692",
+  "model": "gpt-4.1-mini",
+  "baseline_f1": 0.8925,
+  "arm_d_f1": 0.8299,
+  "v4_f1": 0.903,
+  "max_rounds": 5,
+  "converged_at": null,
+  "final_f1": 0.7489,
+  "chroma_path": "/home/curtis/DmAVID/data/chromadb_feedback",
+  "rounds": [
+    {
+      "round": 1,
+      "metrics": {
+        "TP": 121,
+        "FN": 22,
+        "FP": 13,
+        "TN": 87,
+        "precision": 0.903,
+        "recall": 0.8462,
+        "F1": 0.8736,
+        "FPR": 0.13
+      },
+      "delta_f1": -0.0189,
+      "pipeline_llm_calls": 164,
+      "pipeline_tokens": 94558,
+      "errors_analyzed": 30,
+      "new_patterns_added": 30,
+      "chroma_total": 30,
+      "patterns": [
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤以為檢查 .send() 返回值即可避免拒絕服務，但忽略了單筆失敗仍會阻塞整體循環導致 DoS。",
+          "missing_knowledge": "需補充拒絕服務漏洞中，使用 .send() 並檢查返回值無法避免因單一接收方拒絕接受轉帳而導致整個批次轉帳流程被阻塞的情況，尤其是在循環發送時應採用非阻塞或分批處理策略。",
+          "is_systematic": true,
+          "pattern_category": "dos_fn",
+          "suggested_rag_entry": "[dos_fn] 使用 .send() 並檢查返回值 → 不代表安全，因為單筆失敗仍會阻塞整個循環，導致拒絕服務。正確做法是避免在循環中依賴所有轉帳成功，或採用非阻塞機制（如事件記錄、後續提款模式）以防止單一失敗影響整體流程。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統僅依賴低階呼叫函式（.call.value()、.send()）判斷重入風險，忽略了其他可能導致重入的高階呼叫方式或邏輯缺陷。",
+          "missing_knowledge": "補充重入攻擊不僅限於使用 .call.value() 或 .send()，即使未使用低階呼叫，合約中存在狀態更新順序錯誤或外部呼叫也可能導致重入漏洞，應結合邏輯流程與狀態變更分析來判斷重入風險。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] 合約未使用 .call.value()、.send() 或 .transfer() 且無明確防護機制，但存在外部呼叫且狀態更新順序錯誤 → 判定為可能存在重入漏洞。理由：重入攻擊不僅依賴低階呼叫，狀態更新前的外部呼叫同樣會被利用，故需結合邏輯流程分析而非僅依賴呼叫函式類型。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統未將 Solidity 0.4.x 版本中缺乏內建溢位保護且未使用 SafeMath 的算術運算視為高風險漏洞。",
+          "missing_knowledge": "RAG 知識庫缺少對舊版本 Solidity（0.4.x）中算術溢位風險的明確識別規則，尤其是未使用 SafeMath 且無內建溢位保護的合約算術操作應被標記為高風險漏洞。",
+          "is_systematic": true,
+          "pattern_category": "overflow_fn",
+          "suggested_rag_entry": "[overflow_fn] Solidity 0.4.x 版本合約中若存在未使用 SafeMath 且無內建溢位保護的算術運算，應判定為潛在溢位漏洞 → 因為該版本編譯器不提供自動溢位檢查，算術溢位可能導致資產錯誤計算，造成安全風險。"
+        },
+        {
+          "error_type": "FP",
+          "root_cause": "系統僅依賴呼叫方式和缺少防護標記判斷漏洞，忽略了合約邏輯中實際不存在重入風險的設計細節。",
+          "missing_knowledge": "RAG 需補充合約內部狀態變更順序與呼叫後狀態檢查等防重入設計模式，尤其是即使使用 .call.value() 且未檢查返回值，但若合約先更新狀態或無狀態改變且無外部呼叫依賴，則不構成重入風險。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] 合約使用 .call.value() 且未檢查返回值，但在外部呼叫前已更新關鍵狀態或無依賴狀態改變 → 判定為 SAFE，因為重入攻擊無法利用狀態不一致漏洞。此類設計有效防止重入，避免誤判。"
+        },
+        {
+          "error_type": "FP",
+          "root_cause": "系統誤以為 .transfer() 不會檢查返回值且存在 unchecked call 風險，忽略了 .transfer() 固有的安全性限制（2300 gas）防止重入。",
+          "missing_knowledge": "補充 .transfer() 內建的安全機制說明：.transfer() 會自動 revert 失敗交易，不會忽略返回值，且因限制 2300 gas 使重入攻擊不可行，故不需額外檢查返回值以防 unchecked call。",
+          "is_systematic": true,
+          "pattern_category": "unchecked_fp",
+          "suggested_rag_entry": "[unchecked_fp] 使用 .transfer() 進行以太幣轉帳 → 判定為安全，因為 .transfer() 會自動 revert 失敗交易且限制 2300 gas，防止重入與 unchecked call 風險，不需額外檢查返回值。"
+        },
+        {
+          "error_type": "FP",
+          "root_cause": "系統僅根據表面特徵（如未檢查 .call.value() 返回值及無防重入機制）判斷漏洞，未考慮合約邏輯或調用上下文中實際存在的防護措施。",
+          "missing_knowledge": "補充合約防重入與呼叫安全性的判斷需結合合約邏輯分析，例如：即使使用 .call.value()，若合約在呼叫前後狀態已妥善更新且無重入路徑，仍可視為安全；此外，未檢查返回值不一定導致漏洞，需結合錯誤處理邏輯判斷。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] 合約使用 .call.value() 且未檢查返回值，但合約邏輯中已妥善更新狀態且無重入路徑 → 判定為 SAFE。理由：重入漏洞需結合狀態變更與呼叫順序判斷，單純依賴調用方式與返回值檢查不足以判斷漏洞。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤以為 .transfer() 的 2300 gas 限制足以完全阻止重入攻擊，忽略了合約邏輯中可能存在的其他重入路徑或副作用。",
+          "missing_knowledge": "需補充對於 .transfer() 雖然限制了 gas，但在某些合約邏輯中仍可能因狀態更新順序錯誤或其他合約呼叫導致重入，且 .transfer() 並非萬能防護，不能單憑使用 .transfer() 就判定無重入風險。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] 僅使用 .transfer() 發送 Ether → 不可單憑 .transfer() 的 2300 gas 限制判定無重入漏洞，需結合狀態更新順序及合約邏輯判斷。因為在某些情況下，即使使用 .transfer()，仍可能透過狀態錯誤或其他合約呼叫導致重入攻擊。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統僅依賴 SafeMath 和 transfer() 使用判斷安全，忽略了合約中存在的重入漏洞或其他邏輯缺陷。",
+          "missing_knowledge": "需要補充對於重入攻擊的全面檢測知識，包括即使使用 SafeMath 和 transfer() 也可能因狀態更新順序錯誤或其他邏輯缺陷導致重入漏洞的判斷規則。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] 合約使用 SafeMath 並非重入漏洞安全保證 → 即使使用 SafeMath 和 transfer()，若狀態更新順序錯誤或缺乏 ReentrancyGuard，仍可能存在重入漏洞。判斷時需綜合分析狀態變更與外部呼叫順序，避免誤判為安全。"
+        },
+        {
+          "error_type": "FP",
+          "root_cause": "系統只依賴未檢查 .call.value() 返回值判斷漏洞，忽略了合約內部邏輯已妥善處理該返回值或不依賴該調用結果。",
+          "missing_knowledge": "補充合約內部對 .call.value() 返回值的實際使用情況分析，包含返回值是否被明確檢查或不影響合約安全的場景，避免單純存在 .call.value() 且未檢查返回值即判定為漏洞。",
+          "is_systematic": true,
+          "pattern_category": "unchecked_fp",
+          "suggested_rag_entry": "[unchecked_fp] 合約中存在 .call.value() 調用且未直接檢查返回值 → 若合約邏輯中有其他方式妥善處理該調用結果（如事件紀錄、後續狀態檢查等），則不應視為漏洞；判斷需結合合約整體邏輯，避免單純依賴返回值檢查判斷漏洞，減少誤報。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統過度依賴.transfer()的2300 gas限制來判斷無重入風險，忽略了合約內部邏輯可能因狀態更新順序錯誤導致重入漏洞。",
+          "missing_knowledge": "需要補充：即使使用.transfer()，若合約在發送以太前未先更新狀態，仍可能遭受重入攻擊；重入防護不應僅依賴.transfer()的gas限制，而應結合狀態變更順序及鎖定機制判斷。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] 合約僅使用.transfer()發送以太且無ReentrancyGuard → 不可單憑.transfer()判斷無重入風險，需檢查狀態更新順序及是否存在重入鎖定機制；因.transfer()雖限制gas，但若狀態更新在發送後，仍可能被重入利用。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤以為使用 .transfer() 就能完全防止重入攻擊，忽略了合約中其他可被重入利用的邏輯漏洞。",
+          "missing_knowledge": "需補充重入攻擊判斷不僅依賴轉帳方式（如 .transfer()），還要分析合約中狀態變更與外部呼叫的順序及邏輯，因為即使使用 .transfer()，若狀態更新在外部呼叫之後，仍可能被重入利用。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] 使用 .transfer() 並不保證免疫重入攻擊 → 判斷重入漏洞時，必須分析狀態變更與外部呼叫的先後順序。即使 .transfer() 限制 gas，若狀態更新在外部呼叫之後，攻擊者仍可利用重入漏洞。故不能僅依賴轉帳方法判斷重入安全性。"
+        },
+        {
+          "error_type": "FP",
+          "root_cause": "系統誤將使用 .transfer() 且有返回值檢查的外部呼叫判為未檢查呼叫，且未考慮合約設計已避免 DoS 風險。",
+          "missing_knowledge": "補充 Solidity 0.4.x 版本中 .transfer() 的安全特性及其對重入攻擊和 DoS 風險的防護效果，並明確區分 .send() 和 .transfer() 返回值檢查的安全意義；同時納入合約中已存在的防護機制（SafeMath、onlyOwner、返回值檢查）如何降低風險的判斷邏輯。",
+          "is_systematic": true,
+          "pattern_category": "unchecked_fp",
+          "suggested_rag_entry": "[unchecked_fp] 使用 .transfer() 進行以太轉帳且有返回值檢查 → 判定為安全。理由：Solidity 0.4.x 版本中 .transfer() 限制 2300 gas，天然防止重入攻擊，且若合約有明確檢查 .send() 返回值及使用 SafeMath、onlyOwner 等防護機制，則外部呼叫風險已大幅降低，無需視為未檢查呼叫漏洞。"
+        },
+        {
+          "error_type": "FP",
+          "root_cause": "系統誤將使用 .transfer() 且有檢查返回值的安全模式誤判為存在 unchecked call 與 DoS 風險。",
+          "missing_knowledge": "需要補充對使用 .transfer() 發送以太且有檢查返回值的合約，因其內建 2300 gas 限制且會自動 revert，實際上已防範重入與未檢查呼叫風險，且 DoS 風險需結合業務邏輯判斷，非單純由 .transfer() 使用判定。",
+          "is_systematic": true,
+          "pattern_category": "unchecked_fp",
+          "suggested_rag_entry": "[unchecked_fp] 使用 .transfer() 發送以太且有檢查返回值 → 判定為安全，因 .transfer() 內建 2300 gas 限制且失敗會 revert，避免重入與未檢查呼叫問題；除非業務邏輯另有漏洞，否則不應標記為 unchecked call 或 DoS。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統未能識別 Solidity 0.4.x 版本中缺乏內建溢位保護且未使用 SafeMath 導致的整數溢位風險。",
+          "missing_knowledge": "RAG 知識庫缺少對舊版本 Solidity（<0.8）中算術運算無內建溢位檢查的明確規則，尤其是未使用 SafeMath 且無其他防護機制時存在高風險的判斷依據。",
+          "is_systematic": true,
+          "pattern_category": "overflow_fn",
+          "suggested_rag_entry": "[overflow_fn] Solidity 版本低於0.8且合約中存在算術運算，且未使用 SafeMath 或其他溢位防護機制 → 判定為高風險溢位漏洞，因為該版本不具備內建溢位檢查，易導致整數溢位攻擊。"
+        },
+        {
+          "error_type": "FP",
+          "root_cause": "系統僅依賴合約中缺乏常見防護機制的表面特徵判斷漏洞，未深入分析合約邏輯及資金流向，導致誤判。",
+          "missing_knowledge": "合約即使未使用 SafeMath、ReentrancyGuard 或 .transfer()，仍可能透過設計限制資金流出路徑或無外部呼叫而安全，RAG 需補充合約邏輯層面判斷資金流向與外部呼叫風險的知識。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] 合約未使用常見防護機制（SafeMath、ReentrancyGuard、.transfer()）且使用舊版Solidity → 若合約無外部呼叫或資金流出限制嚴格，則不一定存在重入或溢位風險；正確判斷需結合合約邏輯分析資金流向與外部呼叫情況，避免單純依賴防護機制存在與否判斷漏洞。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統僅依賴是否使用 .call.value()、.send() 或 .transfer() 來判斷 UNCHECKED_CALL，忽略了其他低階呼叫或外部呼叫未檢查返回值的情況。",
+          "missing_knowledge": "RAG 知識庫需補充所有可能導致 UNCHECKED_CALL 的外部呼叫類型，不僅限於 .call.value()、.send()、.transfer()，還應涵蓋所有低階呼叫（如 .call()、.delegatecall()）及任何未檢查返回值的外部函式呼叫，尤其在 Solidity 0.4.x 版本中更為重要。",
+          "is_systematic": true,
+          "pattern_category": "unchecked_fp",
+          "suggested_rag_entry": "[unchecked_fp] Solidity 0.4.x 合約中所有外部呼叫（包括 .call(), .delegatecall(), 直接外部函式呼叫）若未檢查返回值，均存在 UNCHECKED_CALL 風險 → 正確判斷應涵蓋所有外部呼叫類型，因為 .transfer()、.send()、.call.value() 只是部分情況，忽略其他呼叫會導致漏報漏洞。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤以為使用.transfer()且有檢查返回值即完全防止重入及時間操控，忽略了合約邏輯中仍可能依賴可被操控的區塊時間或存在其他未防護的重入路徑。",
+          "missing_knowledge": "RAG需補充合約中即使使用.transfer()也可能因合約邏輯依賴block.timestamp或block.number導致時間操控漏洞，以及.transfer()雖限制2300 gas但無法涵蓋所有重入風險，需結合邏輯層面分析重入可能性。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] 使用.transfer()且檢查返回值並非絕對防止重入漏洞 → 合約仍可能因邏輯依賴區塊時間或未封鎖所有重入路徑而存在重入風險，需結合時間依賴判斷及多路徑重入分析才能正確判斷安全性。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤以為 .transfer() 的 2300 gas 限制足以防止所有重入攻擊，忽略了 Solidity 0.4.x 版本中仍可能被繞過的風險。",
+          "missing_knowledge": "補充 Solidity 0.4.x 版本中 .transfer() 雖有 2300 gas 限制，但仍可能因合約邏輯或外部合約 fallback 函數複雜而被利用重入，且算術溢位風險與重入攻擊可能交互影響，需綜合判斷。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x 合約使用 .transfer() 雖有 2300 gas 限制 → 不可單純依賴此限制防止重入攻擊，因舊版編譯器及複雜 fallback 邏輯仍可能被利用，需搭配 ReentrancyGuard 或其他防護措施。理由：0.4.x 版本無內建防重入保護，且算術溢位可能導致狀態錯亂，增加攻擊面。"
+        },
+        {
+          "error_type": "FP",
+          "root_cause": "系統僅根據存在 .call.value() 且缺乏典型防護機制判斷重入風險，忽略了合約邏輯中實際無重入攻擊路徑或狀態變更順序安全性。",
+          "missing_knowledge": "補充合約內部邏輯分析，包含狀態變量更新順序、重入攻擊路徑判斷及 onlyOwner 限制範圍，避免單純依賴呼叫方式判斷重入漏洞。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] 合約使用 .call.value() 但函數內部狀態變更先於外部呼叫，且有限制呼叫者（如 onlyOwner），可視為安全，避免誤判重入漏洞 → 判斷重入漏洞時需結合狀態更新順序與存取控制，非僅依賴呼叫方式與防護機制存在與否。"
+        },
+        {
+          "error_type": "FP",
+          "root_cause": "系統誤判所有未使用 onlyOwner 修飾符的函數均為敏感函數，忽略了合約邏輯中這些函數實際無敏感操作。",
+          "missing_knowledge": "RAG 需補充合約內函數敏感性判斷的上下文分析知識，包含函數是否實際修改關鍵狀態或資產，僅依賴 onlyOwner 修飾符不足以判定 ACCESS_CONTROL 漏洞。",
+          "is_systematic": true,
+          "pattern_category": "access_control_fp",
+          "suggested_rag_entry": "[access_control_fp] 合約中僅部分函數使用 onlyOwner 修飾符，但未使用修飾符的函數不一定敏感 → 判斷 ACCESS_CONTROL 漏洞時需結合函數內部邏輯判斷是否涉及關鍵狀態變更或資產操作，避免僅憑修飾符存在與否誤判，因為部分函數可能為只讀或非敏感操作。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統未能識別合約中依賴區塊時間戳（block.timestamp）作為關鍵條件的邏輯，導致忽略了時間操控風險。",
+          "missing_knowledge": "RAG 知識庫缺少對於使用 block.timestamp 或 now 作為限制條件（如 crowdsale 開始與結束時間判斷）的合約模式的識別規則，及其可能被礦工微調時間以操控合約行為的風險說明。",
+          "is_systematic": true,
+          "pattern_category": "other",
+          "suggested_rag_entry": "[other] 使用 block.timestamp 或 now 作為合約關鍵時間判斷條件 → 判定為存在 TIME_MANIPULATION 風險，因礦工可微調區塊時間影響合約行為，需額外防護或設計避免依賴嚴格時間判斷。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統只依賴 transfer() 的使用及 SafeMath 等表面防護，忽略了 Solidity 0.4.x 版本中 transfer() 固有的 gas 限制可能導致的拒絕服務漏洞。",
+          "missing_knowledge": "RAG 需補充 Solidity 0.4.x 版本中 .transfer() 固有的 2300 gas 限制會導致接收合約 fallback 函數無法執行複雜邏輯，可能引發拒絕服務攻擊的知識，且此問題不會被 SafeMath 或 onlyOwner 等防護機制覆蓋。",
+          "is_systematic": true,
+          "pattern_category": "dos_fn",
+          "suggested_rag_entry": "[dos_fn] 使用 .transfer() 於 Solidity 0.4.x 版本 → 判定為 vulnerable。因為 .transfer() 固有的 2300 gas 限制會導致接收合約無法執行複雜邏輯，可能被惡意合約利用造成拒絕服務攻擊。SafeMath、onlyOwner 等防護無法避免此問題。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統僅依賴 onlyOwner 修飾符判斷存取控制，忽略了多重擁有者合約中多重簽名邏輯未被正確驗證。",
+          "missing_knowledge": "多重擁有者（multiowned）合約中，存取控制不僅依賴 onlyOwner，還需檢查多重簽名機制是否正確實作及強制執行，否則單一 onlyOwner 修飾符無法防止未授權操作。",
+          "is_systematic": true,
+          "pattern_category": "access_control_fp",
+          "suggested_rag_entry": "[access_control_fp] 多重擁有者合約（multiowned）常見特徵包括多重簽名機制控制敏感操作，僅使用 onlyOwner 修飾符不足以保障存取控制安全。正確判斷需檢查多重簽名邏輯是否完整且強制執行，因為單一 onlyOwner 修飾符可能被繞過，導致未授權存取。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "錯誤假設 .transfer() 內建 2300 gas 限制能完全防止重入攻擊，忽略了 Solidity 0.4.x 版本中該限制可被繞過或不適用的風險。",
+          "missing_knowledge": "補充 Solidity 0.4.x 版本中 .transfer() 並非絕對安全，2300 gas 限制可能被繞過，且重入攻擊仍有可能發生，尤其在缺乏 ReentrancyGuard 的情況下；同時指出 .transfer() 並非唯一防止重入的機制，需結合狀態變量檢查或鎖定機制。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x 合約使用 .transfer() 進行以太轉帳 → 不可單純依賴 2300 gas 限制防止重入攻擊，因為在該版本中限制可被繞過或不適用，需搭配 ReentrancyGuard 或狀態變量鎖定機制；因此判斷重入漏洞時，不能僅以是否使用 .transfer() 作為安全依據。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統只依賴.transfer()存在即判定安全，忽略了0.4.x版本無內建overflow保護且存在算術溢位風險。",
+          "missing_knowledge": "需要補充Solidity 0.4.x版本缺乏內建算術溢位保護，且僅使用.transfer()無法防止算術溢位或其他非重入漏洞的知識。",
+          "is_systematic": true,
+          "pattern_category": "overflow_fn",
+          "suggested_rag_entry": "[overflow_fn] Solidity 0.4.x版本合約使用算術運算且無SafeMath，僅依賴.transfer()防護不足 → 判斷為VULNERABLE，因為0.4.x不具備內建overflow保護，算術溢位風險高，可能導致資金錯誤或邏輯錯誤。"
+        },
+        {
+          "error_type": "FP",
+          "root_cause": "系統誤將 .transfer() 視為不檢查返回值的呼叫，忽略了其內建的失敗自動 revert 機制。",
+          "missing_knowledge": "補充 .transfer() 在 Solidity 0.4.x 版本中會自動 revert 交易，無需額外檢查返回值，因此不構成 UNCHECKED_CALL 風險。",
+          "is_systematic": true,
+          "pattern_category": "unchecked_fp",
+          "suggested_rag_entry": "[unchecked_fp] 使用 .transfer() 發送以太幣 → 判定為安全，因為 .transfer() 在 Solidity 0.4.x 版本中會自動 revert 失敗交易，不會忽略返回值，故不屬於未檢查呼叫（UNCHECKED_CALL）漏洞。"
+        },
+        {
+          "error_type": "FP",
+          "root_cause": "系統誤將使用 .transfer() 的安全呼叫視為未檢查呼叫，忽略了 .transfer() 內建的失敗自動回退機制。",
+          "missing_knowledge": "需要補充 .transfer() 在 Solidity 0.4.x 中會自動 revert 失敗交易，不需額外檢查返回值，且其 2300 gas 限制天然防止重入攻擊，因此使用 .transfer() 的呼叫不應被判定為 UNCHECKED_CALL 或 REENTRANCY 漏洞。",
+          "is_systematic": true,
+          "pattern_category": "unchecked_fp",
+          "suggested_rag_entry": "[unchecked_fp] 使用 .transfer() 進行以太幣轉帳 → 判定為安全呼叫，因 .transfer() 在 Solidity 0.4.x 版本會自動 revert 失敗交易且限制 gas 防止重入，無需額外檢查返回值，故不應標記為 UNCHECKED_CALL 或 REENTRANCY 漏洞。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統過度依賴.transfer()的2300 gas限制來判斷無重入風險，忽略了.transfer()仍可能被繞過或不適用於所有重入場景。",
+          "missing_knowledge": "需補充.transfer()雖限制2300 gas但無法完全防止重入攻擊，尤其在低版本Solidity及複雜合約邏輯中，且時間操控漏洞需檢查所有依賴區塊時間的邏輯，不能只看是否直接使用block.timestamp或block.number。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] 僅使用.transfer()發送Ether → 不保證無重入漏洞，因2300 gas限制可被繞過或合約邏輯複雜時仍有重入風險，必須結合狀態鎖(ReentrancyGuard)或其他防護措施判斷。時間操控漏洞判斷需全面分析合約對區塊時間的依賴，避免僅依賴表面使用情況做出錯誤判斷。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤以為 .transfer() 的 2300 gas 限制完全防止重入，忽略了合約內部狀態更新順序錯誤導致的重入漏洞風險。",
+          "missing_knowledge": "需補充合約中即使使用 .transfer() 也可能因狀態更新順序錯誤而導致重入攻擊的判斷規則，尤其是發送以太幣前未先更新餘額或狀態的情況。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] 使用 .transfer() 但未先更新狀態 → 判定為 vulnerable。理由：.transfer() 雖限制 2300 gas，無法執行複雜呼叫，但若合約在轉帳前未更新餘額或狀態，攻擊者可利用 fallback 函式重入，造成重入漏洞。故需檢查狀態更新順序，而非僅依賴 .transfer() 的 gas 限制。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤以為使用.transfer()即可完全防止重入，但實際上.solidity 0.4.x版本中.transfer()的2300 gas限制不足以阻止所有重入攻擊。",
+          "missing_knowledge": "Solidity 0.4.x版本中.transfer()的2300 gas限制並非絕對安全，攻擊者可利用合約邏輯或低層呼叫繞過此限制導致重入攻擊，且在無ReentrancyGuard等防護下仍有風險；此外，.send()雖有返回值檢查，但不代表所有呼叫都安全，需結合狀態變更順序及防重入設計評估風險。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x版本合約使用.transfer()進行以太幣轉帳 → 不可單純依賴.transfer()的2300 gas限制防止重入攻擊，因為攻擊者仍可透過合約邏輯或低層呼叫繞過限制導致重入；正確判斷需考慮Solidity版本、呼叫順序、狀態更新及是否有明確防重入機制（如ReentrancyGuard），避免誤判為安全。"
+        }
+      ]
+    },
+    {
+      "round": 2,
+      "metrics": {
+        "TP": 61,
+        "FN": 82,
+        "FP": 2,
+        "TN": 98,
+        "precision": 0.9683,
+        "recall": 0.4266,
+        "F1": 0.5922,
+        "FPR": 0.02
+      },
+      "delta_f1": -0.2814,
+      "pipeline_llm_calls": 164,
+      "pipeline_tokens": 144336,
+      "errors_analyzed": 30,
+      "new_patterns_added": 30,
+      "chroma_total": 60,
+      "patterns": [
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤判以為 .call.value() 在 Solidity 0.4.19 版本中會自動 revert 且限制 gas，實際上不會，導致錯誤判定為 SAFE。",
+          "missing_knowledge": "RAG 知識庫缺少對 Solidity 0.4.x 版本中 .call.value() 調用特性及其重入風險的明確描述，尤其是該版本不會自動 revert 且不限制 gas，容易導致重入攻擊，且未使用任何防護機制時必須判定為 vulnerable。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x 版本合約使用 .call.value() 進行以太幣轉帳且未採用 ReentrancyGuard、checks-effects-interactions 模式或檢查返回值 → 判定為 VULNERABLE，因為該調用不限制 gas 且不會自動 revert，存在重入攻擊風險。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤判以為使用 .transfer() 可防重入，實際合約使用不安全的 .call.value() 且無防護機制。",
+          "missing_knowledge": "需補充 Solidity 0.4.x 版本中 .call.value() 不限制 gas，存在重入風險，且 .transfer() 與 .call.value() 差異及其安全性判斷標準，避免僅以版本判斷防護有效性。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x 合約使用 .call.value() 進行以太幣轉帳且無 ReentrancyGuard 或其他防護機制 → 判定為存在重入漏洞，因 .call.value() 不限制 gas，易被重入攻擊，不能僅依賴 Solidity 版本或假設使用 .transfer() 來防護。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤以為合約使用了.transfer()且其失敗會自動 revert，忽略了實際使用的是.call.value()且未檢查返回值，導致重入和未檢查呼叫漏洞被漏報。",
+          "missing_knowledge": "需補充 Solidity 0.4.x 版本中 .call.value() 調用的風險，尤其是在未檢查返回值且無防重入保護時易受重入攻擊，且 .transfer() 與 .call.value() 的差異及其安全性影響。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x 合約中使用 .call.value() 進行以太轉帳且未檢查返回值，且無 ReentrancyGuard 或其他防護機制 → 判定為 Vulnerable。理由：.call.value() 不限制 gas，且失敗不會自動 revert，若未檢查返回值，攻擊者可利用重入漏洞竊取資金。與 .transfer() 不同，後者限制 2300 gas 且失敗會 revert，能有效防止重入攻擊。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統錯誤地將使用 .transfer() 的呼叫視為完全安全，忽略了 Solidity 0.4.x 版本中 .transfer() 可能因受限 gas 導致失敗且未被正確處理的風險。",
+          "missing_knowledge": "在 Solidity 0.4.x 版本中，雖然 .transfer() 會在失敗時 revert，但若合約業務邏輯依賴多重呼叫或存在其他未檢查的外部呼叫，單純依賴 .transfer() 並非萬無一失，且 .transfer() 的 2300 gas 限制可能導致某些合約無法接收款項，造成潛在 DoS 或邏輯錯誤，需結合業務邏輯判斷。",
+          "is_systematic": true,
+          "pattern_category": "unchecked_fp",
+          "suggested_rag_entry": "[unchecked_fp] Solidity 0.4.x 中使用 .transfer() 發送以太幣 → 判斷時需考慮 .transfer() 內建的 2300 gas 限制及可能導致的失敗情況，不能單純認為無需檢查返回值即安全；應結合業務邏輯及其他呼叫狀況綜合判斷，避免誤判為安全。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤以為合約中使用的 .call.value() 是用於轉帳且未檢查返回值，實際上合約使用的是 .transfer()，且 .call.value() 可能用於非轉帳呼叫，導致誤判。",
+          "missing_knowledge": "需要補充 Solidity 0.4.x 版本中 .transfer() 與 .call.value() 的區別及其安全性，特別是 .call.value() 不一定用於轉帳且未必存在未檢查返回值的風險，以及 .transfer() 在 0.4.x 版本中自帶 revert 機制和 2300 gas 限制可防止重入攻擊。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x 合約中若使用 .transfer() 進行以太轉帳，因其內建 2300 gas 限制及失敗自動 revert 機制，故不應判定為存在重入風險；同時 .call.value() 可能用於非轉帳呼叫，若未檢查返回值不一定構成 UNCHECKED_CALL 漏洞，判斷時需結合上下文確認是否為以太轉帳行為。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤以為使用 .transfer() 可完全避免重入及 DoS，忽略了業務邏輯層面因轉帳失敗導致的 Denial of Service 風險。",
+          "missing_knowledge": "需要補充 Solidity 0.4.x 中 .transfer() 雖然自動 revert 且限制 2300 gas，但仍可能因接收方合約消耗超過限制導致轉帳失敗，進而造成業務邏輯層面的 Denial of Service，且此類 DoS 不屬於未檢查呼叫漏洞，應區分技術層與業務層風險。",
+          "is_systematic": true,
+          "pattern_category": "dos_fn",
+          "suggested_rag_entry": "[dos_fn] 使用 Solidity 0.4.x 的 .transfer() 發送以太幣 → 判斷需區分技術層面與業務層面風險：雖然 .transfer() 會自動 revert 且限制 2300 gas，有效防止重入攻擊及未檢查呼叫，但若接收方合約消耗超過 2300 gas 導致轉帳失敗，會造成 Denial of Service（業務邏輯層面），此風險不應被誤判為安全，需在分析中明確標示此類 DoS 風險，避免誤判為 SAFE。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤以為 .transfer() 可完全防止重入，但忽略了錯誤的 constructor 名稱導致初始化失敗，合約狀態未正確設置，產生安全風險。",
+          "missing_knowledge": "RAG 需補充錯誤 constructor 名稱會導致合約初始化函數變成普通公開函數，造成合約所有權未被正確設定，進而引發安全漏洞，即使使用 .transfer() 也無法防止此類錯誤。",
+          "is_systematic": true,
+          "pattern_category": "other",
+          "suggested_rag_entry": "[other] 錯誤的 constructor 名稱導致初始化函數成為公開函數 → 判定為 Wrong Constructor 漏洞，因為合約所有權未被正確設置，攻擊者可任意調用初始化函數取得控制權，造成安全風險。即使合約使用 .transfer() 防止重入，錯誤 constructor 仍會導致嚴重漏洞。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統錯誤地將使用 .transfer() 的合約視為無重入風險，忽略了 .transfer() 仍可能因接收方 fallback 函數邏輯導致重入。",
+          "missing_knowledge": "RAG 知識庫缺少對 Solidity 0.4.x 中 .transfer() 雖有 2300 gas 限制但仍可能被重入利用的案例與條件說明，及其防護不足的情況說明。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x 合約使用 .transfer() → 不可單純依賴 .transfer() 的 2300 gas 限制防止重入，因為接收方 fallback 函數仍可執行有限邏輯導致重入攻擊。正確判斷需結合狀態更新順序與其他防護措施，避免誤判為安全。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統未能正確結合多項風險指標判斷，導致誤判含有明顯重入與未檢查呼叫漏洞的合約為安全。",
+          "missing_knowledge": "RAG知識庫缺少對於Solidity 0.4.x版本中使用.call.value()且無防護機制（如ReentrancyGuard、onlyOwner）時，重入攻擊及未檢查呼叫風險的明確規則，尤其在未檢查.send()返回值且無任何防護措施時應直接判定為VULNERABLE。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x合約中存在.call.value()調用且無ReentrancyGuard、onlyOwner等防護機制，且未檢查.send()返回值 → 判定為VULNERABLE，因為.call.value()不限制gas，易被重入攻擊利用，且未檢查返回值屬於Unchecked Call漏洞，缺乏防護即存在重大安全風險。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統未將 Solidity 0.4.x 版本中缺乏內建溢位保護且未使用 SafeMath 的算術運算視為高風險漏洞。",
+          "missing_knowledge": "RAG 知識庫缺少對舊版本 Solidity（0.4.x）中算術溢位風險的明確識別規則，尤其是未使用 SafeMath 且無內建溢位保護的合約算術操作應被標記為高風險漏洞。",
+          "is_systematic": true,
+          "pattern_category": "overflow_fn",
+          "suggested_rag_entry": "[overflow_fn] Solidity 0.4.x 版本合約中若存在未使用 SafeMath 且無內建溢位保護的算術運算，應判定為高風險溢位漏洞 → 因為該版本編譯器不自動檢查溢位，算術錯誤可能導致資產損失或邏輯錯誤。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤將含有 .call.value() 的合約判定為安全，未充分考慮該呼叫未檢查返回值且無防護機制的重入風險。",
+          "missing_knowledge": "RAG 知識庫缺少對 Solidity 0.4.x 版本中 .call.value() 呼叫若未檢查返回值且無防護機制，存在重入攻擊與未檢查呼叫漏洞的明確規則與判斷依據。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x 合約中若存在 .call.value() 呼叫且未檢查返回值，且合約未實施任何重入防護（如 ReentrancyGuard、checks-effects-interactions 模式等），則該呼叫存在重入攻擊風險，應標記為 VULNERABLE。理由：.call.value() 不同於 .transfer()，不會自動限制 gas 或 revert，若未檢查返回值且無防護，攻擊者可利用重入漏洞竊取資金或造成狀態錯亂。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統僅根據是否有狀態更新判斷重入風險，未深入分析外部呼叫前後狀態變更的具體邏輯。",
+          "missing_knowledge": "需要補充 Solidity 0.4.x 中使用 .call.value() 進行以太幣轉帳時，若外部呼叫前後狀態更新不當，仍會導致重入漏洞，且無防護機制（如 ReentrancyGuard）時風險極高；此外，應強調 .call.value() 不具備 2300 gas 限制，容易被重入利用。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x 合約使用 .call.value() 轉帳且無 ReentrancyGuard 或狀態更新保護 → 即使合約有狀態更新，若更新順序錯誤或不完整，仍存在重入風險；因 .call.value() 不限制 gas，攻擊者可重入合約，導致資金被多次提領。判斷重入漏洞需深入分析狀態更新邏輯，不能僅依賴簡單存在狀態更新即判定安全。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統未能正確識別.sol 0.4.x版本中.call.value()未檢查返回值且無防護機制即存在重入與未檢查呼叫風險。",
+          "missing_knowledge": "補充Solidity 0.4.x版本中.call.value()的gas傳遞特性及返回值必須檢查，且在無ReentrancyGuard或其他防護機制時易導致重入攻擊與unchecked call漏洞。",
+          "is_systematic": true,
+          "pattern_category": "unchecked_fp",
+          "suggested_rag_entry": "[unchecked_fp] Solidity 0.4.x版本合約中使用.call.value()進行以太幣轉帳，若未檢查返回值且無重入防護機制（如ReentrancyGuard），即存在重入攻擊與未檢查呼叫漏洞，應嚴格檢查返回值並採用防重入措施以確保安全。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統未正確識別 .call.value() 返回值未檢查且缺乏防護機制的重入風險，誤判為安全。",
+          "missing_knowledge": "RAG 知識庫需補充關於 Solidity 0.4.x 版本中 .call.value() 調用若未檢查返回值且無防護機制（如 ReentrancyGuard、onlyOwner 等）即存在重入攻擊風險的明確規則，並區分 .transfer() 與 .call.value() 的安全性差異。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x 合約中使用 .call.value() 進行以太轉賬且未檢查返回值，且缺乏 ReentrancyGuard 或類似防護機制 → 判定為 VULNERABLE，因 .call.value() 不限制 gas 且未檢查返回值會導致重入攻擊風險；相較之下 .transfer() 受 2300 gas 限制較安全。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統過度依賴 transfer() 的 2300 gas 限制來判斷重入風險，忽略了合約邏輯中其他可能導致重入的因素。",
+          "missing_knowledge": "transfer() 雖然限制 2300 gas 並自動 revert，但在某些 Solidity 版本或特定合約邏輯下，仍可能存在重入風險，尤其當狀態更新順序不當或合約內部有其他外部呼叫時，不能單純以 transfer() 來判斷安全性，需綜合考慮狀態更新與外部呼叫的先後順序及合約邏輯。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] 使用 transfer() 進行以太幣轉帳的合約 → 不應單純依賴 transfer() 的 2300 gas 限制判斷重入安全性，必須結合狀態變數更新順序與合約邏輯分析；transfer() 限制雖能降低重入風險，但若狀態更新在外部呼叫之後或合約中有其他外部呼叫，仍可能遭受重入攻擊。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤以為使用 .transfer() 即可完全防止重入與拒絕服務，忽略了業務邏輯依賴轉帳成功的風險。",
+          "missing_knowledge": "需補充 .transfer() 雖然有 2300 gas 限制可防止重入，但若業務邏輯依賴轉帳成功，接收方拒絕接收會導致拒絕服務，且 .transfer() 失敗會 revert 可能造成合約不可用，這是業務層面的漏洞，不是語言層面的安全保護；此外，重入攻擊不僅限於呼叫外部合約執行代碼，也可能因 revert 導致資金鎖死，應納入判斷範圍。",
+          "is_systematic": true,
+          "pattern_category": "dos_fn",
+          "suggested_rag_entry": "[dos_fn] 使用 .transfer() 發送以太幣 → 判斷拒絕服務漏洞時，需考慮業務邏輯是否依賴轉帳成功；.transfer() 失敗會 revert，可能導致合約資金鎖死或功能不可用，構成拒絕服務漏洞，故不能單純以 .transfer() 存在即判定安全。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統未考慮合約中存在其他防禦重入或未檢查呼叫的邏輯，僅以 call.value() 使用及缺少標準防護機制判斷漏洞。",
+          "missing_knowledge": "補充合約中可能存在非標準或自訂的重入防禦機制（如狀態變量檢查、鎖定邏輯）以及對 call.value() 返回值未檢查但仍安全的特殊設計模式的識別能力。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] 合約使用 call.value() 但未使用 ReentrancyGuard 或 SafeMath，且未檢查返回值，若合約內部有明確狀態變量更新或自訂鎖定邏輯防止重入，則不應判定為漏洞 → 正確判斷需結合合約邏輯分析，避免單純依賴標準防護機制判斷重入漏洞，因部分合約透過自訂狀態控制達成防禦。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統僅依賴 SafeMath 和算術檢查，忽略了合約中可能存在的重入漏洞或其他邏輯缺陷。",
+          "missing_knowledge": "缺少對重入攻擊、轉帳函數使用模式（非僅.transfer()）、以及合約邏輯漏洞的檢測規則，尤其是在沒有 ReentrancyGuard 且使用非安全轉帳方式時的風險評估。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] 合約使用 SafeMath 並非代表無重入風險 → 即使有 SafeMath，若合約未使用 ReentrancyGuard 且存在非 .transfer() 的轉帳調用，仍可能遭受重入攻擊，需結合呼叫模式與狀態變更順序判斷。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統未能正確識別合約中缺乏防護機制且使用 .call.value() 導致的重入及 unchecked call 風險。",
+          "missing_knowledge": "缺少對 Solidity 0.4.x 版本中 .call.value() 調用若未檢查返回值且無任何防護機制（如 ReentrancyGuard 或狀態變更順序控制）即存在重入及 unchecked call 漏洞的明確規則。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x 合約使用 .call.value() 進行以太轉帳，且未檢查返回值且無任何防護機制（如 ReentrancyGuard、onlyOwner、手動狀態變更順序控制）→ 判定為 VULNERABLE，因為此類調用不限制 gas 且易被重入攻擊利用，必須嚴格檢查返回值並採取防護措施。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統未能正確識別 Solidity 0.4.x 版本中 .call.value() 不限制 gas 且未檢查返回值的高風險特性，導致誤判為 SAFE。",
+          "missing_knowledge": "補充 Solidity 0.4.x 版本中 .call.value() 調用不限制 gas 且返回值需檢查的安全風險，並強調缺乏 ReentrancyGuard、防護機制及未檢查返回值時存在重入攻擊和未檢查呼叫漏洞。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x 合約中使用 .call.value() 進行以太幣轉帳且未檢查返回值，且無 ReentrancyGuard 或其他防護機制 → 判定為 VULNERABLE。因 .call.value() 不限制 gas，攻擊者可利用重入攻擊，且未檢查返回值導致未檢查呼叫漏洞。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統未能正確識別 .call.value() 的重入風險，誤判為安全。",
+          "missing_knowledge": "需補充 .call.value() 在 Solidity 0.4.x 版本中不具備 2300 gas 限制，容易被重入攻擊利用，且缺乏 ReentrancyGuard 或其他防護機制時應判定為 vulnerable。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] 使用 .call.value() 進行以太轉帳且未使用 ReentrancyGuard、.transfer() 或檢查返回值 → 判定為 vulnerable。理由：.call.value() 不限制 gas，攻擊者可利用重入漏洞反覆調用，造成資金被重複提領。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "誤以為 Solidity 0.4.x 版本中 .transfer() 的 2300 gas 限制能完全防止所有重入攻擊。",
+          "missing_knowledge": "Solidity 0.4.x 版本中 .transfer() 雖限制 2300 gas，但仍可能因合約邏輯設計缺陷或外部合約 fallback 函數異常導致重入攻擊，且 Access Control 僅靠 onlyOwner 修飾符不足以防止所有權限繞過風險。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x 版本中使用 .transfer() 進行以太幣轉帳 → 不可單純依賴 2300 gas 限制防止重入攻擊，因為合約邏輯缺陷或外部合約 fallback 函數異常仍可能觸發重入；需搭配狀態變量檢查或 ReentrancyGuard 等防護措施。Access Control 僅靠 onlyOwner 修飾符不足以防止所有權限繞過，應結合多層權限檢查與事件監控。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤以為使用 .transfer() 即可完全防範重入與低階呼叫風險，忽略了 delegatecall 可能引入的信任問題與算術溢位風險。",
+          "missing_knowledge": "補充 delegatecall 調用不可信庫即使使用 .transfer() 仍存在安全風險，且 Solidity 0.4.x 版本算術溢位風險高，需明確區分 transfer 防重入與 delegatecall 信任問題的不同安全機制。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] 使用 .transfer() 只能防止重入攻擊中的低階呼叫失敗與重入，但無法防範 delegatecall 調用不可信合約帶來的安全風險；尤其在 Solidity 0.4.x 版本中，算術溢位風險高且缺乏內建保護，需額外檢查 delegatecall 使用情況及算術安全，避免誤判為安全。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤以為使用.transfer()即自動防止重入及DoS，忽略.transfer()在目標合約拒絕接收或消耗過多gas時會導致交易失敗，造成DoS風險。",
+          "missing_knowledge": "需補充.transfer()雖有2300 gas限制與自動revert機制，但當接收方合約fallback函數消耗過多gas或拒絕接收時，會導致轉帳失敗並回退整個交易，從而產生DoS攻擊風險，且.transfer()本身不保證無重入風險，需結合其他防護措施。",
+          "is_systematic": true,
+          "pattern_category": "dos_fn",
+          "suggested_rag_entry": "[dos_fn] 使用.transfer()轉帳以太幣 → 判定為安全錯誤，因.transfer()在接收方消耗過多gas或拒絕接收時會revert，導致交易失敗並可能造成服務拒絕（DoS）攻擊；因此，僅依賴.transfer()並不能完全防止DoS，需額外設計容錯或替代方案以避免此類風險。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤以為 .transfer() 的 revert 機制及 2300 gas 限制足以防止所有 UNCHECKED_CALL 與 DENIAL_OF_SERVICE，忽略了業務邏輯中因收款方拒絕接受轉帳導致的 DoS 風險。",
+          "missing_knowledge": "需要補充 .transfer() 雖然會 revert，但若收款地址是合約且 fallback 函數消耗超過 2300 gas 或故意 revert，會導致整個交易失敗，造成業務層面的 Denial of Service，且此類 DoS 風險無法單靠 revert 機制避免，必須結合業務邏輯分析。",
+          "is_systematic": true,
+          "pattern_category": "dos_fn",
+          "suggested_rag_entry": "[dos_fn] 使用 .transfer() 發送以太幣 → 判定時需考慮收款合約可能拒絕接受轉帳導致交易 revert，造成 Denial of Service；因此即使 .transfer() 會 revert 並限制 gas，仍存在業務層面的 DoS 風險，需結合業務邏輯判斷，不能單純以 revert 機制判定安全。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統未正確識別 Solidity 0.4.x 中 .call.value() 未檢查返回值且無防護機制即存在重入風險。",
+          "missing_knowledge": "RAG 知識庫缺少針對 Solidity 0.4.x 版本中 .call.value() 調用未檢查返回值且無 ReentrancyGuard 或其他防護機制時即存在重入攻擊風險的明確規則，尤其是未將 .transfer() 與 .call.value() 的差異及其安全性納入判斷依據。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x 合約中使用 .call.value() 進行以太幣轉帳且未檢查返回值，且無 ReentrancyGuard 或其他防護機制 → 判定為存在重入攻擊風險，因 .call.value() 不限制 gas 且未檢查返回值會導致重入漏洞，與 .transfer() 的 2300 gas 限制不同，故需嚴格檢查並加防護。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統未能識別.sol版本與call.value()未檢查返回值及無防護機制的組合導致的重入與未檢查呼叫風險。",
+          "missing_knowledge": "需補充Solidity 0.4.x版本中call.value()不限制gas且返回值必須檢查，且無ReentrancyGuard等防護機制時存在重入與未檢查呼叫漏洞的明確判斷規則。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x版本合約使用.call.value()進行以太幣轉帳且未檢查返回值，且缺乏ReentrancyGuard或其他重入防護機制 → 判定為VULNERABLE，因為.call.value()不限制gas，攻擊者可利用重入漏洞，且未檢查返回值存在未檢查呼叫風險。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統錯誤地認為 Solidity 0.4.x 版本中 .transfer() 的 2300 gas 限制足以防止所有重入攻擊，但實際上存在可繞過該限制的重入風險。",
+          "missing_knowledge": "Solidity 0.4.x 中 .transfer() 雖限制 2300 gas，但部分合約可利用 fallback 函數或其他機制在有限 gas 下觸發重入，且 .transfer() 並非絕對安全，需結合其他防護措施判斷重入風險。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x 版本中使用 .transfer() 進行以太幣轉帳 → 不可單純依賴 2300 gas 限制防止重入，因部分合約可在有限 gas 下觸發重入攻擊，需結合狀態變量鎖定（如 ReentrancyGuard）或其他邏輯防護，判斷時應避免將 .transfer() 誤判為絕對安全。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤判 .call.value() 呼叫在未檢查返回值且無防護機制時不構成漏洞。",
+          "missing_knowledge": "RAG 知識庫缺少對 Solidity 0.4.x 版本中 .call.value() 使用情境的精確判斷規則，特別是未檢查返回值且無防護機制時確實存在重入及未檢查呼叫漏洞的明確識別條件。",
+          "is_systematic": true,
+          "pattern_category": "unchecked_fp",
+          "suggested_rag_entry": "[unchecked_fp] Solidity 0.4.x 合約使用 .call.value() 呼叫且未檢查返回值且無任何重入防護機制 → 判定為 VULNERABLE，因 .call.value() 不限制 gas 且不會自動 revert，易遭受重入攻擊及未檢查呼叫失敗風險。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統未能正確將 Solidity 0.4.x 中 .call.value() 無 gas 限制且未檢查返回值的風險與重入漏洞關聯起來，導致誤判為 SAFE。",
+          "missing_knowledge": "RAG 知識庫缺少針對 Solidity 0.4.x 版本中 .call.value() 調用不限制 gas 且未檢查返回值會導致重入攻擊和未檢查呼叫漏洞的明確規則與案例，尤其在無任何防護機制（如 ReentrancyGuard、onlyOwner）且未使用 .transfer() 的情況下應判定為 VULNERABLE。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x 合約中使用 .call.value() 進行以太幣轉帳且未檢查返回值，且無任何重入防護機制（如 ReentrancyGuard、onlyOwner）且未使用 .transfer() 限制 gas → 判定為 VULNERABLE，因為 .call.value() 不限制 gas，易被重入攻擊利用，且未檢查返回值存在未檢查呼叫風險。"
+        }
+      ]
+    },
+    {
+      "round": 3,
+      "metrics": {
+        "TP": 58,
+        "FN": 85,
+        "FP": 3,
+        "TN": 97,
+        "precision": 0.9508,
+        "recall": 0.4056,
+        "F1": 0.5686,
+        "FPR": 0.03
+      },
+      "delta_f1": -0.0236,
+      "pipeline_llm_calls": 164,
+      "pipeline_tokens": 145032,
+      "errors_analyzed": 30,
+      "new_patterns_added": 30,
+      "chroma_total": 90,
+      "patterns": [
+        {
+          "error_type": "FN",
+          "root_cause": "系統未能區分 .call.value() 是否用於轉帳，且未考慮 0.4.x 版本中 .transfer() 的安全特性，導致誤判。",
+          "missing_knowledge": "補充 Solidity 0.4.x 版本中 .transfer() 轉帳具有限制 2300 gas 且自動 revert 的安全保障，並且明確區分 .call.value() 用途與返回值檢查的重要性，避免將所有 .call.value() 調用一律視為高風險。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x 版本合約中，使用 .transfer() 進行以太幣轉帳時，由於限制 2300 gas 且自動 revert，可有效防止重入攻擊和未檢查呼叫風險 → 判定為 SAFE。若合約使用 .call.value() 進行轉帳且未檢查返回值，則存在重入和未檢查呼叫漏洞，應判定為 VULNERABLE。分析時須明確區分轉帳方式與返回值檢查，避免誤判。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤以為使用 .call.value() 但實際上存在其他防護或調用模式導致誤判為 SAFE。",
+          "missing_knowledge": "需補充 Solidity 0.4.x 版本中 .call.value() 的使用細節與重入風險判斷標準，特別是如何判斷是否存在有效的重入防護機制（如狀態變量更新順序、調用模式等），而非僅依賴是否使用 .transfer() 或 ReentrancyGuard。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x 合約中使用 .call.value() 進行以太幣轉帳 → 若合約中存在狀態變量先更新後調用、或其他邏輯防護，則可判定為 SAFE；單純判斷是否使用 .call.value() 且無 ReentrancyGuard 不足以判斷為 VULNERABLE，需結合調用順序與狀態更新邏輯進行綜合判斷。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤以為使用 .transfer() 可完全避免 Denial of Service 與 Reentrancy 風險，忽略了業務邏輯中時間依賴與算術溢出可能導致的漏洞。",
+          "missing_knowledge": "RAG 需補充 Solidity 0.4.x 版本中，雖然 .transfer() 會 revert 失敗轉帳，但若合約邏輯依賴時間戳（block.timestamp）或未使用 SafeMath，仍可能因時間操控或算術溢出導致 Denial of Service 或其他安全問題；此外，需區分業務層面 DoS 與合約層面漏洞，並非所有 DoS 皆為設計問題。",
+          "is_systematic": true,
+          "pattern_category": "dos_fn",
+          "suggested_rag_entry": "[dos_fn] Solidity 0.4.x 合約使用 .transfer() 發送以太幣 → 不應視為完全防止 Denial of Service，因接收方拒絕接收或時間依賴邏輯仍可導致 DoS；且未使用 SafeMath 及依賴 block.timestamp 可能引發時間操控漏洞，故需結合合約邏輯判斷，避免誤判為 SAFE。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統未能正確判斷.solidity 0.4.x中.call.value()未檢查返回值即存在重入風險，誤以為無防護即為安全。",
+          "missing_knowledge": "RAG需補充.solidity 0.4.x版本中.call.value()調用若未檢查返回值且無ReentrancyGuard等防護，存在unchecked call及重入攻擊風險，且.transfer()因2300 gas限制可防止重入且會自動revert。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x版本合約中使用.call.value()且未檢查返回值，且無ReentrancyGuard或其他防護機制 → 判定為VULNERABLE，因.call.value()會傳遞所有剩餘gas，易遭重入攻擊；相反，使用.transfer()因2300 gas限制且失敗自動revert，可視為安全。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤以為使用 .transfer() 就必然安全，忽略了合約中其他未檢查返回值的外部呼叫可能導致漏洞。",
+          "missing_knowledge": "除了 .transfer()，合約中其他外部呼叫（如低階 call、send）未檢查返回值也可能產生 UNCHECKED_CALL 漏洞，且 .transfer() 並非唯一可能的呼叫方式，需全面檢查所有外部呼叫的返回值。",
+          "is_systematic": true,
+          "pattern_category": "unchecked_fp",
+          "suggested_rag_entry": "[unchecked_fp] 合約中所有外部呼叫（包括但不限於 .transfer()、.send()、.call()）均需檢查返回值 → 僅依賴 .transfer() 的內建 revert 並不足以保證安全，必須全面檢查所有外部呼叫的返回值以避免 UNCHECKED_CALL 漏洞。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統僅以存在 .call.value() 判定高風險，未深入分析呼叫上下文與狀態變數更新順序，導致誤判安全合約為易受重入攻擊。",
+          "missing_knowledge": "補充對於使用 .call.value() 發送 Ether 的安全模式判斷，包含狀態變數更新順序（checks-effects-interactions pattern）、是否有狀態鎖定機制、以及是否存在重入攻擊可利用的狀態變更漏洞，避免單純依賴呼叫方式判斷風險。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] 使用 .call.value() 發送 Ether 不必然導致重入漏洞 → 正確判斷需結合狀態變數更新順序和呼叫上下文，若合約遵循 checks-effects-interactions 模式且無狀態競爭，則可視為安全。理由：.call.value() 本身允許較多 gas 傳遞，可能被重入利用，但若合約設計妥善，重入攻擊無法改變狀態或重複執行敏感邏輯，則不構成漏洞。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤以為使用 transfer() 即可完全避免 DoS 及重入問題，忽略了 transfer() 可能因接收方 fallback 函數消耗過多 gas 導致轉帳失敗而造成 DoS。",
+          "missing_knowledge": "transfer() 雖然會 revert 失敗交易並限制 2300 gas 防止重入，但接收方若故意或無意消耗過多 gas，會導致轉帳失敗，造成合約資金無法轉出，形成 Denial of Service，且此類 DoS 是合約設計缺陷，非以太坊底層限制，應視為漏洞。",
+          "is_systematic": true,
+          "pattern_category": "dos_fn",
+          "suggested_rag_entry": "[dos_fn] 使用 transfer() 發送以太幣 → transfer() 會限制 2300 gas 並 revert 失敗交易，防止重入，但若接收方 fallback 函數消耗過多 gas，會導致轉帳失敗，造成 Denial of Service，合約應避免依賴 transfer() 強制轉帳或設計可容錯機制，否則存在 DoS 漏洞。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統過度信任 Solidity 0.4.x 版本中 transfer 的 2300 gas 限制能完全防止重入攻擊。",
+          "missing_knowledge": "transfer 在 Solidity 0.4.x 雖然限制 2300 gas，但若被呼叫合約 fallback 函數中存在狀態修改或呼叫外部合約，仍可能透過重入造成漏洞，且未先更新狀態仍有風險。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x 合約使用 transfer 轉帳但未先更新狀態 → 判定為 SAFE 可能誤判，因為 2300 gas 限制不保證完全防止重入，攻擊者可利用 fallback 函數中有限邏輯進行重入攻擊。正確判斷應考慮狀態更新順序與 fallback 函數行為，避免誤判為安全。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統未正確結合多重指標判斷，導致重入與未檢查呼叫漏洞被誤判為安全。",
+          "missing_knowledge": "補充合約中存在 .call.value() 調用且未檢查返回值，且缺乏任何重入防護機制時即存在高風險的重入攻擊與未檢查呼叫漏洞，尤其在 Solidity 0.4.x 版本中需特別注意。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] 合約使用 .call.value() 進行以太幣轉帳且未檢查返回值，且無 ReentrancyGuard 或其他重入防護機制 → 判定為存在重入與未檢查呼叫漏洞，因為此類調用易被攻擊者利用重入漏洞導致資金被重複提取。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統未將 Solidity 0.4.x 版本中缺乏內建溢位保護且未使用 SafeMath 的算術運算視為高風險漏洞。",
+          "missing_knowledge": "RAG 知識庫需補充對舊版本 Solidity（<0.8）中算術運算無內建保護且未使用 SafeMath 時存在高溢位風險的判斷規則，並將此類合約標記為 vulnerable。",
+          "is_systematic": true,
+          "pattern_category": "overflow_fn",
+          "suggested_rag_entry": "[overflow_fn] Solidity 版本低於0.8且合約中存在未使用 SafeMath 的算術運算 → 判定為 vulnerable，因為舊版本不具備內建溢位保護，易導致溢位漏洞。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤判 .call.value() 未檢查返回值的風險，錯誤地將其與 .transfer() 的安全性混淆。",
+          "missing_knowledge": "需補充 .call.value() 在 Solidity 0.4.x 版本中不限制 gas 且不會自動 revert，若未檢查返回值即存在重入及未檢查呼叫風險，與 .transfer() 的安全性區別。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x 合約中使用 .call.value() 進行以太幣轉帳且未檢查返回值 → 判定為 VULNERABLE，因 .call.value() 不限制 gas 且不會自動 revert，存在重入攻擊及未檢查呼叫風險；與 .transfer()（限制 2300 gas 且自動 revert）不同，需明確檢查返回值並實施防護機制。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤以為檢查 .send() 返回值即可防止 Denial of Service，但未考慮業務邏輯因退款失敗而停擺的風險。",
+          "missing_knowledge": "需補充 Denial of Service 不僅是重入攻擊，還包括因退款失敗（如 .send() 返回 false）導致合約核心業務無法繼續執行的情況，尤其在拍賣等需退款給多方的合約中，退款失敗會阻塞整個流程。",
+          "is_systematic": true,
+          "pattern_category": "dos_fn",
+          "suggested_rag_entry": "[dos_fn] 使用 .send() 並檢查返回值但未妥善處理退款失敗的合約 → 判定為 Vulnerable。理由：即使檢查返回值，若退款失敗未有替代機制（如允許用戶後續提領），會導致合約核心功能因單一用戶拒收款項而阻塞，造成 Denial of Service。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統僅依賴表面特徵（如 call.value() 使用與防護機制缺失）判斷漏洞，未深入分析合約邏輯與狀態變更順序，導致誤判。",
+          "missing_knowledge": "補充合約內部狀態變更與資金轉移的執行順序分析，尤其在 Solidity 0.4.x 環境下，判斷是否存在重入攻擊的實際可行性，並結合返回值檢查與狀態更新的先後關係來判斷漏洞真偽。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] 使用 call.value() 但在轉帳前已更新關鍵狀態變數 → 判定為 SAFE。理由：若狀態變數先更新，重入攻擊無法重複獲取資金，避免重入漏洞。此類合約雖無明顯防護機制（如 ReentrancyGuard），但因狀態更新順序正確，實際無重入風險。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤以為 Solidity 0.4.19 版本中 .call.value() 具有限制性 gas 且安全，忽略了該版本 .call.value() 不限制 gas 且易受重入攻擊。",
+          "missing_knowledge": "Solidity 0.4.x 版本中，使用 .call.value() 轉帳不會限制 2300 gas，且不會自動 revert，存在重入攻擊風險，必須檢查返回值並採取防護措施；只有 .transfer() 在該版本會限制 2300 gas 且自動 revert。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x 版本中使用 .call.value() 進行以太幣轉帳 → 判定為 Vulnerable，因 .call.value() 不限制 gas 且不會自動 revert，存在重入攻擊風險，必須檢查返回值並搭配防護機制；僅 .transfer() 具有 2300 gas 限制且自動 revert，能有效防止重入。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統未能正確判斷 .call.value() 未檢查返回值且無防護機制即存在重入風險，誤以為 Solidity 0.4.x 版本自動防護重入。",
+          "missing_knowledge": "需補充 Solidity 0.4.x 版本中使用 .call.value() 呼叫時，因不限制 gas 且返回值未檢查，存在重入攻擊風險，且該版本不會自動防止重入，只有 .transfer() 限制 2300 gas 才能有效防禦重入攻擊。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x 合約中使用 .call.value() 且未檢查返回值且無防護機制 → 判定為 vulnerable，因 .call.value() 不限制 gas，易遭重入攻擊；Solidity 0.4.x 不會自動防止重入，僅 .transfer() 限制 2300 gas 可防範重入。"
+        },
+        {
+          "error_type": "FP",
+          "root_cause": "系統僅依賴 call.value() 無檢查返回值及無明顯防護機制即判定漏洞，忽略了合約邏輯本身已避免重入或錯誤影響。",
+          "missing_knowledge": "合約中即使存在 call.value() 且未檢查返回值，但若合約邏輯設計上無狀態變更順序錯誤、無重入入口，或有其他隱含防護（如狀態變量先更新、無外部呼叫後狀態改變等），則不一定存在重入或 unchecked call 風險。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] 合約使用 call.value() 且未檢查返回值，但合約邏輯中狀態變量先於外部呼叫更新或無重入入口 → 判定為 SAFE。理由：重入攻擊需有狀態變更後外部呼叫的漏洞點，若合約設計避免此類狀態錯誤，則不構成重入風險。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統過度依賴 .transfer() 的 2300 gas 限制，忽略了合約內部狀態更新順序和其他可被利用的重入路徑。",
+          "missing_knowledge": "在 Solidity 0.4.x 中，雖然 .transfer() 限制 2300 gas 可阻止大部分重入，但若合約狀態更新不當（如先發送再更新狀態），仍可能被重入利用；因此僅依賴 .transfer() 不足以完全防範重入攻擊，需結合狀態更新順序及其他防護機制判斷。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x 合約使用 .transfer() 進行以太幣轉帳 → 單憑 .transfer() 的 2300 gas 限制不足以完全防範重入攻擊，必須檢查狀態更新順序及其他防護機制；若先執行轉帳再更新狀態，仍存在重入風險。故判斷重入安全需綜合考量轉帳方式與狀態變更邏輯。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤判以為 .call.value() 在 Solidity 0.4.19 中自帶安全限制，忽略了未檢查返回值和無限 gas 風險。",
+          "missing_knowledge": "Solidity 0.4.x 版本中 .call.value() 不會限制 gas，且若未檢查返回值，易導致重入攻擊和未檢查呼叫漏洞，且 .transfer() 才有 2300 gas 限制，兩者行為差異需明確區分。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x 使用 .call.value() 轉帳且未檢查返回值 → 判定為高風險重入漏洞，因 .call.value() 不限制 gas 且無自動 revert，易被重入攻擊利用。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統僅依賴 SafeMath 和 transfer() 使用判斷安全，忽略了合約中存在的重入漏洞或其他邏輯缺陷。",
+          "missing_knowledge": "需要補充關於重入攻擊的檢測知識，特別是在沒有使用 ReentrancyGuard 且存在非 transfer() 轉帳方式或狀態更新順序錯誤時的風險判斷。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] 合約使用 SafeMath 且有 transfer() 但未使用 ReentrancyGuard，且存在狀態更新與外部呼叫順序錯誤 → 判斷為 vulnerable，因為 SafeMath 無法防止重入攻擊，transfer() 也非萬能防護，需檢查狀態更新邏輯與外部呼叫順序。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤判 .call.value() 的使用安全性，未考慮其在低版本 Solidity 中易被重入攻擊利用的風險。",
+          "missing_knowledge": "需補充低版本 Solidity（<0.5）中 .call.value() 不會自動 revert 且不限制 gas，容易導致重入攻擊，且 .transfer() 雖有 2300 gas 限制但在某些情況下仍可能失效，應結合其他防護機制使用。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 版本低於0.5時，合約中使用 .call.value() 發送 ETH 且未檢查返回值，存在重入攻擊風險 → 判定為 VULNERABLE。理由：.call.value() 不限制 gas 且不會自動 revert，攻擊者可利用重入漏洞竊取資金。僅依賴 .transfer() 的 2300 gas 限制並非萬無一失，應結合 ReentrancyGuard 或檢查返回值等防護措施。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤以為使用 .call.value() 在 Solidity 0.4.19 版本中等同於 .transfer()，忽略了 .call.value() 不限制 gas 且不自動 revert 的特性。",
+          "missing_knowledge": "需要補充 Solidity 0.4.x 版本中 .call.value() 與 .transfer() 在 gas 限制和錯誤處理上的差異，以及在未檢查返回值時容易導致重入和 unchecked call 漏洞的風險。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x 中使用 .call.value() 進行以太幣轉帳 → 判定為高風險重入漏洞，因為 .call.value() 不限制 gas 且不自動 revert，若未檢查返回值，攻擊者可利用重入攻擊；與 .transfer()（限制 2300 gas 且自動 revert）不同，需額外防護機制如檢查返回值或使用重入鎖。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統未能正確識別合約中 .call.value() 的重入風險，誤判其為安全。",
+          "missing_knowledge": "補充對 Solidity 0.4.x 版本中 .call.value() 的重入風險識別規則，特別是在未使用任何重入防護機制（如 ReentrancyGuard、checks-effects-interactions 模式）且未檢查返回值的情況下，應判定為高風險漏洞。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x 合約使用 .call.value() 進行以太轉帳且未使用任何重入防護機制（如 ReentrancyGuard、onlyOwner、checks-effects-interactions）且未檢查返回值 → 判定為 VULNERABLE。理由：.call.value() 不限制 gas，容易被重入攻擊利用，缺乏防護機制時存在明顯風險。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統過度信任 .transfer() 在 Solidity 0.4.x 中能完全防止重入攻擊，忽略了合約邏輯中可能存在的狀態更新順序錯誤或其他可被利用的重入路徑。",
+          "missing_knowledge": "需要補充關於 Solidity 0.4.x 版本中 .transfer() 雖限制 2300 gas，但仍可能因合約邏輯設計不當（如狀態更新順序錯誤）導致重入漏洞的案例與判斷準則；同時補充 onlyOwner 修飾符在複雜權限場景下可能被繞過的風險分析與檢測方法。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x 合約使用 .transfer() 轉帳 → 雖然 .transfer() 限制 2300 gas 減少重入風險，但若合約中狀態更新順序錯誤或存在多重呼叫路徑，仍可能被重入攻擊利用；因此判斷重入漏洞時，需結合狀態更新邏輯與呼叫流程分析，而非單純依賴 .transfer() 防護。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤判合約使用了 .call.value() 但未正確識別其未檢查返回值與無防護機制的高風險。",
+          "missing_knowledge": "需補充 .call.value() 調用在 Solidity 0.4.x 版本中不限制 gas 且返回值必須檢查，否則存在重入與未檢查呼叫漏洞風險，且無任何防護機制時風險更高。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x 合約使用 .call.value() 發送以太幣且未檢查返回值，且無 ReentrancyGuard 或其他防護機制 → 判定為 VULNERABLE。理由：.call.value() 不限制 gas，攻擊者可利用重入漏洞，且未檢查返回值可能導致資金損失。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤以為使用 .transfer() 即完全防止重入，忽略了算術溢位與邏輯缺陷可能導致的漏洞風險。",
+          "missing_knowledge": "需要補充 Solidity 0.4.x 版本中，.transfer() 雖限制 2300 gas 防止重入，但合約仍可能因缺乏 SafeMath 導致算術溢位，且重入攻擊不僅限於低階呼叫，應綜合考慮算術安全與邏輯漏洞；此外，應辨識算術溢位與重入為不同漏洞類型，避免誤判為安全。",
+          "is_systematic": true,
+          "pattern_category": "overflow_fn",
+          "suggested_rag_entry": "[overflow_fn] Solidity 0.4.x 合約使用 .transfer() 進行以太幣轉帳且無 SafeMath 保護 → 不應判定為完全安全，因算術溢位風險仍存在，可能導致餘額錯亂或重入間接利用；故需結合算術溢位檢測與重入防護判斷，避免單純依賴 .transfer() 限制 gas 判斷安全性。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統錯誤地認為使用 .transfer() 內建的 2300 gas 限制足以完全防止重入與 DoS 攻擊，忽略了業務邏輯層面可能導致的 DoS 風險。",
+          "missing_knowledge": "補充 .transfer() 雖然防止重入，但仍可能因接收方合約拒絕接收或消耗過多 gas 而導致 DoS，且 UNCHECKED_CALL 不僅指未檢查返回值，還包括未考慮呼叫失敗對業務邏輯的影響。",
+          "is_systematic": true,
+          "pattern_category": "dos_fn",
+          "suggested_rag_entry": "[dos_fn] 使用 .transfer() 發送以太幣 → 不保證完全避免 DoS 攻擊，因為接收方合約可拒絕接收或消耗過多 gas 導致轉帳失敗，若合約未妥善處理轉帳失敗情況，可能造成業務邏輯中斷與 DoS。判斷時需結合業務邏輯檢查是否有因轉帳失敗導致合約功能無法正常運作的風險。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統未正確結合.solc版本與call.value()未檢查返回值的風險判斷，誤判為SAFE。",
+          "missing_knowledge": "RAG需補充Solidity 0.4.x版本中，使用.call.value()且未檢查返回值時，存在高風險的重入漏洞及unchecked call問題，且無防護機制時必須判定為VULNERABLE。",
+          "is_systematic": true,
+          "pattern_category": "unchecked_fp",
+          "suggested_rag_entry": "[unchecked_fp] Solidity 0.4.x版本合約使用.call.value()進行以太幣轉帳且未檢查返回值，且無ReentrancyGuard或其他防護機制 → 判定為VULNERABLE，因為.call.value()會傳遞全部gas，容易被重入攻擊且未檢查返回值可能導致失敗未被捕捉。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統錯誤地將 .transfer() 的失敗 revert 行為視為無需檢查返回值，忽略了因接收方 fallback 函數消耗過多 gas 導致的 DoS 風險。",
+          "missing_knowledge": "需補充 Solidity 0.4.x 中 .transfer() 雖然會 revert 但仍可能因接收方 fallback 函數消耗過多 gas 導致整體交易失敗，造成 Denial of Service，且此風險屬於合約設計層面，非僅靠檢查返回值即可避免。",
+          "is_systematic": true,
+          "pattern_category": "dos_fn",
+          "suggested_rag_entry": "[dos_fn] Solidity 0.4.x 使用 .transfer() 發送以太幣時 → 判斷 .transfer() 失敗會 revert 並非完全防止 DoS 攻擊，因接收方 fallback 函數 gas 限制可能導致交易失敗，造成 Denial of Service。故此類合約應考慮額外設計避免 DoS，而非僅依賴 .transfer() 內建機制。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統未能識別.sol 0.4.x版本中.call.value()未檢查返回值且無防護機制即為漏洞的嚴重性。",
+          "missing_knowledge": "RAG缺少對Solidity 0.4.x版本中.call.value()調用特性及其重入風險的明確規則，尤其是未檢查返回值且無防護機制時即為VULNERABLE的判斷依據。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x版本合約中，使用.call.value()進行以太幣轉帳且未檢查返回值，且未使用ReentrancyGuard或其他重入防護機制 → 判定為VULNERABLE，因.call.value()不限制gas且易被重入攻擊利用。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統過度信任 .transfer() 的 2300 gas 限制能完全防止重入，忽略了合約中其他可被重入利用的邏輯漏洞。",
+          "missing_knowledge": "需補充 Solidity 0.4.x 中 .transfer() 雖限制 2300 gas，但仍可能因合約設計不當導致重入攻擊，且重入漏洞不僅限於以太幣轉帳函式，應全面檢查狀態變更順序與外部呼叫風險。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x 中使用 .transfer() 雖限制 2300 gas 並會 revert 失敗，但若合約邏輯未遵循「檢查-效果-互動」模式，仍可能遭受重入攻擊 → 判斷重入漏洞時不可僅依賴 .transfer() 的安全性，需分析狀態變更與外部呼叫順序，避免誤判為安全。"
+        }
+      ]
+    },
+    {
+      "round": 4,
+      "metrics": {
+        "TP": 93,
+        "FN": 50,
+        "FP": 6,
+        "TN": 94,
+        "precision": 0.9394,
+        "recall": 0.6503,
+        "F1": 0.7686,
+        "FPR": 0.06
+      },
+      "delta_f1": 0.2,
+      "pipeline_llm_calls": 164,
+      "pipeline_tokens": 145449,
+      "errors_analyzed": 30,
+      "new_patterns_added": 30,
+      "chroma_total": 120,
+      "patterns": [
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤判 .call.value() 呼叫為安全的 .transfer()，忽略了未檢查返回值且使用 .call.value() 會導致重入風險。",
+          "missing_knowledge": "RAG 知識庫缺少對 Solidity 0.4.x 版本中 .call.value() 與 .transfer() 兩者在轉帳行為及重入風險上的明確區分，特別是 .call.value() 不會限制 gas 且若未檢查返回值即存在重入漏洞。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x 合約中使用 .call.value() 進行以太幣轉帳且未檢查返回值 → 判定為 vulnerable，因 .call.value() 不限制 gas，易被重入攻擊；而 .transfer() 內建 2300 gas 限制且自動 revert，可防止重入，兩者不可混淆。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤判 .transfer() 會自動 revert，忽略了合約中其他未檢查的外部呼叫可能導致的 UNCHECKED_CALL 漏洞。",
+          "missing_knowledge": "RAG 知識庫缺少對 Solidity 0.4.x 版本中 .transfer() 的安全特性與其他外部呼叫（如 call、send）未檢查返回值風險的區分，且未涵蓋合約中多種外部呼叫混用時的綜合風險評估。",
+          "is_systematic": true,
+          "pattern_category": "unchecked_fp",
+          "suggested_rag_entry": "[unchecked_fp] Solidity 0.4.x 合約中使用 .transfer() 會自動 revert，故單獨 .transfer() 不構成 UNCHECKED_CALL 漏洞，但若合約中存在其他未檢查返回值的外部呼叫（如 call、send），則仍可能存在漏洞 → 判斷時需全面檢查所有外部呼叫，避免因忽略非 .transfer() 呼叫而誤判安全。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤以為所有 .call.value() 調用都被 .transfer() 的限制所保護，忽略了 .call.value() 本身不限制 gas 且未檢查返回值的風險。",
+          "missing_knowledge": "需要補充 .call.value() 調用在 Solidity 0.4.x 版本中不會自動限制 gas 且必須檢查返回值，否則存在重入攻擊和未檢查呼叫風險，即使合約中有 .transfer() 也無法完全防護。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] 合約中同時存在 .transfer() 與 .call.value() 調用時 → 不可僅依賴 .transfer() 的 2300 gas 限制防範重入，必須檢查 .call.value() 返回值並採用額外防護（如 ReentrancyGuard 或檢查返回值）以避免重入攻擊，因為 .call.value() 不限制 gas 且易被利用。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤以為使用 transfer() 且有檢查返回值即無 Denial of Service 風險，忽略了 transfer() 的 2300 gas 限制可能導致收款方拒絕接收款項，進而阻塞合約核心功能。",
+          "missing_knowledge": "transfer() 在 Solidity 0.4.x 版本中雖會自動 revert 失敗交易，但其 2300 gas 限制會導致目標合約若含複雜 fallback 函數或拒絕接收以太，會造成 Denial of Service，尤其當退款失敗會阻塞合約後續邏輯時，應視為潛在 DoS 風險。",
+          "is_systematic": true,
+          "pattern_category": "dos_fn",
+          "suggested_rag_entry": "[dos_fn] 使用 transfer() 發送以太於 Solidity 0.4.x 版本 → 判斷需考慮 transfer() 2300 gas 限制可能導致收款方拒絕接收款項，若合約退款失敗會阻塞核心邏輯，則存在 Denial of Service 風險。即使有檢查返回值，仍不可忽略此限制，應評估退款失敗對合約功能的影響。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統僅根據是否使用 .call.value() 或 .send() 判斷重入風險，忽略了 .transfer() 在 Solidity 0.4.x 中自帶的 2300 gas 限制防護效果。",
+          "missing_knowledge": "補充 Solidity 0.4.x 版本中 .transfer() 會限制 2300 gas 並在失敗時 revert，這本質上防止了重入攻擊，即使沒有其他防護機制也能有效防禦重入漏洞。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x 合約中使用 .transfer() 進行以太幣轉帳 → 判定為安全，因為 .transfer() 會限制 2300 gas 並在失敗時 revert，限制了外部呼叫的複雜度，防止重入攻擊。即使缺少 ReentrancyGuard 或其他防護機制，單純使用 .transfer() 仍可視為有效防禦重入漏洞。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統未將 Solidity 0.4.x 版本中缺乏內建溢位保護且未使用 SafeMath 的算術運算視為高風險漏洞。",
+          "missing_knowledge": "RAG 知識庫缺少對舊版本 Solidity（0.4.x）中算術溢位風險的明確識別規則，尤其是當合約未使用 SafeMath 且無其他防護機制時，應判定為 vulnerable。",
+          "is_systematic": true,
+          "pattern_category": "overflow_fn",
+          "suggested_rag_entry": "[overflow_fn] Solidity 版本低於0.8且未使用 SafeMath 或其他溢位防護 → 判定為 vulnerable，因為舊版本無內建溢位保護，算術運算存在高風險溢位漏洞，可能導致資金錯誤或合約邏輯錯誤。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統未正確將 .call.value() 未檢查返回值且無防護機制的重入風險判定為漏洞。",
+          "missing_knowledge": "RAG 知識庫缺少對 Solidity 0.4.x 版本中 .call.value() 與 .transfer() 行為差異的明確描述，特別是 .call.value() 不限制 gas 且返回值需檢查，否則易遭受重入攻擊的規則與判斷依據。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x 合約中若使用 .call.value() 進行以太幣轉帳，且未檢查返回值且無任何重入防護機制（如 ReentrancyGuard 或使用 .transfer() 限制 gas），則存在重入攻擊風險 → 正確判斷為 VULNERABLE，因為 .call.value() 不限制 gas，攻擊者可利用重入漏洞竊取資金。"
+        },
+        {
+          "error_type": "FP",
+          "root_cause": "系統僅依賴 call.value() 無檢查返回值及無明顯防護機制即判定漏洞，忽略了合約邏輯中可能存在的隱性防禦或狀態更新順序。",
+          "missing_knowledge": "RAG 需補充合約中即使使用 call.value() 且未檢查返回值，但若合約邏輯設計避免重入（如先更新狀態再呼叫外部合約、無可重入攻擊路徑等）即為安全的判斷依據與範例。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] 合約使用 call.value() 且未檢查返回值，但因先更新狀態或無重入攻擊路徑 → 判定為 SAFE。理由：防禦重入不一定需顯式使用 ReentrancyGuard，狀態變更順序及邏輯設計同樣能有效防止重入攻擊。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統過度信任 .transfer() 的 2300 gas 限制足以防止所有重入攻擊，忽略了合約邏輯中狀態更新順序及其他可被利用的重入路徑。",
+          "missing_knowledge": "補充 .transfer() 並非萬能防禦重入攻擊，尤其在狀態更新順序錯誤或合約內部邏輯複雜時，仍可能被重入利用，需結合狀態更新時機與其他防禦措施判斷。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] 合約僅使用 .transfer() 進行以太幣轉帳且無 ReentrancyGuard，若狀態更新順序錯誤或存在可重入調用的邏輯，仍可能遭受重入攻擊 → 單憑 .transfer() 的 2300 gas 限制不足以完全防止重入，必須檢查狀態更新順序與合約邏輯，並推薦使用 ReentrancyGuard 或先更新狀態後轉帳等防禦手段。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤以為 .transfer() 的 2300 gas 限制能完全防止重入與拒絕服務，但忽略了業務邏輯依賴接收方成功收款的風險。",
+          "missing_knowledge": "需要補充 .transfer() 雖然會在失敗時 revert，但因 2300 gas 限制可能導致接收方合約拒絕收款，造成業務邏輯中斷，形成 Denial of Service；且 .transfer() 並非萬能防禦重入，特別是當業務流程依賴多筆轉帳成功時，仍可能遭受 DoS 或間接重入攻擊。",
+          "is_systematic": true,
+          "pattern_category": "dos_fn",
+          "suggested_rag_entry": "[dos_fn] 使用 .transfer() 發送以太幣 → 判斷需考慮接收方合約因 2300 gas 限制拒絕收款導致 Denial of Service，尤其當業務邏輯依賴所有轉帳成功時；.transfer() 雖自動 revert 但可能造成整體交易失敗，非絕對安全。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統僅依賴 SafeMath 和 transfer() 使用判斷安全，忽略了 ERC20 代幣合約中可能存在的重入攻擊或邏輯漏洞。",
+          "missing_knowledge": "缺少對 ERC20 合約內部邏輯漏洞（如重入攻擊、授權機制缺陷、狀態更新順序錯誤）的識別知識，特別是在沒有 ReentrancyGuard 且未嚴格檢查授權和狀態變更的情況下仍可能存在漏洞。",
+          "is_systematic": true,
+          "pattern_category": "other",
+          "suggested_rag_entry": "[other] ERC20 合約中即使使用 SafeMath 且未使用 .transfer()，若缺乏重入防護和嚴格授權檢查，仍可能存在重入攻擊或狀態錯亂漏洞 → 判定為 VULNERABLE，因為 SafeMath 只能防止算術溢位，無法涵蓋合約邏輯層面的安全風險"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統未將 .call.value() 未檢查返回值且無防護機制的重入風險納入嚴重判斷依據。",
+          "missing_knowledge": "補充 Solidity 0.4.x 版本中 .call.value() 調用不限制 gas 且返回值必須檢查，否則存在重入與 unchecked call 風險，且 .transfer() 的 2300 gas 限制可防止重入，兩者風險差異需明確區分。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x 合約中使用 .call.value() 進行以太幣轉帳且未檢查返回值，且缺乏 ReentrancyGuard、onlyOwner 等防護機制 → 判定為存在重入漏洞，因 .call.value() 不限制 gas，攻擊者可利用重入攻擊，與 .transfer() 2300 gas 限制防禦機制不同。"
+        },
+        {
+          "error_type": "FP",
+          "root_cause": "系統未考慮合約內部對 .call.value() 返回值的間接檢查或其他安全設計，單純以存在未檢查的 .call.value() 判定漏洞。",
+          "missing_knowledge": "需要補充合約中 .call.value() 返回值未直接檢查但透過其他邏輯或狀態變數間接保障安全的判斷方法，並結合 SafeMath、onlyOwner 等防護機制的綜合影響評估。",
+          "is_systematic": true,
+          "pattern_category": "unchecked_fp",
+          "suggested_rag_entry": "[unchecked_fp] 合約中存在 .call.value() 呼叫且未直接檢查返回值 → 若合約具備 SafeMath、onlyOwner 等防護機制，且合約邏輯或狀態變數間接保障資金安全，則不一定構成漏洞，應結合上下文判斷。理由：.call.value() 未檢查返回值是典型風險，但若合約設計已考慮失敗情況且不會導致資金鎖死或狀態錯亂，則可視為安全。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統未能將.sol 0.4.x版本中使用.call.value()且缺乏防護機制的情況正確識別為重入漏洞，導致誤判為安全。",
+          "missing_knowledge": "RAG知識庫缺少針對Solidity 0.4.x版本中，使用.call.value()進行以太幣轉帳且未使用任何重入防護（如ReentrancyGuard或檢查返回值）的合約即存在重入攻擊風險的明確規則。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x版本合約使用.call.value()轉帳且未採用任何重入防護措施（無ReentrancyGuard、無檢查返回值、無.transfer()）→ 判定為VULNERABLE。理由：0.4.x版本不具備內建安全機制，.call.value()不限制gas且不自動revert，易被重入攻擊利用。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤以為使用 transfer() 即完全免疫重入與 unchecked call 風險，忽略了算術溢位與 delegatecall 風險未被充分驗證。",
+          "missing_knowledge": "需要補充 Solidity 0.4.x 版本中 transfer() 雖限制 2300 gas 可防重入，但合約中存在算術溢位風險且未明確排除 delegatecall 使用，且 transfer() 並非萬能防護，需結合算術安全檢查與 delegatecall 來源驗證才能判定安全。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x 合約中僅使用 transfer() 轉帳 → 判定重入風險需同時考慮算術溢位與 delegatecall 使用情況，transfer() 限制 2300 gas 可防止重入，但無法涵蓋算術溢位及 delegatecall 風險，故不能單憑 transfer() 判定為 SAFE。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統未將 Solidity 0.4.x 版本中 .call.value() 不檢查返回值且無防重入機制視為高風險，誤判為 SAFE。",
+          "missing_knowledge": "RAG 需補充 Solidity 0.4.x 版本中 .call.value() 呼叫不限制 gas 且返回值未檢查會導致 UNCHECKED_CALL 與 REENTRANCY 風險，且缺乏 ReentrancyGuard 或其他防護機制時應判定為 VULNERABLE。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x 合約中使用 .call.value() 且未檢查返回值，且無 ReentrancyGuard 或其他防重入保護 → 判定為 VULNERABLE，因 .call.value() 不限制 gas，易被重入攻擊利用，且返回值不檢查導致資金損失風險。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統未正確判斷.solidity 0.4.x 版本中 .call.value() 未檢查返回值且無防護機制即存在重入與未檢查呼叫風險。",
+          "missing_knowledge": "RAG 知識庫缺少對 Solidity 0.4.x 版本中 .call.value() 調用若未檢查返回值且無 ReentrancyGuard 或其他防護措施，容易導致重入攻擊及未檢查呼叫漏洞的明確規則與判斷依據。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x 合約中若使用 .call.value() 且未檢查返回值，且缺乏 ReentrancyGuard、onlyOwner 或其他防護機制，則存在重入攻擊及未檢查呼叫漏洞風險 → 判定為 VULNERABLE，因為 .call.value() 不限制 gas 且返回值未檢查，攻擊者可利用重入漏洞竊取資金或破壞合約狀態。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統未能識別合約中使用區塊屬性作為隨機種子，導致隨機性漏洞判斷失誤。",
+          "missing_knowledge": "RAG 知識庫缺少對 Solidity 0.4.x 合約中常見隨機性來源（如 block.timestamp、blockhash）使用模式的識別規則，尤其在無 SafeMath、無 onlyOwner 等防護且使用區塊屬性作為隨機種子時，應明確標記為 BAD_RANDOMNESS 漏洞。",
+          "is_systematic": true,
+          "pattern_category": "other",
+          "suggested_rag_entry": "[other] Solidity 0.4.x 合約中若使用區塊屬性（block.timestamp、blockhash）作為隨機種子且無額外防護措施 → 判定為 BAD_RANDOMNESS 漏洞，因區塊屬性可被礦工操控，導致隨機性不安全，易被攻擊者預測或操控。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "誤信 Solidity 0.4.x 中 .transfer() 限制 2300 gas 可完全防止重入攻擊，忽略了合約邏輯層面仍可能存在重入風險。",
+          "missing_knowledge": "補充 Solidity 0.4.x 時代 .transfer() 雖限制 2300 gas 但仍可能因合約邏輯設計不當導致重入漏洞，且 .transfer() 並非萬能防禦，需結合狀態變更順序及重入防護機制判斷。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x 合約使用 .transfer() 發送以太幣 → 雖然 .transfer() 限制 2300 gas 並自動 revert，但合約邏輯中若狀態變更順序錯誤或存在外部呼叫前修改狀態，仍可能發生重入漏洞；因此判斷重入風險時，不能僅依賴 .transfer()，需結合狀態管理及重入防護機制做全面分析。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤判 .call.value() 呼叫在 0.4.x 版本中等同於 .transfer()，忽略了其不限制 gas 且不自動 revert 的特性。",
+          "missing_knowledge": "RAG 知識庫缺少對 Solidity 0.4.x 版本中 .call.value() 與 .transfer() 行為差異的明確描述，特別是 .call.value() 不限制 gas 且不會自動 revert，若未檢查返回值即存在重入及未檢查呼叫風險。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x 中使用 .call.value() 進行 ETH 轉帳 → 判定為高風險且易受重入攻擊，因 .call.value() 不限制 gas 且不會自動 revert，必須檢查返回值並搭配防重入機制，否則存在重入及未檢查呼叫漏洞。"
+        },
+        {
+          "error_type": "FP",
+          "root_cause": "系統誤將 .transfer() 的 2300 gas 限制視為無法防止 DoS，忽略了該合約設計中已接受且合理的風險承擔與防護機制。",
+          "missing_knowledge": "應補充 .transfer() 在 Solidity 0.4.x 中自動 revert 失敗交易的特性，以及使用 .transfer() 本身即包含對未檢查呼叫的防護，且 DoS 風險需結合合約業務邏輯判斷，而非單純依賴 gas 限制判斷漏洞。",
+          "is_systematic": true,
+          "pattern_category": "unchecked_fp",
+          "suggested_rag_entry": "[unchecked_fp] 使用 .transfer() 發送以太 → 判定為 SAFE，因為 .transfer() 在 Solidity 0.4.x 版本中會自動 revert 失敗交易，確保呼叫結果被檢查，避免 UNCHECKED_CALL 漏洞；同時，雖然 .transfer() 有 2300 gas 限制可能導致 DoS，但這是設計選擇，非漏洞，需結合合約業務邏輯判斷 DoS 風險，避免誤判。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統未能正確識別 .call.value() 調用未檢查返回值且缺乏重入防護的高風險特徵，導致誤判為安全。",
+          "missing_knowledge": "需補充 Solidity 0.4.x 版本中 .call.value() 調用若未檢查返回值且無重入防護機制，必然存在重入攻擊及未檢查呼叫漏洞的明確規則。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x 合約中使用 .call.value() 進行以太幣轉帳且未檢查返回值，且缺乏 ReentrancyGuard、onlyOwner 等防護機制 → 判定為 VULNERABLE，因 .call.value() 不限制 gas 且易被重入攻擊利用，未檢查返回值更增加失敗風險。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統未能識別 Solidity 0.4.x 版本缺乏內建溢位保護，且合約中存在未防範的算術溢位風險。",
+          "missing_knowledge": "RAG 知識庫需補充針對不同 Solidity 編譯器版本的內建安全機制差異，特別是 0.8 版本之前無內建 overflow 保護，且未使用 SafeMath 等防護手段時存在高風險算術溢位漏洞。",
+          "is_systematic": true,
+          "pattern_category": "overflow_fn",
+          "suggested_rag_entry": "[overflow_fn] Solidity 0.4.x 版本合約中若使用算術運算且未引入 SafeMath 或其他防溢位機制，且無內建 overflow 保護，則存在高風險整數溢位漏洞 → 系統應判定為 VULNERABLE，因為該版本編譯器不具備自動溢位檢測，算術溢位可能導致資金錯誤或邏輯錯誤。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統未將 Solidity 0.4.x 中使用 .call.value() 但未檢查返回值視為 unchecked call 與重入風險，誤判為 SAFE。",
+          "missing_knowledge": "RAG 知識庫缺少對 Solidity 0.4.x 版本中 .call.value() 調用必須檢查返回值且存在重入風險的明確規則，尤其在無防護機制（如 ReentrancyGuard、onlyOwner）時應判定為 vulnerable。",
+          "is_systematic": true,
+          "pattern_category": "unchecked_fp",
+          "suggested_rag_entry": "[unchecked_fp] Solidity 0.4.x 合約中使用 .call.value() 調用時，若未檢查返回值且缺乏重入防護機制（如 ReentrancyGuard、onlyOwner），則存在 unchecked call 與重入漏洞 → 判定為 vulnerable，因 .call.value() 不限 gas 且可能被重入攻擊利用，必須嚴格檢查返回值並採取防護措施。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤以為檢查了 .send() 返回值即可完全避免 DoS，忽略了因單一惡意接收者阻塞整個列表付款流程的問題。",
+          "missing_knowledge": "需補充對使用 .send() 並檢查返回值仍可能遭受 Denial of Service 攻擊的理解，特別是合約中對多個地址依序付款時，單一失敗會阻塞整個流程，造成 DoS。",
+          "is_systematic": true,
+          "pattern_category": "dos_fn",
+          "suggested_rag_entry": "[dos_fn] 使用 .send() 並檢查返回值的多地址付款合約 → 判定為 VULNERABLE，因為單一惡意接收者拒絕接收會阻塞整個付款流程，造成 Denial of Service。僅檢查返回值無法完全避免 DoS，需設計跳過失敗或使用 pull payment 模式。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤認 Solidity 0.4.25 版本中 .transfer() 會自動 revert，忽略了該版本實際上不會自動 revert 而是返回布林值需手動檢查。",
+          "missing_knowledge": "Solidity 0.4.x 版本中，address.transfer() 並不會自動 revert 失敗交易，而是返回布林值，必須手動檢查返回值以避免 UNCHECKED_CALL 漏洞；自 Solidity 0.6.x 起才引入自動 revert 機制。",
+          "is_systematic": true,
+          "pattern_category": "unchecked_fp",
+          "suggested_rag_entry": "[unchecked_fp] Solidity 0.4.x 版本中使用 .transfer() 發送以太幣 → 必須檢查返回值以避免 UNCHECKED_CALL 漏洞，因為該版本 .transfer() 不會自動 revert 失敗交易；自 0.6.x 版本起 .transfer() 會自動 revert，無需額外檢查。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤以為 .transfer() 的 2300 gas 限制足以防止所有重入攻擊，忽略了合約邏輯中存在可被時間操控或狀態變更利用的重入風險。",
+          "missing_knowledge": "需要補充在 Solidity 0.4.x 版本中，雖然 .transfer() 限制了 gas，但仍可能因合約邏輯設計不當（如依賴區塊時間戳或狀態變更順序）導致重入或時間操控漏洞，且 .transfer() 並非萬能防護，必須結合狀態鎖定等防護措施才能有效防範。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x 合約使用 .transfer() 發送以太幣 → 不應單純依賴 .transfer() 的 2300 gas 限制防止重入，需結合狀態鎖定或 ReentrancyGuard，因合約邏輯中依賴區塊時間戳或狀態變更順序仍可能被利用進行重入或時間操控攻擊。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤以為使用 .transfer() 即完全避免重入漏洞，忽略了合約其他邏輯可能導致的重入風險。",
+          "missing_knowledge": "除了 .transfer() 的限制外，合約邏輯中仍可能存在重入攻擊風險，尤其在狀態變更順序錯誤或外部呼叫前未更新狀態時，應結合邏輯分析判斷重入漏洞。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] 僅使用 .transfer() 並不保證無重入漏洞 → 合約仍可能因狀態更新順序錯誤或外部呼叫位置不當而遭受重入攻擊，需結合邏輯分析判斷，不能僅依賴 .transfer() 的 gas 限制和自動 revert 機制。"
+        },
+        {
+          "error_type": "FP",
+          "root_cause": "系統誤將 onlyOwner 權限限制誤判為無效防護，且未辨識 call.value() 呼叫後有安全邏輯保障。",
+          "missing_knowledge": "RAG 需補充合約中 onlyOwner 權限限制可有效防止非授權呼叫造成的重入風險，且在某些設計中 call.value() 雖未檢查返回值但因邏輯限制無實際重入漏洞，需結合合約邏輯判斷外部呼叫風險。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] 合約使用 onlyOwner 限制敏感函數且 call.value() 呼叫後有狀態更新或邏輯限制 → 判定為 SAFE。理由：onlyOwner 防止非授權重入，且合約邏輯保障即使未檢查 call.value() 返回值亦無重入風險。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統未能判斷狀態變更與外部呼叫的先後順序，誤以為存在重入風險。",
+          "missing_knowledge": "補充合約中狀態變更與外部呼叫順序的判斷規則，若狀態先更新再呼叫外部合約，即使使用 .call.value() 也不一定存在重入漏洞。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] 使用 .call.value() 進行轉帳時，若合約在外部呼叫前已完成所有關鍵狀態更新，則不構成重入漏洞 → 正確判斷依賴於狀態更新與外部呼叫順序，避免誤判重入風險。"
+        }
+      ]
+    },
+    {
+      "round": 5,
+      "metrics": {
+        "TP": 88,
+        "FN": 55,
+        "FP": 4,
+        "TN": 96,
+        "precision": 0.9565,
+        "recall": 0.6154,
+        "F1": 0.7489,
+        "FPR": 0.04
+      },
+      "delta_f1": -0.0197,
+      "pipeline_llm_calls": 164,
+      "pipeline_tokens": 146956,
+      "errors_analyzed": 30,
+      "new_patterns_added": 30,
+      "chroma_total": 150,
+      "patterns": [
+        {
+          "error_type": "FN",
+          "root_cause": "系統錯誤地認為使用 .transfer() 自動避免了所有未檢查呼叫及 DoS 風險，忽略了合約中實際存在的時間依賴與算術溢位問題。",
+          "missing_knowledge": "RAG 知識庫缺少對 Solidity 0.4.x 版本中 .transfer() 雖有 2300 gas 限制但仍可能導致 DoS 的具體業務場景判斷，以及未涵蓋合約中時間依賴邏輯（TIME_MANIPULATION）和算術溢位風險的綜合分析指引。",
+          "is_systematic": true,
+          "pattern_category": "dos_fn",
+          "suggested_rag_entry": "[dos_fn] Solidity 0.4.x 合約中使用 .transfer() 發送以太幣 → 不可單純認為 .transfer() 可完全避免 DoS，因 2300 gas 限制在特定業務邏輯下仍會導致拒絕服務；需結合合約時間依賴邏輯及算術運算風險綜合判斷，避免誤判為安全。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統未將使用 call.value() 且未檢查返回值的情況視為高風險，誤判為安全。",
+          "missing_knowledge": "補充 Solidity 0.4.x 版本中，使用 call.value() 進行以太幣轉帳且未檢查返回值，因無 gas 限制且不自動 revert，存在未檢查呼叫與重入攻擊風險；與此同時，transfer() 在該版本因 gas 限制及自動 revert 可視為安全轉帳方式。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x 合約中使用 call.value() 轉帳且未檢查返回值 → 判定為 VULNERABLE，因 call.value() 不限制 gas 且不自動 revert，易遭受重入攻擊與未檢查呼叫問題；相較之下，transfer() 具 2300 gas 限制且失敗自動 revert，為安全轉帳方式。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤以為 .transfer() 在 Solidity 0.4.x 版本中必定安全且不會忽略返回值，忽略了其他可能導致重入或失敗的風險。",
+          "missing_knowledge": "補充 Solidity 0.4.x 中 .transfer() 雖會 revert 失敗交易，但仍可能因合約邏輯或外部合約行為導致重入風險，且未檢查其他外部呼叫的返回值仍存在安全隱患，不能單憑 .transfer() 認定無 UNCHECKED_CALL 漏洞。",
+          "is_systematic": true,
+          "pattern_category": "unchecked_fp",
+          "suggested_rag_entry": "[unchecked_fp] Solidity 0.4.x 合約中使用 .transfer() 雖會 revert 失敗，但仍須結合防重入機制或返回值檢查，因 .transfer() 的 2300 gas 限制並非萬無一失，且其他外部呼叫未檢查返回值仍可能導致漏洞 → 判斷時不可僅依賴 .transfer() 內建機制，需綜合考量合約邏輯與防護措施，避免誤判為安全。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤以為所有 .call.value() 呼叫都被 SafeMath 或 .transfer() 防護，忽略了 .call.value() 本身可能導致重入且未檢查返回值。",
+          "missing_knowledge": "需要補充 .call.value() 在 Solidity 0.4.x 中不具備內建失敗回退機制，且不會自動 revert，必須手動檢查返回值，否則存在 unchecked call 風險；此外，.transfer() 的使用並不代表所有外部呼叫都安全，尤其當合約中同時存在 .call.value() 時，必須針對該呼叫獨立判斷重入風險。",
+          "is_systematic": true,
+          "pattern_category": "unchecked_fp",
+          "suggested_rag_entry": "[unchecked_fp] Solidity 0.4.x 中合約使用 .call.value() 進行外部呼叫且未檢查返回值 → 判定為 UNCHECKED_CALL 漏洞，因 .call.value() 不會自動 revert，失敗不會回退交易，且存在重入攻擊風險。SafeMath 僅防止算術溢位，.transfer() 的安全性不代表 .call.value() 也安全。必須明確檢查 .call.value() 返回值並結合重入防護機制，才能避免漏洞。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤以為 .transfer() 的 2300 gas 限制能完全防止 DoS，忽略了接收方 fallback 函數可能因耗費過多 gas 導致轉帳失敗而造成服務阻斷。",
+          "missing_knowledge": "需要補充 Solidity 0.4.x 版本中 .transfer() 雖會 revert 但因 2300 gas 限制可能導致接收方合約因 fallback 函數複雜或 gas 不足而失敗，進而引發 Denial of Service，且此類失敗非設計限制而是潛在漏洞，應結合業務邏輯判斷風險。",
+          "is_systematic": true,
+          "pattern_category": "dos_fn",
+          "suggested_rag_entry": "[dos_fn] 使用 .transfer() 發送以太幣於 Solidity 0.4.x 版本中 → 判定為潛在 Denial of Service 漏洞，因 .transfer() 內建 2300 gas 限制，若接收合約 fallback 函數執行超過此限制會導致轉帳失敗並 revert，可能被惡意合約利用阻斷服務，故不可僅以 gas 限制防護判定安全，需結合業務邏輯及接收方行為評估風險。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤判以為使用 transfer() 可完全防止重入，且未能識別錯誤命名的 constructor 導致錯誤漏報。",
+          "missing_knowledge": "RAG 知識庫需補充 Solidity 0.4.x 版本中錯誤命名 constructor（函數名與合約名不符）會導致初始化函數變成普通函數，造成合約初始化失敗的漏洞；以及 transfer() 並非萬能防禦重入，錯誤的初始化會導致合約狀態異常，可能被利用重入或其他攻擊。",
+          "is_systematic": true,
+          "pattern_category": "other",
+          "suggested_rag_entry": "[other] Solidity 0.4.x 錯誤命名 constructor → 錯誤命名的 constructor 函數不會被自動調用，導致合約初始化失敗，合約狀態異常可能引發安全漏洞。transfer() 雖限制 gas 防止重入，但錯誤初始化仍會造成潛在風險，應明確檢查 constructor 名稱與合約名一致。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統錯誤假設使用 .transfer() 就能完全防止重入，但忽略了合約內部狀態更新順序不當導致的重入風險。",
+          "missing_knowledge": "合約即使使用 .transfer() 發送以太幣，若在外部呼叫前未先更新狀態變數，仍存在重入攻擊風險；防禦重入需關注狀態更新時機而非僅依賴轉帳方式。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] 合約使用 .transfer() 發送以太幣但狀態更新在外部呼叫後 → 不應判定為安全，因 .transfer() 雖限制 gas，但若狀態更新順序錯誤仍可被重入利用。正確判斷需檢查狀態更新是否在外部呼叫前完成，避免重入攻擊。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統未將 Solidity 0.4.x 版本中缺乏內建溢位保護與 SafeMath 使用視為高風險，導致溢位漏洞被忽略。",
+          "missing_knowledge": "RAG 知識庫需補充 Solidity 0.4.x 版本無內建算術溢位保護，且未使用 SafeMath 函式庫時存在高風險溢位漏洞，應視為 vulnerable。",
+          "is_systematic": true,
+          "pattern_category": "overflow_fn",
+          "suggested_rag_entry": "[overflow_fn] Solidity 0.4.x 版本合約中，若未使用 SafeMath 或其他溢位保護機制，且存在算術運算，則存在高風險整數溢位漏洞 → 系統應判定為 VULNERABLE，因為該版本編譯器不具備內建溢位檢查，易導致資金錯誤或邏輯錯誤。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統未正確將 .call.value() 未檢查返回值與缺乏重入防護機制的組合視為高風險漏洞。",
+          "missing_knowledge": "RAG 知識庫缺少對 Solidity 0.4.x 版本中 .call.value() 調用若未檢查返回值且無重入防護機制時，存在典型重入攻擊風險的明確規則與示例。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x 合約中使用 .call.value() 進行以太轉帳且未檢查返回值，且未使用 ReentrancyGuard 或類似防護機制 → 判定為高風險重入漏洞，因為攻擊者可利用未檢查返回值繞過錯誤處理，並重入合約導致資金被盜。"
+        },
+        {
+          "error_type": "FP",
+          "root_cause": "系統單純根據 call.value() 無檢查返回值即判定風險，未考慮合約邏輯本身無重入攻擊路徑。",
+          "missing_knowledge": "合約中即使使用 call.value()，若合約邏輯不涉及狀態變更後再呼叫外部合約，且沒有可被重入利用的狀態變數修改，則不構成重入攻擊風險；此外，重入攻擊判斷應結合合約邏輯流程，而非僅依賴呼叫方式與防護機制標記。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] 使用 call.value() 且未檢查返回值 → 若合約無狀態變更後呼叫外部合約或無可被重入利用的狀態變數，則不構成重入攻擊風險；正確判斷需結合合約邏輯流程，而非單純依賴呼叫函式形式或防護機制標記。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統過度信任 .transfer() 的 2300 gas 限制能完全防止重入，忽略了合約邏輯中狀態更新時機及外部呼叫的複雜性。",
+          "missing_knowledge": "在 Solidity 0.4.x 版本中，雖然 .transfer() 限制 2300 gas，但若狀態更新發生在 .transfer() 之後，或合約中存在其他可被重入的外部呼叫，仍可能導致重入漏洞；此外，.transfer() 並非萬能防護，需結合狀態更新順序及其他防禦機制判斷安全性。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x 合約使用 .transfer() → 不可單憑 .transfer() 的 2300 gas 限制判定安全，需確認狀態更新是否在 .transfer() 之前完成，且無其他外部呼叫可被重入。因 .transfer() 可能因接收方 fallback 函數復雜邏輯或合約設計錯誤導致重入，故必須結合狀態管理順序及額外防禦措施（如 ReentrancyGuard）共同判斷安全性。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤以為使用.transfer()即完全避免重入及拒絕服務風險，忽略了.transfer()本身可能導致拒絕服務且不代表無重入風險。",
+          "missing_knowledge": "需補充.transfer()雖有2300 gas限制可降低重入風險，但仍可能因接收方合約邏輯或gas限制導致拒絕服務，且.transfer()並非萬無一失的重入防護，應結合業務邏輯判斷整體風險。",
+          "is_systematic": true,
+          "pattern_category": "dos_fn",
+          "suggested_rag_entry": "[dos_fn] 合約僅使用.transfer()發送以太幣 → 判斷為安全存在誤導，因.transfer()的2300 gas限制可能導致接收方合約執行失敗而拒絕服務，且不代表完全無重入風險；正確判斷應結合業務邏輯及接收方合約特性，並考慮使用更安全的提款模式或重入保護機制。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統僅依賴 SafeMath 和 transfer() 使用判斷安全，忽略了合約中可能存在的重入漏洞或其他邏輯缺陷。",
+          "missing_knowledge": "需要補充對於重入攻擊的判斷條件，不僅要看是否使用 transfer()，還要分析函數調用邏輯是否存在狀態更新順序錯誤或外部呼叫後未立即更新狀態的漏洞。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] 僅使用 SafeMath 並不代表合約無重入風險 → 合約若存在外部呼叫且狀態更新順序錯誤，即使使用 transfer() 也可能遭受重入攻擊，故需結合狀態變更邏輯分析判斷。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統未將未檢查 .call.value() 返回值與缺乏防護機制的組合視為高風險，導致誤判為 SAFE。",
+          "missing_knowledge": "需補充 Solidity 0.4.x 版本中使用 .call.value() 進行以太轉帳時，若未檢查返回值且無防重入保護，極易導致重入攻擊與未檢查呼叫漏洞，且 .transfer() 的 2300 gas 限制是防範重入的重要機制。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x 合約中使用 .call.value() 進行以太轉帳且未檢查返回值，且無 ReentrancyGuard 或其他防重入機制 → 判定為 VULNERABLE。理由：.call.value() 不限制 gas，攻擊者可利用重入漏洞竊取資金，且未檢查返回值會導致未檢查呼叫漏洞，.transfer() 的 2300 gas 限制與自動 revert 是防範重入的關鍵。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤判合約為安全是因為未能正確識別.sol 0.4.x版本中.call.value()不限制gas導致的重入風險。",
+          "missing_knowledge": "補充Solidity 0.4.x版本中.call.value()的gas傳遞特性及其重入風險，並明確區分不同版本中.transfer()與.call.value()的安全性差異。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x合約使用.call.value()進行以太幣轉帳 → 判定為VULNERABLE，因為.call.value()不限制gas，易被重入攻擊；除非有明確防護機制（如ReentrancyGuard或狀態變量檢查），否則不能視為安全。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "誤以為 Solidity 0.4.x 版本中 .transfer() 的 2300 gas 限制足以完全防止重入攻擊。",
+          "missing_knowledge": "在 Solidity 0.4.x 版本，.transfer() 雖限制 2300 gas，但仍可能被特定合約利用 fallback 函數觸發有限重入，且僅依賴 .transfer() 無法完全杜絕重入風險，尤其當合約邏輯複雜或存在多階段狀態更新時；此外，onlyOwner 修飾符若未嚴格檢查所有敏感操作入口，仍可能導致權限繞過，需結合多層防護與事件監控判斷。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x 合約使用 .transfer() 進行以太轉帳 → 不應單純依賴 2300 gas 限制防止重入攻擊，因部分 fallback 函數仍可觸發有限重入，且合約狀態更新順序與多階段邏輯影響重入風險；建議搭配狀態鎖定（如 ReentrancyGuard）或先更新狀態再轉帳以確保安全。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤以為使用 transfer() 即可完全防止重入，忽略了算術溢位及其他間接重入風險。",
+          "missing_knowledge": "Solidity 0.4.x 版本中，transfer() 雖有限制 2300 gas 並會 revert，但算術溢位風險高且無 SafeMath，可能導致狀態錯亂間接引發重入漏洞；此外，delegatecall 漏洞需明確檢查合約內是否存在 delegatecall 指令，不能僅憑 transfer() 判斷安全性。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x 合約使用 transfer() 發送以太幣 → 不可單憑 transfer() 認定無重入風險，需結合算術溢位檢查及 delegatecall 指令存在與否判斷；transfer() 限制 2300 gas 僅防範直接重入，無法防範因算術溢位或狀態錯亂引發的間接重入漏洞。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤以為使用.transfer()即自動避免所有UNCHED_CALL與DoS風險，忽略.transfer()的2300 gas限制可能導致接收方拒收，造成實際DoS漏洞。",
+          "missing_knowledge": "需補充.transfer()雖自動revert但因2300 gas限制可能導致接收合約執行失敗，進而造成Denial of Service，且此風險依賴業務邏輯，不能單純視為安全。",
+          "is_systematic": true,
+          "pattern_category": "dos_fn",
+          "suggested_rag_entry": "[dos_fn] 使用.transfer()發送以太 → 不可單純視為安全，因2300 gas限制可能導致接收合約執行失敗，造成Denial of Service。判斷時需結合業務邏輯分析是否存在阻斷付款流程的風險。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤以為使用 transfer() 會自動 revert 且不需考慮業務邏輯導致的 DoS，忽略了 transfer() 的 2300 gas 限制可能造成實際的服務中斷。",
+          "missing_knowledge": "transfer() 在 Solidity 0.4.x 中雖會 revert 失敗，但其 2300 gas 限制可能導致接收合約因執行複雜邏輯而無法成功接收款項，若合約業務依賴此轉帳成功，則存在實際的 Denial of Service 風險，需結合業務邏輯判斷。",
+          "is_systematic": true,
+          "pattern_category": "dos_fn",
+          "suggested_rag_entry": "[dos_fn] 使用 transfer() 發送以太時，因 2300 gas 限制可能導致接收合約執行失敗，若合約業務依賴該轉帳成功，則存在實際 Denial of Service 風險 → 判斷時需結合業務邏輯，不能僅憑 transfer() 會 revert 就視為安全。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統未能根據合約內隨機數生成的具體實現判斷其不可預測性，僅依賴轉帳防護機制誤判隨機性安全。",
+          "missing_knowledge": "補充隨機數生成安全性評估的知識，特別是基於區塊屬性（如 blockhash、timestamp）等可預測來源生成隨機數的風險與判斷標準，並非僅依賴轉帳或重入防護機制即可判定隨機性安全。",
+          "is_systematic": true,
+          "pattern_category": "other",
+          "suggested_rag_entry": "[other] 使用區塊屬性（block.timestamp、blockhash）等可預測資料作為隨機數種子 → 判定為 BAD_RANDOMNESS 脆弱性，因為這些資料可被礦工或攻擊者操控或預測，導致隨機數可被預測或操控，無法依賴轉帳防護機制判斷隨機性安全。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統未正確識別 Solidity 0.4.x 版本中 .transfer() 的內建 2300 gas 限制及自動 revert 特性，誤判存在重入及未檢查呼叫漏洞。",
+          "missing_knowledge": "RAG 知識庫缺少對 Solidity 0.4.x 版本 .transfer() 調用的安全特性描述，特別是其自動 revert 失敗交易及 2300 gas 限制防止重入攻擊的能力。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x 版本中使用 .transfer() 發送以太幣 → 判定為安全，因為 .transfer() 內建 2300 gas 限制，且失敗時會自動 revert，能有效防止重入攻擊，無需額外 ReentrancyGuard。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統未正確識別 .call.value() 未檢查返回值且缺乏防重入機制的高風險，誤判為安全。",
+          "missing_knowledge": "RAG 知識庫缺少對 Solidity 0.4.x 版本中 .call.value() 調用未檢查返回值且無防護機制時，存在重入攻擊與未檢查呼叫漏洞的明確規則。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x 合約中使用 .call.value() 進行以太幣轉帳且未檢查返回值，且未採用 ReentrancyGuard、onlyOwner 或 .transfer() 等防護措施 → 判定為存在重入攻擊與未檢查呼叫漏洞，因 .call.value() 不受 2300 gas 限制，易被攻擊者利用重入，且未檢查返回值可能導致資金損失。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤以為使用.transfer()自動檢查呼叫結果且不會造成實際DoS，忽略了.transfer()本身的2300 gas限制可能導致接收方拒絕接收以太，造成業務層面的Denial of Service。",
+          "missing_knowledge": "需補充.transfer()雖會revert但其2300 gas限制可能導致合法接收合約無法成功接收以太，從而引發業務層面的Denial of Service風險，且此風險非以太坊設計缺陷而是合約設計需考慮的問題。",
+          "is_systematic": true,
+          "pattern_category": "dos_fn",
+          "suggested_rag_entry": "[dos_fn] 使用.transfer()發送以太 → 判斷為安全忽略DoS風險錯誤。正確判斷：.transfer()雖會自動revert確保呼叫結果被檢查，但其2300 gas限制可能導致部分接收合約無法成功接收以太，造成業務層面的Denial of Service。需結合業務邏輯判斷是否存在實際DoS風險，不能單純以.transfer()存在即判定安全。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統未正確識別 .call.value() 調用未檢查返回值且無防護機制即存在重入風險。",
+          "missing_knowledge": "補充 Solidity 0.4.x 版本中 .call.value() 不限制 gas 且返回值需檢查，否則存在重入與未檢查呼叫漏洞，且 .transfer() 才有 2300 gas 限制與自動 revert 保護。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x 合約中使用 .call.value() 進行以太幣轉帳且未檢查返回值，且缺乏重入防護機制 → 判定為存在重入與未檢查呼叫漏洞，因 .call.value() 不限制 gas 且不自動 revert，易被重入攻擊利用。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統未能識別 Solidity 0.4.x 版本缺乏內建溢位保護，且合約中存在未防範的算術溢位風險。",
+          "missing_knowledge": "RAG 知識庫缺少對舊版本 Solidity（<0.8）中算術運算無內建溢位檢查的認知，尤其是當合約未使用 SafeMath 或其他防護機制時，應判定為高風險溢位漏洞。",
+          "is_systematic": true,
+          "pattern_category": "overflow_fn",
+          "suggested_rag_entry": "[overflow_fn] Solidity 版本低於0.8且合約未使用 SafeMath 或其他溢位防護，且存在算術運算 → 判定為溢位漏洞（VULNERABLE），因為舊版本 Solidity 不具備內建溢位檢查，算術運算存在高風險。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤以為 Solidity 0.4.x 版本使用 .call.value() 不檢查返回值不會導致重入風險，忽略了 .call.value() 本身不限制 gas 且未檢查返回值的危險性。",
+          "missing_knowledge": "需要補充 Solidity 0.4.x 版本中 .call.value() 調用與 .transfer() 的本質差異，特別是 .call.value() 不限制 gas 且未檢查返回值會導致 unchecked call 和重入風險，即使版本較舊也不能忽略此風險。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x 合約中使用 .call.value() 且未檢查返回值 → 判定為 VULNERABLE。理由：.call.value() 不限制 gas，攻擊者可利用重入攻擊；.transfer() 限制 2300 gas 且會自動 revert，能防止重入，但 .call.value() 不具此保護，必須檢查返回值或加防護機制。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤以為檢查 .send() 返回值即可完全避免 DoS，忽略了因單一接收者拒絕導致整體服務阻斷的邏輯風險。",
+          "missing_knowledge": "需補充 DoS 漏洞不僅來自未檢查 .send() 返回值，還可能因單一接收者惡意阻擋導致整體流程停擺，尤其在使用列表迴圈發送款項時，單一失敗會阻斷整體執行。",
+          "is_systematic": true,
+          "pattern_category": "dos_fn",
+          "suggested_rag_entry": "[dos_fn] 合約中使用迴圈對多個地址逐一 .send() 付款，且依賴所有 .send() 成功才能繼續後續邏輯 → 判定為 VULNERABLE，因單一接收者拒絕接收會導致整體交易失敗，形成 Denial of Service。即使有檢查返回值，也無法避免此類邏輯層面的 DoS。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤以為使用 transfer() 即自動避免所有未檢查呼叫與 DoS 風險，忽略了 transfer() 本身可能引發的業務層面拒絕服務問題。",
+          "missing_knowledge": "transfer() 雖會在失敗時 revert，但其 2300 gas 限制可能導致接收合約因執行失敗而無法接收以太，造成業務層面的 Denial of Service，且此風險需結合具體業務邏輯判斷，不能一概視為設計限制而忽略。",
+          "is_systematic": true,
+          "pattern_category": "dos_fn",
+          "suggested_rag_entry": "[dos_fn] 使用 transfer() 發送以太 → 判斷需結合業務邏輯：transfer() 會自動 revert 確保呼叫結果被檢查，避免 unchecked_call，但 2300 gas 限制可能導致接收合約執行失敗，造成 Denial of Service，故不能單純以 transfer() 存在即視為安全，應評估業務流程中是否存在因接收失敗導致功能阻斷的風險。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤以為所有未檢查返回值的呼叫都屬於 UNCHECKED_CALL，忽略了 Solidity 0.4.25 中 .transfer() 會自動 revert 的特性。",
+          "missing_knowledge": "補充 Solidity 0.4.x 版本中 .transfer() 函數在失敗時會自動 revert 交易，且不需額外檢查返回值，因此不構成 UNCHECKED_CALL 漏洞。",
+          "is_systematic": true,
+          "pattern_category": "unchecked_fp",
+          "suggested_rag_entry": "[unchecked_fp] Solidity 0.4.x 中使用 .transfer() 發送以太幣 → 不需檢查返回值，因為 .transfer() 失敗會自動 revert，避免 UNCHECKED_CALL 漏洞。此版本 .transfer() 限制 2300 gas，防止重入攻擊，故不應誤判為漏洞。"
+        },
+        {
+          "error_type": "FN",
+          "root_cause": "系統誤以為 Solidity 0.4.x 版本使用 transfer() 即可完全防止重入，忽略了合約內邏輯可能導致的時間操控與重入風險。",
+          "missing_knowledge": "需要補充 Solidity 0.4.x 中即使使用 transfer() 也可能因合約邏輯設計不當導致重入攻擊及時間操控漏洞，尤其合約內部狀態更新與時間依賴的具體風險分析。",
+          "is_systematic": true,
+          "pattern_category": "reentrancy_fp",
+          "suggested_rag_entry": "[reentrancy_fp] Solidity 0.4.x 合約即使使用 transfer() 進行以太幣轉帳，仍可能因狀態更新順序錯誤或時間依賴邏輯導致重入與時間操控漏洞 → 判斷時需結合合約內部狀態變更流程與時間依賴邏輯，不能僅依賴 transfer() 的 2300 gas 限制防護，避免誤判為安全。"
+        }
+      ]
+    }
+  ],
+  "convergence": {
+    "converged_at_round": null,
+    "final_f1": 0.7489,
+    "total_patterns_learned": 150
+  }
+}
