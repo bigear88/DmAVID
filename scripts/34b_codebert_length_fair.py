@@ -170,14 +170,28 @@ def prepare_arm_data(
         return processed, desc
 
     elif arm == "C":
-        # 固定窗口：所有合約截取中間 window_size chars
+        # 等長截斷：過濾 < W chars 的合約，截取前 W chars，使 length_ratio = 1.0
+        # 原版 Arm C 缺陷：44% vuln < 1024 chars 保持原始短長度，信號未消除
+        # 修正版：所有輸入都是 exactly W real chars，CodeBERT 無法從長度推斷標籤
+        W = window_size  # 預設 512
         processed = []
+        excl_vuln = excl_safe = 0
         for c in sample:
             code = strip_comments(c["code_raw"])
             code = strip_annotations(code)
-            code = extract_middle_window(code, window_size)
-            processed.append({**c, "code": code, "code_length": len(code)})
-        desc = f"固定窗口 {window_size} chars (中間截取)"
+            if len(code) < W:
+                if c["label"] == 1:
+                    excl_vuln += 1
+                else:
+                    excl_safe += 1
+                continue
+            code = code[:W]
+            processed.append({**c, "code": code, "code_length": W})
+        n_v = sum(1 for c in processed if c["label"] == 1)
+        n_s = sum(1 for c in processed if c["label"] == 0)
+        print(f"  [Arm C] W={W}: excluded vuln={excl_vuln} safe={excl_safe}")
+        print(f"  [Arm C] Remaining: {n_v}v + {n_s}s = {len(processed)} total (ratio={n_s/n_v:.2f})")
+        desc = f"等長截斷 ≥{W} chars (取前 {W} chars, length_ratio=1.00)"
         return processed, desc
 
     else:
@@ -479,8 +493,8 @@ def main():
     parser.add_argument("--batch-size", type=int, default=8)
     parser.add_argument("--lr", type=float, default=2e-5)
     parser.add_argument("--max-seq-len", type=int, default=512)
-    parser.add_argument("--window-size", type=int, default=1024,
-                        help="Arm C 固定窗口大小 (chars)")
+    parser.add_argument("--window-size", type=int, default=512,
+                        help="Arm C 等長截斷大小 (chars)；建議 512 → 99v+99s 完全平衡")
     parser.add_argument("--model-name", default="microsoft/codebert-base")
     args = parser.parse_args()
 
