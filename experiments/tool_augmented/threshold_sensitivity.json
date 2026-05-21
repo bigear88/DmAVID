@@ -1,0 +1,56 @@
+{
+  "experiment": "threshold_sensitivity",
+  "timestamp": "2026-05-21T19:26:08.080213",
+  "model": "gpt-4.1-mini",
+  "note": "T=2 is current v4. T=1 adds 58 new LLM calls for count==1 contracts.",
+  "new_llm_calls_for_T1": 58,
+  "new_tokens_for_T1": 37912,
+  "baseline": {
+    "TP": 137,
+    "FN": 6,
+    "FP": 27,
+    "TN": 73,
+    "precision": 0.8354,
+    "recall": 0.958,
+    "F1": 0.8925,
+    "FPR": 0.27
+  },
+  "results": {
+    "T=1": {
+      "TP": 128,
+      "FN": 15,
+      "FP": 20,
+      "TN": 80,
+      "precision": 0.8649,
+      "recall": 0.8951,
+      "F1": 0.8797,
+      "FPR": 0.2,
+      "reeval_count": 75,
+      "flipped_to_safe": 16
+    },
+    "T=2": {
+      "TP": 135,
+      "FN": 8,
+      "FP": 21,
+      "TN": 79,
+      "precision": 0.8654,
+      "recall": 0.9441,
+      "F1": 0.903,
+      "FPR": 0.21,
+      "reeval_count": 17,
+      "flipped_to_safe": 8
+    },
+    "T=3": {
+      "TP": 136,
+      "FN": 7,
+      "FP": 23,
+      "TN": 77,
+      "precision": 0.8553,
+      "recall": 0.951,
+      "F1": 0.9007,
+      "FPR": 0.23,
+      "reeval_count": 10,
+      "flipped_to_safe": 5
+    }
+  }
+}
