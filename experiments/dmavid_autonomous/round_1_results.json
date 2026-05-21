@@ -1,0 +1,3320 @@
+{
+  "round": 1,
+  "metrics": {
+    "tp": 102,
+    "fp": 68,
+    "tn": 32,
+    "fn": 41,
+    "precision": 0.6,
+    "recall": 0.7133,
+    "f1": 0.6518,
+    "fpr": 0.68,
+    "total_samples": 243
+  },
+  "pre_verify_metrics": {
+    "tp": 102,
+    "fp": 68,
+    "tn": 32,
+    "fn": 41,
+    "precision": 0.6,
+    "recall": 0.7133,
+    "f1": 0.6518,
+    "fpr": 0.68,
+    "total_samples": 243
+  },
+  "coordinator_strategy": {
+    "focus_vuln_types": [
+      "reentrancy",
+      "integer_overflow",
+      "access_control",
+      "unchecked_call",
+      "denial_of_service",
+      "front_running"
+    ],
+    "challenges_per_type": 1,
+    "sv_threshold": 0.88,
+    "reasoning": "default (dry-run or LLM skip)"
+  },
+  "cost": {
+    "total_tokens": 0,
+    "total_cost_usd": 0.0,
+    "budget_usd": 5.0,
+    "budget_remaining_usd": 5.0,
+    "per_stage": {
+      "coordinator": {
+        "tokens": 0,
+        "cost_usd": 0.0
+      },
+      "teacher": {
+        "tokens": 0,
+        "cost_usd": 0.0
+      },
+      "student": {
+        "tokens": 0,
+        "cost_usd": 0.0
+      },
+      "red_team": {
+        "tokens": 0,
+        "cost_usd": 0.0
+      }
+    }
+  },
+  "results": [
+    {
+      "contract_id": "curated_access_control_rubixi.sol",
+      "ground_truth_vulnerable": true,
+      "category": "access_control",
+      "predicted_vulnerable": true,
+      "confidence": 0.7721847180826011,
+      "vulnerability_types": [
+        "access_control"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_arithmetic_integer_overflow_1.sol",
+      "ground_truth_vulnerable": true,
+      "category": "arithmetic",
+      "predicted_vulnerable": true,
+      "confidence": 0.4478163579461789,
+      "vulnerability_types": [
+        "arithmetic"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0152_0xfac1c7270bc5b0664e27e7f2e82281d564aedf4e.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.4163884706909387,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_reentrancy_0xbaf51e761510c1a11bf48dd87c0307ac8a8c8a4f.sol",
+      "ground_truth_vulnerable": true,
+      "category": "reentrancy",
+      "predicted_vulnerable": false,
+      "confidence": 0.6779454084568493,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0614_0xda017d3417d7fcdd4db134e2491f30292ec647c7.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": false,
+      "confidence": 0.5093607078776566,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_access_control_phishable.sol",
+      "ground_truth_vulnerable": true,
+      "category": "access_control",
+      "predicted_vulnerable": true,
+      "confidence": 0.6997178143317692,
+      "vulnerability_types": [
+        "access_control"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0624_0x3c139c5ef130d4db3793b1ce7017e6b326d66f2b.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": false,
+      "confidence": 0.7240961261317498,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0340_0xd51ef370830dd8a04a6131f1e4b7b9ee2b8dbd26.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.40357431782293357,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_reentrancy_0x8c7777c45481dba411450c228cb692ac3d550344.sol",
+      "ground_truth_vulnerable": true,
+      "category": "reentrancy",
+      "predicted_vulnerable": true,
+      "confidence": 0.7839766672435248,
+      "vulnerability_types": [
+        "reentrancy"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0332_0xa8d859f36cb259d4e84afbd4f3cfa54ea5d65736.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.48551372489647987,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0352_0x9d06c8da3283d84ba7a77cbabd0ba28a71a447f3.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.5851269998119447,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0201_0x80a9ca0bee2a09753d27657f7ab6d6e018e78b55.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": false,
+      "confidence": 0.4531940072584052,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x4051334adc52057aca763453820cb0e045076ef3.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": true,
+      "confidence": 0.7320493172517901,
+      "vulnerability_types": [
+        "unchecked_low_level_calls"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0599_0xa206ea08e73d779cd7c429581af81c93287cc656.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.8013524826815999,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_arithmetic_integer_overflow_mul.sol",
+      "ground_truth_vulnerable": true,
+      "category": "arithmetic",
+      "predicted_vulnerable": true,
+      "confidence": 0.9352136701886538,
+      "vulnerability_types": [
+        "arithmetic"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x78c2a1e91b52bca4130b6ed9edd9fbcfd4671c37.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": true,
+      "confidence": 0.7036223472002748,
+      "vulnerability_types": [
+        "unchecked_low_level_calls"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_access_control_incorrect_constructor_name3.sol",
+      "ground_truth_vulnerable": true,
+      "category": "access_control",
+      "predicted_vulnerable": true,
+      "confidence": 0.7401858638003354,
+      "vulnerability_types": [
+        "access_control"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_time_manipulation_governmental_survey.sol",
+      "ground_truth_vulnerable": true,
+      "category": "time_manipulation",
+      "predicted_vulnerable": true,
+      "confidence": 0.7175436798912191,
+      "vulnerability_types": [
+        "time_manipulation"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_time_manipulation_roulette.sol",
+      "ground_truth_vulnerable": true,
+      "category": "time_manipulation",
+      "predicted_vulnerable": true,
+      "confidence": 0.42520341101061426,
+      "vulnerability_types": [
+        "time_manipulation"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0795_0xcfa8fa17f60d2b97104878dba2d461d10d8fdb78.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": false,
+      "confidence": 0.559163379981159,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0234_0xfea1d31da698bcf688649fd6bc4a85ca138f0ef4.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": false,
+      "confidence": 0.5280349874985666,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0xb11b2fed6c9354f7aa2f658d3b4d7b31d8a13b77.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": false,
+      "confidence": 0.5528854817105506,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_reentrancy_0xf015c35649c82f5467c9c74b7f28ee67665aad68.sol",
+      "ground_truth_vulnerable": true,
+      "category": "reentrancy",
+      "predicted_vulnerable": true,
+      "confidence": 0.6006576984335463,
+      "vulnerability_types": [
+        "reentrancy"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_reentrancy_0x93c32845fae42c83a70e5f06214c8433665c2ab5.sol",
+      "ground_truth_vulnerable": true,
+      "category": "reentrancy",
+      "predicted_vulnerable": true,
+      "confidence": 0.5152288669243182,
+      "vulnerability_types": [
+        "reentrancy"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0xb0510d68f210b7db66e8c7c814f22680f2b8d1d6.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": false,
+      "confidence": 0.9151600232418716,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_arithmetic_integer_overflow_minimal.sol",
+      "ground_truth_vulnerable": true,
+      "category": "arithmetic",
+      "predicted_vulnerable": true,
+      "confidence": 0.7350220531168434,
+      "vulnerability_types": [
+        "arithmetic"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0660_0xc74b66be9e70b02c23bbc841629bdd2c5ce51503.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": false,
+      "confidence": 0.8010197388726921,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0xe4eabdca81e31d9acbc4af76b30f532b6ed7f3bf.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": false,
+      "confidence": 0.6087004929667063,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0446_0xe9ce4238f1ee0e4882cb02da2938d26c631fe09c.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.751999867919751,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x52d2e0f9b01101a59b38a3d05c80b7618aeed984.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": true,
+      "confidence": 0.776537838044431,
+      "vulnerability_types": [
+        "unchecked_low_level_calls"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0725_0x82d4fae5b529fd52e464bcf7d5d737d0fd313f37.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.8267999513504346,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0639_0xf8a53a14725e41373944d5244fe9be19a27fdca4.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": false,
+      "confidence": 0.4176551341472208,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0397_0x7ee8477645d22f6006e01b576319d9a7cd98d4d1.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.5472574817866365,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_access_control_parity_wallet_bug_2.sol",
+      "ground_truth_vulnerable": true,
+      "category": "access_control",
+      "predicted_vulnerable": false,
+      "confidence": 0.9186003428842799,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0028_0xf20a0fadc2bc7ed5fb5839d52d954b3df0e06ccf.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.5730728344391629,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0498_0x84d4816ffb1ae1728b378078a955209a29c08112.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.6175975455833653,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x39cfd754c85023648bf003bea2dd498c5612abfa.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": true,
+      "confidence": 0.6523685189230694,
+      "vulnerability_types": [
+        "unchecked_low_level_calls"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0129_0x1041ebc580a989743d3b42245e1c6a8662b72600.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": false,
+      "confidence": 0.5356451292316909,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0483_0xfc1b3b5fdae98b30f2d2b4130c9a867f5a733c8c.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.5445078846876144,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_arithmetic_tokensalechallenge.sol",
+      "ground_truth_vulnerable": true,
+      "category": "arithmetic",
+      "predicted_vulnerable": true,
+      "confidence": 0.8938025859813623,
+      "vulnerability_types": [
+        "arithmetic"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_reentrancy_0xb5e1b1ee15c6fa0e48fce100125569d430f1bd12.sol",
+      "ground_truth_vulnerable": true,
+      "category": "reentrancy",
+      "predicted_vulnerable": true,
+      "confidence": 0.5206264175365058,
+      "vulnerability_types": [
+        "reentrancy"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0638_0x472920d700172c3787c3538dfc6457fc516e871c.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.6802394615220555,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_access_control_unprotected0.sol",
+      "ground_truth_vulnerable": true,
+      "category": "access_control",
+      "predicted_vulnerable": false,
+      "confidence": 0.42591400648360406,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_arithmetic_integer_overflow_mapping_sym_1.sol",
+      "ground_truth_vulnerable": true,
+      "category": "arithmetic",
+      "predicted_vulnerable": false,
+      "confidence": 0.7450953229366994,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0463_0x9d2ce3f9e181e413dbcc4ec7e020d82414b62e46.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.6321879817398262,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x4a66ad0bca2d700f11e1f2fc2c106f7d3264504c.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": false,
+      "confidence": 0.6098906075785953,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_front_running_eth_tx_order_dependence_minimal.sol",
+      "ground_truth_vulnerable": true,
+      "category": "front_running",
+      "predicted_vulnerable": true,
+      "confidence": 0.6910128898045254,
+      "vulnerability_types": [
+        "front_running"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_reentrancy_0x96edbe868531bd23a6c05e9d0c424ea64fb1b78b.sol",
+      "ground_truth_vulnerable": true,
+      "category": "reentrancy",
+      "predicted_vulnerable": true,
+      "confidence": 0.8734288362289739,
+      "vulnerability_types": [
+        "reentrancy"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0701_0x5666c4d481ccc798d4d7cafe8a53820f71089e8b.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": false,
+      "confidence": 0.796397000648107,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0844_0x4705d36d5ffb432ce0aa3859ffc7ab21e7edf34f.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.6953336817248373,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x8fd1e427396ddb511533cf9abdbebd0a7e08da35.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": false,
+      "confidence": 0.7525289892188944,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0355_0x7860ca4be312900ca0e0e949e7f98e380576517b.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": false,
+      "confidence": 0.6391208878680077,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0749_0xb0bb3c7193fb9aea9d8c28200162264ff1800167.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.924598760136594,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x3a0e9acd953ffc0dd18d63603488846a6b8b2b01.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": true,
+      "confidence": 0.5448639779130999,
+      "vulnerability_types": [
+        "unchecked_low_level_calls"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0xf2570186500a46986f3139f65afedc2afe4f445d.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": true,
+      "confidence": 0.4982585342915723,
+      "vulnerability_types": [
+        "unchecked_low_level_calls"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x958a8f594101d2c0485a52319f29b2647f2ebc06.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": true,
+      "confidence": 0.8787852134102218,
+      "vulnerability_types": [
+        "unchecked_low_level_calls"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_denial_of_service_dos_number.sol",
+      "ground_truth_vulnerable": true,
+      "category": "denial_of_service",
+      "predicted_vulnerable": false,
+      "confidence": 0.7514222221763028,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_reentrancy_0x627fa62ccbb1c1b04ffaecd72a53e37fc0e17839.sol",
+      "ground_truth_vulnerable": true,
+      "category": "reentrancy",
+      "predicted_vulnerable": true,
+      "confidence": 0.4840615977022992,
+      "vulnerability_types": [
+        "reentrancy"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0760_0x58ca3065c0f24c7c96aee8d6056b5b5decf9c2f8.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.6966584665657942,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0xd2018bfaa266a9ec0a1a84b061640faa009def76.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": true,
+      "confidence": 0.6916945197073476,
+      "vulnerability_types": [
+        "unchecked_low_level_calls"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_reentrancy_reentrancy_insecure.sol",
+      "ground_truth_vulnerable": true,
+      "category": "reentrancy",
+      "predicted_vulnerable": false,
+      "confidence": 0.5782858313525702,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0769_0x5c13a9ad2601eeec34672c655d2ca994a360c4a0.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": false,
+      "confidence": 0.9110042389455394,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_reentrancy_0xcead721ef5b11f1a7b530171aab69b16c5e66b6e.sol",
+      "ground_truth_vulnerable": true,
+      "category": "reentrancy",
+      "predicted_vulnerable": true,
+      "confidence": 0.8574160411486487,
+      "vulnerability_types": [
+        "reentrancy"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0633_0x3efb198612a0a933de56d809275690dfb1e703e1.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.43185884157180315,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_reentrancy_0x561eac93c92360949ab1f1403323e6db345cbf31.sol",
+      "ground_truth_vulnerable": true,
+      "category": "reentrancy",
+      "predicted_vulnerable": true,
+      "confidence": 0.9208221949138967,
+      "vulnerability_types": [
+        "reentrancy"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0xf70d589d76eebdd7c12cc5eec99f8f6fa4233b9e.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": false,
+      "confidence": 0.6672947548241376,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x07f7ecb66d788ab01dc93b9b71a88401de7d0f2e.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": false,
+      "confidence": 0.8183311908914773,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0127_0xef64c6b4f189d2053b8a00a23c725475fc509884.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.47061530547486957,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_access_control_wallet_03_wrong_constructor.sol",
+      "ground_truth_vulnerable": true,
+      "category": "access_control",
+      "predicted_vulnerable": true,
+      "confidence": 0.7023919764222191,
+      "vulnerability_types": [
+        "access_control"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_bad_randomness_guess_the_random_number.sol",
+      "ground_truth_vulnerable": true,
+      "category": "bad_randomness",
+      "predicted_vulnerable": false,
+      "confidence": 0.8798381725968916,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_reentrancy_reentrance.sol",
+      "ground_truth_vulnerable": true,
+      "category": "reentrancy",
+      "predicted_vulnerable": true,
+      "confidence": 0.5164890129931451,
+      "vulnerability_types": [
+        "reentrancy"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_reentrancy_etherstore.sol",
+      "ground_truth_vulnerable": true,
+      "category": "reentrancy",
+      "predicted_vulnerable": true,
+      "confidence": 0.8014620879994869,
+      "vulnerability_types": [
+        "reentrancy"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_arithmetic_integer_overflow_multitx_multifunc_feasible.sol",
+      "ground_truth_vulnerable": true,
+      "category": "arithmetic",
+      "predicted_vulnerable": false,
+      "confidence": 0.5714439602154923,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0216_0x447ebb5396d045eb310c6d90793011cc3e7b9a8e.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.7574329317016995,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0061_0x6db37629bb1da376e9a54d8ba3b30447043018d3.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.6846667125695749,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0486_0x42ccea04f823a130ff1a7603d9057b9fe2a25ac5.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": false,
+      "confidence": 0.5235835353673566,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_arithmetic_overflow_simple_add.sol",
+      "ground_truth_vulnerable": true,
+      "category": "arithmetic",
+      "predicted_vulnerable": true,
+      "confidence": 0.7235697951514783,
+      "vulnerability_types": [
+        "arithmetic"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0xb7c5c5aa4d42967efe906e1b66cb8df9cebf04f7.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": false,
+      "confidence": 0.5211195614483577,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0297_0x6e5d3e9ce88a0fba4e096e2eb8d2b3dc54685dd2.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": false,
+      "confidence": 0.7471066264985544,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_reentrancy_0x4320e6f8c05b27ab4707cd1f6d5ce6f3e4b3a5a1.sol",
+      "ground_truth_vulnerable": true,
+      "category": "reentrancy",
+      "predicted_vulnerable": false,
+      "confidence": 0.8979810071533703,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0156_0xb9701088afeaa12f323e4d619e2ff21621eb8640.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.4389715424387594,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0xbaa3de6504690efb064420d89e871c27065cdd52.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": false,
+      "confidence": 0.7679377780629543,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0596_0x62d6655db4d29a38e3fa588bcd4137c6d330c2a2.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": false,
+      "confidence": 0.4727715167987638,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_access_control_mapping_write.sol",
+      "ground_truth_vulnerable": true,
+      "category": "access_control",
+      "predicted_vulnerable": true,
+      "confidence": 0.7140737013289065,
+      "vulnerability_types": [
+        "access_control"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_denial_of_service_send_loop.sol",
+      "ground_truth_vulnerable": true,
+      "category": "denial_of_service",
+      "predicted_vulnerable": true,
+      "confidence": 0.8315406833599144,
+      "vulnerability_types": [
+        "denial_of_service"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x663e4229142a27f00bafb5d087e1e730648314c3.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": true,
+      "confidence": 0.5047254528990327,
+      "vulnerability_types": [
+        "unchecked_low_level_calls"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_denial_of_service_dos_address.sol",
+      "ground_truth_vulnerable": true,
+      "category": "denial_of_service",
+      "predicted_vulnerable": false,
+      "confidence": 0.6370781503235077,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_etherpot_lotto.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": true,
+      "confidence": 0.6568635674201713,
+      "vulnerability_types": [
+        "unchecked_low_level_calls"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_reentrancy_0x7b368c4e805c3870b6c49a3f1f49f69af8662cf3.sol",
+      "ground_truth_vulnerable": true,
+      "category": "reentrancy",
+      "predicted_vulnerable": true,
+      "confidence": 0.7703505010113159,
+      "vulnerability_types": [
+        "reentrancy"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_reentrancy_0x01f8c4e3fa3edeb29e514cba738d87ce8c091d3f.sol",
+      "ground_truth_vulnerable": true,
+      "category": "reentrancy",
+      "predicted_vulnerable": true,
+      "confidence": 0.4541298291335774,
+      "vulnerability_types": [
+        "reentrancy"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x89c1b3807d4c67df034fffb62f3509561218d30b.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": true,
+      "confidence": 0.5866164329672298,
+      "vulnerability_types": [
+        "unchecked_low_level_calls"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0079_0x3dddcf24a8cfbc603a213e772ef07f4f44270ba5.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.5367609836561571,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0048_0x4cd7d3962dae1ebb711441d0b106d66fa8adf2e8.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": false,
+      "confidence": 0.6467374513082226,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0562_0xb43c257e493e16e83c9212fad4ad2c87ca09cc09.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.5531998295668172,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0777_0xf11c4b3885ba77ab07fef50484b6dd51f0f12a13.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": false,
+      "confidence": 0.907796079601807,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_arithmetic_insecure_transfer.sol",
+      "ground_truth_vulnerable": true,
+      "category": "arithmetic",
+      "predicted_vulnerable": true,
+      "confidence": 0.8737420076190068,
+      "vulnerability_types": [
+        "arithmetic"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_unchecked_return_value.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": true,
+      "confidence": 0.4278235812386847,
+      "vulnerability_types": [
+        "unchecked_low_level_calls"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_bad_randomness_smart_billions.sol",
+      "ground_truth_vulnerable": true,
+      "category": "bad_randomness",
+      "predicted_vulnerable": true,
+      "confidence": 0.8598151717939735,
+      "vulnerability_types": [
+        "bad_randomness"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0xb37f18af15bafb869a065b61fc83cfc44ed9cc27.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": true,
+      "confidence": 0.9095018406544702,
+      "vulnerability_types": [
+        "unchecked_low_level_calls"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0646_0x41f3d85e9b8497fca552523047bf4dac7beea64a.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.4914711108321527,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_short_addresses_short_address_example.sol",
+      "ground_truth_vulnerable": true,
+      "category": "short_addresses",
+      "predicted_vulnerable": true,
+      "confidence": 0.51756101455955,
+      "vulnerability_types": [
+        "short_addresses"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_bad_randomness_lucky_doubler.sol",
+      "ground_truth_vulnerable": true,
+      "category": "bad_randomness",
+      "predicted_vulnerable": true,
+      "confidence": 0.43224946998469843,
+      "vulnerability_types": [
+        "bad_randomness"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_bad_randomness_etheraffle.sol",
+      "ground_truth_vulnerable": true,
+      "category": "bad_randomness",
+      "predicted_vulnerable": true,
+      "confidence": 0.9419198640788492,
+      "vulnerability_types": [
+        "bad_randomness"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_reentrancy_0x4e73b32ed6c35f570686b89848e5f39f20ecc106.sol",
+      "ground_truth_vulnerable": true,
+      "category": "reentrancy",
+      "predicted_vulnerable": false,
+      "confidence": 0.8312388310717131,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_reentrancy_0x7a8721a9d64c74da899424c1b52acbf58ddc9782.sol",
+      "ground_truth_vulnerable": true,
+      "category": "reentrancy",
+      "predicted_vulnerable": true,
+      "confidence": 0.6326541172945896,
+      "vulnerability_types": [
+        "reentrancy"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0437_0xad439b784ff3c09fad40ee0db262eb82c8512b1f.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.9474824792209926,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_bad_randomness_random_number_generator.sol",
+      "ground_truth_vulnerable": true,
+      "category": "bad_randomness",
+      "predicted_vulnerable": true,
+      "confidence": 0.7951245514129792,
+      "vulnerability_types": [
+        "bad_randomness"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_access_control_simple_suicide.sol",
+      "ground_truth_vulnerable": true,
+      "category": "access_control",
+      "predicted_vulnerable": false,
+      "confidence": 0.5631893040220103,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0209_0x8f97b36157bad3f48d28498e83477bc6fd48d760.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.7185491599489409,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_other_open_address_lottery.sol",
+      "ground_truth_vulnerable": true,
+      "category": "other",
+      "predicted_vulnerable": true,
+      "confidence": 0.8113865582084852,
+      "vulnerability_types": [
+        "other"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_access_control_incorrect_constructor_name2.sol",
+      "ground_truth_vulnerable": true,
+      "category": "access_control",
+      "predicted_vulnerable": false,
+      "confidence": 0.7212976769524342,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0815_0x52e2a7dbb799e402d33a36c6ecd5f0fc78c95031.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.8689959406265568,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0458_0x0bd344cade9a06d1798140023f56fb0f56d48afe.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": false,
+      "confidence": 0.9284283968009477,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0771_0x1178ce8bbd246d4e985c536fb54f7cab3b08ac9a.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": false,
+      "confidence": 0.5022037285393978,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_reentrancy_reentrancy_bonus.sol",
+      "ground_truth_vulnerable": true,
+      "category": "reentrancy",
+      "predicted_vulnerable": true,
+      "confidence": 0.7713669044822495,
+      "vulnerability_types": [
+        "reentrancy"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_arithmetic_overflow_single_tx.sol",
+      "ground_truth_vulnerable": true,
+      "category": "arithmetic",
+      "predicted_vulnerable": false,
+      "confidence": 0.46593763767091834,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0410_0xe76987e5f39652159dff4b40cf6cc93004f92958.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.5354184412837437,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0517_0x77c8a119173f0c0656f55954e4ebc1517b32afed.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.7406598306826566,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0xd5967fed03e85d1cce44cab284695b41bc675b5c.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": true,
+      "confidence": 0.7210197591101736,
+      "vulnerability_types": [
+        "unchecked_low_level_calls"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0743_0x80f39542473a4ce45a1e44e1bc1db21c67441fad.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.9140884417550349,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_access_control_mycontract.sol",
+      "ground_truth_vulnerable": true,
+      "category": "access_control",
+      "predicted_vulnerable": false,
+      "confidence": 0.7939054904341781,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_reentrancy_modifier_reentrancy.sol",
+      "ground_truth_vulnerable": true,
+      "category": "reentrancy",
+      "predicted_vulnerable": false,
+      "confidence": 0.61768221573519,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0372_0x84684d48f9983bf959a2b4e88fb9393e90b9166f.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.5649983938893193,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_arithmetic_integer_overflow_add.sol",
+      "ground_truth_vulnerable": true,
+      "category": "arithmetic",
+      "predicted_vulnerable": true,
+      "confidence": 0.8135254708279211,
+      "vulnerability_types": [
+        "arithmetic"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_time_manipulation_timed_crowdsale.sol",
+      "ground_truth_vulnerable": true,
+      "category": "time_manipulation",
+      "predicted_vulnerable": false,
+      "confidence": 0.6520570374402224,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_bad_randomness_blackjack.sol",
+      "ground_truth_vulnerable": true,
+      "category": "bad_randomness",
+      "predicted_vulnerable": true,
+      "confidence": 0.9478530463203019,
+      "vulnerability_types": [
+        "bad_randomness"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0146_0x35bfd2cfe27ef7af2029d584b9b6c2ca27d9b3c7.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": false,
+      "confidence": 0.5172348717468722,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0602_0xf6445627bc9d06516d317a0dbbc4660bab7a17c0.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": false,
+      "confidence": 0.9132926578965399,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0xe894d54dca59cb53fe9cbc5155093605c7068220.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": true,
+      "confidence": 0.8835986333664985,
+      "vulnerability_types": [
+        "unchecked_low_level_calls"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0838_0xa72ef5e0d3723d199d0bc5dd5efb3adf0a03dd2e.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.4867607577964776,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0104_0xc3a007ee74b71fb09a1fd0296f643438e207df00.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.786946958798054,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0392_0x3cc81d9d440da71d9f15b564139c95a14c3022d2.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.9429781849973273,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_time_manipulation_lottopollo.sol",
+      "ground_truth_vulnerable": true,
+      "category": "time_manipulation",
+      "predicted_vulnerable": true,
+      "confidence": 0.4043027089336869,
+      "vulnerability_types": [
+        "time_manipulation"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_access_control_incorrect_constructor_name1.sol",
+      "ground_truth_vulnerable": true,
+      "category": "access_control",
+      "predicted_vulnerable": true,
+      "confidence": 0.5646583137099879,
+      "vulnerability_types": [
+        "access_control"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x7d09edb07d23acb532a82be3da5c17d9d85806b4.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": true,
+      "confidence": 0.9164115021599071,
+      "vulnerability_types": [
+        "unchecked_low_level_calls"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0758_0x8768b7ad12ea89eb13a125404601501ccbf49899.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": false,
+      "confidence": 0.46348576873050623,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0828_0x40607c8be5e35502b319b598350f4da745fb46af.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": false,
+      "confidence": 0.7042730024866488,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_denial_of_service_auction.sol",
+      "ground_truth_vulnerable": true,
+      "category": "denial_of_service",
+      "predicted_vulnerable": false,
+      "confidence": 0.7326564048666231,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0xec329ffc97d75fe03428ae155fc7793431487f63.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": true,
+      "confidence": 0.5119785217800992,
+      "vulnerability_types": [
+        "unchecked_low_level_calls"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x7a4349a749e59a5736efb7826ee3496a2dfd5489.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": true,
+      "confidence": 0.5451911458967251,
+      "vulnerability_types": [
+        "unchecked_low_level_calls"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_access_control_arbitrary_location_write_simple.sol",
+      "ground_truth_vulnerable": true,
+      "category": "access_control",
+      "predicted_vulnerable": true,
+      "confidence": 0.8979350700936277,
+      "vulnerability_types": [
+        "access_control"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_access_control_wallet_02_refund_nosub.sol",
+      "ground_truth_vulnerable": true,
+      "category": "access_control",
+      "predicted_vulnerable": true,
+      "confidence": 0.4507641572420034,
+      "vulnerability_types": [
+        "access_control"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x5aa88d2901c68fda244f1d0584400368d2c8e739.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": true,
+      "confidence": 0.5521741231847385,
+      "vulnerability_types": [
+        "unchecked_low_level_calls"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0819_0x37b53b46fa74ac3f9b4340dc5a39aabb0f2afa33.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": false,
+      "confidence": 0.8241155726607949,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_arithmetic_integer_overflow_benign_1.sol",
+      "ground_truth_vulnerable": true,
+      "category": "arithmetic",
+      "predicted_vulnerable": true,
+      "confidence": 0.5440753943388915,
+      "vulnerability_types": [
+        "arithmetic"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0xa1fceeff3acc57d257b917e30c4df661401d6431.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": true,
+      "confidence": 0.7034242316195152,
+      "vulnerability_types": [
+        "unchecked_low_level_calls"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_reentrancy_etherbank.sol",
+      "ground_truth_vulnerable": true,
+      "category": "reentrancy",
+      "predicted_vulnerable": true,
+      "confidence": 0.405318334784587,
+      "vulnerability_types": [
+        "reentrancy"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_reentrancy_0xaae1f51cf3339f18b6d3f3bdc75a5facd744b0b8.sol",
+      "ground_truth_vulnerable": true,
+      "category": "reentrancy",
+      "predicted_vulnerable": false,
+      "confidence": 0.8857085163150786,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_reentrancy_0x23a91059fdc9579a9fbd0edc5f2ea0bfdb70deb4.sol",
+      "ground_truth_vulnerable": true,
+      "category": "reentrancy",
+      "predicted_vulnerable": true,
+      "confidence": 0.7000746590630373,
+      "vulnerability_types": [
+        "reentrancy"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_denial_of_service_list_dos.sol",
+      "ground_truth_vulnerable": true,
+      "category": "denial_of_service",
+      "predicted_vulnerable": true,
+      "confidence": 0.7203802615693866,
+      "vulnerability_types": [
+        "denial_of_service"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x524960d55174d912768678d8c606b4d50b79d7b1.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": false,
+      "confidence": 0.47009503560517635,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_reentrancy_simple_dao.sol",
+      "ground_truth_vulnerable": true,
+      "category": "reentrancy",
+      "predicted_vulnerable": true,
+      "confidence": 0.8944398188084244,
+      "vulnerability_types": [
+        "reentrancy"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0773_0x090b60abc45e2af60eb058a4c7f25574a1c6ae4a.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.8733864201004965,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0xa46edd6a9a93feec36576ee5048146870ea2c3ae.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": true,
+      "confidence": 0.5155420960868647,
+      "vulnerability_types": [
+        "unchecked_low_level_calls"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_reentrancy_reentrancy_simple.sol",
+      "ground_truth_vulnerable": true,
+      "category": "reentrancy",
+      "predicted_vulnerable": false,
+      "confidence": 0.4565364919194821,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0058_0xb2e1c5486dfb5d5e7cf9bb8b6e4fe5b39801c449.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.8862740857980549,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0xb620cee6b52f96f3c6b253e6eea556aa2d214a99.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": true,
+      "confidence": 0.741363830582892,
+      "vulnerability_types": [
+        "unchecked_low_level_calls"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_lotto.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": false,
+      "confidence": 0.9114345586315209,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0086_0x27eba2a67b906eb4341dfe54ce78083a611a0222.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.9369133181120295,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x610495793564aed0f9c7fc48dc4c7c9151d34fd6.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": true,
+      "confidence": 0.8847789125648284,
+      "vulnerability_types": [
+        "unchecked_low_level_calls"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0231_0x73b172756bd5ddf0110ba8d7b88816eb639eb21c.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": false,
+      "confidence": 0.8051104594652951,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0245_0x4aef06aa244438f28fd60c710a1cdf825374bcbd.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.911948737326579,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_arithmetic_token.sol",
+      "ground_truth_vulnerable": true,
+      "category": "arithmetic",
+      "predicted_vulnerable": true,
+      "confidence": 0.8752352156064036,
+      "vulnerability_types": [
+        "arithmetic"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_access_control_FibonacciBalance.sol",
+      "ground_truth_vulnerable": true,
+      "category": "access_control",
+      "predicted_vulnerable": true,
+      "confidence": 0.5467431402769596,
+      "vulnerability_types": [
+        "access_control"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0254_0x9166b15cba71be78da4127369e564b2d1f1b3008.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.45945259452162646,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0641_0xf8e06e4e4a80287fdca5b02dccecaa9d0954840f.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.8722262882357799,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0xe09b1ab8111c2729a76f16de96bc86a7af837928.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": false,
+      "confidence": 0.8491226330783109,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_time_manipulation_ether_lotto.sol",
+      "ground_truth_vulnerable": true,
+      "category": "time_manipulation",
+      "predicted_vulnerable": true,
+      "confidence": 0.5678549770362303,
+      "vulnerability_types": [
+        "time_manipulation"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0560_0x149b8c8e5c039d3e3c00203fcd24b0dd5596c4b2.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.5251775180742737,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_reentrancy_reentrancy_cross_function.sol",
+      "ground_truth_vulnerable": true,
+      "category": "reentrancy",
+      "predicted_vulnerable": false,
+      "confidence": 0.5062213835802398,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x806a6bd219f162442d992bdc4ee6eba1f2c5a707.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": true,
+      "confidence": 0.8753941181166575,
+      "vulnerability_types": [
+        "unchecked_low_level_calls"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_access_control_parity_wallet_bug_1.sol",
+      "ground_truth_vulnerable": true,
+      "category": "access_control",
+      "predicted_vulnerable": true,
+      "confidence": 0.5535187459970292,
+      "vulnerability_types": [
+        "access_control"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x3f2ef511aa6e75231e4deafc7a3d2ecab3741de2.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": true,
+      "confidence": 0.6198231113980335,
+      "vulnerability_types": [
+        "unchecked_low_level_calls"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x9d06cbafa865037a01d322d3f4222fa3e04e5488.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": true,
+      "confidence": 0.694918652863297,
+      "vulnerability_types": [
+        "unchecked_low_level_calls"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0xe82f0742a71a02b9e9ffc142fdcb6eb1ed06fb87.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": true,
+      "confidence": 0.4634379635182852,
+      "vulnerability_types": [
+        "unchecked_low_level_calls"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0264_0xf5aa54d121dfe0d5eeb37c83aed42238f4f2c5c6.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.498212298894855,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0xf29ebe930a539a60279ace72c707cba851a57707.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": true,
+      "confidence": 0.5460064993876328,
+      "vulnerability_types": [
+        "unchecked_low_level_calls"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_arithmetic_timelock.sol",
+      "ground_truth_vulnerable": true,
+      "category": "arithmetic",
+      "predicted_vulnerable": false,
+      "confidence": 0.6390100672105544,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_reentrancy_0xbe4041d55db380c5ae9d4a9b9703f1ed4e7e3888.sol",
+      "ground_truth_vulnerable": true,
+      "category": "reentrancy",
+      "predicted_vulnerable": true,
+      "confidence": 0.5725225228072451,
+      "vulnerability_types": [
+        "reentrancy"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0550_0x4f809c087f105ecf570bb7a127df5363b033f3fe.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.6812826828182129,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_bad_randomness_old_blockhash.sol",
+      "ground_truth_vulnerable": true,
+      "category": "bad_randomness",
+      "predicted_vulnerable": true,
+      "confidence": 0.7171234239231297,
+      "vulnerability_types": [
+        "bad_randomness"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0210_0x185480332ee00c4a23422df11e022172dc10d5a9.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": false,
+      "confidence": 0.7898319061087938,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_reentrancy_0x7541b76cb60f4c60af330c208b0623b7f54bf615.sol",
+      "ground_truth_vulnerable": true,
+      "category": "reentrancy",
+      "predicted_vulnerable": false,
+      "confidence": 0.9090663410244955,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0778_0x7423a4c58f25a193ca9fdf77731c7d7ce00521ab.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.7956864995296651,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x627fa62ccbb1c1b04ffaecd72a53e37fc0e17839.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": true,
+      "confidence": 0.7688456774381497,
+      "vulnerability_types": [
+        "unchecked_low_level_calls"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x84d9ec85c9c568eb332b7226a8f826d897e0a4a8.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": true,
+      "confidence": 0.43848559611947063,
+      "vulnerability_types": [
+        "unchecked_low_level_calls"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0203_0xcb0ac19e629a237e2a865b9e2c8b2c534f129006.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.581610019823428,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0240_0xf8956d735f7a6ebb9f7a015a9396b227888b441c.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.8664084037284845,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0553_0xc518086f77b45498fabdaa93bdbea24393c7fed6.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.5651772475161954,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_front_running_odds_and_evens.sol",
+      "ground_truth_vulnerable": true,
+      "category": "front_running",
+      "predicted_vulnerable": true,
+      "confidence": 0.6246160997405692,
+      "vulnerability_types": [
+        "front_running"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x4b71ad9c1a84b9b643aa54fdd66e2dec96e8b152.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": true,
+      "confidence": 0.5626103613892709,
+      "vulnerability_types": [
+        "unchecked_low_level_calls"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0648_0xcddbea34e7602f17fb661f4d2e59fe561f11e753.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": false,
+      "confidence": 0.6312454835750996,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0414_0x2812ce48e96530f7c7ebc0f6eff9c195c9dcd0be.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.7725248699000031,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_access_control_proxy.sol",
+      "ground_truth_vulnerable": true,
+      "category": "access_control",
+      "predicted_vulnerable": true,
+      "confidence": 0.7385332037732593,
+      "vulnerability_types": [
+        "access_control"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0249_0xf8a3dc13b7a8da473f80660f513c4343e4edd7f7.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.701365467224634,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0027_0x04a487afd662c4f9deacc07a7b10cfb686b682a4.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": false,
+      "confidence": 0.55780254427791,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_reentrancy_0xb93430ce38ac4a6bb47fb1fc085ea669353fd89e.sol",
+      "ground_truth_vulnerable": true,
+      "category": "reentrancy",
+      "predicted_vulnerable": true,
+      "confidence": 0.7189916296576251,
+      "vulnerability_types": [
+        "reentrancy"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0480_0x5ed786a050c866703e16ad621b9259553a1188a9.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.6557435046358577,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x19cf8481ea15427a98ba3cdd6d9e14690011ab10.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": true,
+      "confidence": 0.5175357705440051,
+      "vulnerability_types": [
+        "unchecked_low_level_calls"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0197_0x6b14c373c24556165002a00cba4174fd96fe28f0.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.8956494542055398,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_mishandled.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": true,
+      "confidence": 0.4933302679089301,
+      "vulnerability_types": [
+        "unchecked_low_level_calls"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_arithmetic_BECToken.sol",
+      "ground_truth_vulnerable": true,
+      "category": "arithmetic",
+      "predicted_vulnerable": false,
+      "confidence": 0.683498605453369,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0432_0x3a7a90534d60af6fd8e043f260d2f0cbee65e877.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.5843535404753906,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0112_0x01058f3806cc9c04e3542de8a284c902f3876f82.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.8131259756474027,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0237_0x4fdbe683500063f6919436c1389b9e9123e585b9.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.5235523662985085,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0312_0x9899af5aa1efa90921d686212c87e70f4fbea035.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": false,
+      "confidence": 0.4134339632497545,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_front_running_ERC20.sol",
+      "ground_truth_vulnerable": true,
+      "category": "front_running",
+      "predicted_vulnerable": false,
+      "confidence": 0.6613249893203428,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0328_0x9989f9ff91626899227dc7ce45dcd47233d43aa6.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.44005552605151305,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_other_crypto_roulette.sol",
+      "ground_truth_vulnerable": true,
+      "category": "other",
+      "predicted_vulnerable": true,
+      "confidence": 0.7463709594057425,
+      "vulnerability_types": [
+        "other"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_bad_randomness_lottery.sol",
+      "ground_truth_vulnerable": true,
+      "category": "bad_randomness",
+      "predicted_vulnerable": false,
+      "confidence": 0.7829948377697777,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_reentrancy_reentrancy_dao.sol",
+      "ground_truth_vulnerable": true,
+      "category": "reentrancy",
+      "predicted_vulnerable": true,
+      "confidence": 0.5341914417681414,
+      "vulnerability_types": [
+        "reentrancy"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_front_running_FindThisHash.sol",
+      "ground_truth_vulnerable": true,
+      "category": "front_running",
+      "predicted_vulnerable": true,
+      "confidence": 0.40304964997591747,
+      "vulnerability_types": [
+        "front_running"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x2972d548497286d18e92b5fa1f8f9139e5653fd2.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": true,
+      "confidence": 0.8235254037157138,
+      "vulnerability_types": [
+        "unchecked_low_level_calls"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_access_control_wallet_04_confused_sign.sol",
+      "ground_truth_vulnerable": true,
+      "category": "access_control",
+      "predicted_vulnerable": false,
+      "confidence": 0.6338304066685038,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_reentrancy_0x941d225236464a25eb18076df7da6a91d0f95e9e.sol",
+      "ground_truth_vulnerable": true,
+      "category": "reentrancy",
+      "predicted_vulnerable": false,
+      "confidence": 0.9268813232537468,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0747_0x12c24018c143a352f7cd5b8075adf5b33b1525cd.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.42762011182735254,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0601_0xd622a760908f26d4a0bbe823b0309d115f1e2797.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": false,
+      "confidence": 0.8665849910434128,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_access_control_multiowned_vulnerable.sol",
+      "ground_truth_vulnerable": true,
+      "category": "access_control",
+      "predicted_vulnerable": true,
+      "confidence": 0.8407791309472454,
+      "vulnerability_types": [
+        "access_control"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0652_0xddad0c85488b0a7aeaf22d96f5c4f28eb046b0a7.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.9433408491865464,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0xdb1c55f6926e7d847ddf8678905ad871a68199d2.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": true,
+      "confidence": 0.9225217846437357,
+      "vulnerability_types": [
+        "unchecked_low_level_calls"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0360_0x7187d76c123d54834c68f9e3bdbb644c23a1e607.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.7369587775189695,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0xbebbfe5b549f5db6e6c78ca97cac19d1fb03082c.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": true,
+      "confidence": 0.677627990653421,
+      "vulnerability_types": [
+        "unchecked_low_level_calls"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0311_0x3bd82e49a5013dddde9ae96b22fdb83cc6e27fdf.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.7013295728359557,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_arithmetic_integer_overflow_multitx_onefunc_feasible.sol",
+      "ground_truth_vulnerable": true,
+      "category": "arithmetic",
+      "predicted_vulnerable": true,
+      "confidence": 0.8090104931877717,
+      "vulnerability_types": [
+        "arithmetic"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0558_0x47af9fd69adc231e674140c81811a640dd92dc51.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.5425553516557606,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0403_0xc6e43ad19490c476012316d1dab988afc73720ef.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": false,
+      "confidence": 0.7507137902268859,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0269_0xb52afc158acbe21f16c1e44a4f90c8c9cc09c13c.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.6867148970553901,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0108_0xeccab39acb2caf9adba72c1cb92fdc106b993e0b.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.551028595804646,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_reentrancy_spank_chain_payment.sol",
+      "ground_truth_vulnerable": true,
+      "category": "reentrancy",
+      "predicted_vulnerable": false,
+      "confidence": 0.5571504829747339,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0753_0x7b984c4f9d619bdb68ae74090fa3daaf00d6f564.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": false,
+      "confidence": 0.5758402626303193,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0093_0x324a48ebcbb46e61993931ef9d35f6697cd2901b.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.47610573383388566,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0407_0x3125124e6e3744d52c38952081a4e8407708b30d.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": false,
+      "confidence": 0.7816723967644787,
+      "vulnerability_types": [],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0199_0x405dd8fca636282ab5ee47b88036a7256fd29b31.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.43532586789263295,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x70f9eddb3931491aab1aeafbc1e7f1ca2a012db4.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": true,
+      "confidence": 0.6984361272771534,
+      "vulnerability_types": [
+        "unchecked_low_level_calls"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0379_0xd1ceeeefa68a6af0a5f6046132d986066c7f9426.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.5137589142329256,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0855_0xef0736a83b537dbd2f1637a71b79eeee27a267e3.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.8976611630870972,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_other_name_registrar.sol",
+      "ground_truth_vulnerable": true,
+      "category": "other",
+      "predicted_vulnerable": true,
+      "confidence": 0.7825376425738824,
+      "vulnerability_types": [
+        "other"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_king_of_the_ether_throne.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": true,
+      "confidence": 0.8210770168649382,
+      "vulnerability_types": [
+        "unchecked_low_level_calls"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_denial_of_service_dos_simple.sol",
+      "ground_truth_vulnerable": true,
+      "category": "denial_of_service",
+      "predicted_vulnerable": true,
+      "confidence": 0.4032428459711962,
+      "vulnerability_types": [
+        "denial_of_service"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x0cbe050f75bc8f8c2d6c0d249fea125fd6e1acc9.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": true,
+      "confidence": 0.8144113187826623,
+      "vulnerability_types": [
+        "unchecked_low_level_calls"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0742_0x3f45bd50104e9782d3d22986ef4a231fb87e99c8.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.9243866861585585,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x3e013fc32a54c4c5b6991ba539dcd0ec4355c859.sol",
+      "ground_truth_vulnerable": true,
+      "category": "unchecked_low_level_calls",
+      "predicted_vulnerable": true,
+      "confidence": 0.8111336179379278,
+      "vulnerability_types": [
+        "unchecked_low_level_calls"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    },
+    {
+      "contract_id": "wild_safe_0040_0x84862974a52ef8550fed40d2cc9cf9ed062f73c9.sol",
+      "ground_truth_vulnerable": false,
+      "category": "none",
+      "predicted_vulnerable": true,
+      "confidence": 0.7317889239176827,
+      "vulnerability_types": [
+        "none"
+      ],
+      "reasoning": "dry-run",
+      "tokens_used": 0,
+      "verify_flipped": false,
+      "verify_reason": ""
+    }
+  ]
+}

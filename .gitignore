@@ -185,3 +185,6 @@ SPRINT3_CLAUDE_CODE_PROMPT.md
 THESIS_DIFF_REPORT.md
 evmbench_results_summary.md
 experiments/explainability/ctc_checkpoint*.json
+data/chroma_kb/
+experiments/codebert_baseline/checkpoints*
+experiments/codebert_length_fair/checkpoints*
