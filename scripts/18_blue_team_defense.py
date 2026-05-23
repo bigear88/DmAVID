@@ -216,23 +216,40 @@ def update_knowledge_files(new_entries: List[Dict[str, Any]]) -> Dict[str, int]:
 
     existing_ids = {e.get("id") for e in kb.get("entries", [])}
 
+    # Count existing Blue Team entries per category to enforce cap
+    BT_CAP_PER_CATEGORY = 3
+    from collections import Counter
+    bt_counts = Counter(
+        e.get("category")
+        for e in kb.get("entries", [])
+        if "Blue Team Defense" in e.get("title", "")
+    )
+
     for entry in new_entries:
-        if entry["id"] not in existing_ids:
-            # Map to KB schema (keep only fields the KB uses)
-            kb_entry = {
-                "id": entry["id"],
-                "category": entry["category"],
-                "title": entry["title"],
-                "description": entry["description"],
-                "vulnerability_pattern": entry["vulnerability_pattern"],
-                "safe_pattern": entry["safe_pattern"],
-                "mitigation": entry["mitigation"],
-                "severity": entry.get("severity", "Medium"),
-                "swc_id": "Custom-BT",
-                "real_world_case": f"Blue team synthesis from variant {entry.get('source_variant_id', 'unknown')}",
-            }
-            kb["entries"].append(kb_entry)
-            stats["vulnerability_knowledge"] += 1
+        if entry["id"] in existing_ids:
+            continue
+        category = entry["category"]
+        if bt_counts.get(category, 0) >= BT_CAP_PER_CATEGORY:
+            logger.info(
+                f"  [KB-CAP] Skipping {category} entry — already {bt_counts[category]}/{BT_CAP_PER_CATEGORY} Blue Team entries"
+            )
+            continue
+        # Map to KB schema (keep only fields the KB uses)
+        kb_entry = {
+            "id": entry["id"],
+            "category": category,
+            "title": entry["title"],
+            "description": entry["description"],
+            "vulnerability_pattern": entry["vulnerability_pattern"],
+            "safe_pattern": entry["safe_pattern"],
+            "mitigation": entry["mitigation"],
+            "severity": entry.get("severity", "Medium"),
+            "swc_id": "Custom-BT",
+            "real_world_case": f"Blue team synthesis from variant {entry.get('source_variant_id', 'unknown')}",
+        }
+        kb["entries"].append(kb_entry)
+        bt_counts[category] += 1
+        stats["vulnerability_knowledge"] += 1
 
     kb["metadata"]["total_entries"] = len(kb["entries"])
 
