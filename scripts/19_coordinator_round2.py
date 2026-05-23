@@ -665,8 +665,12 @@ def main():
         # --- (c) Red Team: Adversarial variants for false negatives ---
         # --uncertain-only: only process samples where confidence < 0.70
         if args.uncertain_only:
-            uncertain_pool = [r for r in student_results if float(r.get("confidence", 0.5)) < 0.70]
-            logger.info(f"[RED TEAM] --uncertain-only: {len(uncertain_pool)} uncertain samples (of {len(student_results)} total)")
+            # Include uncertain (conf < 0.70) AND any FN cases regardless of confidence.
+            # FNs are always targets for Red Team; excluding high-confidence FNs defeats the purpose.
+            uncertain_pool = [r for r in student_results
+                              if float(r.get("confidence", 0.5)) < 0.70
+                              or (r.get("ground_truth_vulnerable") and not r.get("predicted_vulnerable"))]
+            logger.info(f"[RED TEAM] --uncertain-only: {len(uncertain_pool)} uncertain+FN samples (of {len(student_results)} total)")
             variants = run_red_team_stage(red_mod, uncertain_pool, dataset, cost, args.dry_run, max_fn=args.max_fn_variants)
         else:
             variants = run_red_team_stage(red_mod, student_results, dataset, cost, args.dry_run, max_fn=args.max_fn_variants)
