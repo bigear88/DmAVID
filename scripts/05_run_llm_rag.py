@@ -20,6 +20,33 @@ OUTPUT_FILE = os.path.join(BASE_DIR, "experiments/llm_rag/llm_rag_results.json")
 client = OpenAI()
 MODEL = os.environ.get("DMAVID_MODEL", "gpt-4.1-mini")
 
+# ---------------------------------------------------------------------------
+# Dynamic KB: load false_positive + Blue Team entries from vulnerability_knowledge.json
+# Loaded once at module import time so the coordinator's per-round KB updates
+# are picked up when the module is reloaded between rounds.
+# ---------------------------------------------------------------------------
+_DYNAMIC_KB_PATH = os.path.join(BASE_DIR, "scripts/knowledge/vulnerability_knowledge.json")
+
+def _load_dynamic_kb():
+    """Return (fp_entries, bt_safe_patterns_by_category) from the dynamic KB."""
+    fp_entries = []          # false_positive entries → anti-FP hints
+    bt_safe = {}             # category → list of safe_pattern keyword strings (Blue Team)
+    try:
+        with open(_DYNAMIC_KB_PATH) as f:
+            kb = json.load(f)
+        for e in kb.get("entries", []):
+            cat = e.get("category", "")
+            title = e.get("title", "")
+            if cat == "false_positive":
+                fp_entries.append(e)
+            elif "Blue Team Defense" in title and e.get("safe_pattern"):
+                bt_safe.setdefault(cat, []).append(e["safe_pattern"])
+    except Exception:
+        pass
+    return fp_entries, bt_safe
+
+_FP_ENTRIES, _BT_SAFE_PATTERNS = _load_dynamic_kb()
+
 
 
 
@@ -172,11 +199,19 @@ VULN_KNOWLEDGE_BASE = {
 }
 
 def build_rag_context(code):
-    """Build RAG context by matching code patterns to knowledge base."""
+    """Build RAG context by matching code patterns to knowledge base.
+
+    Two sources of signal are combined:
+    1. Static VULN_KNOWLEDGE_BASE — keyword-based risk/safe scoring per vuln type.
+    2. Dynamic KB (_FP_ENTRIES, _BT_SAFE_PATTERNS) — false-positive sentinel
+       patterns and Blue Team safe_pattern augmentation loaded from disk.
+    """
     context_parts = []
     code_lower = code.lower()
-    
-    # Score each vulnerability type
+
+    # ------------------------------------------------------------------
+    # Phase 1: Score each vulnerability type (static KB)
+    # ------------------------------------------------------------------
     scores = {}
     for vuln_type, kb in VULN_KNOWLEDGE_BASE.items():
         score = 0
@@ -186,17 +221,62 @@ def build_rag_context(code):
             if any(kw in code_lower for kw in pattern_keywords if len(kw) > 3):
                 score += 1
                 matched_patterns.append(pattern)
-        
+
         safe_score = 0
         for sp in kb["safe_patterns"]:
             sp_keywords = sp.lower().split()
             if any(kw in code_lower for kw in sp_keywords if len(kw) > 3):
                 safe_score += 1
-        
+
+        # Augment safe_score with Blue Team safe_patterns for this category
+        for bt_sp in _BT_SAFE_PATTERNS.get(vuln_type, []):
+            kws = bt_sp.lower().split()
+            if any(kw in code_lower for kw in kws if len(kw) > 3):
+                safe_score += 1
+                break  # count at most +1 per category from Blue Team
+
         scores[vuln_type] = (score, safe_score, matched_patterns)
-    
-    # Build context from top-3 most relevant vulnerability types
-    # Sort by net risk (score - safe_score) so mitigated types rank lower
+
+    # ------------------------------------------------------------------
+    # Phase 2: Check false_positive sentinel patterns (dynamic KB)
+    # Match on distinctive code identifiers extracted from safe_pattern,
+    # not generic prose keywords. Require ≥2 unique identifiers to match.
+    # ------------------------------------------------------------------
+    # Common Solidity keywords / types that are NOT discriminative
+    _SOLIDITY_STOPWORDS = {
+        "pragma", "solidity", "contract", "function", "public", "external",
+        "internal", "private", "returns", "return", "require", "revert",
+        "address", "uint256", "uint", "bool", "bytes", "string", "mapping",
+        "memory", "storage", "calldata", "payable", "modifier", "event",
+        "emit", "import", "interface", "library", "struct", "enum", "this",
+        "super", "true", "false", "value", "amount", "owner", "sender",
+        "balance", "balances", "transfer", "success", "failed", "error",
+    }
+
+    known_safe_hits = []
+    for fp_entry in _FP_ENTRIES:
+        sp_text = fp_entry.get("safe_pattern", "")
+        # Extract identifiers: sequences of ≥5 alnum chars containing at least one letter
+        identifiers = re.findall(r'\b[A-Za-z][A-Za-z0-9_]{4,}\b', sp_text)
+        # Keep only distinctive ones (not stopwords, and case-sensitive check in code)
+        distinctive = [
+            ident for ident in dict.fromkeys(identifiers)
+            if ident.lower() not in _SOLIDITY_STOPWORDS
+        ]
+        hit_count = sum(1 for ident in distinctive if ident in code)
+        if hit_count >= 2:
+            known_safe_hits.append(fp_entry.get("title", ""))
+
+    if known_safe_hits:
+        context_parts.append(
+            "\n=== KNOWN SAFE PATTERNS DETECTED ===\n"
+            + "\n".join(f"  ✓ {h}" for h in known_safe_hits)
+            + "\nThese patterns strongly indicate the code is SAFE for the relevant vulnerability types.\n"
+        )
+
+    # ------------------------------------------------------------------
+    # Phase 3: Build per-type context (top-3 by net risk)
+    # ------------------------------------------------------------------
     sorted_vulns = sorted(scores.items(), key=lambda x: x[1][0] - x[1][1], reverse=True)
 
     for vuln_type, (score, safe_score, matched) in sorted_vulns[:3]:
@@ -205,10 +285,9 @@ def build_rag_context(code):
         kb = VULN_KNOWLEDGE_BASE[vuln_type]
         net = score - safe_score
         if net <= 0:
-            # Safe mitigations outweigh risk signals — flag as likely mitigated
             ctx = (
                 f"\n--- {vuln_type.upper()} [NET RISK: LOW — LIKELY MITIGATED] ---\n"
-                f"Risk signals matched: {score}  |  Safe/mitigating patterns found: {safe_score}\n"
+                f"Risk signals: {score}  |  Safe/mitigating signals: {safe_score}\n"
                 f"The code shows as many or more safe patterns than risk patterns for this type.\n"
                 f"Safe example: {kb['example_safe']}\n"
             )
@@ -217,7 +296,7 @@ def build_rag_context(code):
                 f"\n--- {vuln_type.upper()} [NET RISK: {'HIGH' if net >= 2 else 'MEDIUM'}] ---\n"
                 f"Description: {kb['description']}\n"
                 f"Matched risk patterns: {', '.join(matched)}\n"
-                f"Safe/mitigating patterns found: {safe_score}\n"
+                f"Safe/mitigating signals: {safe_score}\n"
                 f"Vulnerable example: {kb['example_vulnerable']}\n"
                 f"Safe example: {kb['example_safe']}\n"
             )
