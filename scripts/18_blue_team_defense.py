@@ -56,6 +56,43 @@ Extract the following in JSON format ONLY:
 }}"""
 
 
+# ---------------------------------------------------------------------------
+# FP-pollution guard: prevent Blue Team from writing KB entries that confuse
+# safe patterns (ReentrancyGuard, onlyOwner, etc.) with vulnerabilities.
+# ---------------------------------------------------------------------------
+_FP_KEYWORDS = [
+    "nonreentrant", "reentrancyguard", "checks-effects-interactions", "cei pattern",
+    "onlyowner", "only owner", "safemath", "safe math", "overflow check",
+    "require(success)", "pull payment", "pull-payment", "emit before",
+    "access control modifier",
+]
+_ABSENCE_WORDS = [
+    "lacks", "missing", "absent", "without", "no ", "does not use",
+    "not implemented", "fails to", "omits", "bypass", "despite",
+]
+_ADD_WORDS = ["add ", "use ", "implement", "apply", "include", "adopt"]
+
+
+def _is_fp_polluting(entry: dict) -> bool:
+    combined = (entry.get("vulnerability_pattern", "") + " " +
+                entry.get("generalized_pattern", "")).lower()
+    mitigation = entry.get("mitigation", "").lower()
+    for kw in _FP_KEYWORDS:
+        if kw not in combined:
+            continue
+        if any(absence in combined for absence in _ABSENCE_WORDS):
+            return False
+        for kw_fp in _FP_KEYWORDS:
+            if kw_fp in mitigation and any(add in mitigation for add in _ADD_WORDS):
+                return False
+        logger.warning(
+            f"  [KB-VALIDATE] FP-pollution risk: vulnerability_pattern mentions '{kw}' "
+            "without flagging its absence. Entry rejected."
+        )
+        return True
+    return False
+
+
 def synthesize_defense_patterns(variants: List[Dict[str, Any]], vuln_type: str) -> List[Dict[str, Any]]:
     """
     Synthesize defensive detection patterns from validated exploit variants.
@@ -134,6 +171,11 @@ def synthesize_defense_patterns(variants: List[Dict[str, Any]], vuln_type: str) 
                 "generated_at": datetime.now().isoformat(),
                 "tokens_used": response.usage.total_tokens if response.usage else 0,
             }
+
+            # FP-safety check: reject entries that would pollute KB
+            if _is_fp_polluting(entry):
+                logger.warning(f"  [KB-VALIDATE] Rejected entry {entry_id} -- FP pollution risk")
+                continue
 
             defense_entries.append(entry)
             logger.info(f"  Synthesized pattern: {entry['title']}")

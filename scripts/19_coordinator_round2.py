@@ -553,6 +553,14 @@ def main():
                         help="Teacher challenges per vulnerability type per round (default: 1)")
     parser.add_argument("--max-fn-variants", type=int, default=10,
                         help="Max false negatives to generate variants for (default: 10)")
+    parser.add_argument("--uncertain-only", action="store_true",
+                        help="Red Team generates variants only for UNCERTAIN samples (confidence < 0.70)")
+    parser.add_argument("--no-early-stop", action="store_true",
+                        help="Disable delta-F1 early stopping (default: early stopping is ON)")
+    parser.add_argument("--convergence-threshold", type=float, default=0.01,
+                        help="Min |delta-F1| improvement to continue (default: 0.01)")
+    parser.add_argument("--convergence-patience", type=int, default=2,
+                        help="Rounds without improvement before stopping (default: 2)")
     args = parser.parse_args()
 
     logger.info("=" * 70)
@@ -560,6 +568,9 @@ def main():
     logger.info(f"Timestamp: {datetime.now().isoformat()}")
     logger.info(f"Model: {MODEL}")
     logger.info(f"Rounds: {args.rounds} | Budget: ${args.budget:.2f} | Dry run: {args.dry_run}")
+    early_stop_enabled = not args.no_early_stop
+    logger.info(f"Early stop: {early_stop_enabled} | Threshold: {args.convergence_threshold} | Patience: {args.convergence_patience}")
+    logger.info(f"Uncertain-only Red Team: {args.uncertain_only}")
     logger.info(f"Baseline F1: {BASELINE_F1}")
     logger.info("=" * 70)
 
@@ -606,6 +617,10 @@ def main():
             "dataset_size": len(dataset),
             "baseline_f1": BASELINE_F1,
             "dry_run": args.dry_run,
+            "early_stop_enabled": early_stop_enabled,
+            "convergence_threshold": args.convergence_threshold,
+            "convergence_patience": args.convergence_patience,
+            "uncertain_only": args.uncertain_only,
             "started_at": datetime.now().isoformat(),
         },
         "rounds": [],
@@ -614,6 +629,9 @@ def main():
     # ===========================================================================
     # Iteration rounds
     # ===========================================================================
+    prev_f1 = None
+    no_improvement_count = 0
+
     for round_num in range(1, args.rounds + 1):
         round_start = time.time()
         logger.info("")
@@ -645,9 +663,13 @@ def main():
         )
 
         # --- (c) Red Team: Adversarial variants for false negatives ---
-        variants = run_red_team_stage(
-            red_mod, student_results, dataset, cost, args.dry_run, max_fn=args.max_fn_variants
-        )
+        # --uncertain-only: only process samples where confidence < 0.70
+        if args.uncertain_only:
+            uncertain_pool = [r for r in student_results if float(r.get("confidence", 0.5)) < 0.70]
+            logger.info(f"[RED TEAM] --uncertain-only: {len(uncertain_pool)} uncertain samples (of {len(student_results)} total)")
+            variants = run_red_team_stage(red_mod, uncertain_pool, dataset, cost, args.dry_run, max_fn=args.max_fn_variants)
+        else:
+            variants = run_red_team_stage(red_mod, student_results, dataset, cost, args.dry_run, max_fn=args.max_fn_variants)
         round_data["red_team_variants"] = len(variants)
 
         # --- (d) Foundry: Validate compilation ---
@@ -681,6 +703,22 @@ def main():
         round_data["f1_delta_vs_baseline"] = round(f1_delta, 4)
         direction = "+" if f1_delta >= 0 else ""
         logger.info(f"[EVALUATE] F1 vs baseline: {direction}{f1_delta:.4f} (baseline={BASELINE_F1})")
+
+        # --- Early stopping: delta-F1 convergence check ---
+        current_f1 = post_verify_metrics["f1"]
+        if early_stop_enabled and prev_f1 is not None:
+            delta_from_prev = current_f1 - prev_f1
+            round_data["delta_f1_from_prev"] = round(delta_from_prev, 4)
+            if abs(delta_from_prev) < args.convergence_threshold:
+                no_improvement_count += 1
+                logger.info(
+                    f"[CONVERGE] Round {round_num}: |delta_F1|={abs(delta_from_prev):.4f} < "
+                    f"{args.convergence_threshold} (patience {no_improvement_count}/{args.convergence_patience})"
+                )
+            else:
+                no_improvement_count = 0
+                logger.info(f"[CONVERGE] Round {round_num}: delta_F1={delta_from_prev:+.4f} -- resetting patience")
+        prev_f1 = current_f1
 
         # Challenge-set recall (teacher challenges are all vulnerable)
         if challenges:
@@ -718,6 +756,14 @@ def main():
                 "results": verified_results,
             }, f, indent=2)
         logger.info(f"Round {round_num} results saved to {round_results_file}")
+
+        # Trigger early stop if patience exhausted
+        if early_stop_enabled and no_improvement_count >= args.convergence_patience:
+            logger.info(
+                f"[CONVERGE] Early stopping after round {round_num}: "
+                f"no improvement for {args.convergence_patience} consecutive rounds"
+            )
+            break
 
     # ===========================================================================
     # Save final outputs
