@@ -124,18 +124,12 @@ def generate_challenge(vuln_type, difficulty_level, knowledge_base):
                 {"role": "user", "content": prompt}
             ],
             temperature=0.7,
+            response_format={"type": "json_object"},
             **token_param(2048),
         )
 
         content = response.choices[0].message.content.strip()
-
-        # Parse JSON from response
-        import re
-        json_match = re.search(r'\{[\s\S]*\}', content)
-        if json_match:
-            parsed = json.loads(json_match.group())
-        else:
-            parsed = json.loads(content)
+        parsed = json.loads(content)
 
         # Build challenge object
         challenge = {
