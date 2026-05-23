@@ -688,7 +688,7 @@ def main():
 
         # --- (f) Self-Verify: Post-process predictions ---
         # Dynamic conf_threshold: increases with rounds as Student improves
-        sv_threshold = 0.85 + 0.03 * round_num  # R1: 0.88, R2: 0.91, R3: 0.94
+        sv_threshold = 0.85 + 0.01 * round_num  # R1: 0.86, R2: 0.87, R3: 0.88
         logger.info(f"[SELF-VERIFY] Dynamic threshold for round {round_num}: {sv_threshold:.2f}")
         verified_results = run_self_verify_stage(student_results, cost, args.dry_run, conf_threshold=sv_threshold)
 
