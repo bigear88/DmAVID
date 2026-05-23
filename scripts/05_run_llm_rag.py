@@ -196,19 +196,33 @@ def build_rag_context(code):
         scores[vuln_type] = (score, safe_score, matched_patterns)
     
     # Build context from top-3 most relevant vulnerability types
-    sorted_vulns = sorted(scores.items(), key=lambda x: x[1][0], reverse=True)
-    
+    # Sort by net risk (score - safe_score) so mitigated types rank lower
+    sorted_vulns = sorted(scores.items(), key=lambda x: x[1][0] - x[1][1], reverse=True)
+
     for vuln_type, (score, safe_score, matched) in sorted_vulns[:3]:
-        if score > 0:
-            kb = VULN_KNOWLEDGE_BASE[vuln_type]
-            ctx = f"\n--- {vuln_type.upper()} ---\n"
-            ctx += f"Description: {kb['description']}\n"
-            ctx += f"Matched risk patterns: {', '.join(matched)}\n"
-            ctx += f"Safe patterns found: {safe_score}\n"
-            ctx += f"Vulnerable example: {kb['example_vulnerable']}\n"
-            ctx += f"Safe example: {kb['example_safe']}\n"
-            context_parts.append(ctx)
-    
+        if score == 0:
+            continue
+        kb = VULN_KNOWLEDGE_BASE[vuln_type]
+        net = score - safe_score
+        if net <= 0:
+            # Safe mitigations outweigh risk signals — flag as likely mitigated
+            ctx = (
+                f"\n--- {vuln_type.upper()} [NET RISK: LOW — LIKELY MITIGATED] ---\n"
+                f"Risk signals matched: {score}  |  Safe/mitigating patterns found: {safe_score}\n"
+                f"The code shows as many or more safe patterns than risk patterns for this type.\n"
+                f"Safe example: {kb['example_safe']}\n"
+            )
+        else:
+            ctx = (
+                f"\n--- {vuln_type.upper()} [NET RISK: {'HIGH' if net >= 2 else 'MEDIUM'}] ---\n"
+                f"Description: {kb['description']}\n"
+                f"Matched risk patterns: {', '.join(matched)}\n"
+                f"Safe/mitigating patterns found: {safe_score}\n"
+                f"Vulnerable example: {kb['example_vulnerable']}\n"
+                f"Safe example: {kb['example_safe']}\n"
+            )
+        context_parts.append(ctx)
+
     return "\n".join(context_parts) if context_parts else "No specific vulnerability patterns matched."
 
 RAG_SYSTEM_PROMPT = """You are an expert smart contract security auditor with access to a vulnerability knowledge base.
@@ -216,11 +230,11 @@ You will be provided with:
 1. The Solidity source code to analyze
 2. Relevant vulnerability patterns and examples from the knowledge base (RAG context)
 
-Use the RAG context to make more informed decisions. Compare the code against both vulnerable AND safe patterns.
-If the code follows safe patterns (like ReentrancyGuard, SafeMath, onlyOwner), it is likely SAFE even if it contains some risky operations.
-
-IMPORTANT: Be balanced in your assessment. Not every contract with external calls is vulnerable.
-A contract is SAFE if it properly implements security best practices.
+Decision rules — apply in order:
+1. If the RAG context marks a type as [NET RISK: LOW — LIKELY MITIGATED], treat it as SAFE for that type unless you see a clear, specific exploit path in the actual code.
+2. Only set has_vulnerability=true when you can identify a CONCRETE, EXPLOITABLE weakness in the code — not merely the presence of a risky pattern.
+3. When in doubt, default to has_vulnerability=false. False negatives are recoverable; false positives waste audit resources.
+4. A contract is SAFE if it properly implements security best practices (ReentrancyGuard, SafeMath, onlyOwner, require checks, CEI pattern).
 
 Respond in JSON format ONLY:
 {
