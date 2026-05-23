@@ -185,6 +185,10 @@ def run_student_stage(
     rag_mod, dataset: List[Dict], cost: CostTracker, dry_run: bool
 ) -> List[Dict[str, Any]]:
     """Run Student (LLM+RAG) detection on the full dataset."""
+    # Refresh dynamic KB so Blue Team entries from the previous round are
+    # visible in this round's RAG context (FP sentinels + safe_pattern boost).
+    if hasattr(rag_mod, "reload_dynamic_kb"):
+        rag_mod.reload_dynamic_kb()
     logger.info(f"[STUDENT] Evaluating on {len(dataset)} contracts...")
     results = []
 

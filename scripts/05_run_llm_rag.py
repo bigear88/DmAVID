@@ -48,6 +48,16 @@ def _load_dynamic_kb():
 _FP_ENTRIES, _BT_SAFE_PATTERNS = _load_dynamic_kb()
 
 
+def reload_dynamic_kb():
+    """Reload FP sentinels and Blue Team safe patterns from disk.
+
+    Call this at the start of each iterative round so Blue Team entries
+    added in the previous round are visible to the Student's RAG.
+    """
+    global _FP_ENTRIES, _BT_SAFE_PATTERNS
+    _FP_ENTRIES, _BT_SAFE_PATTERNS = _load_dynamic_kb()
+
+
 
 
 def strip_answer_comments(code):
