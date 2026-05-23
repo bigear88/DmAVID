@@ -283,7 +283,7 @@ def run_red_team_stage(
                 pass
 
     variants = []
-    transformations = ["variable_renaming", "code_reordering", "dead_code_injection", "control_flow_obfuscation"]
+    transformations = list(red_mod.MUTATION_STRATEGIES.keys())
 
     for fn in fn_cases:
         if not cost.under_budget():

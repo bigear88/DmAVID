@@ -32,13 +32,92 @@ BASE_DIR = os.environ.get(
     "/home/curtis/DmAVID"
 )
 MODEL = os.environ.get("DMAVID_MODEL", "gpt-4.1-mini")
+import random
+
 DEFAULT_VARIANTS_PER_CASE = 3
-TRANSFORMATION_TYPES = [
-    "variable_renaming",
-    "code_reordering",
-    "dead_code_injection",
-    "control_flow_obfuscation"
-]
+
+# Advanced mutation strategies for adversarial variant generation.
+# Each strategy targets a different structural dimension to maximize
+# the diversity of variants while preserving vulnerability semantics.
+MUTATION_STRATEGIES = {
+    "control_flow_flattening": (
+        "Restructure the contract's control flow without changing semantics. "
+        "Convert if/else branches into a state-machine pattern using an integer "
+        "dispatch variable (e.g. `uint8 _step`). Add intermediate conditional "
+        "checks that always resolve to the original execution path. "
+        "The resulting code must appear structurally different while executing "
+        "identically to the original."
+    ),
+    "dead_code_insertion": (
+        "Insert plausible-looking but unreachable defensive code throughout "
+        "the contract. Examples: require() checks on constants that always pass, "
+        "dummy SafeMath-style arithmetic on local variables that are never stored, "
+        "event emissions in code paths that are never reached. "
+        "None of the inserted code may affect any state variable or alter "
+        "the execution path of the vulnerability trigger."
+    ),
+    "cross_contract_delegation": (
+        "Split the contract into two Solidity contracts: a thin proxy/wrapper "
+        "and a Library (or second contract) containing the extracted core logic. "
+        "Use `delegatecall` or Solidity `library` syntax so the vulnerable "
+        "function's execution context and storage layout remain identical. "
+        "The vulnerability must reside in the extracted library/contract and "
+        "still be triggerable through the wrapper's external interface."
+    ),
+}
+
+# Per-vulnerability-type semantic constraints injected into the prompt.
+# These prevent the LLM from accidentally 'fixing' the vulnerability
+# while applying the chosen mutation strategy.
+VULN_SEMANTIC_CONSTRAINTS = {
+    "reentrancy": (
+        "CONSTRAINT — Reentrancy: The external call (.call / .transfer / .send) "
+        "MUST still occur BEFORE the state variable that tracks the balance/flag "
+        "is updated. Do NOT add a nonReentrant modifier or any reentrancy guard. "
+        "Do NOT reorder the call so it comes after the state write."
+    ),
+    "arithmetic": (
+        "CONSTRAINT — Arithmetic: The unchecked arithmetic operation "
+        "(overflow/underflow) MUST be preserved. Do NOT wrap the operation "
+        "in SafeMath, use Solidity 0.8.x checked arithmetic, or add any "
+        "overflow/underflow guard."
+    ),
+    "access_control": (
+        "CONSTRAINT — Access Control: The missing authorization check MUST "
+        "remain missing. Do NOT add onlyOwner, require(msg.sender == owner), "
+        "or any access-control modifier to the vulnerable function."
+    ),
+    "unchecked_low_level_calls": (
+        "CONSTRAINT — Unchecked Low-Level Call: The return value of the "
+        ".call()/.send()/.delegatecall() MUST remain unchecked. Do NOT add "
+        "require(success) or any check on the boolean return value."
+    ),
+    "time_manipulation": (
+        "CONSTRAINT — Time Manipulation: The dependency on block.timestamp "
+        "(or 'now') MUST be preserved as the source of randomness or a "
+        "condition. Do NOT replace it with a Chainlink oracle or block.number."
+    ),
+    "bad_randomness": (
+        "CONSTRAINT — Bad Randomness: The use of block.number, blockhash, "
+        "or block.timestamp as a randomness source MUST be preserved. "
+        "Do NOT introduce a commit-reveal scheme or any external oracle."
+    ),
+    "front_running": (
+        "CONSTRAINT — Front Running: The state-revealing transaction ordering "
+        "vulnerability MUST be preserved. Do NOT add a commit-reveal mechanism "
+        "or slippage check that would neutralise the front-running vector."
+    ),
+    "denial_of_service": (
+        "CONSTRAINT — Denial of Service: The DoS vector (unbounded loop over "
+        "a user-controlled array, or a .transfer() inside a loop) MUST be "
+        "preserved. Do NOT add a gas limit check or pull-payment pattern "
+        "that would fix the DoS."
+    ),
+}
+_DEFAULT_CONSTRAINT = (
+    "CONSTRAINT: The original vulnerability trigger condition MUST be fully "
+    "preserved. Do NOT fix, mitigate, or neutralise the vulnerability."
+)
 
 # Initialize OpenAI client
 client = OpenAI()
@@ -74,111 +153,172 @@ def load_false_negatives(results_file: str):
     return false_negatives
 
 
+def _pick_strategies(requested: str | None, n: int = 2) -> list[str]:
+    """Return 1-2 strategy names. If a known strategy is requested use it;
+    otherwise sample randomly (prefer 2 strategies for diversity)."""
+    all_keys = list(MUTATION_STRATEGIES.keys())
+    if requested and requested in MUTATION_STRATEGIES:
+        chosen = [requested]
+        remaining = [k for k in all_keys if k != requested]
+        if remaining and random.random() < 0.5:
+            chosen.append(random.choice(remaining))
+        return chosen
+    # Legacy names → map to closest new strategy
+    legacy_map = {
+        "variable_renaming": "dead_code_insertion",
+        "code_reordering": "control_flow_flattening",
+        "dead_code_injection": "dead_code_insertion",
+        "control_flow_obfuscation": "control_flow_flattening",
+    }
+    if requested and requested in legacy_map:
+        return [legacy_map[requested]]
+    k = min(n, len(all_keys))
+    return random.sample(all_keys, k=random.randint(1, k))
+
+
 def generate_adversarial_variant(
     contract_source: str,
     vuln_type: str,
-    transformation_type: str = None
+    transformation_type: str = None,
 ) -> Tuple[str, str, str]:
-    """
-    Generate a semantically equivalent contract variant using LLM.
+    """Generate a semantically equivalent but structurally distinct variant.
 
-    The variant preserves the vulnerability while applying code transformations
-    to test the robustness of detection systems.
-
-    Args:
-        contract_source: Original Solidity contract source code
-        vuln_type: Type of vulnerability to preserve
-        transformation_type: Specific transformation to apply (optional)
+    Applies 1-2 advanced mutation strategies from MUTATION_STRATEGIES while
+    enforcing per-vulnerability semantic constraints so the vulnerability
+    trigger is never accidentally removed.
 
     Returns:
-        Tuple of (variant_source, transformation_applied, preservation_note)
+        (variant_source, strategies_label, preservation_note)
     """
-    if not transformation_type:
-        transformation_type = TRANSFORMATION_TYPES[0]
+    strategies = _pick_strategies(transformation_type)
+    strategy_label = "+".join(strategies)
 
-    transformation_descriptions = {
-        "variable_renaming": "Rename all state variables and local variables to obscure names while preserving functionality",
-        "code_reordering": "Reorder function definitions and code blocks without changing execution semantics",
-        "dead_code_injection": "Inject unused code paths and dead code blocks that don't affect the vulnerability",
-        "control_flow_obfuscation": "Use conditional statements and loops to obfuscate the original control flow"
-    }
+    strategy_descriptions = "\n".join(
+        f"  Strategy {i+1} — {name}:\n    {MUTATION_STRATEGIES[name]}"
+        for i, name in enumerate(strategies)
+    )
 
-    prompt = f"""You are a Solidity code transformation expert. Transform the following contract to preserve the {vuln_type} vulnerability while applying the transformation: {transformation_descriptions.get(transformation_type, transformation_type)}.
+    semantic_constraint = VULN_SEMANTIC_CONSTRAINTS.get(
+        vuln_type.lower().replace(" ", "_"), _DEFAULT_CONSTRAINT
+    )
 
-IMPORTANT:
-- The vulnerability MUST be preserved exactly as it is
-- The transformed contract must remain functionally equivalent
-- Only apply the specified transformation type
-- Return ONLY the transformed Solidity code, no explanation
+    prompt = f"""You are an expert Solidity adversarial code transformer working on a \
+security-research benchmark. Your task is to produce a VARIANT of the contract below \
+that is structurally different from the original yet preserves all execution semantics \
+— including its {vuln_type} vulnerability.
 
-Original contract:
-```solidity
+=== MUTATION STRATEGIES TO APPLY ===
+{strategy_descriptions}
+
+=== HARD SEMANTIC CONSTRAINT (NEVER VIOLATE) ===
+{semantic_constraint}
+
+=== ADDITIONAL RULES ===
+- Apply ALL listed strategies; the variant must show visible structural changes.
+- Do NOT rename the external interface (function names visible to callers must stay the same).
+- Do NOT change storage variable types or layouts unless required by cross-contract delegation.
+- Return ONLY valid Solidity source code — no markdown fences, no explanation.
+
+=== ORIGINAL CONTRACT ({vuln_type}) ===
 {contract_source}
-```
 
-Transformed contract:"""
+=== TRANSFORMED VARIANT ==="""
 
     try:
-        logger.info(f"Generating variant with {transformation_type} for {vuln_type}")
+        logger.info(f"[RED TEAM] Generating variant [{strategy_label}] for {vuln_type}")
         response = client.chat.completions.create(
             model=MODEL,
             **token_param(4096),
-            messages=[
-                {
-                    "role": "user",
-                    "content": prompt
-                }
-            ],
-            temperature=0.7,
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.8,
         )
 
         variant_source = response.choices[0].message.content.strip()
-
-        # Clean up markdown code blocks if present
-        if variant_source.startswith("```solidity"):
-            variant_source = variant_source[11:]
-        if variant_source.startswith("```"):
-            variant_source = variant_source[3:]
+        # Strip any residual markdown fences
+        for fence in ("```solidity", "```"):
+            if variant_source.startswith(fence):
+                variant_source = variant_source[len(fence):]
         if variant_source.endswith("```"):
             variant_source = variant_source[:-3]
         variant_source = variant_source.strip()
 
-        preservation_note = f"Variant preserves {vuln_type} vulnerability with {transformation_type} applied"
-
-        return variant_source, transformation_type, preservation_note
+        preservation_note = (
+            f"Strategies: {strategy_label} | vuln: {vuln_type} preserved"
+        )
+        return variant_source, strategy_label, preservation_note
 
     except Exception as e:
         logger.error(f"Error generating variant: {e}")
-        return contract_source, transformation_type, f"Failed to transform: {str(e)}"
+        return contract_source, strategy_label, f"Failed: {e}"
 
 
 def generate_poc_template(variant_source: str, vuln_type: str) -> str:
+    """Generate a Foundry exploit PoC for the given variant.
+
+    The hint section gives the LLM a concrete exploit skeleton tailored to
+    the vulnerability type, reducing hallucination and improving forge test
+    pass rates.
     """
-    Generate a Foundry/Hardhat test template for the variant.
+    # Type-specific exploit hints fed to the LLM
+    vuln_hints = {
+        "reentrancy": (
+            "Create an Attacker contract with a receive()/fallback() that "
+            "re-enters the target's withdrawal function. Call attack() to "
+            "drain the contract balance. Assert attacker balance > initial."
+        ),
+        "arithmetic": (
+            "Call the arithmetic function with boundary inputs that trigger "
+            "overflow or underflow. Assert the resulting value wraps around "
+            "(e.g., type(uint256).max + 1 == 0)."
+        ),
+        "access_control": (
+            "Call the privileged function from a non-owner address (address(this) "
+            "or a fresh EOA). Assert the call succeeds (no revert) when it should "
+            "have been restricted."
+        ),
+        "unchecked_low_level_calls": (
+            "Deploy a Rejecter contract whose fallback reverts. Trigger the "
+            "vulnerable low-level .call()/.send() to Rejecter. Assert the "
+            "outer transaction still succeeds despite the inner failure."
+        ),
+        "bad_randomness": (
+            "Predict the outcome by computing the same blockhash/block expression "
+            "inside the test. Call the vulnerable function with the predicted value "
+            "and assert it wins consistently."
+        ),
+        "time_manipulation": (
+            "Use vm.warp() to set block.timestamp to a value that satisfies the "
+            "time-based condition. Assert the condition is exploitable."
+        ),
+        "front_running": (
+            "Submit two transactions in a single test: first record the target's "
+            "pending state, then front-run with a higher-priority call. Assert the "
+            "front-run call captures the value."
+        ),
+        "denial_of_service": (
+            "Add many entries to the victim array (via a loop). Then call the "
+            "function that iterates over all entries and assert it reverts with "
+            "out-of-gas or that a legitimate user is permanently blocked."
+        ),
+    }
+    hint = vuln_hints.get(vuln_type.lower().replace(" ", "_"), "")
+    if hint:
+        hint_section = f"\nExploit hint for {vuln_type}:\n{hint}\n"
+    else:
+        hint_section = ""
 
-    Creates basic test code that attempts to exploit the vulnerability in the variant.
-
-    Args:
-        variant_source: Transformed contract source code
-        vuln_type: Type of vulnerability to test
-
-    Returns:
-        Solidity test code template
-    """
-    poc_prompt = f"""You are a Solidity security testing expert. Create a Foundry test template that attempts to exploit the {vuln_type} vulnerability in the following contract.
-
-Return ONLY valid Solidity code for a test contract that:
-1. Deploys the vulnerable contract
-2. Sets up necessary state
-3. Attempts to exploit the {vuln_type} vulnerability
-4. Asserts that the exploit succeeds
-
-Contract to test:
-```solidity
+    poc_prompt = f"""You are a Solidity security expert writing a Foundry exploit test.
+Write a complete, self-contained test contract in Solidity that:
+1. Imports forge-std/Test.sol and uses the Test base contract.
+2. Deploys the vulnerable contract inside setUp().
+3. Implements a test function (name it test_exploit_{vuln_type.replace('-','_')}) that exploits the {vuln_type} vulnerability.
+4. Uses assertTrue / assertGt / assertEq to assert the exploit succeeded.
+5. Works with `forge test` without external dependencies beyond forge-std.
+{hint_section}
+Vulnerable contract:
 {variant_source}
-```
 
-Test contract code:"""
+Return ONLY valid Solidity code. No markdown fences, no explanation."""
 
     try:
         logger.info(f"Generating PoC template for {vuln_type}")
@@ -245,8 +385,9 @@ def main():
         logger.info(f"Processing {vuln_type} false negative case")
 
         # Generate K variants for this FN case
+        strategy_keys = list(MUTATION_STRATEGIES.keys())
         for variant_idx in range(DEFAULT_VARIANTS_PER_CASE):
-            transformation = TRANSFORMATION_TYPES[variant_idx % len(TRANSFORMATION_TYPES)]
+            transformation = strategy_keys[variant_idx % len(strategy_keys)]
 
             variant_source, transform_applied, preservation_note = generate_adversarial_variant(
                 contract_source,
