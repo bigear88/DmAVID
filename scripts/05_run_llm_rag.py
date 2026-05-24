@@ -350,7 +350,7 @@ def analyze_with_rag(code, max_retries=2, extra_context=""):
                     {"role": "system", "content": RAG_SYSTEM_PROMPT},
                     {"role": "user", "content": f"## RAG Knowledge Base Context:\n{rag_context}\n\n{extra_context}\n\n## Contract to Analyze:\n```solidity\n{code}\n```"}
                 ],
-                temperature=0.1, **token_param(1024), seed=42
+                temperature=0, **token_param(1024), seed=42
             )
             elapsed = time.time() - start
             content = resp.choices[0].message.content.strip()

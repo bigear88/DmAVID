@@ -490,7 +490,7 @@ def run_self_verify_stage(
                 resp = client.chat.completions.create(
                     model=MODEL,
                     messages=[{"role": "user", "content": prompt}],
-                    temperature=0.1,
+                    temperature=0,
                     **token_param(512),
                 )
                 content = resp.choices[0].message.content.strip()
@@ -589,6 +589,7 @@ def main():
         sys.exit(1)
     vuln_contracts = [c for c in all_contracts if c.get("label") == "vulnerable"]
     safe_contracts = [c for c in all_contracts if c.get("label") == "safe"]
+    random.seed(42)
     random.shuffle(safe_contracts)
     dataset = vuln_contracts + safe_contracts[:100]
     random.shuffle(dataset)
