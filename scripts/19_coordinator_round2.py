@@ -490,7 +490,7 @@ def run_self_verify_stage(
                 resp = client.chat.completions.create(
                     model=MODEL,
                     messages=[{"role": "user", "content": prompt}],
-                    temperature=0,
+                    temperature=0.1,
                     **token_param(512),
                 )
                 content = resp.choices[0].message.content.strip()
