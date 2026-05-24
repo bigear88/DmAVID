@@ -678,8 +678,14 @@ def _classify_vuln_type(result: Dict[str, Any]) -> str:
 def run_self_verify_stage_v2(
     student_results: List[Dict], dataset: List[Dict],
     cost: CostTracker, dry_run: bool,
+    conf_threshold: float = 0.75,
 ) -> List[Dict[str, Any]]:
-    """Type-aware structured Self-Verify: required_fields validation replaces exploit-path."""
+    """Type-aware structured Self-Verify with confidence gate.
+
+    High-confidence predictions (conf >= conf_threshold) are skipped — they are
+    almost certainly true positives and challenging them hurts recall without
+    meaningfully reducing false positives.
+    """
     import re as _re
 
     # Build cid → code map from dataset filepaths
@@ -697,7 +703,12 @@ def run_self_verify_stage_v2(
                 pass
 
     positives = [r for r in student_results if r.get("predicted_vulnerable")]
-    logger.info(f"[SELF-VERIFY] Type-aware structured verification on {len(positives)} positives")
+    low_conf = [r for r in positives if float(r.get("confidence", 0.5)) < conf_threshold]
+    logger.info(
+        f"[SELF-VERIFY] {len(positives)} positives | "
+        f"conf<{conf_threshold}: {len(low_conf)} to verify, "
+        f"{len(positives)-len(low_conf)} high-conf skipped"
+    )
 
     verified_results = []
     flipped = 0
@@ -708,6 +719,13 @@ def run_self_verify_stage_v2(
         new_r["sv_flipped"] = False
 
         if not r.get("predicted_vulnerable") or dry_run:
+            verified_results.append(new_r)
+            continue
+
+        # Confidence gate: skip high-confidence predictions (very likely TP)
+        conf = float(r.get("confidence", 0.5))
+        if conf >= conf_threshold:
+            new_r["sv_skipped_high_conf"] = True
             verified_results.append(new_r)
             continue
 
