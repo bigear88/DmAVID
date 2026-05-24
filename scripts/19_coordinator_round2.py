@@ -635,6 +635,10 @@ def main():
     # ===========================================================================
     prev_f1 = None
     no_improvement_count = 0
+    best_f1 = -1.0
+    best_round_num = 0
+    best_round_data: Optional[Dict[str, Any]] = None
+    best_verified_results: List[Dict[str, Any]] = []
 
     for round_num in range(1, args.rounds + 1):
         round_start = time.time()
@@ -712,8 +716,15 @@ def main():
         direction = "+" if f1_delta >= 0 else ""
         logger.info(f"[EVALUATE] F1 vs baseline: {direction}{f1_delta:.4f} (baseline={BASELINE_F1})")
 
-        # --- Early stopping: delta-F1 convergence check ---
+        # Track best round
         current_f1 = post_verify_metrics["f1"]
+        if current_f1 > best_f1:
+            best_f1 = current_f1
+            best_round_num = round_num
+            best_round_data = round_data
+            best_verified_results = verified_results
+
+        # --- Early stopping: delta-F1 convergence check ---
         if early_stop_enabled and prev_f1 is not None:
             delta_from_prev = current_f1 - prev_f1
             round_data["delta_f1_from_prev"] = round(delta_from_prev, 4)
@@ -778,6 +789,8 @@ def main():
     # ===========================================================================
     progression["completed_at"] = datetime.now().isoformat()
     progression["final_cost"] = cost.summary()
+    progression["best_round"] = best_round_num
+    progression["best_f1"] = best_f1
 
     # Progression file for charting
     progression_file = os.path.join(OUTPUT_DIR, "round2_progression.json")
@@ -794,14 +807,35 @@ def main():
     logger.info(f"Baseline F1: {BASELINE_F1}")
 
     if progression["rounds"]:
-        final_round = progression["rounds"][-1]
-        final_f1 = final_round.get("student_post_verify", {}).get("f1", 0)
-        delta = final_f1 - BASELINE_F1
+        last_round = progression["rounds"][-1]
+        last_f1 = last_round.get("student_post_verify", {}).get("f1", 0)
+
+        # Report best-round metrics as primary output
+        report_round = best_round_data if best_round_data else last_round
+        report_f1 = best_f1 if best_round_data else last_f1
+        delta = report_f1 - BASELINE_F1
         direction = "+" if delta >= 0 else ""
-        logger.info(f"Final F1:    {final_f1:.4f} ({direction}{delta:.4f} vs baseline)")
-        logger.info(f"Final P:     {final_round.get('student_post_verify', {}).get('precision', 0):.4f}")
-        logger.info(f"Final R:     {final_round.get('student_post_verify', {}).get('recall', 0):.4f}")
-        logger.info(f"Final FPR:   {final_round.get('student_post_verify', {}).get('fpr', 0):.4f}")
+        logger.info(f"Final F1:    {report_f1:.4f} ({direction}{delta:.4f} vs baseline)  [best round: {best_round_num}]")
+        logger.info(f"Final P:     {report_round.get('student_post_verify', {}).get('precision', 0):.4f}")
+        logger.info(f"Final R:     {report_round.get('student_post_verify', {}).get('recall', 0):.4f}")
+        logger.info(f"Final FPR:   {report_round.get('student_post_verify', {}).get('fpr', 0):.4f}")
+        if best_round_num != len(progression["rounds"]):
+            last_delta = last_f1 - BASELINE_F1
+            last_dir = "+" if last_delta >= 0 else ""
+            logger.info(f"Last-round F1: {last_f1:.4f} ({last_dir}{last_delta:.4f} vs baseline)  [round {len(progression['rounds'])}]")
+
+        # Save best-round results for downstream use
+        if best_verified_results:
+            best_results_file = os.path.join(OUTPUT_DIR, "best_round_results.json")
+            with open(best_results_file, 'w') as f:
+                json.dump({
+                    "best_round": best_round_num,
+                    "metrics": report_round.get("student_post_verify", {}),
+                    "cost": cost.summary(),
+                    "results": best_verified_results,
+                }, f, indent=2)
+            logger.info(f"Best-round results saved to {best_results_file}")
+
 
         logger.info("")
         logger.info("Per-round F1 progression:")
