@@ -834,6 +834,377 @@
       "confidence": 0.85,
       "source": "blue_team_defense",
       "mitigation": "Use secure randomness sources such as VRF or commit-reveal schemes; avoid using blockhash or block.timestamp alone as randomness; incorporate external oracle randomness or cryptographic randomness beacons"
+    },
+    "bt_BT-ARI-1779606337-0": {
+      "vulnerability_type": "arithmetic",
+      "pattern": "Unsigned integer arithmetic on token balances without proper underflow/overflow checks leading to potential balance manipulation and token theft",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Use SafeMath library or Solidity 0.8+ built-in checked arithmetic to prevent underflow/overflow; ensure require checks properly prevent invalid arithmetic; avoid manual unchecked arithmetic operations."
+    },
+    "bt_BT-ARI-1779606341-1": {
+      "vulnerability_type": "arithmetic",
+      "pattern": "Unsigned integer arithmetic operations (especially subtraction) performed without underflow checks, allowing wraparound and potentially leading to critical state corruption or logic flaws.",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Use safe arithmetic operations that revert on underflow, such as OpenZeppelin's SafeMath library or Solidity 0.8+ built-in checked arithmetic, or explicitly check that the subtrahend is less than or equal to the minuend before subtraction."
+    },
+    "bt_BT-ARI-1779606346-2": {
+      "vulnerability_type": "arithmetic",
+      "pattern": "Unchecked arithmetic operations (multiplication, addition, subtraction) on user-controlled or untrusted inputs that can overflow or underflow, leading to incorrect state updates and potential asset theft.",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Use safe arithmetic operations that include overflow checks, such as OpenZeppelin's SafeMath library, or Solidity 0.8.x built-in overflow protection. Specifically, replace unchecked multiplication with safe multiplication that reverts on overflow."
+    },
+    "bt_BT-BAD-1779606350-0": {
+      "vulnerability_type": "bad_randomness",
+      "pattern": "Contracts using predictable on-chain variables (timestamps, block numbers) as randomness sources leading to vulnerable random number generation exploitable by miners or attackers",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Use secure randomness sources such as VRF (Verifiable Random Function) or commit-reveal schemes; avoid using block.timestamp, block.number, or any on-chain predictable values for randomness; incorporate off-chain randomness or cryptographic primitives designed for secure randomness"
+    },
+    "bt_BT-UNC-1779606354-0": {
+      "vulnerability_type": "unchecked_low_level_calls",
+      "pattern": "Use of unchecked low-level external calls that ignore the success/failure return value, leading to potential bypass of critical logic or inconsistent contract state",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Always check the returned boolean value of low-level calls and revert on failure, or use higher-level Solidity calls (e.g., function calls or interface calls) that automatically propagate errors"
+    },
+    "bt_BT-ARI-1779607354-0": {
+      "vulnerability_type": "arithmetic",
+      "pattern": "Unsigned integer underflow vulnerability caused by unchecked subtraction of a user-controlled value from a balance, leading to wraparound and unauthorized token transfers.",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Use SafeMath library functions for all arithmetic operations to automatically check for underflows/overflows, or explicitly check that _value <= balances[msg.sender] before performing subtraction."
+    },
+    "bt_BT-ARI-1779607358-1": {
+      "vulnerability_type": "arithmetic",
+      "pattern": "Unsigned integer arithmetic operations (subtraction) without underflow checks leading to potential wraparound vulnerabilities, especially in delegated calls that preserve storage context.",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Use SafeMath library's sub function or Solidity 0.8+ built-in checked arithmetic to prevent underflow by reverting on invalid subtraction."
+    },
+    "bt_BT-ARI-1779607362-2": {
+      "vulnerability_type": "arithmetic",
+      "pattern": "Unchecked arithmetic subtraction on user balances leading to integer underflow vulnerabilities allowing balance manipulation or token creation.",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Use safe arithmetic operations that include underflow/overflow checks, such as OpenZeppelin's SafeMath library, or explicitly require that the balance is sufficient before subtraction and use checked subtraction."
+    },
+    "bt_BT-BAD-1779607368-0": {
+      "vulnerability_type": "bad_randomness",
+      "pattern": "Contracts that rely on blockchain state variables such as blockhash or block.number as sources of randomness, especially when randomness logic is delegated across contracts, are vulnerable to manipulation by miners or attackers, leading to predictable or exploitable outcomes.",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Avoid using block variables (block.number, blockhash, timestamp) as randomness sources. Instead, use secure randomness sources such as VRF (Verifiable Random Functions) like Chainlink VRF, commit-reveal schemes, or external oracles. Also, carefully audit cross-contract delegation to ensure randomness is not reused or exposed."
+    },
+    "bt_BT-ACC-1779607370-0": {
+      "vulnerability_type": "access_control",
+      "pattern": "Access control vulnerabilities arising from multi-signature confirmation mechanisms that derive operation identifiers solely from transaction calldata (msg.data), enabling replay or delegation attacks across contracts due to lack of unique, contract-bound operation identifiers.",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Use explicit and unforgeable operation identifiers that include the contract address and nonce or sequence number; avoid relying solely on sha3(msg.data) for access control. Implement strict input validation and ensure that the multi-signature confirmation cannot be replayed or delegated across contracts. Prefer using `msg.sender` checks combined with explicit operation hashes that include contract-specific context."
+    },
+    "bt_BT-UNC-1779607373-0": {
+      "vulnerability_type": "unchecked_low_level_calls",
+      "pattern": "Unchecked low-level external calls that do not verify success, leading to potential silent failures and exploitable control flow bypasses.",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Always check the return value of low-level calls and revert or handle failure explicitly; prefer using higher-level Solidity calls or interfaces that throw on failure; use require(success) after call."
+    },
+    "bt_BT-ARI-1779608238-0": {
+      "vulnerability_type": "arithmetic",
+      "pattern": "Unsigned integer arithmetic underflow vulnerability where subtraction is performed without proper boundary checks or safe arithmetic, leading to exploitable token balance manipulation.",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Use SafeMath library for all arithmetic operations to prevent underflow/overflow, or explicitly check that _value <= balances[msg.sender] before subtraction."
+    },
+    "bt_BT-ARI-1779608243-1": {
+      "vulnerability_type": "arithmetic",
+      "pattern": "Unsigned integer arithmetic operations (subtraction) without proper boundary checks or safe math protections that can cause underflow vulnerabilities.",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Use explicit boundary checks before subtraction (e.g. require minuend >= subtrahend) or use a safe math library (e.g. OpenZeppelin's SafeMath) that reverts on underflow."
+    },
+    "bt_BT-ARI-1779608247-2": {
+      "vulnerability_type": "arithmetic",
+      "pattern": "Unchecked arithmetic operations on unsigned integer state variables representing token balances or allowances leading to integer underflow or overflow vulnerabilities.",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Use safe arithmetic operations that include overflow/underflow checks (e.g., SafeMath library functions) for all balance updates, ensuring that subtraction does not underflow and addition does not overflow."
+    },
+    "bt_BT-BAD-1779608252-0": {
+      "vulnerability_type": "bad_randomness",
+      "pattern": "Contracts relying on on-chain block variables as entropy sources for randomness in games, lotteries, or critical logic, enabling miners or attackers to bias or control outcomes",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Use secure randomness sources such as VRF (Verifiable Random Function) or commit-reveal schemes; avoid direct use of block variables for randomness; incorporate off-chain randomness or cryptographic randomness oracles"
+    },
+    "bt_BT-ACC-1779608258-0": {
+      "vulnerability_type": "access_control",
+      "pattern": "Access control vulnerabilities caused by obfuscated or flattened control flow that obscure or bypass authorization checks, allowing unauthorized users to execute privileged functions.",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Use explicit and simple access control modifiers (e.g., require(isOwner(msg.sender))) at the start of functions without complex control flow flattening. Avoid obfuscating control flow with while(true) loops and step variables. Use Solidity's built-in modifiers and visibility keywords clearly. Perform access control checks before any state changes or external calls."
+    },
+    "bt_BT-UNC-1779608262-0": {
+      "vulnerability_type": "unchecked_low_level_calls",
+      "pattern": "Unchecked low-level calls in smart contracts where the return value is ignored, leading to silent failures and potential exploitation.",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Always check the return value of low-level calls and revert or handle failure cases explicitly. Prefer higher-level Solidity calls (e.g., transfer, send with require) or use safe wrappers that revert on failure."
+    },
+    "bt_BT-ARI-1779609203-0": {
+      "vulnerability_type": "arithmetic",
+      "pattern": "Unsigned integer underflow vulnerability caused by improper validation of arithmetic operations where subtraction is performed on unsigned integers without safe checks, allowing balance underflow and unauthorized token transfers.",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Use SafeMath library functions for arithmetic operations to prevent underflows/overflows, or explicitly check that _value <= balances[msg.sender] before subtraction without performing the subtraction in the condition."
+    },
+    "bt_BT-ARI-1779609204-1": {
+      "vulnerability_type": "arithmetic",
+      "pattern": "Unchecked arithmetic operations on unsigned integers that can cause integer underflow or overflow, especially when combined with delegatecall preserving context, leading to corrupted contract state.",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Use Solidity's built-in overflow/underflow protection (e.g., Solidity >=0.8.0 built-in checks) or explicitly use SafeMath library functions for arithmetic operations to ensure checks are performed before subtraction."
+    },
+    "bt_BT-ARI-1779609210-2": {
+      "vulnerability_type": "arithmetic",
+      "pattern": "Arithmetic vulnerabilities in token balance updates caused by obscured or insufficient pre-condition checks combined with complex control flow and cross-contract delegation, leading to potential underflow/overflow and unauthorized token transfers.",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Ensure strict and explicit pre-condition checks on balances before arithmetic operations, avoid complex control flow flattening that obscures logic, and use SafeMath consistently with clear state assumptions. Additionally, consider using Solidity ^0.8.x which has built-in overflow/underflow checks."
+    },
+    "bt_BT-BAD-1779609215-0": {
+      "vulnerability_type": "bad_randomness",
+      "pattern": "Use of weak, predictable, or manipulable on-chain values as randomness sources in smart contracts leading to exploitable bad randomness vulnerabilities",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Use secure randomness sources such as VRF (Verifiable Random Functions), commit-reveal schemes, or external oracles that provide unbiased and unpredictable randomness; avoid using block variables directly for randomness"
+    },
+    "bt_BT-ACC-1779609229-0": {
+      "vulnerability_type": "access_control",
+      "pattern": "Access control relying on calldata hash (e.g., sha3(msg.data)) or indirect context-dependent checks that can be bypassed via cross-contract delegation or manipulated call data, leading to unauthorized privileged function execution.",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Use explicit and robust ownership and access control checks based on msg.sender or a verified signer list rather than relying on calldata hashes. Avoid cross-contract delegation without strict context validation. Implement standard modifiers like onlyOwner or multi-signature verification that do not depend on msg.data hashing."
+    },
+    "bt_BT-UNC-1779609236-0": {
+      "vulnerability_type": "unchecked_low_level_calls",
+      "pattern": "Unchecked low-level external calls that do not verify success, leading to potential silent failures and exploitable inconsistent contract state.",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Always check the return value of low-level calls and revert or handle failure cases appropriately. Prefer higher-level Solidity calls or interfaces that throw on failure. Use require() or if-statements to ensure call success."
+    },
+    "bt_BT-ARI-1779610170-0": {
+      "vulnerability_type": "arithmetic",
+      "pattern": "Unsigned integer arithmetic operations (subtraction) performed without proper underflow checks or safe math libraries, often combined with ineffective require conditions, leading to potential balance manipulation and token theft.",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Use SafeMath library functions for all arithmetic operations to prevent underflow/overflow. Replace manual arithmetic and require checks with safe subtraction and addition functions that revert on underflow/overflow."
+    },
+    "bt_BT-ARI-1779610174-1": {
+      "vulnerability_type": "arithmetic",
+      "pattern": "Unsigned integer subtraction without proper underflow protection leading to arithmetic wraparound vulnerabilities.",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Use SafeMath libraries or Solidity 0.8+ built-in checked arithmetic to ensure underflows revert the transaction instead of wrapping around."
+    },
+    "bt_BT-ARI-1779610178-2": {
+      "vulnerability_type": "arithmetic",
+      "pattern": "Integer arithmetic operations on critical state variables (e.g., token balances) without safe math checks leading to potential underflow/overflow vulnerabilities.",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Use SafeMath library functions for all arithmetic operations on token balances to ensure automatic overflow and underflow checks, preventing invalid balance manipulations."
+    },
+    "bt_BT-BAD-1779610182-0": {
+      "vulnerability_type": "bad_randomness",
+      "pattern": "Use of on-chain block data (blockhash, block.number, timestamp) as a source of randomness in smart contracts leading to predictable or manipulable outcomes exploitable in gambling or lottery contracts",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "replace on-chain blockhash/block.number based randomness with secure randomness sources such as VRF (Verifiable Random Function) or commit-reveal schemes; avoid using block data directly as entropy for critical randomness"
+    },
+    "bt_BT-TIM-1779610185-0": {
+      "vulnerability_type": "time_manipulation",
+      "pattern": "Use of miner-manipulable blockchain timestamps for critical time-dependent control flow or state transitions, allowing attackers to influence contract behavior by manipulating block timestamps.",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Avoid using block.timestamp or block.number for critical time-dependent logic. Instead, use trusted external time oracles, or design the contract logic to tolerate small timestamp manipulations by miners (e.g., using time windows with safe margins)."
+    },
+    "bt_BT-UNC-1779610189-0": {
+      "vulnerability_type": "unchecked_low_level_calls",
+      "pattern": "Unchecked low-level calls where the returned success flag is ignored, leading to potential silent failures and exploitable inconsistent contract state.",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Always check the return value of low-level calls and handle failure cases explicitly. Prefer using higher-level Solidity calls (transfer, send with checks) or require/assert on the call result. Consider using reentrancy guards and safe call wrappers."
+    },
+    "bt_BT-ARI-1779610974-0": {
+      "vulnerability_type": "arithmetic",
+      "pattern": "Unsigned integer underflow vulnerability caused by unchecked subtraction on critical state variables, often obscured by control flow flattening and dead code insertion techniques.",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Use explicit checks before subtraction (e.g., require(balances[msg.sender] >= _value)) or use SafeMath library functions that revert on underflow."
+    },
+    "bt_BT-ARI-1779610978-1": {
+      "vulnerability_type": "arithmetic",
+      "pattern": "Unchecked arithmetic operations on unsigned integers (subtraction) that can cause integer underflow vulnerabilities, especially when combined with complex control flow and cross-contract delegation that obscure the vulnerability.",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Add explicit checks before the arithmetic operation to ensure the subtrahend is not greater than the minuend, or use Solidity 0.8.x or later which has built-in overflow/underflow checks, or use SafeMath library functions for arithmetic operations."
+    },
+    "bt_BT-ARI-1779610982-2": {
+      "vulnerability_type": "arithmetic",
+      "pattern": "Arithmetic vulnerabilities in delegatecall-based token contracts where balance updates rely on external library calls without strict access control or storage layout verification, leading to potential underflow/overflow and unauthorized token transfers.",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Ensure that delegatecall is only performed to trusted contracts with identical storage layout and strict access control. Use SafeMath consistently and add explicit authorization checks in the delegatecall target. Avoid delegatecall for critical state updates or use upgradeable proxy patterns with verified logic contracts."
+    },
+    "bt_BT-BAD-1779610987-0": {
+      "vulnerability_type": "bad_randomness",
+      "pattern": "Use of on-chain predictable or miner-controllable blockchain attributes as randomness sources in smart contracts leading to biased or manipulable outcomes",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Use secure randomness sources such as VRF (Verifiable Random Function) or commit-reveal schemes; avoid using block attributes directly for randomness; incorporate off-chain randomness or cryptographic randomness beacons; add entropy from multiple unpredictable sources"
+    },
+    "bt_BT-ACC-1779610995-0": {
+      "vulnerability_type": "access_control",
+      "pattern": "Improper access control in multi-signature wallet contracts where ownership transfer or critical state changes rely on weak authorization mechanisms (e.g., dynamic hashes of calldata) combined with obfuscation techniques like dead code insertion and cross-contract delegation, allowing unauthorized ownership takeover.",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Use explicit and robust access control checks that do not rely solely on msg.data hashes. Validate all input addresses strictly, avoid relying on dynamic hashes for authorization, and implement explicit owner verification before changing ownership. Avoid complex delegation patterns that obscure control flow and make access control reasoning difficult."
+    },
+    "bt_BT-UNC-1779611001-0": {
+      "vulnerability_type": "unchecked_low_level_calls",
+      "pattern": "Unchecked low-level calls (call, delegatecall, callcode) where the return value is ignored, allowing failed calls to go unnoticed and potentially leading to security vulnerabilities such as reentrancy, inconsistent state, or unauthorized execution.",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Always check the return value of low-level calls (call, delegatecall, callcode) and handle failures explicitly, e.g., by requiring success or reverting on failure."
+    },
+    "bt_BT-UNC-1779611004-1": {
+      "vulnerability_type": "unchecked_low_level_calls",
+      "pattern": "Unchecked low-level calls that do not verify the success/failure return value, leading to potential silent failures and exploitable state inconsistencies.",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Always check the return value of low-level calls and revert or handle failure cases explicitly. Prefer using higher-level Solidity calls (e.g., transfer, send with checks) or require/assert on call results."
+    },
+    "bt_BT-ARI-1779611738-0": {
+      "vulnerability_type": "arithmetic",
+      "pattern": "Unchecked arithmetic on unsigned integers leading to underflow or overflow vulnerabilities in token balance updates or critical state variables",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Use explicit overflow/underflow checks (e.g., require(balances[msg.sender] >= _value)) before subtraction or use SafeMath library functions for safe arithmetic operations."
+    },
+    "bt_BT-ARI-1779611742-1": {
+      "vulnerability_type": "arithmetic",
+      "pattern": "Unchecked arithmetic subtraction on unsigned integers where the subtrahend is attacker-controlled and no underflow protection is applied, leading to integer underflow vulnerabilities.",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Use explicit underflow checks before subtraction (e.g. require(storage >= input)) or use SafeMath library functions (e.g. SafeMath.sub) that revert on underflow."
+    },
+    "bt_BT-ARI-1779611748-2": {
+      "vulnerability_type": "arithmetic",
+      "pattern": "Unchecked arithmetic operations (multiplication, addition, subtraction) on token balances or cumulative amounts without overflow/underflow protection, leading to integer overflow vulnerabilities exploitable for unauthorized token minting or balance manipulation.",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Use SafeMath library for all arithmetic operations including multiplication, addition, and subtraction to prevent overflow/underflow; add explicit overflow checks; limit input parameters to safe ranges; avoid unchecked arithmetic on critical balance variables."
+    },
+    "bt_BT-BAD-1779611751-0": {
+      "vulnerability_type": "bad_randomness",
+      "pattern": "Use of predictable or manipulable blockchain state variables as randomness sources in smart contracts leading to exploitable bad randomness vulnerabilities",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Use secure randomness sources such as VRF (Verifiable Random Function) or commit-reveal schemes; avoid relying on blockhash or block.number for randomness; introduce off-chain randomness or cryptographic randomness oracles"
+    },
+    "bt_BT-ACC-1779611758-0": {
+      "vulnerability_type": "access_control",
+      "pattern": "Access control vulnerabilities caused by conditional checks that fail to revert or halt execution on unauthorized callers, often obfuscated by control flow flattening and dead code insertion, allowing bypass of ownership or permission checks.",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Enforce access control by using require/assert statements that revert the transaction immediately when the caller is unauthorized, preventing further execution of sensitive code."
+    },
+    "bt_BT-UNC-1779611762-0": {
+      "vulnerability_type": "unchecked_low_level_calls",
+      "pattern": "Unchecked low-level calls (send/call) where the boolean return value indicating success/failure is ignored, leading to potential silent failures and inconsistent contract state.",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Check the return value of low-level calls like send/call/callcode/delegatecall and handle failure cases appropriately, e.g., revert the transaction or fallback to alternative logic. Prefer using transfer() or call with proper checks and error handling."
+    },
+    "bt_BT-ARI-1779612510-0": {
+      "vulnerability_type": "arithmetic",
+      "pattern": "Unsigned integer underflow vulnerability caused by unchecked subtraction on user balances, leading to wraparound and potential unauthorized token transfers.",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Use SafeMath library functions for arithmetic operations to automatically check for underflows/overflows, or explicitly check that _value <= balances[msg.sender] before subtraction."
+    },
+    "bt_BT-ARI-1779612513-1": {
+      "vulnerability_type": "arithmetic",
+      "pattern": "Unsigned integer subtraction performed without input validation or overflow/underflow protection, leading to potential underflow vulnerabilities in Solidity versions prior to 0.8.0.",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Use Solidity 0.8.0 or later which has built-in underflow/overflow checks, or explicitly check that the minuend is greater than or equal to the subtrahend before subtraction, or use SafeMath library's sub function."
+    },
+    "bt_BT-ARI-1779612518-2": {
+      "vulnerability_type": "arithmetic",
+      "pattern": "Unchecked arithmetic operations (multiplication, subtraction, addition) on user-controlled inputs leading to integer overflow or underflow vulnerabilities that allow balance manipulation or token creation.",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Use SafeMath library functions for all arithmetic operations, especially multiplication and subtraction, to prevent overflow and underflow. Validate inputs strictly and avoid unchecked arithmetic on user-controlled values."
+    },
+    "bt_BT-BAD-1779612526-0": {
+      "vulnerability_type": "bad_randomness",
+      "pattern": "Weak or predictable randomness sources used in smart contracts, especially when combined with cross-contract delegation, leading to exploitable bad randomness vulnerabilities.",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Use secure randomness sources such as VRF (Verifiable Random Functions), commit-reveal schemes, or external oracles (e.g., Chainlink VRF). Avoid using block variables alone as randomness. When using delegatecall, ensure that randomness is not derived from predictable state or that the callee does not rely on weak randomness."
+    },
+    "bt_BT-UNC-1779612530-0": {
+      "vulnerability_type": "unchecked_low_level_calls",
+      "pattern": "Unchecked low-level calls to external addresses (e.g., `.send()`, `.call.value()()`) without verifying success, leading to potential Ether loss, inconsistent state, or reentrancy vulnerabilities.",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Always check the return value of low-level calls such as `.send()`, `.call.value()()`, or `.transfer()`. Prefer using `call` with proper checks or pull-payment patterns. Use `require` or `if` statements to handle failures explicitly."
+    },
+    "bt_BT-ARI-1779613256-0": {
+      "vulnerability_type": "arithmetic",
+      "pattern": "Unsigned integer underflow in token balance subtraction due to improper validation of sender balance before transfer, leading to unauthorized token creation or balance manipulation.",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Use SafeMath library or Solidity 0.8.x built-in checked arithmetic to prevent underflow/overflow. Replace the require with a direct comparison of balances[msg.sender] >= _value before subtraction. Perform subtraction only after validation."
+    },
+    "bt_BT-ARI-1779613259-1": {
+      "vulnerability_type": "arithmetic",
+      "pattern": "Unsigned integer arithmetic operations (especially subtraction) performed without underflow checks, allowing wraparound vulnerabilities leading to incorrect state updates.",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Use SafeMath library functions (e.g., SafeMath.sub) or explicit require statements to ensure the subtraction does not underflow before performing the operation."
+    },
+    "bt_BT-ARI-1779613263-2": {
+      "vulnerability_type": "arithmetic",
+      "pattern": "Arithmetic underflow vulnerability caused by improper or ineffective validation of subtraction operations on unsigned integers, often obfuscated by dead code or dummy checks, leading to exploitable token balance manipulations.",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Use well-audited SafeMath libraries with correct and effective require/assert statements that prevent underflow and overflow, and avoid dead or dummy code that can mislead reviewers or static analyzers. Ensure all arithmetic operations are guarded by meaningful checks."
+    },
+    "bt_BT-BAD-1779613269-0": {
+      "vulnerability_type": "bad_randomness",
+      "pattern": "Insecure randomness generation in smart contracts using predictable or manipulable blockchain state variables, leading to exploitable bad randomness vulnerabilities",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Use secure randomness sources such as commit-reveal schemes, VRF (Verifiable Random Functions) like Chainlink VRF, or external trusted randomness oracles; avoid using block attributes directly for randomness in critical logic"
+    },
+    "bt_BT-TIM-1779613274-0": {
+      "vulnerability_type": "time_manipulation",
+      "pattern": "Smart contract logic that makes critical decisions based on block.timestamp or block.number without accounting for miner manipulation or network variability, leading to potential time manipulation exploits.",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Avoid using block.timestamp for critical time checks; instead, use more reliable time sources or implement time-locks based on block numbers or external trusted oracles. Additionally, minimize trust on exact timestamps and design logic to tolerate small timestamp variations."
+    },
+    "bt_BT-UNC-1779613278-0": {
+      "vulnerability_type": "unchecked_low_level_calls",
+      "pattern": "Use of unchecked low-level calls to external contracts or addresses, leading to potential silent failures and exploitable inconsistent contract state",
+      "confidence": 0.85,
+      "source": "blue_team_defense",
+      "mitigation": "Always check the return value of low-level calls and revert or handle failures appropriately; prefer using higher-level Solidity calls (e.g., function calls) that automatically revert on failure"
     }
   },
   "vulnerability_types": {
