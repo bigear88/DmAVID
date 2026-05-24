@@ -565,6 +565,8 @@ def main():
                         help="Min |delta-F1| improvement to continue (default: 0.01)")
     parser.add_argument("--convergence-patience", type=int, default=2,
                         help="Rounds without improvement before stopping (default: 2)")
+    parser.add_argument("--exp-tag", type=str, default=None,
+                        help="Experiment tag for isolated output dir, e.g. 'exp12' → experiments/exp12/")
     args = parser.parse_args()
 
     logger.info("=" * 70)
@@ -578,8 +580,10 @@ def main():
     logger.info(f"Baseline F1: {BASELINE_F1}")
     logger.info("=" * 70)
 
-    # Create output directory
-    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    # Determine output directory (isolated per exp-tag, or default shared dir)
+    run_output_dir = os.path.join(BASE_DIR, "experiments", args.exp_tag) if args.exp_tag else OUTPUT_DIR
+    os.makedirs(run_output_dir, exist_ok=True)
+    logger.info(f"Output dir: {run_output_dir}")
 
     # Load dataset — sample 143 vulnerable + 100 safe = 243 (same as baseline)
     logger.info("Loading dataset...")
@@ -630,6 +634,25 @@ def main():
         },
         "rounds": [],
     }
+
+    # ===========================================================================
+    # Pre-iteration baseline snapshot (for McNemar: compare before/after)
+    # ===========================================================================
+    logger.info("[PRE-ITER] Running Student on full dataset before any iterative updates...")
+    if hasattr(rag_mod, "reload_dynamic_kb"):
+        rag_mod.reload_dynamic_kb()
+    pre_iter_results = run_student_stage(rag_mod, dataset, cost, args.dry_run)
+    pre_iter_metrics = compute_metrics(pre_iter_results)
+    logger.info(
+        f"[PRE-ITER] F1: {pre_iter_metrics['f1']:.4f}  "
+        f"P: {pre_iter_metrics['precision']:.4f}  "
+        f"R: {pre_iter_metrics['recall']:.4f}  "
+        f"FPR: {pre_iter_metrics['fpr']:.4f}"
+    )
+    pre_iter_file = os.path.join(run_output_dir, "pre_iter_results.json")
+    with open(pre_iter_file, 'w') as f:
+        json.dump({"metrics": pre_iter_metrics, "results": pre_iter_results}, f, indent=2)
+    logger.info(f"[PRE-ITER] Saved to {pre_iter_file}")
 
     # ===========================================================================
     # Iteration rounds
@@ -766,7 +789,7 @@ def main():
         progression["rounds"].append(round_data)
 
         # Save intermediate results
-        round_results_file = os.path.join(OUTPUT_DIR, f"round_{round_num}_results.json")
+        round_results_file = os.path.join(run_output_dir, f"round_{round_num}_results.json")
         with open(round_results_file, 'w') as f:
             json.dump({
                 "round": round_num,
@@ -794,7 +817,7 @@ def main():
     progression["best_f1"] = best_f1
 
     # Progression file for charting
-    progression_file = os.path.join(OUTPUT_DIR, "round2_progression.json")
+    progression_file = os.path.join(run_output_dir, "round2_progression.json")
     with open(progression_file, 'w') as f:
         json.dump(progression, f, indent=2)
     logger.info(f"Progression saved to {progression_file}")
@@ -827,7 +850,7 @@ def main():
 
         # Save best-round results for downstream use
         if best_verified_results:
-            best_results_file = os.path.join(OUTPUT_DIR, "best_round_results.json")
+            best_results_file = os.path.join(run_output_dir, "best_round_results.json")
             with open(best_results_file, 'w') as f:
                 json.dump({
                     "best_round": best_round_num,
