@@ -1,17 +1,6 @@
 {
-  "round": 3,
+  "best_round": 3,
   "metrics": {
-    "tp": 138,
-    "fp": 25,
-    "tn": 75,
-    "fn": 5,
-    "precision": 0.8466,
-    "recall": 0.965,
-    "f1": 0.902,
-    "fpr": 0.25,
-    "total_samples": 243
-  },
-  "pre_verify_metrics": {
     "tp": 138,
     "fp": 25,
     "tn": 75,
