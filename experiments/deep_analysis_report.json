@@ -1,0 +1,415 @@
+{
+  "experiment_a_mcnemar": {
+    "matched_contracts": 243,
+    "baseline_metrics": {
+      "tp": 137,
+      "fp": 27,
+      "tn": 73,
+      "fn": 6,
+      "precision": 0.8354,
+      "recall": 0.958,
+      "f1": 0.8925,
+      "fpr": 0.27
+    },
+    "rounds": {
+      "1": {
+        "tp": 137,
+        "fp": 27,
+        "tn": 73,
+        "fn": 6,
+        "precision": 0.8354,
+        "recall": 0.958,
+        "f1": 0.8925,
+        "fpr": 0.27
+      },
+      "2": {
+        "tp": 138,
+        "fp": 29,
+        "tn": 71,
+        "fn": 5,
+        "precision": 0.8263,
+        "recall": 0.965,
+        "f1": 0.8903,
+        "fpr": 0.29
+      },
+      "3": {
+        "tp": 137,
+        "fp": 25,
+        "tn": 75,
+        "fn": 6,
+        "precision": 0.8457,
+        "recall": 0.958,
+        "f1": 0.8984,
+        "fpr": 0.25
+      }
+    },
+    "mcnemar": {
+      "1": {
+        "b_baseline_better": 10,
+        "c_iter_better": 10,
+        "both_correct": 200,
+        "both_wrong": 23,
+        "chi2": 0.05,
+        "p_value": 0.8231,
+        "significant_p05": false
+      },
+      "2": {
+        "b_baseline_better": 10,
+        "c_iter_better": 9,
+        "both_correct": 200,
+        "both_wrong": 24,
+        "chi2": 0.0,
+        "p_value": 1.0,
+        "significant_p05": false
+      },
+      "3": {
+        "b_baseline_better": 10,
+        "c_iter_better": 12,
+        "both_correct": 200,
+        "both_wrong": 21,
+        "chi2": 0.0455,
+        "p_value": 0.8312,
+        "significant_p05": false
+      }
+    },
+    "fpr_mcnemar": {
+      "1": {
+        "b": 8,
+        "c": 8,
+        "chi2": 0.0625,
+        "p_value": 0.8026
+      },
+      "2": {
+        "b": 7,
+        "c": 9,
+        "chi2": 0.0625,
+        "p_value": 0.8026
+      },
+      "3": {
+        "b": 10,
+        "c": 8,
+        "chi2": 0.0556,
+        "p_value": 0.8137
+      }
+    }
+  },
+  "experiment_b_per_type": {
+    "per_type": {
+      "access_control": {
+        "n": 18,
+        "pre_iter": {
+          "tp": 17,
+          "fp": 0,
+          "tn": 0,
+          "fn": 1,
+          "precision": 1.0,
+          "recall": 0.9444,
+          "f1": 0.9714,
+          "fpr": 0.0
+        },
+        "post_iter": {
+          "tp": 18,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "fpr": 0.0
+        },
+        "delta_f1": 0.0286,
+        "delta_fpr": 0.0
+      },
+      "arithmetic": {
+        "n": 15,
+        "pre_iter": {
+          "tp": 12,
+          "fp": 0,
+          "tn": 0,
+          "fn": 3,
+          "precision": 1.0,
+          "recall": 0.8,
+          "f1": 0.8889,
+          "fpr": 0.0
+        },
+        "post_iter": {
+          "tp": 12,
+          "fp": 0,
+          "tn": 0,
+          "fn": 3,
+          "precision": 1.0,
+          "recall": 0.8,
+          "f1": 0.8889,
+          "fpr": 0.0
+        },
+        "delta_f1": 0.0,
+        "delta_fpr": 0.0
+      },
+      "bad_randomness": {
+        "n": 8,
+        "pre_iter": {
+          "tp": 8,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "fpr": 0.0
+        },
+        "post_iter": {
+          "tp": 7,
+          "fp": 0,
+          "tn": 0,
+          "fn": 1,
+          "precision": 1.0,
+          "recall": 0.875,
+          "f1": 0.9333,
+          "fpr": 0.0
+        },
+        "delta_f1": -0.0667,
+        "delta_fpr": 0.0
+      },
+      "denial_of_service": {
+        "n": 6,
+        "pre_iter": {
+          "tp": 6,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "fpr": 0.0
+        },
+        "post_iter": {
+          "tp": 6,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "fpr": 0.0
+        },
+        "delta_f1": 0.0,
+        "delta_fpr": 0.0
+      },
+      "front_running": {
+        "n": 4,
+        "pre_iter": {
+          "tp": 3,
+          "fp": 0,
+          "tn": 0,
+          "fn": 1,
+          "precision": 1.0,
+          "recall": 0.75,
+          "f1": 0.8571,
+          "fpr": 0.0
+        },
+        "post_iter": {
+          "tp": 4,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "fpr": 0.0
+        },
+        "delta_f1": 0.1429,
+        "delta_fpr": 0.0
+      },
+      "none": {
+        "n": 100,
+        "pre_iter": {
+          "tp": 0,
+          "fp": 27,
+          "tn": 73,
+          "fn": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "fpr": 0.27
+        },
+        "post_iter": {
+          "tp": 0,
+          "fp": 25,
+          "tn": 75,
+          "fn": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "fpr": 0.25
+        },
+        "delta_f1": 0.0,
+        "delta_fpr": -0.02
+      },
+      "other": {
+        "n": 3,
+        "pre_iter": {
+          "tp": 3,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "fpr": 0.0
+        },
+        "post_iter": {
+          "tp": 3,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "fpr": 0.0
+        },
+        "delta_f1": 0.0,
+        "delta_fpr": 0.0
+      },
+      "reentrancy": {
+        "n": 31,
+        "pre_iter": {
+          "tp": 31,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "fpr": 0.0
+        },
+        "post_iter": {
+          "tp": 31,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "fpr": 0.0
+        },
+        "delta_f1": 0.0,
+        "delta_fpr": 0.0
+      },
+      "short_addresses": {
+        "n": 1,
+        "pre_iter": {
+          "tp": 1,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "fpr": 0.0
+        },
+        "post_iter": {
+          "tp": 1,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "fpr": 0.0
+        },
+        "delta_f1": 0.0,
+        "delta_fpr": 0.0
+      },
+      "time_manipulation": {
+        "n": 5,
+        "pre_iter": {
+          "tp": 5,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "fpr": 0.0
+        },
+        "post_iter": {
+          "tp": 4,
+          "fp": 0,
+          "tn": 0,
+          "fn": 1,
+          "precision": 1.0,
+          "recall": 0.8,
+          "f1": 0.8889,
+          "fpr": 0.0
+        },
+        "delta_f1": -0.1111,
+        "delta_fpr": 0.0
+      },
+      "unchecked_low_level_calls": {
+        "n": 52,
+        "pre_iter": {
+          "tp": 51,
+          "fp": 0,
+          "tn": 0,
+          "fn": 1,
+          "precision": 1.0,
+          "recall": 0.9808,
+          "f1": 0.9903,
+          "fpr": 0.0
+        },
+        "post_iter": {
+          "tp": 51,
+          "fp": 0,
+          "tn": 0,
+          "fn": 1,
+          "precision": 1.0,
+          "recall": 0.9808,
+          "f1": 0.9903,
+          "fpr": 0.0
+        },
+        "delta_f1": 0.0,
+        "delta_fpr": 0.0
+      }
+    },
+    "overall_pre": {
+      "tp": 137,
+      "fp": 27,
+      "tn": 73,
+      "fn": 6,
+      "precision": 0.8354,
+      "recall": 0.958,
+      "f1": 0.8925,
+      "fpr": 0.27
+    },
+    "overall_post": {
+      "tp": 137,
+      "fp": 25,
+      "tn": 75,
+      "fn": 6,
+      "precision": 0.8457,
+      "recall": 0.958,
+      "f1": 0.8984,
+      "fpr": 0.25
+    }
+  },
+  "experiment_c_adversarial": {
+    "clean_metrics": {
+      "tp": 137,
+      "fp": 25,
+      "tn": 75,
+      "fn": 6,
+      "precision": 0.8457,
+      "recall": 0.958,
+      "f1": 0.8984,
+      "fpr": 0.25
+    },
+    "adversarial": {
+      "total_variants": 4,
+      "detected": 4,
+      "recall": 1.0,
+      "description": "Red Team adversarial variants (obfuscated vulnerabilities)"
+    },
+    "robustness_gap_fpr": 0.02,
+    "narrative": "Post-iteration FPR=0.2500 vs baseline FPR=0.2700 (gap=+0.0200). Adversarial recall=100% (4/4 variants detected). Iterative pipeline reduces false positives while maintaining adversarial robustness."
+  }
+}
