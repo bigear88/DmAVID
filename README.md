@@ -144,7 +144,7 @@ DmAVID/
 
 ### 1. 傳統 ML 的風格洩漏
 
-傳統 ML (RF F1=0.993) 學到的是**資料集風格差異**，而非漏洞語意：
+傳統 ML（RF test F1=1.0，cv F1=0.9949，leakage-fixed）學到的是**資料集風格差異**，而非漏洞語意：
 - Top TF-IDF 特徵：totalSupply, allowance, indexed (ERC20 特徵)
 - 移除標注後 RF 仍達 0.955
 - EVMbench 真實場景：傳統工具 0%，DmAVID 30.77% (12/39, Enhanced) → **64.10% (25/39, Smart Preprocess FINAL)**
@@ -228,6 +228,26 @@ python scripts/31_postcutoff_validation.py      # Post-cutoff 8 audits (58.82%, 
 5. **評估分析**：F1/Recall/FPR + McNemar 檢驗 + 消融實驗
 
 ---
+
+
+
+---
+
+## 實驗資料來源對照
+
+| 論文表格 | 說明 | 來源 JSON |
+|---------|------|-----------|
+| 表 3-2（傳統 ML SmartBugs） | RF/LR/GB/SVM test F1，leakage-fixed 70/30 split | `experiments/traditional_ml/ml_baseline_results_fixed.json` |
+| 表 3-2（傳統 ML DeFi Real） | DeFiHackLabs 100+100 合約測試集 | `experiments/defi_real_world/defi_results_fixed.json` |
+| 表 3-2（Style Balanced） | 143+143 平衡集消融 | `experiments/style_balanced/balanced_results_fixed.json` |
+| 表 3-1（Self-Verify 門檻掃描 T=1/2/3） | v4 門檻敏感度掃描（F1=0.8797/0.9030/0.9007） | `experiments/tool_augmented/threshold_sensitivity.json` |
+| 漏洞類型分布（143 合約） | 依 SmartBugs GitHub 原始標籤統計 | `data/dataset_1000.json（category 欄位）` |
+| 消融實驗管線 F1 | v5_clean 官方基準（LLM+RAG→Self-Verify） | `experiments/ablation/OFFICIAL_RESULTS_v5.md` |
+| exp15 迭代結果 F1=0.9132 | 2 輪 DmAVID 迭代最終值 | `experiments/exp15/round2_progression.json` |
+
+> **舊檔並存說明**：`experiments/traditional_ml/ml_baseline_results.json`（cv_f1=0.993）與 `experiments/defi_real_world/defi_results.json` 為 TF-IDF **未 Pipeline 化**之舊版實驗，已被 `*_fixed.json` 取代。論文所引用之所有數字均來自 `*_fixed.json`（leakage-fixed，70/30 stratified split）。
+
+> **漏洞類別計數差異**：本研究 `data/dataset_1000.json` 所記載之 access_control=18、arithmetic=15、unchecked_low_level_calls=52，依 SmartBugs Curated GitHub 實際原始碼標籤統計。SmartBugs Durieux 2020 論文所列數字（access_control=17、arithmetic=22、unchecked=42）來自論文版本，兩者總數均為 143 漏洞合約，分類依據略有差異，本研究以 GitHub 實際標籤為準。
 
 ## 引用
 

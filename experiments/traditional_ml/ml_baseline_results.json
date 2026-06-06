@@ -1,4 +1,5 @@
 {
+  "_deprecated": "SUPERSEDED by ml_baseline_results_fixed.json (leakage-fixed, 70/30 split). Do NOT cite this file for thesis numbers.",
   "experiment": "traditional_ml_baselines",
   "dataset": "SmartBugs 243 contracts",
   "features": "TF-IDF (500) + structural (19)",

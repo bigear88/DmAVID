@@ -1,4 +1,5 @@
 {
+  "_deprecated": "SUPERSEDED by defi_results_fixed.json (leakage-fixed). smartbugs_comparison values here use old cv_f1 from ml_baseline_results.json.",
   "experiment": "defi_real_world_test",
   "dataset": "DeFiHackLabs (100 vuln) + SmartBugs Wild (100 safe)",
   "traditional_ml": {
