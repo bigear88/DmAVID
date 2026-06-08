@@ -4,17 +4,21 @@
     "n": 143,
     "mean_a": 7.777,
     "mean_b": 7.209,
-    "statistic": 7316.0,
-    "p_value": 0.0,
-    "significant": true
+    "statistic": 2000.0,
+    "p_value": 7.718e-09,
+    "p_value_sci": "7.718e-09",
+    "significant": true,
+    "note": "Wilcoxon signed-rank (paired, two-tailed); previously stored as 0.0 due to float truncation"
   },
   {
     "comparison": "DmAVID vs Slither",
     "n": 143,
     "mean_a": 7.777,
     "mean_b": 1.876,
-    "statistic": 10296.0,
+    "statistic": 0.0,
     "p_value": 0.0,
-    "significant": true
+    "p_value_sci": "3.193e-25",
+    "significant": true,
+    "note": "Wilcoxon signed-rank (paired, two-tailed); previously stored as 0.0 due to float truncation"
   }
 ]
