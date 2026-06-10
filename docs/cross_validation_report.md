@@ -17,15 +17,29 @@
 - GitHub：TP=143, FP=95, FN=0, TN=5, Acc=0.6091, Prec=0.6008, Rec=1.0, F1=0.7507, FPR=0.95
 - **結果：✅ 完全一致**
 
-### LLM+RAG
-- 論文：TP=142, FP=57, FN=1, TN=43, Acc=0.7613, Prec=0.7136, Rec=0.9930, F1=0.8304, FPR=0.5700
-- GitHub：TP=142, FP=57, FN=1, TN=43, Acc=0.7613, Prec=0.7136, Rec=0.993, F1=0.8304, FPR=0.57
+### LLM+RAG（ablation_v5_clean canonical）
+- 論文 Table 4-2：TP=140, FP=26, FN=3, TN=74, Acc=0.8807, Prec=0.8434, Rec=0.9790, F1=0.9061, FPR=0.26
+- GitHub confusion_matrices.json llm_rag：TP=140, FP=26, FN=3, TN=74, Acc=0.8807, Prec=0.8434, Rec=0.9790, F1=0.9061, FPR=0.26
+- 來源：`experiments/ablation/ablation_v5_clean_results.json` baseline（gpt-4.1-mini, 2026-04-09）
+- **結果：✅ 完全一致**
+- **注意**：`supplementary_results/llm_rag_predictions.csv` 為舊版實驗（TP=142, FP=57, F1=0.8304），使用舊模型/舊 prompt，已廢棄，不對應任何當前論文引用。
+
+### +Self-Verify（ablation_v5_clean canonical）
+- 論文 Table 4-2：TP=140, FP=24, FN=3, TN=76, Acc=0.8889, Prec=0.8537, Rec=0.9790, F1=0.9121, FPR=0.24
+- GitHub confusion_matrices.json llm_rag_self_verify：TP=140, FP=24, FN=3, TN=76, F1=0.9121
+- 來源：`experiments/ablation/ablation_v5_clean_results.json` +self-verify
 - **結果：✅ 完全一致**
 
-### Hybrid
-- 論文：TP=142, FP=52, FN=1, TN=48, Acc=0.7819, Prec=0.7320, Rec=0.9930, F1=0.8427, FPR=0.5200
-- GitHub：TP=142, FP=52, FN=1, TN=48, Acc=0.7819, Prec=0.732, Rec=0.993, F1=0.8427, FPR=0.52
+### 最終 DmAVID（exp15 canonical）
+- 論文最終結果：TP=142, FP=26, FN=1, TN=74, Prec=0.8452, Rec=0.9930, F1=0.9132
+- GitHub confusion_matrices.json dmavid_final：TP=142, FP=26, FN=1, TN=74, F1=0.9132
+- 來源：`experiments/exp15/best_round_results.json`（gpt-4.1-mini）
 - **結果：✅ 完全一致**
+
+### Hybrid（已廢棄，不對應當前論文任何引用）
+- 舊版：TP=142, FP=52, FN=1, TN=48, F1=0.8427（pre-gpt4.1-mini 實驗）
+- 來源：`supplementary_results/hybrid_predictions.csv`
+- **狀態：⚠️ 已廢棄，論文 v16 不引用此數值**
 
 ## 2. McNemar 檢驗（表 4-6）交叉驗證
 

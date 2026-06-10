@@ -51,23 +51,61 @@
     }
   },
   "llm_rag": {
+    "_note": "Canonical: ablation_v5_clean_results.json baseline (gpt-4.1-mini, 2026-04-09). Matches thesis Table 4-2 and README. Old pre-gpt4.1mini result (TP=142,FP=57,F1=0.8304) is in llm_rag_predictions.csv and deprecated.",
+    "confusion_matrix": {
+      "TP": 140,
+      "TN": 74,
+      "FP": 26,
+      "FN": 3
+    },
+    "metrics": {
+      "Accuracy": 0.8807,
+      "Precision": 0.8434,
+      "Recall": 0.979,
+      "F1": 0.9061,
+      "Specificity": 0.74,
+      "FPR": 0.26,
+      "Total": 243
+    }
+  },
+  "llm_rag_self_verify": {
+    "_note": "Canonical: ablation_v5_clean_results.json +self-verify (gpt-4.1-mini, 2026-04-09). Matches thesis Table 4-2 and README +Self-Verify row.",
+    "confusion_matrix": {
+      "TP": 140,
+      "TN": 76,
+      "FP": 24,
+      "FN": 3
+    },
+    "metrics": {
+      "Accuracy": 0.8889,
+      "Precision": 0.8537,
+      "Recall": 0.979,
+      "F1": 0.9121,
+      "Specificity": 0.76,
+      "FPR": 0.24,
+      "Total": 243
+    }
+  },
+  "dmavid_final": {
+    "_note": "Canonical: exp15/best_round_results.json (gpt-4.1-mini). Final DmAVID result after 2 adversarial iteration rounds. Matches thesis final F1=0.9132.",
     "confusion_matrix": {
       "TP": 142,
-      "TN": 43,
-      "FP": 57,
+      "TN": 74,
+      "FP": 26,
       "FN": 1
     },
     "metrics": {
-      "Accuracy": 0.7613,
-      "Precision": 0.7136,
+      "Accuracy": 0.8889,
+      "Precision": 0.8452,
       "Recall": 0.993,
-      "F1": 0.8304,
-      "Specificity": 0.43,
-      "FPR": 0.57,
+      "F1": 0.9132,
+      "Specificity": 0.74,
+      "FPR": 0.26,
       "Total": 243
     }
   },
   "hybrid": {
+    "_note": "DEPRECATED: pre-gpt4.1-mini Slither+LLM+RAG hybrid experiment. Not cited in current thesis. Kept for historical reference only. Source: supplementary_results/hybrid_predictions.csv.",
     "confusion_matrix": {
       "TP": 142,
       "TN": 48,
