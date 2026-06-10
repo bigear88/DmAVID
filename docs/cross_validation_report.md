@@ -68,7 +68,7 @@
 **結果：✅ 全部完全一致**
 
 ## 總結
-所有論文中的實驗數據（混淆矩陣、McNemar 檢驗、成本敏感分析）均與 GitHub 倉庫中的 JSON 數據**完全一致**，無任何不匹配。
+基礎比較方法（Slither / Mythril / LLM Base / LLM+RAG / Hybrid）實驗數據均與 GitHub 倉庫中的 JSON 數據**完全一致**。消融實驗已更新為以 `ablation_v5_clean_results.json` 為基準（詳見第 7 節、第 9 節）。
 
 
 ## 4. 漏洞類型檢測召回率（表 4-4）交叉驗證
@@ -162,16 +162,33 @@ GitHub JSON 中的漏洞類別計數（vulnerability_type_comparison.json）：
 
 Mythril 的 TP+FN=20, FP+TN=20，總計 40 份合約（因 47.5% 超時率僅分析了 40 份），這與論文描述一致。
 
-## 7. 消融實驗 F1 計算驗證
+## 7. 消融實驗 F1 計算驗證（ablation_v5_clean）
 
-| 方法 | 論文 Prec | 論文 Rec | 論文 F1 | 計算 F1 | 差異 |
-|------|----------|---------|---------|---------|------|
-| Slither only | 0.62 | 0.94 | 0.75 | 0.7472 | ⚠️ 0.003 |
-| LLM only | 0.60 | 1.00 | 0.75 | 0.7500 | ✅ |
-| LLM+RAG | 0.71 | 0.99 | 0.83 | 0.8269 | ⚠️ 0.003 |
-| Hybrid | 0.73 | 0.99 | 0.84 | 0.8403 | ✅ |
+資料來源：`experiments/ablation/ablation_v5_clean_results.json`（model: gpt-4.1-mini，dataset: 243 contracts，時間戳：2026-04-09T22:12:15）
 
-**分析**: 消融實驗的 F1 值存在微小的四捨五入差異（0.003 以內），這是因為 Precision 和 Recall 本身就是四捨五入到兩位小數的值。如果使用原始精確值計算，F1 應該更精確。這屬於正常的四捨五入誤差，不構成數據造假。
+### F1 數學驗證（2×Prec×Rec / (Prec+Rec)）
+
+| 配置 | Prec | Rec | JSON F1 | 重算 F1 | 驗證 |
+|------|------|-----|---------|---------|------|
+| baseline (LLM+RAG) | 0.8434 | 0.9790 | 0.9061 | 0.9061 | ✅ |
+| +self-verify | 0.8537 | 0.9790 | 0.9121 | 0.9121 | ✅ |
+| +critique | 0.6190 | 1.0000 | 0.7647 | 0.7647 | ✅ |
+| +critique+debate | 0.6190 | 1.0000 | 0.7647 | 0.7647 | ✅ |
+
+**結果：✅ 全部一致，無四捨五入誤差**
+
+### 混淆矩陣一致性驗證
+
+| 配置 | TP | FP | TN | FN | Total | Prec 重算 | Rec 重算 |
+|------|----|----|----|----|-------|---------|---------|
+| baseline | 140 | 26 | 74 | 3 | 243 | 140/166=0.8434 ✅ | 140/143=0.9790 ✅ |
+| +self-verify | 140 | 24 | 76 | 3 | 243 | 140/164=0.8537 ✅ | 140/143=0.9790 ✅ |
+| +critique | 143 | 88 | 12 | 0 | 243 | 143/231=0.6190 ✅ | 143/143=1.0000 ✅ |
+| +critique+debate | 143 | 88 | 12 | 0 | 243 | 143/231=0.6190 ✅ | 143/143=1.0000 ✅ |
+
+**備註**：+critique+debate 的 debate_summary 顯示 total_debates=0（無辯論觸發），故與 +critique 結果完全相同。
+
+**此節已更新**：舊版（ablation_v5 非 clean 版）比較的是 Slither/LLM only/LLM+RAG/Hybrid，與論文現行版本不符，已替換為 ablation_v5_clean 版本。
 
 ## 8. McNemar 檢驗計算驗證
 
@@ -197,3 +214,37 @@ Mythril 的 TP+FN=20, FP+TN=20，總計 40 份合約（因 47.5% 超時率僅分
 - Hybrid vs Slither: (|8-1|-1)²/(8+1) = 6²/9 = 4.00 ✅
 
 **結論**: ✅ 所有 McNemar 檢驗值使用 Yates 連續性修正後完全正確。論文使用了帶 Yates 修正的 McNemar 檢驗，這是統計學上的標準做法。
+
+## 9. 消融實驗混淆矩陣交叉驗證（ablation_v5_clean vs confusion_matrices.json）
+
+此節驗證 `supplementary_results/confusion_matrices.json` 新增的 `dmavid_ablation` 區段是否與 `experiments/ablation/ablation_v5_clean_results.json` 完全一致。
+
+### baseline（LLM+RAG，與 05_run_llm_rag.py 相同）
+- ablation_v5_clean: TP=140, FP=26, TN=74, FN=3, Acc=0.8807, Prec=0.8434, Rec=0.9790, F1=0.9061, Spec=0.74, FPR=0.26
+- confusion_matrices.json dmavid_ablation.baseline: TP=140, FP=26, TN=74, FN=3, Acc=0.8807, Prec=0.8434, Rec=0.9790, F1=0.9061, Spec=0.74, FPR=0.26
+- **結果：✅ 完全一致**
+
+### +self-verify（三類 Self-Verify，UNCERTAIN 保留 baseline 判斷）
+- ablation_v5_clean: TP=140, FP=24, TN=76, FN=3, Acc=0.8889, Prec=0.8537, Rec=0.9790, F1=0.9121, Spec=0.76, FPR=0.24
+- confusion_matrices.json dmavid_ablation.self_verify: TP=140, FP=24, TN=76, FN=3, Acc=0.8889, Prec=0.8537, Rec=0.9790, F1=0.9121, Spec=0.76, FPR=0.24
+- **結果：✅ 完全一致**
+
+### +critique（Self-Verify + Critic Reflexion）
+- ablation_v5_clean: TP=143, FP=88, TN=12, FN=0, Acc=0.6379, Prec=0.6190, Rec=1.0000, F1=0.7647, Spec=0.12, FPR=0.88
+- confusion_matrices.json dmavid_ablation.critique: TP=143, FP=88, TN=12, FN=0, Acc=0.6379, Prec=0.6190, Rec=1.0000, F1=0.7647, Spec=0.12, FPR=0.88
+- **結果：✅ 完全一致**
+
+### +critique+debate（Self-Verify + Critic + Adversarial Debate）
+- ablation_v5_clean: TP=143, FP=88, TN=12, FN=0，debate_summary.total_debates=0（辯論零觸發）
+- confusion_matrices.json dmavid_ablation.critique_debate: TP=143, FP=88, TN=12, FN=0, Acc=0.6379, Prec=0.6190, Rec=1.0000, F1=0.7647, Spec=0.12, FPR=0.88
+- **結果：✅ 完全一致**
+
+### 關鍵觀察
+| 配置 | F1 | ΔF1 vs baseline | 說明 |
+|------|----|-----------------|----|
+| baseline | 0.9061 | — | LLM+RAG 基線 |
+| +self-verify | 0.9121 | **+0.0060** | Self-Verify 有效降低 FP（26→24） |
+| +critique | 0.7647 | **−0.1414** | Critic 大量增加 FP（26→88），效果負面 |
+| +critique+debate | 0.7647 | −0.1414 | Debate 無觸發，等同 +critique |
+
+**結論**：ablation_v5_clean 版本清楚說明 Self-Verify 是 DmAVID 有效的核心機制（+0.006 F1），而 Critic/Debate 在此配置下反而有害。論文消融表應以此版本為準。

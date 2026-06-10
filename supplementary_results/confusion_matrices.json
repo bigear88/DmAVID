@@ -83,5 +83,80 @@
       "FPR": 0.52,
       "Total": 243
     }
+  },
+  "dmavid_ablation": {
+    "_note": "Ablation study results from ablation_v5_clean_results.json (experiment: ablation_study_v5_clean, model: gpt-4.1-mini, dataset: 243 contracts, timestamp: 2026-04-09T22:12:15)",
+    "baseline": {
+      "description": "LLM+RAG (identical to 05_run_llm_rag.py)",
+      "confusion_matrix": {
+        "TP": 140,
+        "TN": 74,
+        "FP": 26,
+        "FN": 3
+      },
+      "metrics": {
+        "Accuracy": 0.8807,
+        "Precision": 0.8434,
+        "Recall": 0.979,
+        "F1": 0.9061,
+        "Specificity": 0.74,
+        "FPR": 0.26,
+        "Total": 243
+      }
+    },
+    "self_verify": {
+      "description": "LLM+RAG + Three-Class Self-Verify (UNCERTAIN preserves baseline)",
+      "confusion_matrix": {
+        "TP": 140,
+        "TN": 76,
+        "FP": 24,
+        "FN": 3
+      },
+      "metrics": {
+        "Accuracy": 0.8889,
+        "Precision": 0.8537,
+        "Recall": 0.979,
+        "F1": 0.9121,
+        "Specificity": 0.76,
+        "FPR": 0.24,
+        "Total": 243
+      }
+    },
+    "critique": {
+      "description": "Self-Verify + Critic failure analysis feedback (Reflexion)",
+      "confusion_matrix": {
+        "TP": 143,
+        "TN": 12,
+        "FP": 88,
+        "FN": 0
+      },
+      "metrics": {
+        "Accuracy": 0.6379,
+        "Precision": 0.619,
+        "Recall": 1.0,
+        "F1": 0.7647,
+        "Specificity": 0.12,
+        "FPR": 0.88,
+        "Total": 243
+      }
+    },
+    "critique_debate": {
+      "description": "Self-Verify + Critic + Adversarial Debate (debate had 0 triggers)",
+      "confusion_matrix": {
+        "TP": 143,
+        "TN": 12,
+        "FP": 88,
+        "FN": 0
+      },
+      "metrics": {
+        "Accuracy": 0.6379,
+        "Precision": 0.619,
+        "Recall": 1.0,
+        "F1": 0.7647,
+        "Specificity": 0.12,
+        "FPR": 0.88,
+        "Total": 243
+      }
+    }
   }
 }
