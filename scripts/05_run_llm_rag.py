@@ -11,12 +11,6 @@ from openai import OpenAI
 
 import sys; sys.path.insert(0, os.path.dirname(__file__))
 from _model_compat import token_param, MODEL as COMPAT_MODEL
-try:
-    from chroma_rag import query_chroma_context as _query_chroma
-    _CHROMA_ENABLED = True
-except Exception:
-    _CHROMA_ENABLED = False
-    def _query_chroma(code, n_results=3): return ""
 
 random.seed(42)
 BASE_DIR = "/home/curtis/DmAVID"
@@ -318,13 +312,6 @@ def build_rag_context(code):
             )
         context_parts.append(ctx)
 
-    # ------------------------------------------------------------------
-    # Phase 4: ChromaDB semantic search — learned Blue Team patterns
-    # ------------------------------------------------------------------
-    chroma_ctx = _query_chroma(code, n_results=3)
-    if chroma_ctx:
-        context_parts.insert(0, chroma_ctx)  # prepend so LLM sees it first
-
     return "\n".join(context_parts) if context_parts else "No specific vulnerability patterns matched."
 
 RAG_SYSTEM_PROMPT = """You are an expert smart contract security auditor with access to a vulnerability knowledge base.
@@ -337,6 +324,13 @@ Decision rules — apply in order:
 2. Only set has_vulnerability=true when you can identify a CONCRETE, EXPLOITABLE weakness in the code — not merely the presence of a risky pattern.
 3. When in doubt, default to has_vulnerability=false. False negatives are recoverable; false positives waste audit resources.
 4. A contract is SAFE if it properly implements security best practices (ReentrancyGuard, SafeMath, onlyOwner, require checks, CEI pattern).
+
+Plan-and-Solve reasoning (Wang et al., 2023):
+First, devise a plan to systematically check each vulnerability category provided in the
+RAG context against the contract, prioritizing the candidate weaknesses surfaced by the
+retrieved knowledge. Then carry out the plan step by step, reasoning through each candidate
+in turn (chain-of-thought). Finally, output the JSON answer. The "reasoning" field should
+summarize the plan execution and reference the RAG context.
 
 Respond in JSON format ONLY:
 {

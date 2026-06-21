@@ -12,6 +12,7 @@ is identical to script 19 — existing experiment results remain reproducible.
 """
 
 import os
+import re
 import sys
 import json
 import time
@@ -397,7 +398,8 @@ def run_student_stage(rag_mod, dataset, cost, dry_run):
             pred = random.random() > 0.3
             r = {"contract_id": cid, "ground_truth_vulnerable": gt, "category": cat,
                  "predicted_vulnerable": pred, "confidence": random.uniform(0.4, 0.95),
-                 "vulnerability_types": [cat] if pred else [], "reasoning": "dry-run", "tokens_used": 0}
+                 "vulnerability_types": [cat] if pred else [], "reasoning": "dry-run",
+                 "filepath": fp, "tokens_used": 0}
         else:
             analysis = rag_mod.analyze_with_rag(code)
             r = {"contract_id": cid, "ground_truth_vulnerable": gt, "category": cat,
@@ -405,6 +407,7 @@ def run_student_stage(rag_mod, dataset, cost, dry_run):
                  "confidence": analysis.get("confidence", 0.5),
                  "vulnerability_types": analysis.get("vulnerability_types", []),
                  "reasoning": analysis.get("reasoning", ""),
+                 "filepath": fp,
                  "tokens_used": analysis.get("tokens_used", 0)}
         cost.add("student", r.get("tokens_used", 0))
         results.append(r)
@@ -514,47 +517,158 @@ def run_blue_team_stage(blue_mod, validated, cost, dry_run):
     return all_entries
 
 
+# ── Three-class Self-Verify (conf-agnostic) ────────────────────────────────────
+# Ported from 31_ablation_study_v5_clean.py: verify ALL vuln predictions (no gating);
+# only SAFE with a verifiable in-code mitigation flips, UNCERTAIN preserves baseline.
+SELF_VERIFY_SYSTEM = """You are an expert Smart Contract Security Analyst. A previous analysis flagged this contract as VULNERABLE. Your task is to verify whether the vulnerability is genuinely exploitable.
+
+IMPORTANT BIAS WARNING: You have a natural tendency to second-guess vulnerability reports and classify contracts as SAFE. Resist this tendency. The previous detector has a high recall rate — when it says VULNERABLE, it is almost always correct. You should only override it with VERY strong evidence.
+
+Classify into exactly ONE of three categories:
+
+## VULNERABLE (confirmed exploitable) — DEFAULT when the exploit pattern exists
+The vulnerability pattern is present in the code. Choose this unless you have DEFINITIVE proof of mitigation. Even partial or complex exploit paths should be classified as VULNERABLE. When in doubt between VULNERABLE and UNCERTAIN, choose VULNERABLE.
+
+## SAFE (definitively mitigated) — ONLY when you can cite a specific Solidity keyword
+You found a SPECIFIC, NAMED mitigation IN THE CODE that completely blocks the exploit:
+- The exact modifier name applied to the function (e.g., `nonReentrant`, `onlyOwner`)
+- A specific `require()` statement with the condition that blocks the attack
+- State variable assignment BEFORE the external call (Checks-Effects-Interactions)
+- `pragma solidity ^0.8` for integer overflow claims
+
+STRICT RULES for SAFE:
+1. You MUST quote the exact Solidity code line containing the mitigation
+2. "The function is internal" is NOT a valid mitigation unless the function is literally declared `internal` or `private`
+3. "The call target is trusted" is NOT a valid mitigation — any address can be malicious
+4. "No state update after call" is NOT sufficient if state was read before the call
+5. If ANY public/external function in the contract could serve as an entry point for re-entrancy, it is NOT SAFE
+
+## UNCERTAIN (cannot confirm or deny)
+Use this when the vulnerability pattern partially exists but mitigation status is unclear, the code is too complex, or you are not fully confident in either VULNERABLE or SAFE.
+
+DEFAULT BEHAVIOR: When in doubt, choose VULNERABLE. The cost of missing a real vulnerability far exceeds the cost of a false positive.
+
+Respond strictly in JSON:
+{
+  "exploit_evidence": "<specific code pattern/line that enables the exploit, or null>",
+  "mitigation_found": "<the EXACT Solidity code line containing the mitigation, or null>",
+  "reasoning": "<brief explanation of your analysis>",
+  "verdict": "VULNERABLE" or "SAFE" or "UNCERTAIN"
+}"""
+
+VALID_MITIGATION_KEYWORDS = [
+    "nonreentrant", "onlyowner", "onlyadmin", "onlyminter", "onlyauthorized",
+    "whennotpaused", "require(msg.sender", "require(_msgsender",
+    "modifier ", "pragma solidity ^0.8", "pragma solidity >=0.8",
+    "locked", "mutex", "reentrancyguard",
+]
+
+
 def run_self_verify_stage(student_results, cost, dry_run, conf_threshold=0.90):
-    logger.info(f"[SELF-VERIFY] threshold={conf_threshold:.2f}")
-    verified, flipped, skipped = [], 0, 0
+    """Three-class, conf-agnostic Self-Verify.
+
+    Verifies EVERY predicted_vulnerable case (no confidence gating). The verdict is
+    one of VULNERABLE / SAFE / UNCERTAIN:
+      - SAFE      → flip to safe, but only if the claimed mitigation is verifiable
+                    in the actual code (or confidence < conf_threshold as a fallback)
+      - VULNERABLE→ preserve baseline (still vulnerable)
+      - UNCERTAIN → preserve baseline (still vulnerable)
+
+    conf_threshold is NO LONGER a gate; it only bounds the low-confidence override
+    when a SAFE mitigation is claimed but cannot be located in the code.
+    """
+    logger.info(f"[SELF-VERIFY] three-class conf-agnostic (low-conf override < {conf_threshold:.2f})")
+    verified, flipped, confirmed, uncertain = [], 0, 0, 0
     for r in student_results:
         nr = dict(r)
-        pred, conf = r.get("predicted_vulnerable"), float(r.get("confidence", 0.5))
-        do_verify = pred and not dry_run and cost.under_budget()
-        if do_verify and conf >= conf_threshold:
-            do_verify = False
-            skipped += 1
-        if do_verify:
-            reasoning = r.get("reasoning", "")[:1500]
-            vstr = ", ".join(r.get("vulnerability_types", [])) or "a potential vulnerability"
-            prompt = (f"You previously classified a smart contract as VULNERABLE due to {vstr}.\n"
-                      f"Reasoning: \"{reasoning}\"\n"
-                      f"Can you construct a CONCRETE exploit path? "
-                      f"If NOT, respond exactly: NO_EXPLOIT_PATH")
+        nr["verify_flipped"] = False
+        nr["sv_verdict"] = None
+
+        if not r.get("predicted_vulnerable") or dry_run or not cost.under_budget():
+            verified.append(nr)
+            continue
+
+        # Load contract source for in-code mitigation verification
+        code = ""
+        fp = r.get("filepath", "")
+        if fp and os.path.exists(fp):
             try:
-                resp = client.chat.completions.create(
-                    model=MODEL, temperature=0.1,
-                    messages=[{"role": "user", "content": prompt}],
-                    **token_param(512))
-                content = resp.choices[0].message.content.strip()
-                cost.add("self_verify", resp.usage.total_tokens if resp.usage else 0)
-                if "NO_EXPLOIT_PATH" in content.upper():
+                code = open(fp, encoding="utf-8", errors="ignore").read()
+            except Exception:
+                code = ""
+        code_short = code[:8000]
+
+        vuln_types = r.get("vulnerability_types", [])
+        reasoning  = r.get("reasoning", "")[:1500]
+        user_msg = (
+            f"The previous analysis flagged this contract as VULNERABLE.\n"
+            f"Claimed vulnerability types: {', '.join(vuln_types) if vuln_types else 'unspecified'}\n"
+            f"Previous reasoning: \"{reasoning}\"\n\n"
+            f"## Contract Code:\n```solidity\n{code_short}\n```\n\n"
+            f"Verify: is this genuinely exploitable, definitively mitigated, or uncertain?"
+        )
+        try:
+            resp = client.chat.completions.create(
+                model=MODEL, temperature=0.1, seed=42,
+                messages=[{"role": "system", "content": SELF_VERIFY_SYSTEM},
+                          {"role": "user", "content": user_msg}],
+                **token_param(800))
+            content = resp.choices[0].message.content.strip()
+            cost.add("self_verify", resp.usage.total_tokens if resp.usage else 0)
+
+            jm = re.search(r"\{[\s\S]*\}", content)
+            parsed = json.loads(jm.group()) if jm else {"verdict": "UNCERTAIN"}
+            verdict    = parsed.get("verdict", "UNCERTAIN").upper()
+            mitigation = parsed.get("mitigation_found")
+            nr["sv_verdict"]    = verdict
+            nr["sv_reasoning"]  = parsed.get("reasoning", "")
+            nr["sv_mitigation"] = mitigation
+
+            if verdict == "SAFE":
+                has_mitigation = mitigation not in (None, "null", "")
+                code_lower = code_short.lower()
+                mitigation_in_code = False
+                if has_mitigation:
+                    for kw in VALID_MITIGATION_KEYWORDS:
+                        if kw in code_lower:
+                            mitigation_in_code = True
+                            break
+                    if not mitigation_in_code and len(str(mitigation)) > 10:
+                        for ident in re.findall(r'[a-zA-Z_][a-zA-Z0-9_]{3,}', str(mitigation)):
+                            il = ident.lower()
+                            if il in code_lower and il not in (
+                                "function", "contract", "require", "return", "public",
+                                "external", "internal", "private", "memory", "storage",
+                                "address", "uint256", "bool", "true", "false", "null",
+                                "vulnerable", "safe", "exploit", "attack", "this",
+                                "that", "with", "from", "call", "value", "send"):
+                                mitigation_in_code = True
+                                break
+                is_low_conf = float(r.get("confidence", 0.5)) < conf_threshold
+                if has_mitigation and mitigation_in_code:
                     nr["predicted_vulnerable"] = False
                     nr["verify_flipped"] = True
-                    nr["verify_reason"] = "No concrete exploit path"
+                    flipped += 1
+                elif has_mitigation and is_low_conf:
+                    nr["predicted_vulnerable"] = False
+                    nr["verify_flipped"] = True
+                    nr["sv_verdict"] = "SAFE (low-conf override)"
                     flipped += 1
                 else:
-                    nr["verify_flipped"] = False
-                    nr["verify_reason"] = content[:300]
-            except Exception as e:
-                nr["verify_flipped"] = False
-                nr["verify_reason"] = f"error: {e}"
-            time.sleep(0.1)
-        else:
-            nr["verify_flipped"] = False
-            nr["verify_reason"] = ""
+                    nr["sv_verdict"] = "UNCERTAIN (mitigation not verified)"
+                    uncertain += 1
+            elif verdict == "VULNERABLE":
+                confirmed += 1
+            else:
+                uncertain += 1
+        except Exception as e:
+            uncertain += 1
+            nr["sv_verdict"] = "UNCERTAIN (error)"
+            nr["verify_reason"] = f"error: {e}"
+        time.sleep(0.1)
         verified.append(nr)
-    logger.info(f"[SELF-VERIFY] Flipped {flipped} (skipped_high_conf={skipped})")
+
+    logger.info(f"[SELF-VERIFY] confirmed={confirmed} flipped_SAFE={flipped} uncertain={uncertain}")
     return verified
 
 

@@ -1529,15 +1529,15 @@
       "mitigation": "Use SafeMath library's `sub` function or Solidity 0.8+ built-in checked arithmetic to automatically revert on underflow/overflow. Alternatively, add explicit require checks to ensure the subtrahend is not greater than the minuend before subtraction."
     },
     "bt_variant_0_0": {
-      "vulnerability_type": "arithmetic",
-      "pattern": "Unsigned integer arithmetic operations performed without explicit overflow or underflow checks, leading to potential state corruption or unauthorized asset manipulation",
-      "blue_team_defense": "Integrate SafeMath or equivalent arithmetic safety checks for all unsigned integer operations, especially in token balance updates and critical state changes; enforce require conditions validating inputs and results",
+      "vulnerability_type": "time_manipulation",
+      "pattern": "Smart contracts generating randomness or critical decisions based on block timestamps or other miner-influenced block variables, leading to time manipulation vulnerabilities.",
+      "blue_team_defense": "Avoid using block.timestamp or block attributes directly for randomness. Integrate verifiable randomness or off-chain randomness or use cryptographic commit-reveal schemes to ensure unpredictability.",
       "source": "blue_team_synthesis"
     },
     "bt_variant_1_1": {
-      "vulnerability_type": "arithmetic",
-      "pattern": "Unsigned integer arithmetic involving subtraction without explicit underflow checks, especially when result is stored in local variables and dead code is inserted to obfuscate the vulnerability",
-      "blue_team_defense": "Implement explicit boundary checks (e.g., require statements) before arithmetic operations to prevent underflow/overflow; use SafeMath libraries or Solidity 0.8+ built-in overflow checks; audit for dead/unreachable code that may hide vulnerabilities.",
+      "vulnerability_type": "time_manipulation",
+      "pattern": "Smart contracts performing critical time-dependent logic using block.timestamp comparisons, potentially obfuscated by dead code insertion to evade detection",
+      "blue_team_defense": "Avoid using block.timestamp for critical time conditions; if used, combine with additional safeguards such as minimum block confirmations, external time oracles, or multi-sig time locks; implement static analysis to detect time-based conditions especially when obfuscated by dead code",
       "source": "blue_team_synthesis"
     },
     "bt_variant_2_2": {
@@ -1547,27 +1547,69 @@
       "source": "blue_team_synthesis"
     },
     "bt_variant_0_3": {
-      "vulnerability_type": "bad_randomness",
-      "pattern": "Contracts relying on on-chain block data or predictable values for randomness generation without secure entropy sources, leading to exploitable bad randomness vulnerabilities.",
-      "blue_team_defense": "Avoid using block attributes or other predictable on-chain data as randomness sources. Integrate secure randomness oracles or cryptographic commit-reveal schemes. Perform thorough security audits focusing on randomness generation logic.",
+      "vulnerability_type": "unchecked_low_level_calls",
+      "pattern": "Detect low-level external calls whose return values are not checked or handled, leading to unchecked failures and potential exploitability.",
+      "blue_team_defense": "Always check the return value of low-level calls and revert on failure. Prefer using Solidity’s high-level calls (e.g., transfer, send with require, or interface calls) that automatically revert on failure. Implement proper error handling and avoid unchecked external calls.",
       "source": "blue_team_synthesis"
     },
     "bt_variant_0_4": {
-      "vulnerability_type": "unchecked_low_level_calls",
-      "pattern": "Detect low-level external calls whose return values are ignored or unchecked, leading to potential silent failures and exploitation",
-      "blue_team_defense": "Always check the return value of low-level calls and revert on failure; prefer using Solidity’s built-in transfer or call with require; add explicit error handling for external calls",
+      "vulnerability_type": "denial_of_service",
+      "pattern": "Loops that append to dynamic storage arrays without bounds, causing gas consumption to grow until transactions fail, enabling denial of service",
+      "blue_team_defense": "Limit the number of elements added per transaction; enforce maximum array length; use pull-over-push payment patterns; avoid gas-heavy loops over unbounded arrays; add circuit breakers or emergency stops",
       "source": "blue_team_synthesis"
     },
     "bt_variant_0_5": {
-      "vulnerability_type": "unchecked_low_level_calls",
-      "pattern": "Low-level external calls in Solidity must have their returned success status checked to avoid silent failures and potential exploits.",
-      "blue_team_defense": "Always check the returned boolean value of low-level calls and revert or handle failure cases explicitly to prevent silent failures and exploitability.",
+      "vulnerability_type": "arithmetic",
+      "pattern": "Unsigned integer arithmetic performed without safe math protections, combined with manual boundary checks and dead code insertion used as obfuscation or defensive coding, leading to potential underflow or overflow vulnerabilities.",
+      "blue_team_defense": "Integrate a well-audited SafeMath library for all arithmetic operations; avoid manual require checks for arithmetic safety; remove or ignore dead code that does not affect state but may obscure true logic; perform thorough static analysis to detect arithmetic vulnerabilities.",
       "source": "blue_team_synthesis"
     },
     "bt_variant_0_2": {
+      "vulnerability_type": "bad_randomness",
+      "pattern": "Smart contract functions that generate randomness using predictable blockchain state variables or deterministic inputs without cryptographic safeguards",
+      "blue_team_defense": "Avoid using block variables or contract state as randomness sources; integrate verifiable randomness or cryptographic commitments to ensure unpredictability; perform thorough code reviews focusing on randomness usage",
+      "source": "blue_team_synthesis"
+    },
+    "bt_variant_0_1": {
+      "vulnerability_type": "unchecked_low_level_calls",
+      "pattern": "Low-level external calls made without verifying the returned success status, leading to unchecked failures and potential exploitation",
+      "blue_team_defense": "Always check the return value of low-level calls and revert or handle failure explicitly. Prefer using higher-level Solidity calls or interfaces that return success booleans. Use require/assert to enforce call success.",
+      "source": "blue_team_synthesis"
+    },
+    "bt_variant_1_2": {
+      "vulnerability_type": "unchecked_low_level_calls",
+      "pattern": "Use of low-level call() without checking the returned boolean success value, leading to unchecked external call failures.",
+      "blue_team_defense": "Always check the return value of low-level calls (call, delegatecall, callcode) and handle failures explicitly, preferably using require or if-statements to revert on failure.",
+      "source": "blue_team_synthesis"
+    },
+    "bt_variant_2_3": {
+      "vulnerability_type": "unchecked_low_level_calls",
+      "pattern": "Detect low-level external calls whose return values are ignored or unchecked, leading to potential silent failures and exploitable state inconsistencies.",
+      "blue_team_defense": "Always check the return value of low-level calls and revert or handle failure cases explicitly. Prefer using higher-level Solidity calls or interfaces that return success status. Use SafeERC20 or similar libraries that encapsulate safe calls.",
+      "source": "blue_team_synthesis"
+    },
+    "bt_variant_1_6": {
+      "vulnerability_type": "arithmetic",
+      "pattern": "Arithmetic operations on unsigned integers without proper boundary checks leading to integer underflow or overflow vulnerabilities.",
+      "blue_team_defense": "Always validate arithmetic operations to ensure no underflow or overflow occurs, using require/assert statements or SafeMath libraries.",
+      "source": "blue_team_synthesis"
+    },
+    "bt_variant_2_7": {
+      "vulnerability_type": "arithmetic",
+      "pattern": "User-controlled arithmetic addition to critical state variables (e.g., timestamps or balances) without overflow or boundary checks leading to potential wraparound vulnerabilities.",
+      "blue_team_defense": "Use SafeMath library or Solidity 0.8+ built-in overflow checks to prevent integer overflow when updating time locks. Always validate that the new lock time is greater than or equal to the previous lock time before assignment.",
+      "source": "blue_team_synthesis"
+    },
+    "bt_variant_0_8": {
       "vulnerability_type": "access_control",
-      "pattern": "Owner or admin management functions exposed externally without proper access control modifiers, enabling unauthorized privilege escalation or ownership takeover.",
-      "blue_team_defense": "Enforce strict access control on all owner and requirement management functions by using modifiers that require confirmation from owners; audit all external functions that alter ownership or multisig parameters.",
+      "pattern": "Functions that modify ownership or critical contract state lacking explicit and enforced access control checks, relying on modifiers or conditions that can be bypassed or fail silently.",
+      "blue_team_defense": "Ensure all privileged functions enforce ownership checks with require statements or explicit revert on failure; avoid silent failures in modifiers; use explicit access control modifiers on all sensitive functions.",
+      "source": "blue_team_synthesis"
+    },
+    "bt_variant_1_4": {
+      "vulnerability_type": "unchecked_low_level_calls",
+      "pattern": "Low-level calls (.call, .delegatecall, .callcode) performed without verifying the returned success status, leading to unchecked failures and potential vulnerabilities.",
+      "blue_team_defense": "Always check the boolean return value of low-level calls (.call, .callcode, .delegatecall) and revert or handle failure cases explicitly to prevent silent failures.",
       "source": "blue_team_synthesis"
     }
   },
