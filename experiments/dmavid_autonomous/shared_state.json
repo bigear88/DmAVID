@@ -1,21 +1,20 @@
 {
-  "started_at": "2026-06-21T22:19:12.563305",
-  "updated_at": "2026-06-21T23:17:54.974866",
+  "started_at": "2026-06-22T00:25:25.825970",
+  "updated_at": "2026-06-22T01:16:46.059132",
   "fn_patterns": {
-    "bad_randomness": 3,
-    "unchecked_low_level_calls": 9,
-    "time_manipulation": 4,
-    "arithmetic": 10,
-    "access_control": 3,
-    "denial_of_service": 1
+    "access_control": 6,
+    "arithmetic": 5,
+    "time_manipulation": 1,
+    "unchecked_low_level_calls": 5,
+    "bad_randomness": 1,
+    "other": 1
   },
   "learned_defenses": [
-    "bad_randomness",
-    "unchecked_low_level_calls",
-    "time_manipulation",
-    "arithmetic",
     "access_control",
-    "denial_of_service"
+    "arithmetic",
+    "time_manipulation",
+    "unchecked_low_level_calls",
+    "bad_randomness"
   ],
   "coordinator_decisions": [
     {
@@ -27,65 +26,64 @@
           "integer_overflow",
           "access_control"
         ],
-        "challenges_per_type": 1,
+        "challenges_per_type": 2,
         "sv_threshold": 0.9,
-        "reasoning": "Starting with common critical vulnerabilities to establish baseline detection with moderate confidence."
+        "reasoning": "Starting with common critical vulnerabilities and using two challenges per type to maximize detection within budget."
       },
-      "reasoning": "Starting with common critical vulnerabilities to establish baseline detection with moderate confidence.",
-      "ts": "2026-06-21T22:19:15.035457"
+      "reasoning": "Starting with common critical vulnerabilities and using two challenges per type to maximize detection within budget.",
+      "ts": "2026-06-22T00:25:28.213666"
     },
     {
       "round": 2,
-      "stage": "round_strategy",
-      "decision": {
-        "focus_vuln_types": [
-          "unchecked_call",
-          "time_manipulation",
-          "access_control"
-        ],
-        "challenges_per_type": 2,
-        "sv_threshold": 0.92,
-        "reasoning": "Focus on types with high false negatives and learned defenses, using 2 challenges per type to improve recall while maintaining a balanced threshold to reduce false positives."
-      },
-      "reasoning": "Focus on types with high false negatives and learned defenses, using 2 challenges per type to improve recall while maintaining a balanced threshold to reduce false positives.",
-      "ts": "2026-06-21T22:40:35.118095"
-    },
-    {
-      "round": 3,
       "stage": "round_strategy",
       "decision": {
         "focus_vuln_types": [
           "unchecked_call",
           "access_control",
-          "time_manipulation",
-          "denial_of_service"
+          "time_manipulation"
         ],
         "challenges_per_type": 2,
         "sv_threshold": 0.92,
-        "reasoning": "Focus on high FN types and related categories with 2 challenges each to improve recall while maintaining a balanced false positive rate."
+        "reasoning": "Focus on high FN types and related categories with two challenges each to improve recall while maintaining a high threshold to reduce false positives."
       },
-      "reasoning": "Focus on high FN types and related categories with 2 challenges each to improve recall while maintaining a balanced false positive rate.",
-      "ts": "2026-06-21T23:00:32.148120"
+      "reasoning": "Focus on high FN types and related categories with two challenges each to improve recall while maintaining a high threshold to reduce false positives.",
+      "ts": "2026-06-22T00:46:05.345738"
+    },
+    {
+      "round": 3,
+      "stage": "round_strategy",
+      "decision": {
+        "focus_vuln_types": [
+          "access_control",
+          "unchecked_call",
+          "time_manipulation"
+        ],
+        "challenges_per_type": 1,
+        "sv_threshold": 0.9,
+        "reasoning": "Focus on top false negative types with a balanced threshold to maintain precision while addressing missed vulnerabilities within budget."
+      },
+      "reasoning": "Focus on top false negative types with a balanced threshold to maintain precision while addressing missed vulnerabilities within budget.",
+      "ts": "2026-06-22T01:08:05.160494"
     }
   ],
   "round_summaries": [
     {
       "round": 1,
-      "f1_post": 0.9116,
-      "fn_count": 9,
-      "patterns_added": 9
+      "f1_post": 0.9017,
+      "fn_count": 10,
+      "patterns_added": 10
     },
     {
       "round": 2,
-      "f1_post": 0.9041,
-      "fn_count": 11,
-      "patterns_added": 8
+      "f1_post": 0.9109,
+      "fn_count": 5,
+      "patterns_added": 5
     },
     {
       "round": 3,
-      "f1_post": 0.9078,
-      "fn_count": 10,
-      "patterns_added": 5
+      "f1_post": 0.8909,
+      "fn_count": 4,
+      "patterns_added": 0
     }
   ]
 }

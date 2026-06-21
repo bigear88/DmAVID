@@ -28,9 +28,18 @@ MODEL = os.environ.get("DMAVID_MODEL", "gpt-4.1-mini")
 _DYNAMIC_KB_PATH = os.path.join(BASE_DIR, "scripts/knowledge/vulnerability_knowledge.json")
 
 def _load_dynamic_kb():
-    """Return (fp_entries, bt_safe_patterns_by_category) from the dynamic KB."""
+    """Return (fp_entries, bt_safe_patterns_by_category, bt_vuln_by_category).
+
+    Three signals are extracted from the dynamic KB written by the Blue Team:
+      - fp_entries : false_positive sentinels        → anti-FP hints
+      - bt_safe    : Blue Team safe_pattern strings   → safe-score augmentation (↓FP)
+      - bt_vuln    : Blue Team vulnerability_pattern  → learned risk signals (↓FN),
+                     the FN-curriculum feedback so the Student can detect patterns
+                     it previously missed in earlier rounds.
+    """
     fp_entries = []          # false_positive entries → anti-FP hints
     bt_safe = {}             # category → list of safe_pattern keyword strings (Blue Team)
+    bt_vuln = {}             # category → list of learned vulnerability patterns (Blue Team)
     try:
         with open(_DYNAMIC_KB_PATH) as f:
             kb = json.load(f)
@@ -39,23 +48,32 @@ def _load_dynamic_kb():
             title = e.get("title", "")
             if cat == "false_positive":
                 fp_entries.append(e)
-            elif "Blue Team Defense" in title and e.get("safe_pattern"):
-                bt_safe.setdefault(cat, []).append(e["safe_pattern"])
+            elif "Blue Team Defense" in title:
+                if e.get("safe_pattern"):
+                    bt_safe.setdefault(cat, []).append(e["safe_pattern"])
+                if e.get("vulnerability_pattern") or e.get("description"):
+                    bt_vuln.setdefault(cat, []).append({
+                        "title":       title.replace("Blue Team Defense: ", ""),
+                        "vuln_pattern": e.get("vulnerability_pattern", ""),
+                        "description":  e.get("description", ""),
+                        "mitigation":   e.get("mitigation", ""),
+                    })
     except Exception:
         pass
-    return fp_entries, bt_safe
+    return fp_entries, bt_safe, bt_vuln
 
-_FP_ENTRIES, _BT_SAFE_PATTERNS = _load_dynamic_kb()
+_FP_ENTRIES, _BT_SAFE_PATTERNS, _BT_VULN_PATTERNS = _load_dynamic_kb()
 
 
 def reload_dynamic_kb():
-    """Reload FP sentinels and Blue Team safe patterns from disk.
+    """Reload FP sentinels and Blue Team safe/vulnerability patterns from disk.
 
     Call this at the start of each iterative round so Blue Team entries
-    added in the previous round are visible to the Student's RAG.
+    added in the previous round are visible to the Student's RAG (closed-loop
+    knowledge feedback).
     """
-    global _FP_ENTRIES, _BT_SAFE_PATTERNS
-    _FP_ENTRIES, _BT_SAFE_PATTERNS = _load_dynamic_kb()
+    global _FP_ENTRIES, _BT_SAFE_PATTERNS, _BT_VULN_PATTERNS
+    _FP_ENTRIES, _BT_SAFE_PATTERNS, _BT_VULN_PATTERNS = _load_dynamic_kb()
 
 
 
@@ -311,6 +329,53 @@ def build_rag_context(code):
                 f"Safe example: {kb['example_safe']}\n"
             )
         context_parts.append(ctx)
+
+    # ------------------------------------------------------------------
+    # Phase 4: Inject LEARNED vulnerability patterns from Blue Team
+    # (closed-loop FN-curriculum feedback). Keyword-based selection only —
+    # NO ChromaDB / vector query in the main pipeline.
+    # A learned pattern is surfaced when (a) its category is among the
+    # top-3 keyword-matched types, OR (b) ≥2 distinctive keywords from its
+    # detection text appear in the code. Capped to keep the prompt bounded.
+    # ------------------------------------------------------------------
+    if _BT_VULN_PATTERNS:
+        top3_types = {vt for vt, _ in sorted_vulns[:3]}
+        learned, seen = [], set()
+        _STOP = {"contract", "function", "require", "return", "public", "external",
+                 "internal", "private", "memory", "storage", "address", "uint256",
+                 "with", "from", "value", "without", "large", "array", "loop"}
+        for cat, entries in _BT_VULN_PATTERNS.items():
+            for bt in entries:
+                title = bt.get("title", "")
+                if title in seen:
+                    continue
+                in_top3 = cat in top3_types
+                kw_hit = False
+                if not in_top3:
+                    text = (bt.get("vuln_pattern", "") + " " + bt.get("description", "")).lower()
+                    kws = {w for w in re.findall(r'[a-z_]{4,}', text) if w not in _STOP}
+                    kw_hit = sum(1 for kw in kws if kw in code_lower) >= 2
+                if in_top3 or kw_hit:
+                    seen.add(title)
+                    vp = bt.get("vuln_pattern", "")[:200]
+                    desc = bt.get("description", "")[:200]
+                    learned.append(
+                        f"  • [{cat.upper()}] {title}\n"
+                        + (f"    Vulnerable idiom: {vp}\n" if vp else "")
+                        + (f"    Why exploitable: {desc}\n" if desc else "")
+                    )
+                if len(learned) >= 5:
+                    break
+            if len(learned) >= 5:
+                break
+        if learned:
+            context_parts.append(
+                "\n=== LEARNED VULNERABILITY PATTERNS (from adversarial iteration) ===\n"
+                "These patterns were synthesised by the Blue Team from cases the detector "
+                "previously MISSED. Treat them as elevated-attention checks: if the code "
+                "exhibits the vulnerable idiom and lacks a concrete mitigation, classify as "
+                "vulnerable.\n" + "".join(learned)
+            )
 
     return "\n".join(context_parts) if context_parts else "No specific vulnerability patterns matched."
 

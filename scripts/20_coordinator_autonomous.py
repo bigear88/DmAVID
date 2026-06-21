@@ -758,6 +758,14 @@ def main():
         round_data["teacher_challenges"] = len(challenges)
 
         # (b) Student
+        # Closed-loop knowledge feedback: reload the dynamic KB so Blue Team
+        # patches written in previous rounds are visible to the Student's RAG.
+        if hasattr(rag_mod, "reload_dynamic_kb"):
+            rag_mod.reload_dynamic_kb()
+            n_bt_vuln = sum(len(v) for v in getattr(rag_mod, "_BT_VULN_PATTERNS", {}).values())
+            n_bt_safe = sum(len(v) for v in getattr(rag_mod, "_BT_SAFE_PATTERNS", {}).values())
+            logger.info(f"[FEEDBACK] Reloaded dynamic KB: {n_bt_vuln} learned vuln-patterns, "
+                        f"{n_bt_safe} safe-patterns visible to Student")
         student_results = run_student_stage(rag_mod, dataset, cost, args.dry_run)
         pre_m = compute_metrics(student_results)
         round_data["student_pre_verify"] = pre_m
