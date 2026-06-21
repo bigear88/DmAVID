@@ -27,6 +27,12 @@ from openai import OpenAI
 
 sys.path.insert(0, os.path.dirname(__file__))
 from _model_compat import token_param
+try:
+    from chroma_rag import write_blue_team_to_chroma as _write_chroma
+    _CHROMA_ENABLED = True
+except Exception:
+    _CHROMA_ENABLED = False
+    def _write_chroma(entries): return 0
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
@@ -502,6 +508,8 @@ def run_blue_team_stage(blue_mod, validated, cost, dry_run):
             all_entries.extend(entries)
     if not dry_run and all_entries:
         blue_mod.update_knowledge_files(all_entries)
+        n_chroma = _write_chroma(all_entries)
+        logger.info(f"[BLUE TEAM] ChromaDB upserted {n_chroma} new docs (chroma_enabled={_CHROMA_ENABLED})")
     logger.info(f"[BLUE TEAM] Synthesised {len(all_entries)} patterns")
     return all_entries
 

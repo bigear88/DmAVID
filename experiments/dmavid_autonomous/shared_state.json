@@ -1,26 +1,19 @@
 {
-  "started_at": "2026-05-08T05:42:24.412825",
-  "updated_at": "2026-05-08T05:42:26.876172",
+  "started_at": "2026-06-21T20:15:21.129061",
+  "updated_at": "2026-06-21T20:44:03.834384",
   "fn_patterns": {
-    "reentrancy": 21,
-    "unchecked_low_level_calls": 26,
-    "access_control": 7,
-    "arithmetic": 13,
-    "denial_of_service": 6,
-    "bad_randomness": 5,
-    "time_manipulation": 3,
-    "front_running": 3,
-    "short_addresses": 1,
-    "other": 2
+    "arithmetic": 7,
+    "access_control": 3,
+    "bad_randomness": 2,
+    "unchecked_low_level_calls": 28,
+    "time_manipulation": 1,
+    "denial_of_service": 1
   },
   "learned_defenses": [
-    "reentrancy",
-    "unchecked_low_level_calls",
-    "access_control",
     "arithmetic",
-    "denial_of_service",
-    "front_running",
-    "bad_randomness"
+    "access_control",
+    "bad_randomness",
+    "unchecked_low_level_calls"
   ],
   "coordinator_decisions": [
     {
@@ -30,49 +23,51 @@
         "focus_vuln_types": [
           "reentrancy",
           "integer_overflow",
-          "access_control",
-          "unchecked_call",
-          "denial_of_service",
-          "front_running"
+          "access_control"
         ],
         "challenges_per_type": 1,
-        "sv_threshold": 0.88,
-        "reasoning": "default (dry-run or LLM skip)"
+        "sv_threshold": 0.9,
+        "reasoning": "Starting with common critical vulnerabilities and moderate threshold to balance false positives and negatives."
       },
-      "reasoning": "default (dry-run or LLM skip)",
-      "ts": "2026-05-08T05:42:24.413095"
+      "reasoning": "Starting with common critical vulnerabilities and moderate threshold to balance false positives and negatives.",
+      "ts": "2026-06-21T20:15:24.030024"
     },
     {
       "round": 2,
       "stage": "round_strategy",
       "decision": {
         "focus_vuln_types": [
-          "reentrancy",
-          "integer_overflow",
           "access_control",
-          "unchecked_call",
-          "denial_of_service",
-          "front_running"
+          "reentrancy"
         ],
-        "challenges_per_type": 1,
-        "sv_threshold": 0.91,
-        "reasoning": "default (dry-run or LLM skip)"
+        "challenges_per_type": 2,
+        "sv_threshold": 0.92,
+        "reasoning": "Prioritize previously high FN types plus reentrancy with 2 challenges each to improve recall while maintaining a balanced FP rate given sufficient budget."
       },
-      "reasoning": "default (dry-run or LLM skip)",
-      "ts": "2026-05-08T05:42:25.665784"
+      "reasoning": "Prioritize previously high FN types plus reentrancy with 2 challenges each to improve recall while maintaining a balanced FP rate given sufficient budget.",
+      "ts": "2026-06-21T20:27:04.861152"
+    },
+    {
+      "round": 2,
+      "stage": "early_stop",
+      "decision": {
+        "stop": true
+      },
+      "reasoning": "F1 has not improved for 2 consecutive rounds and FN count remains stable, indicating diminishing returns from further rounds.",
+      "ts": "2026-06-21T20:44:03.834336"
     }
   ],
   "round_summaries": [
     {
       "round": 1,
-      "f1_post": 0.6518,
-      "fn_count": 41,
-      "patterns_added": 5
+      "f1_post": 0.9133,
+      "fn_count": 6,
+      "patterns_added": 6
     },
     {
       "round": 2,
-      "f1_post": 0.6178,
-      "fn_count": 46,
+      "f1_post": 0.8137,
+      "fn_count": 6,
       "patterns_added": 5
     }
   ]

@@ -11,6 +11,12 @@ from openai import OpenAI
 
 import sys; sys.path.insert(0, os.path.dirname(__file__))
 from _model_compat import token_param, MODEL as COMPAT_MODEL
+try:
+    from chroma_rag import query_chroma_context as _query_chroma
+    _CHROMA_ENABLED = True
+except Exception:
+    _CHROMA_ENABLED = False
+    def _query_chroma(code, n_results=3): return ""
 
 random.seed(42)
 BASE_DIR = "/home/curtis/DmAVID"
@@ -311,6 +317,13 @@ def build_rag_context(code):
                 f"Safe example: {kb['example_safe']}\n"
             )
         context_parts.append(ctx)
+
+    # ------------------------------------------------------------------
+    # Phase 4: ChromaDB semantic search — learned Blue Team patterns
+    # ------------------------------------------------------------------
+    chroma_ctx = _query_chroma(code, n_results=3)
+    if chroma_ctx:
+        context_parts.insert(0, chroma_ctx)  # prepend so LLM sees it first
 
     return "\n".join(context_parts) if context_parts else "No specific vulnerability patterns matched."
 

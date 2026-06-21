@@ -1527,6 +1527,48 @@
       "confidence": 0.85,
       "source": "blue_team_defense",
       "mitigation": "Use SafeMath library's `sub` function or Solidity 0.8+ built-in checked arithmetic to automatically revert on underflow/overflow. Alternatively, add explicit require checks to ensure the subtrahend is not greater than the minuend before subtraction."
+    },
+    "bt_variant_0_0": {
+      "vulnerability_type": "arithmetic",
+      "pattern": "Unsigned integer arithmetic operations performed without explicit overflow or underflow checks, leading to potential state corruption or unauthorized asset manipulation",
+      "blue_team_defense": "Integrate SafeMath or equivalent arithmetic safety checks for all unsigned integer operations, especially in token balance updates and critical state changes; enforce require conditions validating inputs and results",
+      "source": "blue_team_synthesis"
+    },
+    "bt_variant_1_1": {
+      "vulnerability_type": "arithmetic",
+      "pattern": "Unsigned integer arithmetic involving subtraction without explicit underflow checks, especially when result is stored in local variables and dead code is inserted to obfuscate the vulnerability",
+      "blue_team_defense": "Implement explicit boundary checks (e.g., require statements) before arithmetic operations to prevent underflow/overflow; use SafeMath libraries or Solidity 0.8+ built-in overflow checks; audit for dead/unreachable code that may hide vulnerabilities.",
+      "source": "blue_team_synthesis"
+    },
+    "bt_variant_2_2": {
+      "vulnerability_type": "arithmetic",
+      "pattern": "Unsigned integer subtraction without input validation leading to potential underflow in smart contracts",
+      "blue_team_defense": "Add explicit input validation to ensure no underflow occurs before arithmetic operations, or use Solidity 0.8.0+ built-in overflow/underflow checks.",
+      "source": "blue_team_synthesis"
+    },
+    "bt_variant_0_3": {
+      "vulnerability_type": "bad_randomness",
+      "pattern": "Contracts relying on on-chain block data or predictable values for randomness generation without secure entropy sources, leading to exploitable bad randomness vulnerabilities.",
+      "blue_team_defense": "Avoid using block attributes or other predictable on-chain data as randomness sources. Integrate secure randomness oracles or cryptographic commit-reveal schemes. Perform thorough security audits focusing on randomness generation logic.",
+      "source": "blue_team_synthesis"
+    },
+    "bt_variant_0_4": {
+      "vulnerability_type": "unchecked_low_level_calls",
+      "pattern": "Detect low-level external calls whose return values are ignored or unchecked, leading to potential silent failures and exploitation",
+      "blue_team_defense": "Always check the return value of low-level calls and revert on failure; prefer using Solidity’s built-in transfer or call with require; add explicit error handling for external calls",
+      "source": "blue_team_synthesis"
+    },
+    "bt_variant_0_5": {
+      "vulnerability_type": "unchecked_low_level_calls",
+      "pattern": "Low-level external calls in Solidity must have their returned success status checked to avoid silent failures and potential exploits.",
+      "blue_team_defense": "Always check the returned boolean value of low-level calls and revert or handle failure cases explicitly to prevent silent failures and exploitability.",
+      "source": "blue_team_synthesis"
+    },
+    "bt_variant_0_2": {
+      "vulnerability_type": "access_control",
+      "pattern": "Owner or admin management functions exposed externally without proper access control modifiers, enabling unauthorized privilege escalation or ownership takeover.",
+      "blue_team_defense": "Enforce strict access control on all owner and requirement management functions by using modifiers that require confirmation from owners; audit all external functions that alter ownership or multisig parameters.",
+      "source": "blue_team_synthesis"
     }
   },
   "vulnerability_types": {
