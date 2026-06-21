@@ -680,6 +680,8 @@ def main():
     parser.add_argument("--dry-run",             action="store_true")
     parser.add_argument("--dataset",             type=str,   default=DATASET_FILE)
     parser.add_argument("--challenges-per-type", type=int,   default=1)
+    parser.add_argument("--no-early-stop",       action="store_true",
+                        help="Disable the Coordinator's autonomous early-stop; always run all rounds")
     args = parser.parse_args()
 
     logger.info("=" * 70)
@@ -821,6 +823,9 @@ def main():
         logger.info(f"Round {round_num} saved → {rf}")
 
         # ── COORDINATOR DECISION 3: Early stop ─────────────────────────
+        if args.no_early_stop:
+            logger.info("[COORDINATOR] Early-stop disabled (--no-early-stop); continuing all rounds")
+            continue
         rounds_left = args.rounds - round_num
         stop, stop_reason = coordinator.decide_early_stop(
             state, rounds_left, cost.remaining(), args.dry_run
