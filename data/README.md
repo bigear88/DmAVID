@@ -11,6 +11,20 @@
 - 漏洞類別分布（143 vulnerable）：unchecked_low_level_calls 52、reentrancy 31、access_control 18、arithmetic 15、bad_randomness 8、denial_of_service 6、time_manipulation 5、front_running 4、other 3、short_addresses 1
 - 每筆記錄欄位：`id`、`filename`、`filepath`（本機絕對路徑）、`label`、`category`、`source`、`lines`、`code_length`
 
+### 1.1 實驗實際使用之子集（重要：243 平衡子集）
+
+`dataset_1000.json` 是「抽樣池」；**論文主要實驗（表 4-2、表 4-9 等）實際使用的是 143 + 100 = 243 份平衡子集**，並非全部 1000 筆：
+
+| 角色 | 來源 | 實驗使用筆數 | 池中總數 |
+|---|---|---|---|
+| vulnerable（正類） | SmartBugs **Curated** | 143（全用） | 143 |
+| safe（負類） | SmartBugs **Wild** | **100** | 857 |
+| 合計 | — | **243** | 1000 |
+
+- 程式碼依據：`scripts/05_run_llm_rag.py:487`（`sample = vuln + safe[:100]`）、`scripts/20_coordinator_autonomous.py:703`（`dataset = vuln_c + safe_c[:100]`）。兩支主腳本皆載入 `data/dataset_1000.json`，僅取前 100 筆 wild safe，其餘 757 筆 wild safe 未進入實驗。
+- **SmartBugs Wild 並非備用資料**：它提供實驗中「全部」的 safe（負類）樣本（243 子集中的 100 筆）。Curated 提供全部 vulnerable（正類）樣本。論文表 3-2 與第肆章對此數字一致（143 vuln + 100 safe = 243）。
+- EVMbench（10 專案 / 39 漏洞）僅作外部跨資料集驗證，不計入 243。
+
 ## 2. 源檔在哪（上游 repo + 釘選 commit）
 
 | source | 標籤 | 筆數 | 上游 GitHub repo | 釘選 commit | 源檔相對路徑規則 |
