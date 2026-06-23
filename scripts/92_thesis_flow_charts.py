@@ -285,25 +285,27 @@ def build_fig34():
 # 圖 3-5　單輪多代理對抗式管線流程（取代舊「內層六步驟」）
 # ═════════════════════════════════════════════════════════════════════════════
 def build_fig35():
-    fig, ax = plt.subplots(figsize=(12.5, 8.6)); ax.set_xlim(0, 12.5); ax.set_ylim(0, 8.6); ax.axis("off")
-    ax.text(6.25, 8.3, "圖 3-5　內層對抗式自強化單輪管線（S1–S6）", ha="center", va="center",
+    fig, ax = plt.subplots(figsize=(12.6, 10.0)); ax.set_xlim(0, 12.6); ax.set_ylim(0, 10.0); ax.axis("off")
+    ax.text(6.3, 9.68, "圖 3-5　對抗式迭代迴圈七步驟流程（S1–S7）", ha="center", va="center",
             fontproperties=CJK_B, fontsize=15, color=INK)
 
     steps = [
         ("S1", "Student 偵測（完整 243）", "Student", C_AGENT_S,
-         "reload_dynamic_kb() → LLM+RAG + Self-Verify；計 F1/P/R/FPR、標記 FN"),
-        ("S2", "結果收集與收斂判定", "Coordinator", C_COORD,
-         "彙整 TP/FP/TN/FN；連兩輪 ΔF1<0.01 或達輪數上限 → 收斂則輸出，否則續 S3"),
-        ("S3", "Red Team 攻擊", "Red Team", C_AGENT_R,
-         "對 FN 施 3 結構突變：control_flow_flattening / dead_code_insertion / cross_contract_delegation；保語義等價"),
-        ("S4", "Foundry 驗證", "Coordinator", C_SIDE,
+         "reload_dynamic_kb() → LLM+RAG + Self-Verify；產出偵測結果、信心度、推理（知識回饋閉環）"),
+        ("S2", "結果收集", "Coordinator", C_COORD,
+         "彙整 TP/FP/TN/FN；計 F1/P/R/FPR；記錄各漏洞類型偵測表現細項"),
+        ("S3", "策略決定與收斂判定", "Coordinator", C_COORD,
+         "decide_early_stop() 判收斂（ΔF1≤0.002×2輪且FN穩定／達3輪）；未收斂則 decide_round_strategy() 回傳重點類型與攻防策略"),
+        ("S4", "Red Team 攻擊", "Red Team", C_AGENT_R,
+         "依 S3 策略對 FN 施 3 結構突變：control_flow_flattening / dead_code_insertion / cross_contract_delegation"),
+        ("S5", "Foundry 驗證", "Coordinator", C_SIDE,
          "solc 編譯確認語法；forge test 重放 PoC；僅雙重驗證通過之變體進入知識合成"),
-        ("S5", "Blue Team 知識合成", "Blue Team", C_AGENT_B,
+        ("S6", "Blue Team 知識合成", "Blue Team", C_AGENT_B,
          "根因分析→防禦補丁；寫 ChromaDB（dmavid_blue_team_iter）+ vulnerability_knowledge.json"),
-        ("S6", "RAG 知識庫更新", "Coordinator", C_KB,
+        ("S7", "RAG 知識庫更新與回饋", "Coordinator", C_KB,
          "reload_dynamic_kb() 關鍵字注入 → 返回 S1，形成閉環學習（closed-loop feedback）"),
     ]
-    y0 = 7.7; h = 0.92; gap = 0.22; x = 0.6; w = 10.7; pitch = h+gap
+    y0 = 9.0; h = 0.92; gap = 0.20; x = 0.6; w = 10.8; pitch = h+gap
     y = y0
     for num, title, agent, c, desc in steps:
         ax.add_patch(FancyBboxPatch((x, y-h), w, h, boxstyle="round,pad=0.012,rounding_size=0.03",
@@ -314,35 +316,35 @@ def build_fig35():
         if agent and agent != "—":
             ax.text(x+w-0.15, y-0.30, f"[{agent}]", ha="right", va="center", fontproperties=CJK,
                     fontsize=9, color="#2E5AAC")
-        ax.text(x+1.05, y-0.64, desc, ha="left", va="center", fontproperties=CJK, fontsize=8.7, color="#444")
-        if num != "S6":
+        ax.text(x+1.05, y-0.64, desc, ha="left", va="center", fontproperties=CJK, fontsize=8.3, color="#444")
+        if num != "S7":
             ax.add_patch(FancyArrowPatch((x+0.5, y-h), (x+0.5, y-h-gap), arrowstyle="-|>",
                          mutation_scale=13, color=ARROW, lw=1.6, zorder=4))
         y -= pitch
 
-    # S2 收斂分支（輸出）
-    s2_mid = y0 - 1*pitch - h/2
-    ax.add_patch(FancyArrowPatch((x+w, s2_mid), (x+w+0.85, s2_mid), arrowstyle="-|>",
+    # S3 收斂分支（輸出）
+    s3_mid = y0 - 2*pitch - h/2
+    ax.add_patch(FancyArrowPatch((x+w, s3_mid), (x+w+0.85, s3_mid), arrowstyle="-|>",
                  mutation_scale=13, color="#2E7D32", lw=1.6, zorder=4))
-    ax.text(x+w+0.92, s2_mid, "收斂\n→輸出", ha="left", va="center",
+    ax.text(x+w+0.92, s3_mid, "收斂\n→輸出", ha="left", va="center",
             fontproperties=CJK_B, fontsize=8.3, color="#2E7D32")
 
-    # loop-back arrow S6 → S1（右側外緣）
+    # loop-back arrow S7 → S1（右側外緣）
     xr = x + w + 0.42
     s1_mid = y0 - h/2
-    s6_mid = y0 - 5*pitch - h/2
-    ax.add_patch(FancyArrowPatch((xr, s6_mid), (xr, s1_mid), arrowstyle="-|>", mutation_scale=16,
+    s7_mid = y0 - 6*pitch - h/2
+    ax.add_patch(FancyArrowPatch((xr, s7_mid), (xr, s1_mid), arrowstyle="-|>", mutation_scale=16,
                  color=C_FB, lw=1.9, ls=(0,(6,4)), connectionstyle="arc3,rad=0.0", zorder=3))
-    ax.text(xr+0.24, (s1_mid+s6_mid)/2, "知識回饋閉環（S6 → S1）", ha="left", va="center",
+    ax.text(xr+0.24, (s1_mid+s7_mid)/2, "知識回饋閉環（S7 → S1）", ha="left", va="center",
             fontproperties=CJK_B, fontsize=8.6, color=C_FB, rotation=90)
 
-    ax.text(6.25, 0.45,
-            "註：內層 S1–S6 為每一迭代輪次之單輪管線（scripts/20_coordinator_autonomous.py）；"
-            "外層迭代輪次與收斂控制見圖 3-4。",
+    ax.text(6.3, 0.4,
+            "註：S1–S7 為自適應迭代迴圈每一輪次之流程（scripts/20_coordinator_autonomous.py）；"
+            "輪次策略與收斂控制見圖 3-4。",
             ha="center", va="center", fontproperties=CJK, fontsize=8.8, color="#444")
 
     plt.subplots_adjust(left=0.01, right=0.99, top=0.99, bottom=0.01)
-    p = os.path.join(OUT, "圖3-5_內層對抗式自強化單輪管線.png")
+    p = os.path.join(OUT, "圖3-5_對抗式迭代迴圈七步驟流程.png")
     plt.savefig(p, dpi=200, bbox_inches="tight", facecolor="white"); plt.close(); print("saved:", p)
 
 
