@@ -5,6 +5,30 @@ DmAVID Adversarial Iteration Loop: Orchestrates the dual-layer iteration process
 This script implements the core adversarial iteration mechanism:
 - Outer loop: Vulnerability type coverage (Teacher Agent)
 - Inner loop: Adversarial self-strengthening per type (Student + Red Team + Foundry)
+
+================================================================================
+!!! DEPRECATED — 早期 scaffold，請勿用於論文實驗數據 !!!
+================================================================================
+本檔為對抗式迭代機制的「早期原型 (scaffold)」，僅用於跑通流程骨架。
+
+重要限制：
+  * 在 non-dry-run 模式下，run_outer_loop() 回報的 precision / recall /
+    false_positive_rate / fn_count / fp_count 皆為 np.random.uniform/randint
+    模擬值（見本檔 run_outer_loop()），並非真實計算所得。
+  * 內層 F1 僅在 Teacher 合成的 challenge 上評估，不在 243 平衡子集上評估。
+  * 因此本檔之任何輸出（experiments/iteration_history/）均「不得」作為論文
+    第肆章的實驗數據引用。
+
+論文正式 pipeline（產生真實、可由資料自動計算之指標）為：
+  * scripts/19_coordinator_round2.py      — Round 2 完整管線（full 243 評估、
+                                            真實 compute_metrics、patience 收斂、
+                                            Blue Team 整合）→ experiments/dmavid_round2/
+  * scripts/20_coordinator_autonomous.py  — 自主協調器（Coordinator 自適應 focus、
+                                            decide_early_stop、Blue Team→ChromaDB）
+                                            → experiments/dmavid_autonomous/
+
+保留本檔僅為歷史軌跡與流程設計參考，未來如需重啟請改以 19/20 為基礎。
+================================================================================
 """
 
 import os
