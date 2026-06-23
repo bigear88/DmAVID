@@ -110,7 +110,7 @@ def build_fig32():
     box(ax, 6.3, 7.85, 2.5, 0.92, "Red Team", C_AGENT_R, 10, True, sub="3 結構突變策略")
     box(ax, 9.05, 7.85, 2.1, 0.92, "Blue Team", C_AGENT_B, 10, True, sub="FN 分析／合成補丁")
     arrow(ax, 6, 7.85, 6, 7.45)
-    box(ax, 2.9, 6.7, 6.2, 0.72, "輪次迭代（上限 3 輪）× 單輪多代理管線", C_LOOP, 11, True,
+    box(ax, 2.9, 6.7, 6.2, 0.72, "自適應迭代迴圈（上限 3 輪）", C_LOOP, 11, True,
         sub="Coordinator 每輪自適應 focus；每輪評完整 243（詳見圖 3-4 / 圖 3-5）")
     arrow(ax, 6, 6.7, 6, 6.3)
     box(ax, 0.8, 5.3, 5.0, 0.82, "Blue Team 知識合成", C_KB, 10, True,
@@ -183,7 +183,7 @@ def build_fig33():
         arrow(ax, x+1.375, 6.7, x+1.375, 6.12, color="#8a8a8a", lw=1.4, style="<|-|>")
 
     # interaction band
-    frame(ax, 0.4, 2.0, 12.2, 2.0, "代理間互動（輪次迭代 × 多代理管線）")
+    frame(ax, 0.4, 2.0, 12.2, 2.0, "代理間互動（自適應迭代迴圈 × 多代理管線）")
     flow = [("Teacher", C_AGENT_T), ("Student", C_AGENT_S), ("收集 FN", "#FFFFFF"),
             ("Red Team", C_AGENT_R), ("Foundry", C_SIDE), ("Blue Team", C_AGENT_B), ("Self-Verify", C_S3)]
     fw, fg = 1.5, 0.22; fx = 0.7
@@ -217,7 +217,7 @@ def build_fig33():
 # ═════════════════════════════════════════════════════════════════════════════
 def build_fig34():
     fig, ax = plt.subplots(figsize=(13, 7.6)); ax.set_xlim(0, 13); ax.set_ylim(0, 7.6); ax.axis("off")
-    ax.text(6.5, 7.25, "圖 3-4　DmAVID 雙層迭代迴圈—外層迭代輪次與收斂控制", ha="center", va="center",
+    ax.text(6.5, 7.25, "圖 3-4　DmAVID 自適應迭代迴圈—迭代輪次與收斂控制", ha="center", va="center",
             fontproperties=CJK_B, fontsize=14.5, color=INK)
 
     f1 = [("baseline","0.9061"), ("R1","0.9103"), ("R2","0.9153"), ("R3","0.9158")]
