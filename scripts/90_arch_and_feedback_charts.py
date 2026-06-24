@@ -61,7 +61,7 @@ def build_architecture():
 
     # Stage 1
     stage_frame(ax, 0.5, 15.0, 11, 1.5, "第一階段：靜態分析 Static Analysis")
-    box(ax, 4.0, 15.25, 4.0, 0.75, "Slither v0.10.4", C_S1, 11.5, True, sub="AST 解析 + 80+ detectors")
+    box(ax, 4.0, 15.25, 4.0, 0.75, "Slither v0.11.5", C_S1, 11.5, True, sub="AST 解析 + 80+ detectors")
     arrow(ax, 6, 15.0, 6, 14.7)
 
     # Stage 2

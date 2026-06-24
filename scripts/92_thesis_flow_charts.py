@@ -80,7 +80,7 @@ def build_fig32():
 
     # Stage 1 — Slither 獨立基線（分支，不注入 LLM）
     frame(ax, 0.4, 15.0, 4.4, 1.45, "第一階段：靜態分析（獨立預篩／基線）")
-    box(ax, 0.75, 15.2, 3.7, 0.72, "Slither v0.10.4", C_S1, 11, True, sub="AST + 80+ detectors")
+    box(ax, 0.75, 15.2, 3.7, 0.72, "Slither v0.11.5", C_S1, 11, True, sub="AST + 80+ detectors")
     arrow(ax, 3.0, 16.55, 2.6, 16.45, ls="-")  # dataset → slither
     ax.add_patch(FancyArrowPatch((2.6, 16.62), (2.6, 15.95), arrowstyle="-|>", mutation_scale=14,
                                  color=ARROW, lw=1.4, zorder=4))
