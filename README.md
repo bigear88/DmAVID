@@ -20,14 +20,26 @@ Stage 4: DmAVID 多代理迭代         → Teacher/Student/Red Team/Blue Team �
 
 ### 核心成果
 
-| 方法 | F1 | Precision | Recall | FPR | 資料集 |
-|------|-----|-----------|--------|-----|--------|
-| Slither | 0.7459 | 61.6% | 94.4% | 84.0% | SmartBugs 243 |
-| LLM Base | 0.7474 | 59.9% | 99.3% | 95.0% | SmartBugs 243 |
-| **LLM+RAG** | **0.9061** | **84.3%** | **97.9%** | **26.0%** | SmartBugs 243 |
-| **+Self-Verify** | **0.9121** | **85.4%** | **97.9%** | **24.0%** | SmartBugs 243 |
-| DmAVID Enhanced (中間) | 30.77% detect (12/39) | 100% | 30.8% | 0% | EVMbench 10 |
-| **DmAVID Smart Preprocess (FINAL)** | **64.10% detect (25/39)** | 100% | 64.1% | 0% | EVMbench 10 |
+**SmartBugs Curated 243 合約（143 漏洞 + 100 安全）**
+
+| 方法 | F1 | Precision | Recall | FPR |
+|------|-----|-----------|--------|-----|
+| Slither（靜態基線） | 0.7459 | 61.6% | 94.4% | 84.0% |
+| LLM Base（無 RAG） | 0.7474 | 59.9% | 99.3% | 95.0% |
+| **LLM+RAG（官方基線）** | **0.9061** | **84.3%** | **97.9%** | **26.0%** |
+| **+Self-Verify（單通道 FINAL）** | **0.9121** | **85.4%** | **97.9%** | **24.0%** |
+| **DmAVID 迭代 Coordinator R2（迭代式 FINAL）** | **0.9132** | **84.5%** | **99.3%** | **26.0%** |
+
+**EVMbench 真實審計泛化（39 漏洞 / 10 審計）**
+
+| 階段 | 偵測率 | 偵測數 |
+|------|--------|--------|
+| LLM+RAG（detect-only） | 7.69% | 3 / 39 |
+| Enhanced（中間，hint-injected） | 30.77% | 12 / 39 |
+| **Smart Preprocess（FINAL）** | **64.10%** | **25 / 39** |
+| Post-cutoff 泛化（8 審計，2025–2026） | 58.82% | 10 / 17 |
+
+> 數字鎖定於 `CANONICAL_TRUTH.md`（唯一真實來源）。單通道管線最終為 +Self-Verify（F1=0.9121）；迭代式 Coordinator（exp15，2 輪）以 **F1=0.9132** 超越之，為全系統最佳。
 
 ---
 
@@ -68,7 +80,9 @@ DmAVID/
 │   ├── llm_base/                     # LLM 基線結果
 │   ├── llm_rag/                      # LLM+RAG 結果 (F1=0.9061)
 │   ├── hybrid/                       # Self-Verify 結果 (F1=0.9121)
-│   ├── dmavid_round2/            # DmAVID 迭代結果
+│   ├── exp15/                   # DmAVID 迭代結果 (canonical, F1=0.9132, round2_progression.json)
+│   ├── dmavid_round2/            # DmAVID 迭代過程輸出
+│   ├── evmbench_postcutoff/         # EVMbench 知識截止後泛化 (58.82%, 10/17)
 │   ├── evmbench_enhanced/            # EVMbench 增強偵測 (30.77%, 12/39, 中間結果)
 │   ├── evmbench_smart/               # EVMbench 智能預處理 (64.10%, 25/39, FINAL)
 │   ├── traditional_ml/              # 傳統 ML 基線 (RF/LR/GB/SVM)
@@ -100,10 +114,13 @@ DmAVID/
     └────────┘ └────────┘ └────────┘ └────────┘
 ```
 
-### 雙層迭代迴圈
+### 自適應迭代迴圈
 
-- **外層**：Teacher 輪詢漏洞類型 (reentrancy → overflow → access control → ...)
-- **內層**：Student 偵測 → FN 收集 → Red Team 變體 → Foundry 驗證 → Blue Team 合成 → RAG 更新 → 重新評估
+每一輪由 Coordinator 自適應決策、對完整 243 合約評估，形成閉環自強化：
+
+- **單一自適應迴圈**：Coordinator 依上一輪 F1／FN 分布決定本輪重點漏洞類型與攻防策略（取代固定輪詢的雙層設計）
+- **每輪流程**：Student 偵測 (LLM+RAG+Self-Verify) → FN 收集 → Red Team 對抗變體 → Foundry 編譯/PoC 驗證 → Blue Team 防禦合成 → RAG 知識庫更新 → 重新評估
+- **FN 課程學習**：上一輪偽陰性以 `extra_context` hints 注入下一輪 Student，逐輪修正（Round 1→2 修正 5/6 FN，Recall 0.958→0.993，F1 0.8961→0.9132）
 
 ### 收斂條件
 
