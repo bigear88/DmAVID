@@ -28,7 +28,7 @@ Stage 4: DmAVID 多代理迭代         → Teacher/Student/Red Team/Blue Team �
 | LLM Base（無 RAG） | 0.7474 | 59.9% | 99.3% | 95.0% |
 | **LLM+RAG（官方基線）** | **0.9061** | **84.3%** | **97.9%** | **26.0%** |
 | **+Self-Verify（單通道 FINAL）** | **0.9121** | **85.4%** | **97.9%** | **24.0%** |
-| **DmAVID 迭代 Coordinator R2（迭代式 FINAL）** | **0.9132** | **84.5%** | **99.3%** | **26.0%** |
+| **DmAVID 迭代 Coordinator R3（ChromaDB，迭代式 FINAL）** | **0.9158** | **88.3%** | **95.1%** | **18.0%** |
 
 **EVMbench 真實審計泛化（39 漏洞 / 10 審計）**
 
@@ -39,7 +39,7 @@ Stage 4: DmAVID 多代理迭代         → Teacher/Student/Red Team/Blue Team �
 | **Smart Preprocess（FINAL）** | **64.10%** | **25 / 39** |
 | Post-cutoff 泛化（8 審計，2025–2026） | 58.82% | 10 / 17 |
 
-> 數字鎖定於 `CANONICAL_TRUTH.md`（唯一真實來源）。單通道管線最終為 +Self-Verify（F1=0.9121）；迭代式 Coordinator（exp15，2 輪）以 **F1=0.9132** 超越之，為全系統最佳。
+> 數字鎖定於 `CANONICAL_TRUTH.md`（唯一真實來源）。單通道管線最終為 +Self-Verify（F1=0.9121）；迭代式 Coordinator（autonomous，ChromaDB 知識回饋閉環，3 輪）以 **F1=0.9158** 超越之，為全系統最佳。
 
 ---
 
@@ -80,7 +80,8 @@ DmAVID/
 │   ├── llm_base/                     # LLM 基線結果
 │   ├── llm_rag/                      # LLM+RAG 結果 (F1=0.9061)
 │   ├── hybrid/                       # Self-Verify 結果 (F1=0.9121)
-│   ├── exp15/                   # DmAVID 迭代結果 (canonical, F1=0.9132, round2_progression.json)
+│   ├── dmavid_autonomous/      # DmAVID 迭代結果 (canonical, ChromaDB, F1=0.9158, autonomous_progression.json)
+│   ├── exp15/                  # (deprecated) JSON-only 迭代 F1=0.9132，已被 dmavid_autonomous 取代
 │   ├── dmavid_round2/            # DmAVID 迭代過程輸出
 │   ├── evmbench_postcutoff/         # EVMbench 知識截止後泛化 (58.82%, 10/17)
 │   ├── evmbench_enhanced/            # EVMbench 增強偵測 (30.77%, 12/39, 中間結果)
@@ -119,8 +120,9 @@ DmAVID/
 每一輪由 Coordinator 自適應決策、對完整 243 合約評估，形成閉環自強化：
 
 - **單一自適應迴圈**：Coordinator 依上一輪 F1／FN 分布決定本輪重點漏洞類型與攻防策略（取代固定輪詢的雙層設計）
-- **每輪流程**：Student 偵測 (LLM+RAG+Self-Verify) → FN 收集 → Red Team 對抗變體 → Foundry 編譯/PoC 驗證 → Blue Team 防禦合成 → RAG 知識庫更新 → 重新評估
-- **FN 課程學習**：上一輪偽陰性以 `extra_context` hints 注入下一輪 Student，逐輪修正（Round 1→2 修正 5/6 FN，Recall 0.958→0.993，F1 0.8961→0.9132）
+- **每輪流程**：Student 偵測 (LLM+RAG+Self-Verify) → FN 收集 → Red Team 對抗變體 → Foundry 編譯/PoC 驗證 → Blue Team 防禦合成 → 知識庫更新 → 重新評估
+- **ChromaDB 知識回饋閉環**：Blue Team 合成之防禦補丁經 `write_blue_team_to_chroma()` 向量化寫入 ChromaDB（`text-embedding-3-small`），並同步更新 `vulnerability_knowledge.json`；經 `reload_dynamic_kb()` 注入下一輪 Student 之 RAG 脈絡
+- **FN 課程學習**：上一輪偽陰性以 `extra_context` hints 注入下一輪 Student，逐輪修正（三輪 F1 0.9103→0.9153→0.9158，Recall 0.9231→0.9510，FN 11→7，累積 16 筆學習補丁）
 
 ### 收斂條件
 
@@ -173,7 +175,7 @@ DmAVID/
 | Slither only | 0.7459 | 基線 |
 | +LLM+RAG | 0.9061 | **+21.5%** |
 | +Self-Verify | 0.9121 | **+0.7%** |
-| +DmAVID 迭代 | **0.9132** | **+0.1%** |
+| +DmAVID 迭代（ChromaDB，3 輪） | **0.9158** | **+0.4%** |
 
 ### 3. 可解釋性（自動化量化）
 
@@ -260,7 +262,7 @@ python scripts/31_postcutoff_validation.py      # Post-cutoff 8 audits (58.82%, 
 | 表 3-1（Self-Verify 門檻掃描 T=1/2/3） | v4 門檻敏感度掃描（F1=0.8797/0.9030/0.9007） | `experiments/tool_augmented/threshold_sensitivity.json` |
 | 漏洞類型分布（143 合約） | 依 SmartBugs GitHub 原始標籤統計 | `data/dataset_1000.json（category 欄位）` |
 | 消融實驗管線 F1 | v5_clean 官方基準（LLM+RAG→Self-Verify） | `experiments/ablation/OFFICIAL_RESULTS_v5.md` |
-| exp15 迭代結果 F1=0.9132 | 2 輪 DmAVID 迭代最終值 | `experiments/exp15/round2_progression.json` |
+| autonomous 迭代結果 F1=0.9158 | 3 輪 ChromaDB 迭代最終值 | `experiments/dmavid_autonomous/autonomous_progression.json` |
 
 > **舊檔並存說明**：`experiments/traditional_ml/ml_baseline_results.json`（cv_f1=0.993）與 `experiments/defi_real_world/defi_results.json` 為 TF-IDF **未 Pipeline 化**之舊版實驗，已被 `*_fixed.json` 取代。論文所引用之所有數字均來自 `*_fixed.json`（leakage-fixed，70/30 stratified split）。
 
