@@ -1,0 +1,264 @@
+{
+  "reference": "Li et al., Smart-LLaMA-DPO, ISSTA 2025, DOI: 10.1145/3728878",
+  "judge": "openai",
+  "model": "gpt-5.4",
+  "evaluated_at": "2026-05-19T12:20:28.025540",
+  "n_contracts": 143,
+  "n_tasks": 429,
+  "per_method": {
+    "dmavid": {
+      "n": 143,
+      "correctness": 8.112,
+      "thoroughness": 6.972,
+      "clarity": 8.182,
+      "ctc_avg": 7.777
+    },
+    "llm": {
+      "n": 143,
+      "correctness": 7.692,
+      "thoroughness": 5.93,
+      "clarity": 8.147,
+      "ctc_avg": 7.209
+    },
+    "slither": {
+      "n": 143,
+      "correctness": 2.056,
+      "thoroughness": 1.056,
+      "clarity": 3.259,
+      "ctc_avg": 1.876
+    }
+  },
+  "per_category": {
+    "reentrancy": {
+      "dmavid": {
+        "n": 31,
+        "correctness": 9.355,
+        "thoroughness": 7.871,
+        "clarity": 8.774,
+        "ctc_avg": 8.852
+      },
+      "llm": {
+        "n": 31,
+        "correctness": 8.871,
+        "thoroughness": 6.516,
+        "clarity": 8.742,
+        "ctc_avg": 8.152
+      },
+      "slither": {
+        "n": 31,
+        "correctness": 2.742,
+        "thoroughness": 1.065,
+        "clarity": 3.839,
+        "ctc_avg": 2.349
+      }
+    },
+    "arithmetic": {
+      "dmavid": {
+        "n": 15,
+        "correctness": 8.067,
+        "thoroughness": 6.6,
+        "clarity": 8.667,
+        "ctc_avg": 7.687
+      },
+      "llm": {
+        "n": 15,
+        "correctness": 8.133,
+        "thoroughness": 5.333,
+        "clarity": 8.533,
+        "ctc_avg": 7.333
+      },
+      "slither": {
+        "n": 15,
+        "correctness": 1.0,
+        "thoroughness": 1.0,
+        "clarity": 2.333,
+        "ctc_avg": 1.133
+      }
+    },
+    "denial_of_service": {
+      "dmavid": {
+        "n": 6,
+        "correctness": 8.667,
+        "thoroughness": 7.5,
+        "clarity": 8.333,
+        "ctc_avg": 8.284
+      },
+      "llm": {
+        "n": 6,
+        "correctness": 7.833,
+        "thoroughness": 6.667,
+        "clarity": 8.5,
+        "ctc_avg": 7.55
+      },
+      "slither": {
+        "n": 6,
+        "correctness": 1.333,
+        "thoroughness": 1.0,
+        "clarity": 2.833,
+        "ctc_avg": 1.383
+      }
+    },
+    "time_manipulation": {
+      "dmavid": {
+        "n": 5,
+        "correctness": 8.2,
+        "thoroughness": 6.4,
+        "clarity": 8.0,
+        "ctc_avg": 7.64
+      },
+      "llm": {
+        "n": 5,
+        "correctness": 8.0,
+        "thoroughness": 5.8,
+        "clarity": 8.2,
+        "ctc_avg": 7.36
+      },
+      "slither": {
+        "n": 5,
+        "correctness": 2.4,
+        "thoroughness": 1.2,
+        "clarity": 3.6,
+        "ctc_avg": 2.16
+      }
+    },
+    "unchecked_low_level_calls": {
+      "dmavid": {
+        "n": 52,
+        "correctness": 7.827,
+        "thoroughness": 6.538,
+        "clarity": 7.865,
+        "ctc_avg": 7.444
+      },
+      "llm": {
+        "n": 52,
+        "correctness": 6.962,
+        "thoroughness": 5.558,
+        "clarity": 7.673,
+        "ctc_avg": 6.612
+      },
+      "slither": {
+        "n": 52,
+        "correctness": 2.481,
+        "thoroughness": 1.077,
+        "clarity": 3.5,
+        "ctc_avg": 2.162
+      }
+    },
+    "access_control": {
+      "dmavid": {
+        "n": 18,
+        "correctness": 7.278,
+        "thoroughness": 7.0,
+        "clarity": 8.056,
+        "ctc_avg": 7.272
+      },
+      "llm": {
+        "n": 18,
+        "correctness": 7.667,
+        "thoroughness": 6.333,
+        "clarity": 8.222,
+        "ctc_avg": 7.322
+      },
+      "slither": {
+        "n": 18,
+        "correctness": 1.167,
+        "thoroughness": 1.0,
+        "clarity": 2.667,
+        "ctc_avg": 1.267
+      }
+    },
+    "front_running": {
+      "dmavid": {
+        "n": 4,
+        "correctness": 7.75,
+        "thoroughness": 7.25,
+        "clarity": 8.0,
+        "ctc_avg": 7.625
+      },
+      "llm": {
+        "n": 4,
+        "correctness": 8.0,
+        "thoroughness": 6.25,
+        "clarity": 8.5,
+        "ctc_avg": 7.525
+      },
+      "slither": {
+        "n": 4,
+        "correctness": 1.0,
+        "thoroughness": 1.0,
+        "clarity": 2.5,
+        "ctc_avg": 1.15
+      }
+    },
+    "bad_randomness": {
+      "dmavid": {
+        "n": 8,
+        "correctness": 6.375,
+        "thoroughness": 6.25,
+        "clarity": 7.125,
+        "ctc_avg": 6.412
+      },
+      "llm": {
+        "n": 8,
+        "correctness": 7.375,
+        "thoroughness": 5.875,
+        "clarity": 7.75,
+        "ctc_avg": 6.963
+      },
+      "slither": {
+        "n": 8,
+        "correctness": 1.625,
+        "thoroughness": 1.125,
+        "clarity": 2.875,
+        "ctc_avg": 1.6
+      }
+    },
+    "short_addresses": {
+      "dmavid": {
+        "n": 1,
+        "correctness": 9.0,
+        "thoroughness": 8.0,
+        "clarity": 9.0,
+        "ctc_avg": 8.7
+      },
+      "llm": {
+        "n": 1,
+        "correctness": 10.0,
+        "thoroughness": 6.0,
+        "clarity": 9.0,
+        "ctc_avg": 8.7
+      },
+      "slither": {
+        "n": 1,
+        "correctness": 1.0,
+        "thoroughness": 1.0,
+        "clarity": 2.0,
+        "ctc_avg": 1.1
+      }
+    },
+    "other": {
+      "dmavid": {
+        "n": 3,
+        "correctness": 9.0,
+        "thoroughness": 8.0,
+        "clarity": 8.667,
+        "ctc_avg": 8.667
+      },
+      "llm": {
+        "n": 3,
+        "correctness": 5.0,
+        "thoroughness": 5.333,
+        "clarity": 7.333,
+        "ctc_avg": 5.333
+      },
+      "slither": {
+        "n": 3,
+        "correctness": 2.0,
+        "thoroughness": 1.0,
+        "clarity": 4.0,
+        "ctc_avg": 1.9
+      }
+    }
+  },
+  "ctc_weights": "C×0.6 + T×0.3 + CL×0.1 (Smart-LLaMA-DPO ISSTA 2025)"
+}

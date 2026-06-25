@@ -1,216 +1,216 @@
 {
   "reference": "Li et al., Smart-LLaMA-DPO, ISSTA 2025, DOI: 10.1145/3728878",
   "judge": "openai",
-  "model": "gpt-5.4",
-  "evaluated_at": "2026-05-19T12:20:28.025540",
+  "model": "gpt-4.1-mini",
+  "evaluated_at": "2026-06-25T13:55:01.107425",
   "n_contracts": 143,
   "n_tasks": 429,
   "per_method": {
     "dmavid": {
       "n": 143,
-      "correctness": 8.112,
-      "thoroughness": 6.972,
-      "clarity": 8.182,
-      "ctc_avg": 7.777
+      "correctness": 8.881,
+      "thoroughness": 8.014,
+      "clarity": 8.035,
+      "ctc_avg": 8.536
     },
     "llm": {
       "n": 143,
-      "correctness": 7.692,
-      "thoroughness": 5.93,
-      "clarity": 8.147,
-      "ctc_avg": 7.209
+      "correctness": 8.587,
+      "thoroughness": 6.867,
+      "clarity": 7.692,
+      "ctc_avg": 7.981
     },
     "slither": {
       "n": 143,
-      "correctness": 2.056,
-      "thoroughness": 1.056,
-      "clarity": 3.259,
-      "ctc_avg": 1.876
+      "correctness": 3.266,
+      "thoroughness": 2.112,
+      "clarity": 3.301,
+      "ctc_avg": 2.923
     }
   },
   "per_category": {
     "reentrancy": {
       "dmavid": {
         "n": 31,
-        "correctness": 9.355,
-        "thoroughness": 7.871,
-        "clarity": 8.774,
-        "ctc_avg": 8.852
+        "correctness": 9.032,
+        "thoroughness": 8.129,
+        "clarity": 8.032,
+        "ctc_avg": 8.661
       },
       "llm": {
         "n": 31,
-        "correctness": 8.871,
-        "thoroughness": 6.516,
-        "clarity": 8.742,
-        "ctc_avg": 8.152
+        "correctness": 8.968,
+        "thoroughness": 6.774,
+        "clarity": 7.935,
+        "ctc_avg": 8.207
       },
       "slither": {
         "n": 31,
-        "correctness": 2.742,
-        "thoroughness": 1.065,
-        "clarity": 3.839,
-        "ctc_avg": 2.349
+        "correctness": 4.226,
+        "thoroughness": 2.516,
+        "clarity": 3.742,
+        "ctc_avg": 3.665
       }
     },
     "arithmetic": {
       "dmavid": {
         "n": 15,
-        "correctness": 8.067,
-        "thoroughness": 6.6,
-        "clarity": 8.667,
-        "ctc_avg": 7.687
+        "correctness": 8.4,
+        "thoroughness": 7.467,
+        "clarity": 7.933,
+        "ctc_avg": 8.073
       },
       "llm": {
         "n": 15,
-        "correctness": 8.133,
-        "thoroughness": 5.333,
-        "clarity": 8.533,
-        "ctc_avg": 7.333
+        "correctness": 8.667,
+        "thoroughness": 6.333,
+        "clarity": 7.867,
+        "ctc_avg": 7.887
       },
       "slither": {
         "n": 15,
-        "correctness": 1.0,
-        "thoroughness": 1.0,
+        "correctness": 2.067,
+        "thoroughness": 1.133,
         "clarity": 2.333,
-        "ctc_avg": 1.133
+        "ctc_avg": 1.813
       }
     },
     "denial_of_service": {
       "dmavid": {
         "n": 6,
-        "correctness": 8.667,
-        "thoroughness": 7.5,
-        "clarity": 8.333,
-        "ctc_avg": 8.284
+        "correctness": 9.0,
+        "thoroughness": 8.167,
+        "clarity": 8.167,
+        "ctc_avg": 8.667
       },
       "llm": {
         "n": 6,
-        "correctness": 7.833,
-        "thoroughness": 6.667,
-        "clarity": 8.5,
-        "ctc_avg": 7.55
+        "correctness": 8.5,
+        "thoroughness": 6.833,
+        "clarity": 7.5,
+        "ctc_avg": 7.9
       },
       "slither": {
         "n": 6,
-        "correctness": 1.333,
-        "thoroughness": 1.0,
-        "clarity": 2.833,
-        "ctc_avg": 1.383
+        "correctness": 2.667,
+        "thoroughness": 1.833,
+        "clarity": 3.0,
+        "ctc_avg": 2.45
       }
     },
     "time_manipulation": {
       "dmavid": {
         "n": 5,
-        "correctness": 8.2,
-        "thoroughness": 6.4,
-        "clarity": 8.0,
-        "ctc_avg": 7.64
+        "correctness": 9.0,
+        "thoroughness": 8.2,
+        "clarity": 8.2,
+        "ctc_avg": 8.68
       },
       "llm": {
         "n": 5,
-        "correctness": 8.0,
-        "thoroughness": 5.8,
-        "clarity": 8.2,
-        "ctc_avg": 7.36
+        "correctness": 8.4,
+        "thoroughness": 6.6,
+        "clarity": 7.8,
+        "ctc_avg": 7.8
       },
       "slither": {
         "n": 5,
-        "correctness": 2.4,
-        "thoroughness": 1.2,
+        "correctness": 3.0,
+        "thoroughness": 2.2,
         "clarity": 3.6,
-        "ctc_avg": 2.16
+        "ctc_avg": 2.82
       }
     },
     "unchecked_low_level_calls": {
       "dmavid": {
         "n": 52,
-        "correctness": 7.827,
-        "thoroughness": 6.538,
-        "clarity": 7.865,
-        "ctc_avg": 7.444
+        "correctness": 8.808,
+        "thoroughness": 7.923,
+        "clarity": 7.942,
+        "ctc_avg": 8.456
       },
       "llm": {
         "n": 52,
-        "correctness": 6.962,
-        "thoroughness": 5.558,
-        "clarity": 7.673,
-        "ctc_avg": 6.612
+        "correctness": 8.269,
+        "thoroughness": 7.0,
+        "clarity": 7.404,
+        "ctc_avg": 7.802
       },
       "slither": {
         "n": 52,
-        "correctness": 2.481,
-        "thoroughness": 1.077,
-        "clarity": 3.5,
-        "ctc_avg": 2.162
+        "correctness": 3.519,
+        "thoroughness": 2.346,
+        "clarity": 3.462,
+        "ctc_avg": 3.161
       }
     },
     "access_control": {
       "dmavid": {
         "n": 18,
-        "correctness": 7.278,
-        "thoroughness": 7.0,
-        "clarity": 8.056,
-        "ctc_avg": 7.272
+        "correctness": 9.111,
+        "thoroughness": 8.333,
+        "clarity": 8.278,
+        "ctc_avg": 8.794
       },
       "llm": {
         "n": 18,
-        "correctness": 7.667,
-        "thoroughness": 6.333,
-        "clarity": 8.222,
-        "ctc_avg": 7.322
+        "correctness": 8.833,
+        "thoroughness": 7.167,
+        "clarity": 8.0,
+        "ctc_avg": 8.25
       },
       "slither": {
         "n": 18,
-        "correctness": 1.167,
-        "thoroughness": 1.0,
-        "clarity": 2.667,
-        "ctc_avg": 1.267
+        "correctness": 2.667,
+        "thoroughness": 1.889,
+        "clarity": 3.056,
+        "ctc_avg": 2.473
       }
     },
     "front_running": {
       "dmavid": {
         "n": 4,
-        "correctness": 7.75,
-        "thoroughness": 7.25,
-        "clarity": 8.0,
-        "ctc_avg": 7.625
+        "correctness": 9.0,
+        "thoroughness": 8.0,
+        "clarity": 8.25,
+        "ctc_avg": 8.625
       },
       "llm": {
         "n": 4,
-        "correctness": 8.0,
-        "thoroughness": 6.25,
-        "clarity": 8.5,
-        "ctc_avg": 7.525
+        "correctness": 8.75,
+        "thoroughness": 6.75,
+        "clarity": 7.75,
+        "ctc_avg": 8.05
       },
       "slither": {
         "n": 4,
-        "correctness": 1.0,
-        "thoroughness": 1.0,
-        "clarity": 2.5,
-        "ctc_avg": 1.15
+        "correctness": 2.25,
+        "thoroughness": 1.5,
+        "clarity": 2.75,
+        "ctc_avg": 2.075
       }
     },
     "bad_randomness": {
       "dmavid": {
         "n": 8,
-        "correctness": 6.375,
-        "thoroughness": 6.25,
-        "clarity": 7.125,
-        "ctc_avg": 6.412
+        "correctness": 8.875,
+        "thoroughness": 8.125,
+        "clarity": 7.875,
+        "ctc_avg": 8.55
       },
       "llm": {
         "n": 8,
-        "correctness": 7.375,
-        "thoroughness": 5.875,
-        "clarity": 7.75,
-        "ctc_avg": 6.963
+        "correctness": 8.5,
+        "thoroughness": 6.75,
+        "clarity": 7.5,
+        "ctc_avg": 7.875
       },
       "slither": {
         "n": 8,
-        "correctness": 1.625,
-        "thoroughness": 1.125,
-        "clarity": 2.875,
-        "ctc_avg": 1.6
+        "correctness": 2.625,
+        "thoroughness": 1.75,
+        "clarity": 3.0,
+        "ctc_avg": 2.4
       }
     },
     "short_addresses": {
@@ -218,47 +218,46 @@
         "n": 1,
         "correctness": 9.0,
         "thoroughness": 8.0,
-        "clarity": 9.0,
-        "ctc_avg": 8.7
+        "clarity": 8.0,
+        "ctc_avg": 8.6
       },
       "llm": {
         "n": 1,
-        "correctness": 10.0,
+        "correctness": 9.0,
         "thoroughness": 6.0,
-        "clarity": 9.0,
-        "ctc_avg": 8.7
+        "clarity": 8.0,
+        "ctc_avg": 8.0
       },
       "slither": {
         "n": 1,
-        "correctness": 1.0,
+        "correctness": 2.0,
         "thoroughness": 1.0,
         "clarity": 2.0,
-        "ctc_avg": 1.1
+        "ctc_avg": 1.7
       }
     },
     "other": {
       "dmavid": {
         "n": 3,
         "correctness": 9.0,
-        "thoroughness": 8.0,
-        "clarity": 8.667,
-        "ctc_avg": 8.667
+        "thoroughness": 8.333,
+        "clarity": 8.333,
+        "ctc_avg": 8.733
       },
       "llm": {
         "n": 3,
-        "correctness": 5.0,
-        "thoroughness": 5.333,
-        "clarity": 7.333,
-        "ctc_avg": 5.333
+        "correctness": 8.667,
+        "thoroughness": 7.667,
+        "clarity": 8.0,
+        "ctc_avg": 8.3
       },
       "slither": {
         "n": 3,
-        "correctness": 2.0,
-        "thoroughness": 1.0,
-        "clarity": 4.0,
-        "ctc_avg": 1.9
+        "correctness": 3.667,
+        "thoroughness": 2.667,
+        "clarity": 4.333,
+        "ctc_avg": 3.434
       }
     }
-  },
-  "ctc_weights": "C×0.6 + T×0.3 + CL×0.1 (Smart-LLaMA-DPO ISSTA 2025)"
+  }
 }
