@@ -20,7 +20,7 @@ Stage 4: DmAVID 多代理迭代         → Teacher/Student/Red Team/Blue Team �
 
 ### 核心成果
 
-**SmartBugs Curated 243 合約（143 漏洞 + 100 安全）**
+**SmartBugs 243 合約（Curated 143 漏洞 + Wild 100 安全）**
 
 | 方法 | F1 | Precision | Recall | FPR |
 |------|-----|-----------|--------|-----|
