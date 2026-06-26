@@ -188,3 +188,10 @@ experiments/explainability/ctc_checkpoint*.json
 data/chroma_kb/
 experiments/codebert_baseline/checkpoints*
 experiments/codebert_length_fair/checkpoints*
+
+# Foundry genuine-PoC infra / run logs / backups
+experiments/foundry_poc/
+experiments/dmavid_autonomous/RERUN_LOG*.txt
+experiments/dmavid_autonomous/autonomous_progression_budget20.json
+experiments/dmavid_autonomous_BAK_*/
+scripts/knowledge/*.bak_*

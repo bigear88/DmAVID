@@ -448,7 +448,9 @@ def run_red_team_stage(red_mod, student_results, dataset, cost, dry_run, max_fn=
         if dry_run:
             vs, ta, note, tokens = f"// variant {cid}", tf, "dry-run", 0
         else:
-            vs, ta, note = red_mod.generate_adversarial_variant(src, vt, tf)
+            # Emit variant in modern Solidity so a forge-std PoC can exercise it
+            vs, ta, note = red_mod.generate_adversarial_variant(src, vt, tf,
+                                                                target_solidity="^0.8.20")
             tokens = 500
         variants.append({"variant_id": f"{cid}_{vt}_{tf}", "original_contract_id": cid,
                          "vulnerability_type": vt, "transformation_applied": ta,
@@ -459,33 +461,70 @@ def run_red_team_stage(red_mod, student_results, dataset, cost, dry_run, max_fn=
     return variants
 
 
-def run_foundry_stage(variants, dry_run):
-    logger.info(f"[FOUNDRY] Validating {len(variants)} variants...")
+def run_foundry_stage(variants, red_mod, cost, dry_run, round_num=0):
+    """Genuine two-stage Foundry validation (S5): solc compile + forge test PoC.
+
+    For each variant the Red Team's PoC generator produces a real Foundry
+    exploit test, which is run with `forge test` (with iterative self-repair).
+    A variant is dual-validated iff it compiles AND its exploit PoC genuinely
+    passes (non-trivial assertion enforced by the runner's anti-cheat check).
+    Per-variant validation artefacts are persisted for auditability.
+    """
+    poc_mod = load_module("13b_foundry_poc")
+    logger.info(f"[FOUNDRY] Genuine dual validation on {len(variants)} variants...")
     validated = []
+    audit = []
     for i, v in enumerate(variants):
         src = v.get("contract_source", "")
         if not src or dry_run:
             v["compile_success"] = bool(dry_run)
+            v["poc_passed"] = bool(dry_run)
+            v["gas_used"] = 0
             validated.append(v)
             continue
+        vt = v.get("vulnerability_type", "unknown")
         try:
-            import tempfile
-            with tempfile.TemporaryDirectory() as tmp:
-                sol = os.path.join(tmp, "Variant.sol")
-                with open(sol, "w") as f:
-                    if "pragma solidity" not in src:
-                        f.write("// SPDX-License-Identifier: MIT\npragma solidity ^0.8.19;\n\n")
-                    f.write(src)
-                r = subprocess.run(["forge", "build", "--root", tmp],
-                                   capture_output=True, text=True, timeout=60)
-                v["compile_success"] = r.returncode == 0
-        except FileNotFoundError:
-            v["compile_success"] = True
-        except Exception:
+            r = poc_mod.validate_with_repair(
+                src, vt, red_mod.generate_poc_template, red_mod.repair_poc,
+                max_attempts=3)
+            v["compile_success"] = r["compile_success"]
+            v["poc_passed"]      = r["poc_passed"]
+            v["gas_used"]        = r.get("gas_used", 0)
+            v["poc_attempts"]    = r.get("attempts", 0)
+            v["poc_source"]      = r.get("poc_source", "")
+            # ~1 generation + (attempts-1) repairs, ~2k tokens each
+            cost.add("red_team", 2000 * max(1, r.get("attempts", 1)))
+            audit.append({"variant_id": v.get("variant_id", f"v{i}"),
+                          "vulnerability_type": vt,
+                          "compile_success": r["compile_success"],
+                          "poc_passed": r["poc_passed"],
+                          "gas_used": r.get("gas_used", 0),
+                          "attempts": r.get("attempts", 0),
+                          "trace": r.get("trace", []),
+                          "contract_source": src,
+                          "poc_source": r.get("poc_source", "")})
+            status = "PoC-PASS" if r["poc_passed"] else ("compiled" if r["compile_success"] else "FAIL")
+            logger.info(f"[FOUNDRY] Variant {i+1}/{len(variants)} ({vt}): {status} "
+                        f"(attempts={r.get('attempts',0)})")
+        except Exception as e:
+            logger.error(f"[FOUNDRY] Error validating variant {i}: {e}")
             v["compile_success"] = False
+            v["poc_passed"] = False
         validated.append(v)
+
+    # Persist audit trail so variant sources + PoCs are never lost again
+    try:
+        out_dir = os.path.join(BASE_DIR, "experiments", "dmavid_autonomous", "foundry_poc")
+        os.makedirs(out_dir, exist_ok=True)
+        with open(os.path.join(out_dir, f"round_{round_num}_foundry_poc.json"), "w",
+                  encoding="utf-8") as f:
+            json.dump({"round": round_num, "results": audit}, f, ensure_ascii=False, indent=2)
+    except Exception as e:
+        logger.warning(f"[FOUNDRY] could not persist audit: {e}")
+
     compiled = sum(1 for v in validated if v.get("compile_success"))
-    logger.info(f"[FOUNDRY] {compiled}/{len(validated)} compiled")
+    passed   = sum(1 for v in validated if v.get("poc_passed"))
+    logger.info(f"[FOUNDRY] {compiled}/{len(validated)} compiled, {passed}/{len(validated)} PoC-exploitable")
     return validated
 
 
@@ -787,13 +826,19 @@ def main():
         variants = run_red_team_stage(red_mod, student_results, dataset, cost, args.dry_run, max_fn)
         round_data["red_team_variants"] = len(variants)
 
-        # (d) Foundry
-        validated = run_foundry_stage(variants, args.dry_run)
-        compiled  = sum(1 for v in validated if v.get("compile_success"))
-        round_data["foundry_compiled"] = compiled
+        # (d) Foundry — genuine dual validation: solc compile + forge test PoC
+        validated = run_foundry_stage(variants, red_mod, cost, args.dry_run, round_num)
+        compiled   = sum(1 for v in validated if v.get("compile_success"))
+        poc_passed = sum(1 for v in validated if v.get("poc_passed"))
+        round_data["foundry_compiled"]   = compiled
+        round_data["foundry_poc_passed"] = poc_passed
+        round_data["foundry_total"]      = len(validated)
+        logger.info(f"[FOUNDRY] dual-validation: {compiled}/{len(validated)} compiled, "
+                    f"{poc_passed}/{len(validated)} PoC-exploitable")
 
-        # (e) Blue Team
-        defenses = run_blue_team_stage(blue_mod, validated, cost, args.dry_run)
+        # (e) Blue Team — only DUAL-validated variants (compile + PoC) feed synthesis
+        dual = [v for v in validated if v.get("compile_success") and v.get("poc_passed")]
+        defenses = run_blue_team_stage(blue_mod, dual, cost, args.dry_run)
         round_data["blue_team_patterns"] = len(defenses)
         state.add_learned_defenses([d.get("category","") for d in defenses])
 

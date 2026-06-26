@@ -1529,15 +1529,15 @@
       "mitigation": "Use SafeMath library's `sub` function or Solidity 0.8+ built-in checked arithmetic to automatically revert on underflow/overflow. Alternatively, add explicit require checks to ensure the subtrahend is not greater than the minuend before subtraction."
     },
     "bt_variant_0_0": {
-      "vulnerability_type": "bad_randomness",
-      "pattern": "Contracts using on-chain deterministic data as randomness seeds without cryptographic protections leading to predictable outcomes",
-      "blue_team_defense": "Avoid using block variables or contract state as randomness seeds; integrate external verifiable randomness or cryptographic commit-reveal protocols to ensure unpredictability",
+      "vulnerability_type": "arithmetic",
+      "pattern": "Unchecked arithmetic operations (especially subtraction) without input validation combined with dead code insertion to obfuscate vulnerability presence",
+      "blue_team_defense": "Always validate arithmetic operands before unchecked operations, especially for subtraction. Avoid unchecked arithmetic unless safety is guaranteed. Use Solidity 0.8.x built-in overflow/underflow checks or explicit require statements.",
       "source": "blue_team_synthesis"
     },
     "bt_variant_1_1": {
-      "vulnerability_type": "access_control",
-      "pattern": "Access control vulnerabilities caused by silent failure (early return) instead of explicit revert on unauthorized callers, especially when ownership is tracked via mappings or bitmasks without strict require enforcement.",
-      "blue_team_defense": "Replace silent failure patterns (early returns) with explicit require checks that revert on unauthorized access. Ensure all owner-only functions use modifiers or require statements that strictly enforce ownership. Conduct thorough code reviews to detect silent access control bypasses and add unit tests for unauthorized access attempts.",
+      "vulnerability_type": "arithmetic",
+      "pattern": "Unchecked arithmetic operations on user balances following conditional checks that can be bypassed or invalidated, especially in flattened or obfuscated control flows, leading to underflow vulnerabilities.",
+      "blue_team_defense": "Avoid unchecked arithmetic on critical state variables; use Solidity 0.8+ built-in checked arithmetic or SafeMath libraries; do not separate balance checks and mutations across complex control flows; minimize control flow flattening that obscures logic.",
       "source": "blue_team_synthesis"
     },
     "bt_variant_2_2": {
@@ -1565,15 +1565,15 @@
       "source": "blue_team_synthesis"
     },
     "bt_variant_0_2": {
-      "vulnerability_type": "short_addresses",
-      "pattern": "Functions accepting address parameters without explicit input size validation are vulnerable to short address attacks causing parameter misalignment and incorrect state updates.",
-      "blue_team_defense": "Validate the calldata length to ensure all parameters are fully provided; upgrade Solidity compiler to versions that enforce address size; use ABI encoder/decoder that rejects short addresses; add explicit require checks on msg.data length in functions accepting address parameters.",
+      "vulnerability_type": "unchecked_low_level_calls",
+      "pattern": "Low-level calls to external addresses performed without checking the returned success status, leading to unchecked failures and potential vulnerabilities.",
+      "blue_team_defense": "Always check the return value of low-level calls (call, delegatecall, staticcall) and handle failures explicitly using require or revert.",
       "source": "blue_team_synthesis"
     },
     "bt_variant_0_1": {
-      "vulnerability_type": "access_control",
-      "pattern": "Functions that perform delegatecall or external calls without verifying caller identity or enforcing access restrictions",
-      "blue_team_defense": "Enforce strict access control (e.g., owner-only modifier) on functions that perform delegatecall or call external contracts to prevent unauthorized usage.",
+      "vulnerability_type": "time_manipulation",
+      "pattern": "Contracts performing critical logic based on block.timestamp comparisons to fixed timestamps, potentially obfuscated by dead code insertions to evade detection.",
+      "blue_team_defense": "Avoid using block.timestamp for critical time checks; prefer block.number-based timing or external trusted time oracles; implement sanity checks and limit miner influence on time-dependent logic.",
       "source": "blue_team_synthesis"
     },
     "bt_variant_1_2": {

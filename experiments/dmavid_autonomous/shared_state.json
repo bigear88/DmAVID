@@ -1,23 +1,15 @@
 {
-  "started_at": "2026-06-22T02:24:51.604001",
-  "updated_at": "2026-06-22T03:37:24.529761",
+  "started_at": "2026-06-26T22:24:59.357314",
+  "updated_at": "2026-06-27T00:00:24.026644",
   "fn_patterns": {
+    "arithmetic": 8,
     "bad_randomness": 3,
-    "unchecked_low_level_calls": 7,
-    "time_manipulation": 1,
-    "arithmetic": 9,
-    "access_control": 3,
-    "short_addresses": 2,
-    "front_running": 1
+    "unchecked_low_level_calls": 6,
+    "access_control": 4
   },
   "learned_defenses": [
-    "bad_randomness",
-    "unchecked_low_level_calls",
-    "time_manipulation",
     "arithmetic",
-    "access_control",
-    "short_addresses",
-    "front_running"
+    "unchecked_low_level_calls"
   ],
   "coordinator_decisions": [
     {
@@ -34,7 +26,7 @@
         "reasoning": "Starting with common critical vulnerabilities to establish baseline detection with moderate confidence."
       },
       "reasoning": "Starting with common critical vulnerabilities to establish baseline detection with moderate confidence.",
-      "ts": "2026-06-22T02:24:53.425051"
+      "ts": "2026-06-26T22:25:00.965925"
     },
     {
       "round": 2,
@@ -42,51 +34,52 @@
       "decision": {
         "focus_vuln_types": [
           "unchecked_call",
-          "access_control",
-          "time_manipulation"
+          "reentrancy",
+          "integer_overflow"
         ],
         "challenges_per_type": 2,
         "sv_threshold": 0.92,
-        "reasoning": "Focus on types with highest false negatives and learned defenses to improve recall while maintaining precision, using 2 challenges per type due to sufficient budget."
+        "reasoning": "Focus on high FN types including unchecked calls and arithmetic, plus related common vulnerabilities, with moderate challenge intensity and a balanced threshold to improve recall while controlling false positives."
       },
-      "reasoning": "Focus on types with highest false negatives and learned defenses to improve recall while maintaining precision, using 2 challenges per type due to sufficient budget.",
-      "ts": "2026-06-22T02:45:34.382137"
+      "reasoning": "Focus on high FN types including unchecked calls and arithmetic, plus related common vulnerabilities, with moderate challenge intensity and a balanced threshold to improve recall while controlling false positives.",
+      "ts": "2026-06-26T22:56:34.401629"
     },
     {
       "round": 3,
       "stage": "round_strategy",
       "decision": {
         "focus_vuln_types": [
-          "unchecked_call",
           "access_control",
-          "time_manipulation"
+          "reentrancy",
+          "unchecked_call",
+          "denial_of_service"
         ],
         "challenges_per_type": 2,
         "sv_threshold": 0.92,
-        "reasoning": "Focus on high FN types and related categories with 2 challenges each to improve recall while maintaining a balanced false positive rate."
+        "reasoning": "Focus on high FN access_control and diversify with other critical types, using 2 challenges per type due to sufficient budget and a moderately high threshold to balance FP and FN."
       },
-      "reasoning": "Focus on high FN types and related categories with 2 challenges each to improve recall while maintaining a balanced false positive rate.",
-      "ts": "2026-06-22T03:15:15.658392"
+      "reasoning": "Focus on high FN access_control and diversify with other critical types, using 2 challenges per type due to sufficient budget and a moderately high threshold to balance FP and FN.",
+      "ts": "2026-06-26T23:29:07.920357"
     }
   ],
   "round_summaries": [
     {
       "round": 1,
-      "f1_post": 0.9103,
-      "fn_count": 11,
-      "patterns_added": 11
+      "f1_post": 0.9164,
+      "fn_count": 6,
+      "patterns_added": 1
     },
     {
       "round": 2,
-      "f1_post": 0.9153,
+      "f1_post": 0.906,
       "fn_count": 8,
-      "patterns_added": 8
+      "patterns_added": 1
     },
     {
       "round": 3,
-      "f1_post": 0.9158,
+      "f1_post": 0.9128,
       "fn_count": 7,
-      "patterns_added": 7
+      "patterns_added": 1
     }
   ]
 }

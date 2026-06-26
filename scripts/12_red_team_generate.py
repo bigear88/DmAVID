@@ -180,12 +180,19 @@ def generate_adversarial_variant(
     contract_source: str,
     vuln_type: str,
     transformation_type: str = None,
+    target_solidity: str = None,
 ) -> Tuple[str, str, str]:
     """Generate a semantically equivalent but structurally distinct variant.
 
     Applies 1-2 advanced mutation strategies from MUTATION_STRATEGIES while
     enforcing per-vulnerability semantic constraints so the vulnerability
     trigger is never accidentally removed.
+
+    Args:
+        target_solidity: when set (e.g. "^0.8.20"), the variant is emitted in
+            that Solidity version while preserving the vulnerability. Required
+            so the variant can be exercised by a forge-std PoC (forge-std needs
+            solc >= 0.6.2). Legacy callers leave it None to keep prior behaviour.
 
     Returns:
         (variant_source, strategies_label, preservation_note)
@@ -202,6 +209,17 @@ def generate_adversarial_variant(
         vuln_type.lower().replace(" ", "_"), _DEFAULT_CONSTRAINT
     )
 
+    version_rule = ""
+    if target_solidity:
+        version_rule = (
+            f"\n- Emit the variant in Solidity {target_solidity} (modern pragma). "
+            "Port any legacy syntax accordingly, but PRESERVE the vulnerability so "
+            "it remains genuinely exploitable. For arithmetic/overflow bugs, wrap the "
+            "vulnerable arithmetic in an `unchecked {{ }}` block so the overflow is "
+            "still reachable under the modern compiler. Make the contract "
+            "self-deployable (a constructor taking no required external contracts)."
+        )
+
     prompt = f"""You are an expert Solidity adversarial code transformer working on a \
 security-research benchmark. Your task is to produce a VARIANT of the contract below \
 that is structurally different from the original yet preserves all execution semantics \
@@ -217,7 +235,7 @@ that is structurally different from the original yet preserves all execution sem
 - Apply ALL listed strategies; the variant must show visible structural changes.
 - Do NOT rename the external interface (function names visible to callers must stay the same).
 - Do NOT change storage variable types or layouts unless required by cross-contract delegation.
-- Return ONLY valid Solidity source code — no markdown fences, no explanation.
+- Return ONLY valid Solidity source code — no markdown fences, no explanation.{version_rule}
 
 === ORIGINAL CONTRACT ({vuln_type}) ===
 {contract_source}
@@ -350,6 +368,58 @@ Return ONLY valid Solidity code. No markdown fences, no explanation."""
     except Exception as e:
         logger.error(f"Error generating PoC: {e}")
         return f"// Failed to generate PoC: {str(e)}"
+
+
+def _strip_fences(code: str) -> str:
+    code = code.strip()
+    if code.startswith("```solidity"):
+        code = code[11:]
+    if code.startswith("```"):
+        code = code[3:]
+    if code.endswith("```"):
+        code = code[:-3]
+    return code.strip()
+
+
+def repair_poc(variant_source: str, vuln_type: str, prev_poc: str, error_output: str) -> str:
+    """Repair a failing Foundry PoC using the real forge compiler/test output.
+
+    This is genuine iterative code synthesis: the returned test must still
+    compile AND its assertions must genuinely pass for forge to accept it. The
+    model is explicitly forbidden from weakening assertions into trivial
+    always-true checks (anti-cheat is also enforced in the runner).
+    """
+    repair_prompt = f"""Your Foundry exploit test FAILED. Fix it so that `forge test` \
+passes by genuinely demonstrating the {vuln_type} vulnerability.
+
+=== HARD RULES (anti-cheat) ===
+- The exploit must REALLY trigger the vulnerability; the assertions must prove it
+  (e.g. attacker balance increased, unauthorized call succeeded, value wrapped around).
+- Do NOT weaken or delete the exploit assertion. Do NOT replace it with assertTrue(true),
+  assertEq(1, 1) or any tautology. A test that passes without exploiting is INVALID.
+- Keep forge-std/Test.sol; keep the test self-contained (inline the vulnerable contract).
+- Fix Solidity compile errors (e.g. address vs address payable, getters are not lvalues —
+  use the contract's real state-changing API or vm.store to set state).
+
+=== FORGE OUTPUT (errors) ===
+{error_output[-2500:]}
+
+=== CURRENT FAILING TEST ===
+{prev_poc}
+
+Return ONLY the corrected, complete Solidity test. No markdown fences, no explanation."""
+    try:
+        logger.info(f"Repairing PoC for {vuln_type}")
+        response = client.chat.completions.create(
+            model=MODEL,
+            **token_param(2560),
+            messages=[{"role": "user", "content": repair_prompt}],
+            temperature=0.5,
+        )
+        return _strip_fences(response.choices[0].message.content)
+    except Exception as e:
+        logger.error(f"Error repairing PoC: {e}")
+        return prev_poc
 
 
 def main():
