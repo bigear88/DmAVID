@@ -20,7 +20,7 @@ methods = [
     ("AuditGPT\n(Xia et al., 2024)",   0.80, 0.83, 0.81),
     ("LLM-SmartAudit\n(Wei et al., 2025a)", 0.91, 0.86, 0.88),
     ("DmAVID\n+Self-Verify",           0.8537, 0.979, 0.9121),
-    ("DmAVID\n+Iteration",             0.8831, 0.9510, 0.9158),
+    ("DmAVID\n+Iteration",             0.8774, 0.9510, 0.9128),
 ]
 labels = [m[0] for m in methods]
 prec = [m[1] for m in methods]
