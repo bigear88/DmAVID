@@ -1,0 +1,135 @@
+[
+  {
+    "i": 1,
+    "contract": "wild_safe_0420_0xd7e108b5e41cbde25461ba095cef7d4c2159a060.sol",
+    "judge": "FALSE_POSITIVE",
+    "safepass": "SAFE",
+    "flipped": true
+  },
+  {
+    "i": 2,
+    "contract": "wild_safe_0608_0x19324c99fc1b2fd7ca827c98f6554085f147dea7.sol",
+    "judge": "REAL_BUG",
+    "safepass": "VULNERABLE",
+    "flipped": false
+  },
+  {
+    "i": 3,
+    "contract": "wild_safe_0599_0xa206ea08e73d779cd7c429581af81c93287cc656.sol",
+    "judge": "REAL_BUG",
+    "safepass": "SAFE",
+    "flipped": true
+  },
+  {
+    "i": 4,
+    "contract": "wild_safe_0338_0xe88a626c896137c74102ed24683917eeb9941157.sol",
+    "judge": "FALSE_POSITIVE",
+    "safepass": "VULNERABLE",
+    "flipped": false
+  },
+  {
+    "i": 5,
+    "contract": "wild_safe_0730_0x45f047e524c83339a5701984fd79e9d98375a5c6.sol",
+    "judge": "FALSE_POSITIVE",
+    "safepass": "VULNERABLE",
+    "flipped": false
+  },
+  {
+    "i": 6,
+    "contract": "wild_safe_0820_0x9eb4f2dd25958ef1c72fe115d62da67abd6c000c.sol",
+    "judge": "FALSE_POSITIVE",
+    "safepass": "SAFE",
+    "flipped": true
+  },
+  {
+    "i": 7,
+    "contract": "wild_safe_0732_0xc0c7d89e4968775931e53e9510ebad43644b0866.sol",
+    "judge": "REAL_BUG",
+    "safepass": "VULNERABLE",
+    "flipped": false
+  },
+  {
+    "i": 8,
+    "contract": "wild_safe_0818_0x970fbc3126e19dc57f6649133436c2def00051a8.sol",
+    "judge": "FALSE_POSITIVE",
+    "safepass": "SAFE",
+    "flipped": true
+  },
+  {
+    "i": 9,
+    "contract": "wild_safe_0114_0x205daf7cb272e436652115ecfb7df465631d80d0.sol",
+    "judge": "FALSE_POSITIVE",
+    "safepass": "SAFE",
+    "flipped": true
+  },
+  {
+    "i": 10,
+    "contract": "wild_safe_0120_0x6a33c2c807124eae26f6188877c15675d3889ca3.sol",
+    "judge": "FALSE_POSITIVE",
+    "safepass": "SAFE",
+    "flipped": true
+  },
+  {
+    "i": 11,
+    "contract": "wild_safe_0100_0x330e4de846f389ec75d1120e3b28c12d270135c8.sol",
+    "judge": "FALSE_POSITIVE",
+    "safepass": "SAFE",
+    "flipped": true
+  },
+  {
+    "i": 12,
+    "contract": "wild_safe_0279_0x8ac4b79f0a29624fcb1720ee131068f1ce23acd3.sol",
+    "judge": "REAL_BUG",
+    "safepass": "VULNERABLE",
+    "flipped": false
+  },
+  {
+    "i": 13,
+    "contract": "wild_safe_0166_0x84c96d19de65b24301b210b92f65ee806d274565.sol",
+    "judge": "FALSE_POSITIVE",
+    "safepass": "SAFE",
+    "flipped": true
+  },
+  {
+    "i": 14,
+    "contract": "wild_safe_0614_0xda017d3417d7fcdd4db134e2491f30292ec647c7.sol",
+    "judge": "REAL_BUG",
+    "safepass": "VULNERABLE",
+    "flipped": false
+  },
+  {
+    "i": 15,
+    "contract": "wild_safe_0476_0xb961339f6f7f3b020255d9281fdd3bf2eb9b4d1e.sol",
+    "judge": "FALSE_POSITIVE",
+    "safepass": "SAFE",
+    "flipped": true
+  },
+  {
+    "i": 16,
+    "contract": "wild_safe_0785_0x3f6a224f0a6350dc9ccfee200e21b011a37957b1.sol",
+    "judge": "FALSE_POSITIVE",
+    "safepass": "SAFE",
+    "flipped": true
+  },
+  {
+    "i": 17,
+    "contract": "wild_safe_0725_0x82d4fae5b529fd52e464bcf7d5d737d0fd313f37.sol",
+    "judge": "REAL_BUG",
+    "safepass": "VULNERABLE",
+    "flipped": false
+  },
+  {
+    "i": 18,
+    "contract": "wild_safe_0346_0x27f8493696a224c40af66b745062c77e2b474671.sol",
+    "judge": "FALSE_POSITIVE",
+    "safepass": "VULNERABLE",
+    "flipped": false
+  },
+  {
+    "i": 19,
+    "contract": "wild_safe_0104_0xc3a007ee74b71fb09a1fd0296f643438e207df00.sol",
+    "judge": "REAL_BUG",
+    "safepass": "SAFE",
+    "flipped": true
+  }
+]

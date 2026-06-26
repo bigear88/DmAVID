@@ -1,0 +1,187 @@
+[
+  {
+    "verdict": "FALSE_POSITIVE",
+    "severity": "none",
+    "exploit_or_why_safe": "The contract uses .transfer() to forward ETH with 2300 gas preventing reentrancy, has explicit balance checks before subtraction, and follows Checks-Effects-Interactions pattern, so no exploitable reentrancy or DoS exists.",
+    "contract": "wild_safe_0420_0xd7e108b5e41cbde25461ba095cef7d4c2159a060.sol",
+    "claim": [
+      "REENTRANCY",
+      "DENIAL_OF_SERVICE"
+    ]
+  },
+  {
+    "verdict": "REAL_BUG",
+    "severity": "high",
+    "exploit_or_why_safe": "The purchase() function uses unbounded loops with external calls to arbitrary addresses, allowing a malicious shareholder to block all future purchases by reverting during dividend payouts, causing a denial of service.",
+    "contract": "wild_safe_0608_0x19324c99fc1b2fd7ca827c98f6554085f147dea7.sol",
+    "claim": [
+      "DENIAL_OF_SERVICE"
+    ]
+  },
+  {
+    "verdict": "REAL_BUG",
+    "severity": "high",
+    "exploit_or_why_safe": "The burn() function contains a faulty overflow check and incorrectly adds _value to the owner's balance, enabling unauthorized minting of licenses and breaking the total supply invariant.",
+    "contract": "wild_safe_0599_0xa206ea08e73d779cd7c429581af81c93287cc656.sol",
+    "claim": [
+      "INTEGER_OVERFLOW"
+    ]
+  },
+  {
+    "verdict": "FALSE_POSITIVE",
+    "severity": "none",
+    "exploit_or_why_safe": "The contract uses .transfer() to forward ETH with 2300 gas preventing reentrancy, has explicit balance checks before subtraction, and follows Checks-Effects-Interactions pattern, so no exploitable reentrancy or DoS exists.",
+    "contract": "wild_safe_0338_0xe88a626c896137c74102ed24683917eeb9941157.sol",
+    "claim": [
+      "REENTRANCY",
+      "DENIAL_OF_SERVICE"
+    ]
+  },
+  {
+    "verdict": "FALSE_POSITIVE",
+    "severity": "none",
+    "exploit_or_why_safe": "The contract uses SafeMath for arithmetic safety, has explicit require checks, no unprotected external calls with unbounded gas, and no reentrancy risk since no .call.value() is used; thus no exploitable denial-of-service or unchecked call vulnerability exists.",
+    "contract": "wild_safe_0730_0x45f047e524c83339a5701984fd79e9d98375a5c6.sol",
+    "claim": [
+      "DENIAL_OF_SERVICE",
+      "UNCHECKED_CALL"
+    ]
+  },
+  {
+    "verdict": "FALSE_POSITIVE",
+    "severity": "none",
+    "exploit_or_why_safe": "The contract uses explicit balance checks before subtraction, no unprotected external calls in state-changing functions except a safe .transfer() forwarding 2300 gas, and follows Checks-Effects-Interactions pattern, preventing integer overflow and reentrancy exploits.",
+    "contract": "wild_safe_0820_0x9eb4f2dd25958ef1c72fe115d62da67abd6c000c.sol",
+    "claim": [
+      "INTEGER_OVERFLOW",
+      "REENTRANCY"
+    ]
+  },
+  {
+    "verdict": "REAL_BUG",
+    "severity": "high",
+    "exploit_or_why_safe": "The contract has two owner variables causing inconsistent ownership checks, and the changeOwner function is callable by any contributor (not only the owner), allowing unauthorized ownership takeover.",
+    "contract": "wild_safe_0732_0xc0c7d89e4968775931e53e9510ebad43644b0866.sol",
+    "claim": [
+      "Unchecked Call",
+      "Access Control"
+    ]
+  },
+  {
+    "verdict": "FALSE_POSITIVE",
+    "severity": "none",
+    "exploit_or_why_safe": "The contract uses access control for withdrawals, no external calls with unbounded gas are made, and no reentrancy-prone patterns are present in the provided code.",
+    "contract": "wild_safe_0818_0x970fbc3126e19dc57f6649133436c2def00051a8.sol",
+    "claim": [
+      "UNCHECKED_CALL",
+      "REENTRANCY"
+    ]
+  },
+  {
+    "verdict": "FALSE_POSITIVE",
+    "severity": "none",
+    "exploit_or_why_safe": "The contract uses explicit balance checks before subtraction, no external calls occur before state changes in transfer functions, and the only external calls in transferAndCall and approveAndCall happen after successful state updates, so no reentrancy or unchecked call vulnerabilities lead to fund loss or broken invariants.",
+    "contract": "wild_safe_0114_0x205daf7cb272e436652115ecfb7df465631d80d0.sol",
+    "claim": [
+      "UNCHECKED_CALL",
+      "REENTRANCY"
+    ]
+  },
+  {
+    "verdict": "FALSE_POSITIVE",
+    "severity": "none",
+    "exploit_or_why_safe": "The contract uses no external calls with more than 2300 gas (only .transfer()), has explicit balance checks before subtraction, and follows Checks-Effects-Interactions pattern, so no exploitable reentrancy or denial-of-service exists.",
+    "contract": "wild_safe_0120_0x6a33c2c807124eae26f6188877c15675d3889ca3.sol",
+    "claim": [
+      "REENTRANCY",
+      "DENIAL_OF_SERVICE"
+    ]
+  },
+  {
+    "verdict": "FALSE_POSITIVE",
+    "severity": "none",
+    "exploit_or_why_safe": "SafeMath is used for all arithmetic operations with explicit require/assert checks, and access control restricts booking and distribution functions to the owner, preventing integer overflow exploits.",
+    "contract": "wild_safe_0100_0x330e4de846f389ec75d1120e3b28c12d270135c8.sol",
+    "claim": [
+      "INTEGER_OVERFLOW"
+    ]
+  },
+  {
+    "verdict": "REAL_BUG",
+    "severity": "high",
+    "exploit_or_why_safe": "The contract uses multiple external calls with .transfer() and .send() which forward only 2300 gas, but the ordering in sell() and burn() functions violates Checks-Effects-Interactions pattern by transferring ether before updating balances, enabling reentrancy attacks that can cause loss or theft of funds.",
+    "contract": "wild_safe_0279_0x8ac4b79f0a29624fcb1720ee131068f1ce23acd3.sol",
+    "claim": [
+      "DENIAL_OF_SERVICE",
+      "UNCHECKED_CALL"
+    ]
+  },
+  {
+    "verdict": "FALSE_POSITIVE",
+    "severity": "none",
+    "exploit_or_why_safe": "The fallback function uses .transfer() to send ether, which forwards only 2300 gas preventing reentrancy, and state updates occur before the external call, ensuring reentrancy safety.",
+    "contract": "wild_safe_0166_0x84c96d19de65b24301b210b92f65ee806d274565.sol",
+    "claim": [
+      "REENTRANCY"
+    ]
+  },
+  {
+    "verdict": "REAL_BUG",
+    "severity": "high",
+    "exploit_or_why_safe": "The transferFrom function uses incorrect comparison operators (<= instead of >=) for balance and allowance checks, allowing unauthorized transfers and causing broken token invariants.",
+    "contract": "wild_safe_0614_0xda017d3417d7fcdd4db134e2491f30292ec647c7.sol",
+    "claim": [
+      "INTEGER_OVERFLOW",
+      "LOGIC_ERROR_IN_TRANSFER_FROM"
+    ]
+  },
+  {
+    "verdict": "FALSE_POSITIVE",
+    "severity": "none",
+    "exploit_or_why_safe": "The contract uses explicit balance checks before subtraction, safe addition checks, access control modifiers, and no external calls with unbounded gas, so no exploitable unchecked call or DoS exists.",
+    "contract": "wild_safe_0476_0xb961339f6f7f3b020255d9281fdd3bf2eb9b4d1e.sol",
+    "claim": [
+      "UNCHECKED_CALL",
+      "DENIAL_OF_SERVICE"
+    ]
+  },
+  {
+    "verdict": "FALSE_POSITIVE",
+    "severity": "none",
+    "exploit_or_why_safe": "The contract uses explicit balance checks before subtraction and addition, preventing underflow/overflow, and follows standard ERC20 patterns without any exploitable arithmetic flaws.",
+    "contract": "wild_safe_0785_0x3f6a224f0a6350dc9ccfee200e21b011a37957b1.sol",
+    "claim": [
+      "ARITHMETIC"
+    ]
+  },
+  {
+    "verdict": "REAL_BUG",
+    "severity": "medium",
+    "exploit_or_why_safe": "The contract uses insecure block variables for randomness allowing miners or attackers to predict or manipulate the recipient, and unbounded growth of targets can cause DoS by running out of gas or storage.",
+    "contract": "wild_safe_0725_0x82d4fae5b529fd52e464bcf7d5d737d0fd313f37.sol",
+    "claim": [
+      "BAD_RANDOMNESS",
+      "DENIAL_OF_SERVICE"
+    ]
+  },
+  {
+    "verdict": "FALSE_POSITIVE",
+    "severity": "none",
+    "exploit_or_why_safe": "The contract uses require checks before balance updates, no unprotected low-level calls with unchecked return, and standard defensive patterns preventing reentrancy and DoS.",
+    "contract": "wild_safe_0346_0x27f8493696a224c40af66b745062c77e2b474671.sol",
+    "claim": [
+      "UNCHECKED_LOW_LEVEL_CALLS",
+      "DENIAL_OF_SERVICE"
+    ]
+  },
+  {
+    "verdict": "REAL_BUG",
+    "severity": "medium",
+    "exploit_or_why_safe": "The approve() function incorrectly requires balances[msg.sender] > tokens, preventing zero approvals and allowing approval only if the balance is strictly greater than tokens, which breaks ERC20 standard behavior and can cause denial of approval or unexpected failures.",
+    "contract": "wild_safe_0104_0xc3a007ee74b71fb09a1fd0296f643438e207df00.sol",
+    "claim": [
+      "INTEGER_OVERFLOW",
+      "APPROVE_LOGIC_FLAW"
+    ]
+  }
+]
