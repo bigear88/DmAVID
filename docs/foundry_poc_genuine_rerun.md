@@ -38,3 +38,10 @@ export OPENAI_API_KEY=...   # 見 env.sh
 python3 scripts/20_coordinator_autonomous.py --rounds 3 --no-early-stop --budget 50
 ```
 注意：管線具隨機性（temperature、資料洗牌、變異策略隨機選取），跨次執行 F1 與通過數會有波動。
+
+## 補充：Table 4-11（per-category）一併校正
+經查，論文 Table 4-11／圖4-7 並非獨立 per-type 實驗，而是「自主 run 的 per-category 切片」，與本次替換之 canonical 同源，故舊數字已 stale。已用 **新 genuine run** 之逐合約結果（）以相同方法重算（）。
+
+真實 per-category（R1→R3 F1）：arithmetic 0.9286→0.8889（−0.040）、access_control 1.0000→0.9412（−0.059）、unchecked_low_level_calls 0.9703→0.9903（+0.020）、bad_randomness 0.9333→0.9333（0）、time_manipulation 1.0000→1.0000（0）、none/safe FPR 0.19→0.19（0）。
+
+**誠實結論**：per-category 迭代效益為中性至輕微負向（與全資料集非單調觀察一致），與舊表「各類別普遍改善」相反。並加註：此 per-category「F1」僅計漏洞合約（precision≡1，實為 recall 轉換），無法反映偽陽性。論文 P456/P460/P463/P467、表4-11、圖4-7 均已據實更新。
