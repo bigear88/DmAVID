@@ -27,8 +27,8 @@ Stage 4: DmAVID 多代理迭代         → Teacher/Student/Red Team/Blue Team �
 | Slither（靜態基線） | 0.7459 | 61.6% | 94.4% | 84.0% |
 | LLM Base（無 RAG） | 0.7474 | 59.9% | 99.3% | 95.0% |
 | **LLM+RAG（官方基線）** | **0.9061** | **84.3%** | **97.9%** | **26.0%** |
-| **+Self-Verify（單通道 FINAL）** | **0.9121** | **85.4%** | **97.9%** | **24.0%** |
-| **DmAVID 迭代 Coordinator R3（ChromaDB，迭代式 FINAL）** | **0.9158** | **88.3%** | **95.1%** | **18.0%** |
+| **+Self-Verify（單通道 FINAL · 穩健最佳）** | **0.9121** | **85.4%** | **97.9%** | **24.0%** |
+| DmAVID 迭代 Coordinator R3（ChromaDB · 真實 PoC 把關） | 0.9128 | 87.7% | 95.1% | 19.0% |
 
 **EVMbench 真實審計泛化（39 漏洞 / 10 審計）**
 
@@ -39,7 +39,7 @@ Stage 4: DmAVID 多代理迭代         → Teacher/Student/Red Team/Blue Team �
 | **Smart Preprocess（FINAL）** | **64.10%** | **25 / 39** |
 | Post-cutoff 泛化（8 審計，2025–2026） | 58.82% | 10 / 17 |
 
-> 數字鎖定於 `CANONICAL_TRUTH.md`（唯一真實來源）。單通道管線最終為 +Self-Verify（F1=0.9121）；迭代式 Coordinator（autonomous，ChromaDB 知識回饋閉環，3 輪）以 **F1=0.9158** 超越之，為全系統最佳。
+> 數字鎖定於 `CANONICAL_STATE.md`（唯一真實來源）。**單通道管線穩健最佳為 +Self-Verify（F1=0.9121）**；迭代式 Coordinator（autonomous、ChromaDB 知識回饋閉環、真實 forge test PoC 把關、3 輪）三輪 F1 為 0.9164→0.9060→0.9128（**非單調**）。經 **multi-seed（42/7/123）+ placebo 對照**嚴格檢定，處理組 R3=0.9149±0.0109、placebo 組 R3=0.9201±0.0072（信賴帶重疊、placebo 平均略高）——**對抗式迭代於 SmartBugs 上無統計顯著之 F1 增益（增益落於測量雜訊內）**；其價值在於 FN 課程學習之過程品質與可解釋性，而非 F1 提升。詳見 `experiments/seed_placebo/` 與 `charts/fig_seed_placebo_errorbar.png`。
 
 ---
 
@@ -58,9 +58,9 @@ DmAVID/
 │   ├── postprocess_self_verify.py    # Stage 3: Self-Verify 後處理
 │   ├── 11_teacher_challenge.py       # Stage 4: Teacher Agent
 │   ├── 12_red_team_generate.py       # Stage 4: Red Team Agent
-│   ├── 13_foundry_validate.py        # Stage 4: Foundry 編譯驗證
+│   ├── 13b_foundry_poc.py            # Stage 4: Foundry 真實驗證 (solc 編譯 + forge test PoC + 自我修復)
 │   ├── 18_blue_team_defense.py       # Stage 4: Blue Team Agent
-│   ├── 19_coordinator_round2.py      # Stage 4: Coordinator 編排
+│   ├── 20_coordinator_autonomous.py  # Stage 4: Coordinator 自主編排 (canonical, --seed/--placebo/--gate)
 │   ├── 21_error_analysis.py          # 錯誤分析 + KB 更新
 │   ├── 22_evmbench_enhanced.py       # EVMbench 增強偵測
 │   ├── 23_traditional_ml_baseline.py # 傳統 ML 基線 (RF/LR/GB/SVM)
