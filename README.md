@@ -58,6 +58,7 @@ DmAVID/
 │   ├── postprocess_self_verify.py    # Stage 3: Self-Verify 後處理
 │   ├── 11_teacher_challenge.py       # Stage 4: Teacher Agent
 │   ├── 12_red_team_generate.py       # Stage 4: Red Team Agent
+│   ├── 13_foundry_validate.py        # (DEPRECATED) 假驗證 assertTrue(true)；僅 exp12~15 用過，已停用、執行即中止
 │   ├── 13b_foundry_poc.py            # Stage 4: Foundry 真實驗證 (solc 編譯 + forge test PoC + 自我修復)
 │   ├── 18_blue_team_defense.py       # Stage 4: Blue Team Agent
 │   ├── 20_coordinator_autonomous.py  # Stage 4: Coordinator 自主編排 (canonical, --seed/--placebo/--gate)
