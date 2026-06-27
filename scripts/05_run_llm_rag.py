@@ -12,7 +12,7 @@ from openai import OpenAI
 import sys; sys.path.insert(0, os.path.dirname(__file__))
 from _model_compat import token_param, MODEL as COMPAT_MODEL
 
-random.seed(42)
+random.seed(int(os.environ.get("DMAVID_SEED", "42")))
 BASE_DIR = "/home/curtis/DmAVID"
 DATASET_FILE = os.path.join(BASE_DIR, "data/dataset_1000.json")
 OUTPUT_FILE = os.path.join(BASE_DIR, "experiments/llm_rag/llm_rag_results.json")
@@ -422,7 +422,7 @@ def analyze_with_rag(code, max_retries=2, extra_context=""):
                     {"role": "system", "content": RAG_SYSTEM_PROMPT},
                     {"role": "user", "content": f"## RAG Knowledge Base Context:\n{rag_context}\n\n{extra_context}\n\n## Contract to Analyze:\n```solidity\n{code}\n```"}
                 ],
-                temperature=0.1, **token_param(1024), seed=42
+                temperature=0.1, **token_param(1024), seed=int(os.environ.get("DMAVID_SEED", "42"))
             )
             elapsed = time.time() - start
             content = resp.choices[0].message.content.strip()

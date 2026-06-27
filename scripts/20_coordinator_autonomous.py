@@ -21,6 +21,7 @@ import logging
 import argparse
 import subprocess
 import importlib.util
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from typing import Dict, List, Any, Optional, Tuple
 
@@ -376,8 +377,57 @@ def run_teacher_stage(teacher_mod, knowledge_base, num_per_type, cost, dry_run, 
     return challenges
 
 
+def _student_one(rag_mod, sample, idx):
+    """Per-contract Student work (used only by the parallel path)."""
+    code = ""
+    fp = sample.get("filepath", "")
+    if fp and os.path.exists(fp):
+        try:
+            code = open(fp, encoding="utf-8", errors="ignore").read()
+        except Exception:
+            pass
+    if not code.strip():
+        return None
+    gt  = sample.get("label") == "vulnerable" or sample.get("ground_truth") == "vulnerable"
+    cid = sample.get("id", sample.get("contract_id", f"s_{idx}"))
+    cat = sample.get("category", sample.get("vulnerability_type", "unknown"))
+    analysis = rag_mod.analyze_with_rag(code)
+    return {"contract_id": cid, "ground_truth_vulnerable": gt, "category": cat,
+            "predicted_vulnerable": analysis.get("predicted_vulnerable", False),
+            "confidence": analysis.get("confidence", 0.5),
+            "vulnerability_types": analysis.get("vulnerability_types", []),
+            "reasoning": analysis.get("reasoning", ""),
+            "filepath": fp,
+            "tokens_used": analysis.get("tokens_used", 0)}
+
+
+def _run_student_parallel(rag_mod, dataset, cost):
+    workers = int(os.environ.get("DMAVID_WORKERS", "12"))
+    logger.info(f"[STUDENT] parallel mode x{workers}")
+    slots = [None] * len(dataset)
+    with ThreadPoolExecutor(max_workers=workers) as ex:
+        futs = {ex.submit(_student_one, rag_mod, s, i): i for i, s in enumerate(dataset)}
+        done = 0
+        for f in as_completed(futs):
+            i = futs[f]
+            try:
+                slots[i] = f.result()
+            except Exception:
+                slots[i] = None
+            done += 1
+            if done % 50 == 0:
+                logger.info(f"[STUDENT|par] {done}/{len(dataset)}")
+    results = [r for r in slots if r]
+    for r in results:                      # cost tallied serially (CostTracker not thread-safe)
+        cost.add("student", r.get("tokens_used", 0))
+    logger.info(f"[STUDENT] Done: {len(results)} contracts (parallel x{workers})")
+    return results
+
+
 def run_student_stage(rag_mod, dataset, cost, dry_run):
     logger.info(f"[STUDENT] Evaluating {len(dataset)} contracts...")
+    if os.environ.get("DMAVID_PARALLEL") == "1" and not dry_run:
+        return _run_student_parallel(rag_mod, dataset, cost)
     results = []
     for idx, sample in enumerate(dataset):
         if not cost.under_budget():
@@ -528,8 +578,8 @@ def run_foundry_stage(variants, red_mod, cost, dry_run, round_num=0):
     return validated
 
 
-def run_blue_team_stage(blue_mod, validated, cost, dry_run):
-    logger.info("[BLUE TEAM] Synthesising defense patterns...")
+def run_blue_team_stage(blue_mod, validated, cost, dry_run, placebo=False):
+    logger.info("[BLUE TEAM] Synthesising defense patterns..." + (" [PLACEBO: KB write disabled]" if placebo else ""))
     compilable = [v for v in validated if v.get("compile_success")]
     if not compilable:
         return []
@@ -548,6 +598,11 @@ def run_blue_team_stage(blue_mod, validated, cost, dry_run):
             for e in entries:
                 cost.add("blue_team", e.get("tokens_used", 0))
             all_entries.extend(entries)
+    if placebo:
+        # PLACEBO control: synthesise patterns (identical cost/behaviour) but DO NOT
+        # write them to the KB or ChromaDB, so the Student never receives the feedback.
+        logger.info(f"[BLUE TEAM] PLACEBO — synthesised {len(all_entries)} patterns, NOT written to KB")
+        return all_entries
     if not dry_run and all_entries:
         blue_mod.update_knowledge_files(all_entries)
         n_chroma = _write_chroma(all_entries)
@@ -603,6 +658,116 @@ VALID_MITIGATION_KEYWORDS = [
 ]
 
 
+def _self_verify_one(r, conf_threshold):
+    """Per-contract Self-Verify work (parallel path). Returns (nr, category, tokens).
+    Mirrors the serial logic exactly; category in {skip, flipped, confirmed, uncertain}."""
+    nr = dict(r)
+    nr["verify_flipped"] = False
+    nr["sv_verdict"] = None
+    if not r.get("predicted_vulnerable"):
+        return nr, "skip", 0
+    code = ""
+    fp = r.get("filepath", "")
+    if fp and os.path.exists(fp):
+        try:
+            code = open(fp, encoding="utf-8", errors="ignore").read()
+        except Exception:
+            code = ""
+    code_short = code[:8000]
+    vuln_types = r.get("vulnerability_types", [])
+    reasoning  = r.get("reasoning", "")[:1500]
+    user_msg = (
+        f"The previous analysis flagged this contract as VULNERABLE.\n"
+        f"Claimed vulnerability types: {', '.join(vuln_types) if vuln_types else 'unspecified'}\n"
+        f"Previous reasoning: \"{reasoning}\"\n\n"
+        f"## Contract Code:\n```solidity\n{code_short}\n```\n\n"
+        f"Verify: is this genuinely exploitable, definitively mitigated, or uncertain?"
+    )
+    try:
+        resp = client.chat.completions.create(
+            model=MODEL, temperature=0.1, seed=int(os.environ.get("DMAVID_SEED", "42")),
+            messages=[{"role": "system", "content": SELF_VERIFY_SYSTEM},
+                      {"role": "user", "content": user_msg}],
+            **token_param(800))
+        content = resp.choices[0].message.content.strip()
+        tok = resp.usage.total_tokens if resp.usage else 0
+        jm = re.search(r"\{[\s\S]*\}", content)
+        parsed = json.loads(jm.group()) if jm else {"verdict": "UNCERTAIN"}
+        verdict    = parsed.get("verdict", "UNCERTAIN").upper()
+        mitigation = parsed.get("mitigation_found")
+        nr["sv_verdict"]    = verdict
+        nr["sv_reasoning"]  = parsed.get("reasoning", "")
+        nr["sv_mitigation"] = mitigation
+        if verdict == "SAFE":
+            has_mitigation = mitigation not in (None, "null", "")
+            code_lower = code_short.lower()
+            mitigation_in_code = False
+            if has_mitigation:
+                for kw in VALID_MITIGATION_KEYWORDS:
+                    if kw in code_lower:
+                        mitigation_in_code = True
+                        break
+                if not mitigation_in_code and len(str(mitigation)) > 10:
+                    for ident in re.findall(r'[a-zA-Z_][a-zA-Z0-9_]{3,}', str(mitigation)):
+                        il = ident.lower()
+                        if il in code_lower and il not in (
+                            "function", "contract", "require", "return", "public",
+                            "external", "internal", "private", "memory", "storage",
+                            "address", "uint256", "bool", "true", "false", "null",
+                            "vulnerable", "safe", "exploit", "attack", "this",
+                            "that", "with", "from", "call", "value", "send"):
+                            mitigation_in_code = True
+                            break
+            is_low_conf = float(r.get("confidence", 0.5)) < conf_threshold
+            if has_mitigation and mitigation_in_code:
+                nr["predicted_vulnerable"] = False
+                nr["verify_flipped"] = True
+                return nr, "flipped", tok
+            elif has_mitigation and is_low_conf:
+                nr["predicted_vulnerable"] = False
+                nr["verify_flipped"] = True
+                nr["sv_verdict"] = "SAFE (low-conf override)"
+                return nr, "flipped", tok
+            else:
+                nr["sv_verdict"] = "UNCERTAIN (mitigation not verified)"
+                return nr, "uncertain", tok
+        elif verdict == "VULNERABLE":
+            return nr, "confirmed", tok
+        else:
+            return nr, "uncertain", tok
+    except Exception as e:
+        nr["sv_verdict"] = "UNCERTAIN (error)"
+        nr["verify_reason"] = f"error: {e}"
+        return nr, "uncertain", 0
+
+
+def _run_self_verify_parallel(student_results, cost, conf_threshold):
+    workers = int(os.environ.get("DMAVID_WORKERS", "12"))
+    logger.info(f"[SELF-VERIFY] parallel mode x{workers}")
+    slots = [None] * len(student_results)
+    with ThreadPoolExecutor(max_workers=workers) as ex:
+        futs = {ex.submit(_self_verify_one, r, conf_threshold): i
+                for i, r in enumerate(student_results)}
+        for f in as_completed(futs):
+            i = futs[f]
+            try:
+                slots[i] = f.result()
+            except Exception as e:
+                nr = dict(student_results[i]); nr["verify_flipped"] = False
+                nr["sv_verdict"] = "UNCERTAIN (error)"; nr["verify_reason"] = f"error: {e}"
+                slots[i] = (nr, "uncertain", 0)
+    verified, flipped, confirmed, uncertain = [], 0, 0, 0
+    for nr, cat, tok in slots:
+        cost.add("self_verify", tok)
+        if cat == "flipped":   flipped += 1
+        elif cat == "confirmed": confirmed += 1
+        elif cat == "uncertain": uncertain += 1
+        verified.append(nr)
+    logger.info(f"[SELF-VERIFY] confirmed={confirmed} flipped_SAFE={flipped} "
+                f"uncertain={uncertain} (parallel x{workers})")
+    return verified
+
+
 def run_self_verify_stage(student_results, cost, dry_run, conf_threshold=0.90):
     """Three-class, conf-agnostic Self-Verify.
 
@@ -617,6 +782,8 @@ def run_self_verify_stage(student_results, cost, dry_run, conf_threshold=0.90):
     when a SAFE mitigation is claimed but cannot be located in the code.
     """
     logger.info(f"[SELF-VERIFY] three-class conf-agnostic (low-conf override < {conf_threshold:.2f})")
+    if os.environ.get("DMAVID_PARALLEL") == "1" and not dry_run:
+        return _run_self_verify_parallel(student_results, cost, conf_threshold)
     verified, flipped, confirmed, uncertain = [], 0, 0, 0
     for r in student_results:
         nr = dict(r)
@@ -648,7 +815,7 @@ def run_self_verify_stage(student_results, cost, dry_run, conf_threshold=0.90):
         )
         try:
             resp = client.chat.completions.create(
-                model=MODEL, temperature=0.1, seed=42,
+                model=MODEL, temperature=0.1, seed=int(os.environ.get("DMAVID_SEED", "42")),
                 messages=[{"role": "system", "content": SELF_VERIFY_SYSTEM},
                           {"role": "user", "content": user_msg}],
                 **token_param(800))
@@ -713,6 +880,7 @@ def run_self_verify_stage(student_results, cost, dry_run, conf_threshold=0.90):
 
 # ── Main ──────────────────────────────────────────────────────────────────────
 def main():
+    global OUTPUT_DIR
     parser = argparse.ArgumentParser(description="DmAVID Autonomous Coordinator")
     parser.add_argument("--rounds",              type=int,   default=3)
     parser.add_argument("--budget",              type=float, default=20.0)
@@ -721,12 +889,26 @@ def main():
     parser.add_argument("--challenges-per-type", type=int,   default=1)
     parser.add_argument("--no-early-stop",       action="store_true",
                         help="Disable the Coordinator's autonomous early-stop; always run all rounds")
+    parser.add_argument("--seed",                type=int,   default=int(os.environ.get("DMAVID_SEED", "42")),
+                        help="Random + LLM sampling seed (also set via env DMAVID_SEED)")
+    parser.add_argument("--placebo",             action="store_true",
+                        help="Placebo control: run the full loop but never write Blue Team patches to the KB")
+    parser.add_argument("--gate",                choices=["poc", "compile"], default="poc",
+                        help="Variant gate feeding Blue Team: poc=dual(compile+PoC), compile=compile-only")
+    parser.add_argument("--output-dir",          type=str,   default=OUTPUT_DIR,
+                        help="Per-run output directory (round files + shared state)")
     args = parser.parse_args()
+
+    # Seed must be in env BEFORE sub-modules import (05's module-level random.seed reads it)
+    os.environ["DMAVID_SEED"] = str(args.seed)
+    random.seed(args.seed)
+    OUTPUT_DIR = args.output_dir
 
     logger.info("=" * 70)
     logger.info("DmAVID Autonomous Coordinator")
     logger.info(f"Timestamp: {datetime.now().isoformat()}")
     logger.info(f"Model: {MODEL}  Rounds: {args.rounds}  Budget: ${args.budget:.2f}  Dry-run: {args.dry_run}")
+    logger.info(f"Seed: {args.seed}  Gate: {args.gate}  Placebo: {args.placebo}  Output: {OUTPUT_DIR}")
     logger.info("=" * 70)
 
     os.makedirs(OUTPUT_DIR, exist_ok=True)
@@ -836,9 +1018,14 @@ def main():
         logger.info(f"[FOUNDRY] dual-validation: {compiled}/{len(validated)} compiled, "
                     f"{poc_passed}/{len(validated)} PoC-exploitable")
 
-        # (e) Blue Team — only DUAL-validated variants (compile + PoC) feed synthesis
-        dual = [v for v in validated if v.get("compile_success") and v.get("poc_passed")]
-        defenses = run_blue_team_stage(blue_mod, dual, cost, args.dry_run)
+        # (e) Blue Team — gate variants feeding synthesis.
+        #   --gate poc     : dual validation (compile + forge-test PoC)  [genuine canonical]
+        #   --gate compile : compile-only (PoC decoupled as a separate generalization exp)
+        if args.gate == "poc":
+            gated = [v for v in validated if v.get("compile_success") and v.get("poc_passed")]
+        else:
+            gated = [v for v in validated if v.get("compile_success")]
+        defenses = run_blue_team_stage(blue_mod, gated, cost, args.dry_run, placebo=args.placebo)
         round_data["blue_team_patterns"] = len(defenses)
         state.add_learned_defenses([d.get("category","") for d in defenses])
 
