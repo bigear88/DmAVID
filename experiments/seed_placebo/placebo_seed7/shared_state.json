@@ -1,0 +1,88 @@
+{
+  "started_at": "2026-06-27T13:51:25.487857",
+  "updated_at": "2026-06-27T15:04:48.131096",
+  "fn_patterns": {
+    "unchecked_low_level_calls": 12,
+    "arithmetic": 9,
+    "access_control": 6,
+    "bad_randomness": 3,
+    "time_manipulation": 4
+  },
+  "learned_defenses": [
+    "arithmetic",
+    "unchecked_low_level_calls",
+    "access_control"
+  ],
+  "coordinator_decisions": [
+    {
+      "round": 1,
+      "stage": "round_strategy",
+      "decision": {
+        "focus_vuln_types": [
+          "reentrancy",
+          "integer_overflow",
+          "access_control"
+        ],
+        "challenges_per_type": 1,
+        "sv_threshold": 0.9,
+        "reasoning": "Starting with common critical vulnerabilities to establish baseline detection and defense learning."
+      },
+      "reasoning": "Starting with common critical vulnerabilities to establish baseline detection and defense learning.",
+      "ts": "2026-06-27T13:51:28.007718"
+    },
+    {
+      "round": 2,
+      "stage": "round_strategy",
+      "decision": {
+        "focus_vuln_types": [
+          "access_control",
+          "time_manipulation",
+          "reentrancy",
+          "denial_of_service"
+        ],
+        "challenges_per_type": 2,
+        "sv_threshold": 0.92,
+        "reasoning": "Focus on top FN types not yet learned plus related high-risk vulnerabilities with moderate challenge count to improve recall while maintaining precision."
+      },
+      "reasoning": "Focus on top FN types not yet learned plus related high-risk vulnerabilities with moderate challenge count to improve recall while maintaining precision.",
+      "ts": "2026-06-27T14:17:26.660082"
+    },
+    {
+      "round": 3,
+      "stage": "round_strategy",
+      "decision": {
+        "focus_vuln_types": [
+          "access_control",
+          "time_manipulation",
+          "unchecked_call",
+          "denial_of_service"
+        ],
+        "challenges_per_type": 2,
+        "sv_threshold": 0.92,
+        "reasoning": "Focus on top FN types not yet learned and related vulnerabilities with a moderate threshold and two challenges per type to improve recall without excessive FP."
+      },
+      "reasoning": "Focus on top FN types not yet learned and related vulnerabilities with a moderate threshold and two challenges per type to improve recall without excessive FP.",
+      "ts": "2026-06-27T14:41:01.237637"
+    }
+  ],
+  "round_summaries": [
+    {
+      "round": 1,
+      "f1_post": 0.9135,
+      "fn_count": 11,
+      "patterns_added": 3
+    },
+    {
+      "round": 2,
+      "f1_post": 0.9129,
+      "fn_count": 12,
+      "patterns_added": 3
+    },
+    {
+      "round": 3,
+      "f1_post": 0.9135,
+      "fn_count": 11,
+      "patterns_added": 4
+    }
+  ]
+}

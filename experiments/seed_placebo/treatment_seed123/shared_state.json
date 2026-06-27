@@ -1,0 +1,93 @@
+{
+  "started_at": "2026-06-27T15:04:49.341902",
+  "updated_at": "2026-06-27T16:21:41.110543",
+  "fn_patterns": {
+    "arithmetic": 7,
+    "unchecked_low_level_calls": 8,
+    "bad_randomness": 4,
+    "access_control": 7,
+    "time_manipulation": 3,
+    "denial_of_service": 1
+  },
+  "learned_defenses": [
+    "arithmetic",
+    "unchecked_low_level_calls",
+    "bad_randomness",
+    "denial_of_service",
+    "access_control",
+    "time_manipulation"
+  ],
+  "coordinator_decisions": [
+    {
+      "round": 1,
+      "stage": "round_strategy",
+      "decision": {
+        "focus_vuln_types": [
+          "reentrancy",
+          "integer_overflow",
+          "access_control"
+        ],
+        "challenges_per_type": 1,
+        "sv_threshold": 0.9,
+        "reasoning": "Starting with common critical vulnerabilities to establish baseline detection with moderate confidence threshold."
+      },
+      "reasoning": "Starting with common critical vulnerabilities to establish baseline detection with moderate confidence threshold.",
+      "ts": "2026-06-27T15:04:50.761314"
+    },
+    {
+      "round": 2,
+      "stage": "round_strategy",
+      "decision": {
+        "focus_vuln_types": [
+          "access_control",
+          "time_manipulation",
+          "reentrancy",
+          "unchecked_call",
+          "denial_of_service"
+        ],
+        "challenges_per_type": 2,
+        "sv_threshold": 0.92,
+        "reasoning": "Focus on top FN types not yet learned plus related high-risk types with a moderate sv_threshold to balance FP reduction and FN detection given sufficient budget."
+      },
+      "reasoning": "Focus on top FN types not yet learned plus related high-risk types with a moderate sv_threshold to balance FP reduction and FN detection given sufficient budget.",
+      "ts": "2026-06-27T15:29:49.767750"
+    },
+    {
+      "round": 3,
+      "stage": "round_strategy",
+      "decision": {
+        "focus_vuln_types": [
+          "access_control",
+          "time_manipulation",
+          "reentrancy",
+          "unchecked_call"
+        ],
+        "challenges_per_type": 2,
+        "sv_threshold": 0.9,
+        "reasoning": "Focus on high FN types not yet learned and related vulnerabilities with moderate challenge intensity to improve recall without excessive false positives."
+      },
+      "reasoning": "Focus on high FN types not yet learned and related vulnerabilities with moderate challenge intensity to improve recall without excessive false positives.",
+      "ts": "2026-06-27T15:56:31.692467"
+    }
+  ],
+  "round_summaries": [
+    {
+      "round": 1,
+      "f1_post": 0.9236,
+      "fn_count": 10,
+      "patterns_added": 3
+    },
+    {
+      "round": 2,
+      "f1_post": 0.9199,
+      "fn_count": 11,
+      "patterns_added": 3
+    },
+    {
+      "round": 3,
+      "f1_post": 0.9147,
+      "fn_count": 9,
+      "patterns_added": 5
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+predicted-vulnerable to re-verify: 155 (TP=136, FP=19)
+  20/155 done (tp_flips=6, fp_flips=2)
+  40/155 done (tp_flips=10, fp_flips=3)
+  60/155 done (tp_flips=12, fp_flips=4)
+  80/155 done (tp_flips=13, fp_flips=6)
+  100/155 done (tp_flips=16, fp_flips=6)
+  120/155 done (tp_flips=20, fp_flips=8)
+  140/155 done (tp_flips=27, fp_flips=10)
+
+================ NET EFFECT ================
+TP wrongly acquitted (new FN): 31/136  (22.8% false-acquit on real vulns)
+FP correctly acquitted (removed): 11/19
+BEFORE  R3: tp=136 fp=19 tn=81 fn=7 | F1=0.9128 P=0.8774 R=0.9510 FPR=0.190
+AFTER  v2:  tp=105 fp=8 tn=92 fn=38 | F1=0.8203 P=0.9292 R=0.7343 FPR=0.080
+ΔF1 = -0.0924
+saved safepass_fullset.json

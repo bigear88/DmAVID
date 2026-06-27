@@ -1,0 +1,86 @@
+{
+  "started_at": "2026-06-27T11:26:14.778730",
+  "updated_at": "2026-06-27T12:41:18.637516",
+  "fn_patterns": {
+    "unchecked_low_level_calls": 10,
+    "arithmetic": 7,
+    "access_control": 5,
+    "bad_randomness": 3,
+    "time_manipulation": 3
+  },
+  "learned_defenses": [
+    "access_control",
+    "arithmetic",
+    "unchecked_low_level_calls"
+  ],
+  "coordinator_decisions": [
+    {
+      "round": 1,
+      "stage": "round_strategy",
+      "decision": {
+        "focus_vuln_types": [
+          "reentrancy",
+          "integer_overflow",
+          "access_control"
+        ],
+        "challenges_per_type": 1,
+        "sv_threshold": 0.9,
+        "reasoning": "Starting with common critical vulnerabilities to establish baseline detection with moderate confidence."
+      },
+      "reasoning": "Starting with common critical vulnerabilities to establish baseline detection with moderate confidence.",
+      "ts": "2026-06-27T11:26:16.340238"
+    },
+    {
+      "round": 2,
+      "stage": "round_strategy",
+      "decision": {
+        "focus_vuln_types": [
+          "unchecked_call",
+          "time_manipulation",
+          "access_control"
+        ],
+        "challenges_per_type": 2,
+        "sv_threshold": 0.92,
+        "reasoning": "Focus on high FN types including unchecked calls and time manipulation with moderate sv_threshold to balance FP reduction and FN recovery."
+      },
+      "reasoning": "Focus on high FN types including unchecked calls and time manipulation with moderate sv_threshold to balance FP reduction and FN recovery.",
+      "ts": "2026-06-27T11:52:58.192833"
+    },
+    {
+      "round": 3,
+      "stage": "round_strategy",
+      "decision": {
+        "focus_vuln_types": [
+          "unchecked_call",
+          "time_manipulation",
+          "access_control"
+        ],
+        "challenges_per_type": 2,
+        "sv_threshold": 0.92,
+        "reasoning": "Focus on top false negative types including some already learned to reinforce detection, using 2 challenges per type given sufficient budget and a slightly higher threshold to balance FP and FN."
+      },
+      "reasoning": "Focus on top false negative types including some already learned to reinforce detection, using 2 challenges per type given sufficient budget and a slightly higher threshold to balance FP and FN.",
+      "ts": "2026-06-27T12:17:23.046319"
+    }
+  ],
+  "round_summaries": [
+    {
+      "round": 1,
+      "f1_post": 0.9072,
+      "fn_count": 11,
+      "patterns_added": 4
+    },
+    {
+      "round": 2,
+      "f1_post": 0.922,
+      "fn_count": 7,
+      "patterns_added": 1
+    },
+    {
+      "round": 3,
+      "f1_post": 0.9017,
+      "fn_count": 10,
+      "patterns_added": 1
+    }
+  ]
+}

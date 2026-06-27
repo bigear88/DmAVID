@@ -1530,14 +1530,14 @@
     },
     "bt_variant_0_0": {
       "vulnerability_type": "arithmetic",
-      "pattern": "Unchecked arithmetic operations (especially subtraction) without input validation combined with dead code insertion to obfuscate vulnerability presence",
-      "blue_team_defense": "Always validate arithmetic operands before unchecked operations, especially for subtraction. Avoid unchecked arithmetic unless safety is guaranteed. Use Solidity 0.8.x built-in overflow/underflow checks or explicit require statements.",
+      "pattern": "Unchecked arithmetic operations on state variables combined with dead code insertion that obscures the vulnerability but does not affect the exploitability",
+      "blue_team_defense": "Enforce input validation before arithmetic operations; avoid unchecked blocks for critical state variables; use Solidity 0.8+ built-in overflow checks or SafeMath libraries; ignore or filter out dead code that does not affect state but may obfuscate analysis.",
       "source": "blue_team_synthesis"
     },
     "bt_variant_1_1": {
       "vulnerability_type": "arithmetic",
-      "pattern": "Unchecked arithmetic operations on user balances following conditional checks that can be bypassed or invalidated, especially in flattened or obfuscated control flows, leading to underflow vulnerabilities.",
-      "blue_team_defense": "Avoid unchecked arithmetic on critical state variables; use Solidity 0.8+ built-in checked arithmetic or SafeMath libraries; do not separate balance checks and mutations across complex control flows; minimize control flow flattening that obscures logic.",
+      "pattern": "Unchecked arithmetic operations on unsigned integers that can cause underflow or overflow due to missing input validation or bounds checking",
+      "blue_team_defense": "Avoid unchecked arithmetic unless absolutely necessary and safe; add explicit input validation to prevent underflow; rely on Solidity's built-in checked arithmetic; use static analysis tools to detect unchecked arithmetic blocks involving user inputs.",
       "source": "blue_team_synthesis"
     },
     "bt_variant_2_2": {
@@ -1547,15 +1547,15 @@
       "source": "blue_team_synthesis"
     },
     "bt_variant_0_3": {
-      "vulnerability_type": "arithmetic",
-      "pattern": "Unsigned integer arithmetic involving user inputs performed without boundary checks, especially subtraction that can underflow, often hidden inside complex or flattened control flow.",
-      "blue_team_defense": "Add explicit boundary checks before arithmetic operations involving user inputs, or use SafeMath libraries to prevent underflow/overflow. Avoid relying on control-flow flattening that obscures straightforward checks.",
+      "vulnerability_type": "unchecked_low_level_calls",
+      "pattern": "Low-level calls (call, delegatecall, staticcall) performed without checking the returned success boolean, leading to unchecked failure and potential vulnerabilities.",
+      "blue_team_defense": "Always check the boolean return value of low-level calls and handle failures explicitly, preferably using require or revert to prevent silent failures.",
       "source": "blue_team_synthesis"
     },
     "bt_variant_0_4": {
-      "vulnerability_type": "arithmetic",
-      "pattern": "Unchecked arithmetic operations on unsigned integers leading to overflow or underflow vulnerabilities in smart contracts, mitigated by using safe arithmetic libraries with embedded validation.",
-      "blue_team_defense": "Integrate SafeMath or equivalent checked arithmetic libraries for all uint256 arithmetic operations, especially for token balance and supply manipulations. Avoid direct arithmetic on unsigned integers without validation. Conduct thorough code reviews and automated static analysis to detect unchecked arithmetic.",
+      "vulnerability_type": "time_manipulation",
+      "pattern": "Smart contracts performing critical logic decisions based on direct comparisons or arithmetic involving block.timestamp, especially against fixed timestamps, are vulnerable to miner-controlled time manipulation attacks.",
+      "blue_team_defense": "Avoid using block.timestamp for critical time-dependent logic; if unavoidable, combine with additional checks or use trusted external time sources; implement sanity checks on timestamp deltas; monitor for suspicious timestamp manipulations",
       "source": "blue_team_synthesis"
     },
     "bt_variant_0_5": {
@@ -1565,21 +1565,21 @@
       "source": "blue_team_synthesis"
     },
     "bt_variant_0_2": {
-      "vulnerability_type": "unchecked_low_level_calls",
-      "pattern": "Low-level calls to external addresses performed without checking the returned success status, leading to unchecked failures and potential vulnerabilities.",
-      "blue_team_defense": "Always check the return value of low-level calls (call, delegatecall, staticcall) and handle failures explicitly using require or revert.",
+      "vulnerability_type": "access_control",
+      "pattern": "Contracts using tx.origin for authorization checks combined with dead code insertion to obfuscate access control vulnerabilities",
+      "blue_team_defense": "Avoid using tx.origin for access control; always use msg.sender. Remove or ignore dead code that does not affect logic but may obfuscate vulnerabilities. Use static analysis tools that detect tx.origin usage in access control.",
       "source": "blue_team_synthesis"
     },
     "bt_variant_0_1": {
-      "vulnerability_type": "time_manipulation",
-      "pattern": "Contracts performing critical logic based on block.timestamp comparisons to fixed timestamps, potentially obfuscated by dead code insertions to evade detection.",
-      "blue_team_defense": "Avoid using block.timestamp for critical time checks; prefer block.number-based timing or external trusted time oracles; implement sanity checks and limit miner influence on time-dependent logic.",
+      "vulnerability_type": "denial_of_service",
+      "pattern": "Unbounded dynamic array growth via loops causing gas exhaustion and denial of service",
+      "blue_team_defense": "Enforce maximum array length limits; add require checks to prevent excessive growth; use pull-over-push patterns or batching; avoid loops that push large numbers of elements in one call",
       "source": "blue_team_synthesis"
     },
     "bt_variant_1_2": {
-      "vulnerability_type": "unchecked_low_level_calls",
-      "pattern": "Low-level external calls in Solidity that do not verify the returned success boolean, leading to unchecked failures and potential exploitation",
-      "blue_team_defense": "Always check the return value of low-level calls and revert on failure. Prefer using Solidity’s built-in function calls or safe wrappers that handle failure cases. Implement thorough testing and static analysis to detect unchecked calls.",
+      "vulnerability_type": "arithmetic",
+      "pattern": "Presence of unchecked arithmetic operations on user-controlled inputs combined with inserted dead code and always-true require statements intended to obfuscate the vulnerability",
+      "blue_team_defense": "Audit for unchecked arithmetic on user inputs, ignore dead code branches that do not affect state, and enforce use of checked arithmetic or explicit overflow/underflow checks on critical operations",
       "source": "blue_team_synthesis"
     },
     "bt_variant_2_3": {
@@ -1613,9 +1613,9 @@
       "source": "blue_team_synthesis"
     },
     "bt_variant_1_3": {
-      "vulnerability_type": "unchecked_low_level_calls",
-      "pattern": "Detect low-level calls to external addresses where the returned boolean success indicator is not checked or handled, leading to unchecked call failures.",
-      "blue_team_defense": "Always check the return value of low-level calls and handle failure cases explicitly, preferably using require/assert to revert on failure. Avoid using low-level calls unless necessary and prefer interface calls or Solidity function calls.",
+      "vulnerability_type": "access_control",
+      "pattern": "Functions that modify critical contract state without explicit access control checks, even if control flow is obfuscated, represent high-risk access control vulnerabilities",
+      "blue_team_defense": "Implement strict access control modifiers or require statements on all state-mutating functions; avoid relying on obfuscated control flow to hide missing authorization; use standard patterns like Ownable or AccessControl",
       "source": "blue_team_synthesis"
     },
     "bt_variant_2_4": {

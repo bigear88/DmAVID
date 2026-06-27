@@ -1,0 +1,90 @@
+{
+  "started_at": "2026-06-27T08:49:06.560782",
+  "updated_at": "2026-06-27T10:06:36.459561",
+  "fn_patterns": {
+    "arithmetic": 8,
+    "bad_randomness": 3,
+    "access_control": 5,
+    "unchecked_low_level_calls": 7,
+    "time_manipulation": 2,
+    "short_addresses": 1
+  },
+  "learned_defenses": [
+    "arithmetic",
+    "unchecked_low_level_calls",
+    "time_manipulation",
+    "short_addresses",
+    "access_control"
+  ],
+  "coordinator_decisions": [
+    {
+      "round": 1,
+      "stage": "round_strategy",
+      "decision": {
+        "focus_vuln_types": [
+          "reentrancy",
+          "integer_overflow",
+          "access_control"
+        ],
+        "challenges_per_type": 1,
+        "sv_threshold": 0.9,
+        "reasoning": "Starting with common critical vulnerabilities to establish baseline detection without overspending budget."
+      },
+      "reasoning": "Starting with common critical vulnerabilities to establish baseline detection without overspending budget.",
+      "ts": "2026-06-27T08:49:08.935755"
+    },
+    {
+      "round": 2,
+      "stage": "round_strategy",
+      "decision": {
+        "focus_vuln_types": [
+          "access_control",
+          "time_manipulation",
+          "reentrancy",
+          "unchecked_call"
+        ],
+        "challenges_per_type": 2,
+        "sv_threshold": 0.92,
+        "reasoning": "Focus on high FN types not yet learned and related vulnerabilities with a moderate sv_threshold to balance FP reduction and detection sensitivity."
+      },
+      "reasoning": "Focus on high FN types not yet learned and related vulnerabilities with a moderate sv_threshold to balance FP reduction and detection sensitivity.",
+      "ts": "2026-06-27T09:13:58.993357"
+    },
+    {
+      "round": 3,
+      "stage": "round_strategy",
+      "decision": {
+        "focus_vuln_types": [
+          "unchecked_call",
+          "access_control",
+          "time_manipulation"
+        ],
+        "challenges_per_type": 2,
+        "sv_threshold": 0.92,
+        "reasoning": "Focusing on high FN types including learned defenses with a moderate threshold and two challenges per type to improve recall while managing budget."
+      },
+      "reasoning": "Focusing on high FN types including learned defenses with a moderate threshold and two challenges per type to improve recall while managing budget.",
+      "ts": "2026-06-27T09:39:51.304778"
+    }
+  ],
+  "round_summaries": [
+    {
+      "round": 1,
+      "f1_post": 0.9231,
+      "fn_count": 11,
+      "patterns_added": 3
+    },
+    {
+      "round": 2,
+      "f1_post": 0.9122,
+      "fn_count": 8,
+      "patterns_added": 3
+    },
+    {
+      "round": 3,
+      "f1_post": 0.9283,
+      "fn_count": 7,
+      "patterns_added": 3
+    }
+  ]
+}

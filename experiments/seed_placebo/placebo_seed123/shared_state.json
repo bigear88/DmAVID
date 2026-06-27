@@ -1,0 +1,84 @@
+{
+  "started_at": "2026-06-27T16:21:42.038205",
+  "updated_at": "2026-06-27T17:29:53.887538",
+  "fn_patterns": {
+    "unchecked_low_level_calls": 11,
+    "arithmetic": 10,
+    "bad_randomness": 3,
+    "access_control": 6,
+    "time_manipulation": 4
+  },
+  "learned_defenses": [
+    "unchecked_low_level_calls",
+    "arithmetic",
+    "time_manipulation"
+  ],
+  "coordinator_decisions": [
+    {
+      "round": 1,
+      "stage": "round_strategy",
+      "decision": {
+        "focus_vuln_types": [
+          "reentrancy",
+          "integer_overflow",
+          "access_control"
+        ],
+        "challenges_per_type": 1,
+        "sv_threshold": 0.9,
+        "reasoning": "Starting with common critical vulnerabilities to establish baseline detection with moderate confidence threshold."
+      },
+      "reasoning": "Starting with common critical vulnerabilities to establish baseline detection with moderate confidence threshold.",
+      "ts": "2026-06-27T16:21:43.667500"
+    },
+    {
+      "round": 2,
+      "stage": "round_strategy",
+      "decision": {
+        "focus_vuln_types": [
+          "access_control",
+          "time_manipulation"
+        ],
+        "challenges_per_type": 2,
+        "sv_threshold": 0.92,
+        "reasoning": "Focus on high FN types not yet fully learned with moderate sv_threshold to balance FP reduction and FN improvement."
+      },
+      "reasoning": "Focus on high FN types not yet fully learned with moderate sv_threshold to balance FP reduction and FN improvement.",
+      "ts": "2026-06-27T16:43:20.259816"
+    },
+    {
+      "round": 3,
+      "stage": "round_strategy",
+      "decision": {
+        "focus_vuln_types": [
+          "access_control",
+          "time_manipulation"
+        ],
+        "challenges_per_type": 2,
+        "sv_threshold": 0.92,
+        "reasoning": "Focus on high FN types not fully learned yet with moderate sv_threshold and 2 challenges per type to improve recall without excessive FP increase."
+      },
+      "reasoning": "Focus on high FN types not fully learned yet with moderate sv_threshold and 2 challenges per type to improve recall without excessive FP increase.",
+      "ts": "2026-06-27T17:07:41.667398"
+    }
+  ],
+  "round_summaries": [
+    {
+      "round": 1,
+      "f1_post": 0.9193,
+      "fn_count": 12,
+      "patterns_added": 5
+    },
+    {
+      "round": 2,
+      "f1_post": 0.9263,
+      "fn_count": 11,
+      "patterns_added": 6
+    },
+    {
+      "round": 3,
+      "f1_post": 0.9167,
+      "fn_count": 11,
+      "patterns_added": 3
+    }
+  ]
+}
