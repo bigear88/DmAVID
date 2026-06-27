@@ -77,6 +77,21 @@
 - 腳本：`scripts/aggregate_seed_placebo.py`、`scripts/plot_seed_placebo.py`、`run_seed_placebo.sh`
 - 機制（FN 學習軌跡 treatment_seed42 R1→R3）：11 漏報學會 7，但新增 5 FP、弄丟 3 → 蹺蹺板抵銷（`scripts/trace_fn_learning.py`）。
 
-## 7. 仍待辦
+## 7. EVMbench 泛化（兩段乾淨軌跡）— 2026-06-27 定稿
+
+論文 §4.3「六、EVMbench 基準線偵測」與「九、智能預處理」已改為**乾淨兩配置**（移除洩漏的 Enhanced）。
+
+| 配置 | 偵測率 | Token | 腳本 / 來源 |
+|---|---|---|---|
+| LLM+RAG（detect-only） | **3/39 = 7.69%** | 124,812 | `09_run_evmbench_detect.py` / `evmbench/evmbench_detect_results.json` |
+| RAG + Smart Preprocess（FINAL） | **25/39 = 64.10%** | 62,858 | `30_evmbench_smart_preprocess.py` / `evmbench_smart/smart_preprocess_results.json` |
+
+- **Smart Preprocess 真實技術**＝擷取全部介面定義（函式簽章/事件/修飾子）＋安全關鍵模組深度分析（存取控制/資金流/外部呼叫）＋匯入/繼承關係摘要，**取代 60K 字元粗暴截斷**。**不是**「合約展平/相依性注入」。偵測 prompt 只放 RAG KB + 預處理碼，**不含 gold → 無洩漏** ✅。
+- **❌ 已移除：Enhanced（hint/gold-injected）30.77%（12/39, token 95,377）**＝`22_evmbench_enhanced.py` 的 `targeted_search(gold_vuln,...)` 把 **gold 漏洞餵給 LLM**（leakage），非 RAG、非真實 hint 增強。論文/HTML/圖 4-13 皆已剔除。
+- **時序分層（表 4-16/圖 4-13）**：pre-cutoff SmartBugs F1 0.9121 → EVMbench 2024 邊界（smart preprocess）64.10% → post-cutoff 2025+ 58.82%（10/17），平緩衰退 −5.28pp，無「矛盾」。圖 4-13 已重畫（`scripts/regen_fig413.py`，英文標籤，已內嵌 docx image23.png）。舊圖誤用 0.3077→0.1176，已棄。
+- **真正 hint-enhanced（讀 EVMbench `*_hints.md` 逐級注入）= 從未跑過**；若未來要做漸進式增強軸需另跑。
+
+## 8. 仍待辦
 - [ ] 路徑 B：把迭代搬到有 headroom 的難集（EVMbench/post-cutoff）驗證 held-out 類推
 - [ ] （選）Student 評估端 temperature 0.1→0 進一步降噪
+- [ ] （選）真正的 hint-enhanced 漸進式增強實驗（讀 `*_hints.md`，名實相符、非洩漏）
