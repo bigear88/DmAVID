@@ -43,7 +43,8 @@ for i, c in enumerate(cats):
 
 ax.set_ylabel("Per-category F1 (recall-based; safe contracts excluded)")
 ax.set_xlabel("Iteration round")
-ax.set_ylim(0.85, 1.03)
+ax.set_ylim(0.83, 1.08)
+ax.set_yticks([0.85, 0.90, 0.95, 1.00])
 ax.set_title("Per-category F1 across adversarial iteration rounds\n"
              "(canonical compile-gated run; monotonic overall F1 0.9103->0.9153->0.9158)",
              fontsize=12)
