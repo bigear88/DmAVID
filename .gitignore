@@ -194,4 +194,6 @@ experiments/foundry_poc/
 experiments/dmavid_autonomous/RERUN_LOG*.txt
 experiments/dmavid_autonomous/autonomous_progression_budget20.json
 experiments/dmavid_autonomous_BAK_*/
+# 例外：compile-only gate 消融資料（單調 0.9103→0.9153→0.9158），論文消融章節引用，需上 GitHub
+!experiments/dmavid_autonomous_BAK_precompile_20260626/
 scripts/knowledge/*.bak_*
