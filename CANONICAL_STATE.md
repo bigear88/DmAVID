@@ -74,7 +74,7 @@
 | placebo（不注入） | **0.9201 ± 0.0088** | [0.9113, 0.9289] |
 
 **穩健性結論：主文 canonical 採 compile-only 單 seed=42 之單調增益（0.9158），惟其於 3-seed 下不穩定——兩帶子重疊、placebo 平均略高 → 單調增益對 seed 敏感，論文以 P468 缺點段誠實揭露；真 PoC 嚴格閘門對照退為 0.9128（非單調）佐證此缺點。** 噪音地板（std ~0.008–0.011）> 任何迭代效益。直接證據：treatment vs placebo 同 seed42 的 R1（同 KB、同 seed）差 0.0102 → OpenAI seed 非決定性。
-- 圖：`charts/fig_seed_placebo_errorbar.png`
+- 圖：seed_placebo 誤差棒圖**尚未產生為檔案**（ 不存在）；論文 P469 以文字陳述 0.9149±0.0133 / 0.9201±0.0088、誤差帶重疊，未內嵌圖（數據在  可隨時重畫）`charts/fig_seed_placebo_errorbar.png`
 - 腳本：`scripts/aggregate_seed_placebo.py`、`scripts/plot_seed_placebo.py`、`run_seed_placebo.sh`
 - 機制（FN 學習軌跡 treatment_seed42 R1→R3）：11 漏報學會 7，但新增 5 FP、弄丟 3 → 蹺蹺板抵銷（`scripts/trace_fn_learning.py`）。
 
