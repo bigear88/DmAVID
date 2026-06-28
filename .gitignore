@@ -173,7 +173,7 @@ verify_*.py
 
 # 論文文件不入 git（避免 GitHub 公開 + 減少 repo 體積）
 *.docx
-CANONICAL_TRUTH.md
+# CANONICAL_TRUTH.md 為 README 引用之權威數字檔（純指標、無敏感資料），需上 GitHub 使引用成立
 DmAVID_第肆章新節_*.md
 EVMBENCH_CLI_EXECUTION.md
 EVMBENCH_QUICK_START.md

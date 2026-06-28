@@ -28,7 +28,7 @@ Stage 4: DmAVID 多代理迭代         → Teacher/Student/Red Team/Blue Team �
 | LLM Base（無 RAG） | 0.7474 | 59.9% | 99.3% | 95.0% |
 | **LLM+RAG（官方基線）** | **0.9061** | **84.3%** | **97.9%** | **26.0%** |
 | **+Self-Verify（單通道 FINAL · 穩健最佳）** | **0.9121** | **85.4%** | **97.9%** | **24.0%** |
-| **DmAVID 迭代 Coordinator R3（ChromaDB · compile 閘門 · 單調）** | **0.9158** | **88.3%** | **95.1%** | **18.0%** |
+| **DmAVID 迭代 R3（ChromaDB · 真 PoC 驗證閘 · 非單調 · FINAL）** | **0.9128** | **87.7%** | **95.1%** | **19.0%** |
 
 **EVMbench 真實審計泛化（39 漏洞 / 10 審計）**
 
@@ -38,7 +38,7 @@ Stage 4: DmAVID 多代理迭代         → Teacher/Student/Red Team/Blue Team �
 | **RAG + Smart Preprocess（FINAL）** | **64.10%** | **25 / 39** |
 | Post-cutoff 泛化（8 審計，2025–2026） | 58.82% | 10 / 17 |
 
-> 數字鎖定於 `CANONICAL_TRUTH.md §H` / `CANONICAL_STATE.md`。**單通道穩健最佳 = +Self-Verify（F1=0.9121）**；迭代式 Coordinator（autonomous、ChromaDB 知識回饋閉環、**compile 閘門**、T=0.1/seed=42、3 輪）三輪 F1 **單調遞增 0.9103→0.9153→0.9158**（> 單通道 0.9121；Recall 0.9231→0.9510、FN 11→7、26 筆補丁）。**穩健性 ablation（誠實揭露）**：改用真實 forge test PoC 把關時，每輪有效補丁由 11/8/7 驟降至 ~1，學習訊號被餓死、三輪退化為非單調 0.9164→0.9060→0.9128；且 multi-seed（42/7/123）+ placebo 檢定顯示單調增益對 seed 敏感（placebo R3 0.9201 ≥ treatment 0.9149）。詳見 `experiments/dmavid_autonomous_BAK_precompile_20260626/`（主，compile-gated）、`experiments/dmavid_autonomous/`（真 PoC ablation）、`experiments/seed_placebo/`。
+> 數字鎖定於 `CANONICAL_TRUTH.md §H` / `CANONICAL_STATE.md`。**單通道穩健最佳 = +Self-Verify（F1=0.9121）**；**正式迭代管線（canonical）= 自主型 Coordinator（autonomous、ChromaDB 知識回饋閉環、真實 forge test PoC 攻擊重放驗證閘、T=0.1/seed=42、3 輪）**，三輪 F1 **非單調 0.9164→0.9060→0.9128**（峰值 R1、最終與單通道相當；Recall 0.9510、FPR 0.19），根本原因為嚴格 PoC 驗證使每輪有效補丁僅約 1 筆、學習訊號稀薄。**消融（compile-only 閘門）**：若放寬為僅需 solc 編譯通過即回饋，每輪有效補丁增為 11/8/7（共 26），三輪 F1 **單調上升 0.9103→0.9153→0.9158**，惟補丁未經漏洞利用驗證，宜視為效能上界；另 multi-seed（42/7/123）+ placebo 檢定顯示單調增益對 seed 敏感（placebo R3 0.9201 ≥ treatment 0.9149）。詳見 `experiments/dmavid_autonomous/`（**主，真 PoC 驗證閘，F1=0.9128**）、`experiments/dmavid_autonomous_BAK_precompile_20260626/`（**消融，compile-only，F1=0.9158**）、`experiments/seed_placebo/`。
 
 ---
 
@@ -80,7 +80,8 @@ DmAVID/
 │   ├── llm_base/                     # LLM 基線結果
 │   ├── llm_rag/                      # LLM+RAG 結果 (F1=0.9061)
 │   ├── hybrid/                       # Self-Verify 結果 (F1=0.9121)
-│   ├── dmavid_autonomous/      # DmAVID 迭代結果 (canonical, ChromaDB, F1=0.9158, autonomous_progression.json)
+│   ├── dmavid_autonomous/      # DmAVID 迭代 canonical 主結果 (真 PoC 驗證閘, ChromaDB, F1=0.9128 非單調)
+│   ├── dmavid_autonomous_BAK_precompile_20260626/  # 迭代消融 (compile-only 閘門, 單調 0.9103→0.9153→0.9158)
 │   ├── exp15/                  # (deprecated) JSON-only 迭代 F1=0.9132，已被 dmavid_autonomous 取代
 │   ├── dmavid_round2/            # DmAVID 迭代過程輸出
 │   ├── evmbench_postcutoff/         # EVMbench 知識截止後泛化 (58.82%, 10/17)
@@ -122,7 +123,7 @@ DmAVID/
 - **單一自適應迴圈**：Coordinator 依上一輪 F1／FN 分布決定本輪重點漏洞類型與攻防策略（取代固定輪詢的雙層設計）
 - **每輪流程**：Student 偵測 (LLM+RAG+Self-Verify) → FN 收集 → Red Team 對抗變體 → Foundry 編譯/PoC 驗證 → Blue Team 防禦合成 → 知識庫更新 → 重新評估
 - **ChromaDB 知識回饋閉環**：Blue Team 合成之防禦補丁經 `write_blue_team_to_chroma()` 向量化寫入 ChromaDB（`text-embedding-3-small`），並同步更新 `vulnerability_knowledge.json`；經 `reload_dynamic_kb()` 注入下一輪 Student 之 RAG 脈絡
-- **FN 課程學習**：上一輪偽陰性以 `extra_context` hints 注入下一輪 Student，逐輪修正（三輪 F1 0.9103→0.9153→0.9158，Recall 0.9231→0.9510，FN 11→7，累積 16 筆學習補丁）
+- **FN 課程學習**：上一輪偽陰性以 `extra_context` hints 注入下一輪 Student 逐輪修正。真 PoC 驗證閘（canonical）下三輪 F1 非單調 0.9164→0.9060→0.9128（每輪有效補丁僅 ~1，學習訊號稀薄）；compile-only 閘門消融下則單調 0.9103→0.9153→0.9158（每輪 11/8/7、共 26 筆補丁，Recall 0.9231→0.9510）
 
 ### 收斂條件
 
@@ -175,7 +176,7 @@ DmAVID/
 | Slither only | 0.7459 | 基線 |
 | +LLM+RAG | 0.9061 | **+21.5%** |
 | +Self-Verify | 0.9121 | **+0.7%** |
-| +DmAVID 迭代（ChromaDB，3 輪） | **0.9158** | **+0.4%** |
+| +DmAVID 迭代（ChromaDB，3 輪，真 PoC 驗證閘） | **0.9128** | **+0.1%** |
 
 ### 3. 可解釋性（自動化量化）
 
@@ -261,7 +262,8 @@ python scripts/31_postcutoff_validation.py      # Post-cutoff 8 audits (58.82%, 
 | 表 3-1（Self-Verify 門檻掃描 T=1/2/3） | v4 門檻敏感度掃描（F1=0.8797/0.9030/0.9007） | `experiments/tool_augmented/threshold_sensitivity.json` |
 | 漏洞類型分布（143 合約） | 依 SmartBugs GitHub 原始標籤統計 | `data/dataset_1000.json（category 欄位）` |
 | 消融實驗管線 F1 | v5_clean 官方基準（LLM+RAG→Self-Verify） | `experiments/ablation/OFFICIAL_RESULTS_v5.md` |
-| autonomous 迭代結果 F1=0.9158 | 3 輪 ChromaDB 迭代最終值 | `experiments/dmavid_autonomous/autonomous_progression.json` |
+| autonomous 迭代 canonical F1=0.9128 | 真 PoC 驗證閘，3 輪最終值（非單調） | `experiments/dmavid_autonomous/autonomous_progression.json` |
+| 迭代消融 F1=0.9158（compile-only） | compile-only 閘門，3 輪單調上界 | `experiments/dmavid_autonomous_BAK_precompile_20260626/round_3_results.json` |
 
 > **舊檔並存說明**：`experiments/traditional_ml/ml_baseline_results.json`（cv_f1=0.993）與 `experiments/defi_real_world/defi_results.json` 為 TF-IDF **未 Pipeline 化**之舊版實驗，已被 `*_fixed.json` 取代。論文所引用之所有數字均來自 `*_fixed.json`（leakage-fixed，70/30 stratified split）。
 
