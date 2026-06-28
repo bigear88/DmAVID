@@ -1,0 +1,235 @@
+{
+  "experiment": "reward_gated_kb_learning",
+  "model": "gpt-4.1-mini",
+  "temperature": 0,
+  "seed": 42,
+  "val_audits": [
+    "2024-08-phi",
+    "2024-07-basin",
+    "2024-05-olas",
+    "2024-01-curves",
+    "2024-03-taiko"
+  ],
+  "test_audits": [
+    "2025-04-forte",
+    "2024-06-size",
+    "2024-01-renft",
+    "2024-12-secondswap",
+    "2026-01-tempo-stablecoin-dex"
+  ],
+  "n_candidates": 8,
+  "n_committed": 2,
+  "candidates": [
+    {
+      "category": "cross_contract",
+      "title": "Cross-Contract State Dependency Leading to Inconsistent Logic",
+      "description": "A contract relies on external contract state that can change unexpectedly between calls, allowing attackers to manipulate outcomes by triggering state changes in the external contract before or during execution."
+    },
+    {
+      "category": "proxy",
+      "title": "Proxy Storage Slot Collision",
+      "description": "Storage variables in proxy and implementation contracts overlap due to improper slot management, enabling attackers or upgrades to corrupt critical state or escalate privileges by overwriting storage."
+    },
+    {
+      "category": "token_accounting",
+      "title": "Fee-on-Transfer Token Accounting Mismatch",
+      "description": "Protocols assume token transfer amounts equal the sent value, but fee-on-transfer tokens deduct fees on transfer, causing incorrect balance or share calculations that attackers exploit to steal funds or mint excess shares."
+    },
+    {
+      "category": "oracle",
+      "title": "TWAP/Oracle Manipulation via Low Liquidity or Update Delay",
+      "description": "Time-weighted average price oracles can be manipulated by attackers executing rapid trades in low liquidity pools or exploiting delayed oracle updates to influence protocol pricing and trigger incorrect liquidations or valuations."
+    },
+    {
+      "category": "math",
+      "title": "Rounding and Precision Loss in Share or Collateral Accounting",
+      "description": "Imprecise rounding in fractional share or collateral calculations accumulates over time, allowing attackers to exploit discrepancies to withdraw more assets than entitled or cause accounting inconsistencies."
+    },
+    {
+      "category": "token_hooks",
+      "title": "Unsafe ERC777/ERC1155 Callback Hook Execution",
+      "description": "Contracts interacting with tokens implementing callback hooks (e.g., ERC777 tokens) fail to handle reentrancy or unexpected callback logic, enabling attackers to execute malicious code during token transfers."
+    },
+    {
+      "category": "liquidation",
+      "title": "Liquidation Logic Flaws Causing Undue Liquidations or Losses",
+      "description": "Incorrect collateral valuation, stale price feeds, or flawed health factor calculations allow attackers or liquidators to trigger unfair liquidations or prevent rightful liquidations, leading to protocol losses or user fund theft."
+    },
+    {
+      "category": "governance",
+      "title": "Governance or Timelock Bypass via Privilege Escalation",
+      "description": "Attackers exploit flaws in governance or timelock contract logic, such as missing access controls or upgrade mechanisms, to bypass intended delays or restrictions and execute unauthorized privileged actions immediately."
+    }
+  ],
+  "committed_titles": [
+    "Cross-Contract State Dependency Leading to Inconsistent Logic",
+    "Rounding and Precision Loss in Share or Collateral Accounting"
+  ],
+  "val_trajectory": [
+    {
+      "step": 0,
+      "candidate": "(baseline)",
+      "val_detected": 6,
+      "decision": "baseline"
+    },
+    {
+      "step": 1,
+      "candidate": "Cross-Contract State Dependency Leading to Inconsistent Logic",
+      "val_detected": 12,
+      "val_current": 12,
+      "decision": "COMMIT (+6)"
+    },
+    {
+      "step": 2,
+      "candidate": "Proxy Storage Slot Collision",
+      "val_detected": 7,
+      "val_current": 12,
+      "decision": "REJECT (-5)"
+    },
+    {
+      "step": 3,
+      "candidate": "Fee-on-Transfer Token Accounting Mismatch",
+      "val_detected": 7,
+      "val_current": 12,
+      "decision": "REJECT (-5)"
+    },
+    {
+      "step": 4,
+      "candidate": "TWAP/Oracle Manipulation via Low Liquidity or Update Delay",
+      "val_detected": 10,
+      "val_current": 12,
+      "decision": "REJECT (-2)"
+    },
+    {
+      "step": 5,
+      "candidate": "Rounding and Precision Loss in Share or Collateral Accounting",
+      "val_detected": 16,
+      "val_current": 16,
+      "decision": "COMMIT (+6)"
+    },
+    {
+      "step": 6,
+      "candidate": "Unsafe ERC777/ERC1155 Callback Hook Execution",
+      "val_detected": 15,
+      "val_current": 16,
+      "decision": "REJECT (-1)"
+    },
+    {
+      "step": 7,
+      "candidate": "Liquidation Logic Flaws Causing Undue Liquidations or Losses",
+      "val_detected": 8,
+      "val_current": 16,
+      "decision": "REJECT (-8)"
+    },
+    {
+      "step": 8,
+      "candidate": "Governance or Timelock Bypass via Privilege Escalation",
+      "val_detected": 15,
+      "val_current": 16,
+      "decision": "REJECT (-1)"
+    }
+  ],
+  "baseline": {
+    "val": 0.3158,
+    "test": 0.75,
+    "val_detected": 6,
+    "test_detected": 15,
+    "val_gold": 19,
+    "test_gold": 20,
+    "test_rows": [
+      [
+        "2025-04-forte",
+        0,
+        5
+      ],
+      [
+        "2024-06-size",
+        4,
+        4
+      ],
+      [
+        "2024-01-renft",
+        6,
+        6
+      ],
+      [
+        "2024-12-secondswap",
+        3,
+        3
+      ],
+      [
+        "2026-01-tempo-stablecoin-dex",
+        2,
+        2
+      ]
+    ]
+  },
+  "gated": {
+    "val": 0.7895,
+    "test": 0.45,
+    "val_detected": 15,
+    "test_detected": 9,
+    "test_rows": [
+      [
+        "2025-04-forte",
+        0,
+        5
+      ],
+      [
+        "2024-06-size",
+        4,
+        4
+      ],
+      [
+        "2024-01-renft",
+        0,
+        6
+      ],
+      [
+        "2024-12-secondswap",
+        3,
+        3
+      ],
+      [
+        "2026-01-tempo-stablecoin-dex",
+        2,
+        2
+      ]
+    ]
+  },
+  "ungated": {
+    "val": 0.7895,
+    "test": 0.75,
+    "val_detected": 15,
+    "test_detected": 15,
+    "test_rows": [
+      [
+        "2025-04-forte",
+        0,
+        5
+      ],
+      [
+        "2024-06-size",
+        4,
+        4
+      ],
+      [
+        "2024-01-renft",
+        6,
+        6
+      ],
+      [
+        "2024-12-secondswap",
+        3,
+        3
+      ],
+      [
+        "2026-01-tempo-stablecoin-dex",
+        2,
+        2
+      ]
+    ]
+  },
+  "test_delta_gated_vs_baseline": -0.3,
+  "test_delta_ungated_vs_baseline": 0.0
+}

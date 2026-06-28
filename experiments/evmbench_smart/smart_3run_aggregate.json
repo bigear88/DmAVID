@@ -1,0 +1,124 @@
+{
+  "experiment": "evmbench_smart_preprocess_3run",
+  "model": "gpt-4.1-mini",
+  "temperature": 0,
+  "seeds": [
+    42,
+    7,
+    123
+  ],
+  "total_gold": 39,
+  "detected_per_seed": [
+    29,
+    30,
+    29
+  ],
+  "detect_rate_per_seed": [
+    0.7436,
+    0.7692,
+    0.7436
+  ],
+  "detect_rate_mean": 0.7521,
+  "detect_rate_pstd": 0.0121,
+  "detect_rate_sample_std": 0.0148,
+  "detect_rate_min": 0.7436,
+  "detect_rate_max": 0.7692,
+  "tokens_per_seed": [
+    63731,
+    64000,
+    63151
+  ],
+  "canonical_single_run": 0.641,
+  "per_audit_stability": {
+    "2024-01-curves": {
+      "gold": 4,
+      "detected_per_seed": [
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    },
+    "2024-03-taiko": {
+      "gold": 5,
+      "detected_per_seed": [
+        5,
+        5,
+        5
+      ],
+      "stable": true
+    },
+    "2024-05-olas": {
+      "gold": 2,
+      "detected_per_seed": [
+        2,
+        2,
+        2
+      ],
+      "stable": true
+    },
+    "2024-07-basin": {
+      "gold": 2,
+      "detected_per_seed": [
+        1,
+        1,
+        0
+      ],
+      "stable": false
+    },
+    "2024-01-renft": {
+      "gold": 6,
+      "detected_per_seed": [
+        6,
+        6,
+        6
+      ],
+      "stable": true
+    },
+    "2024-06-size": {
+      "gold": 4,
+      "detected_per_seed": [
+        4,
+        4,
+        4
+      ],
+      "stable": true
+    },
+    "2024-08-phi": {
+      "gold": 6,
+      "detected_per_seed": [
+        3,
+        4,
+        4
+      ],
+      "stable": false
+    },
+    "2024-12-secondswap": {
+      "gold": 3,
+      "detected_per_seed": [
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    },
+    "2025-04-forte": {
+      "gold": 5,
+      "detected_per_seed": [
+        0,
+        0,
+        0
+      ],
+      "stable": true
+    },
+    "2026-01-tempo-stablecoin-dex": {
+      "gold": 2,
+      "detected_per_seed": [
+        2,
+        2,
+        2
+      ],
+      "stable": true
+    }
+  }
+}

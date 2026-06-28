@@ -24,14 +24,14 @@
 | (基線) Hybrid Slither+LLM | `06_run_hybrid.py` | `06_run_hybrid_optimized.py` | **0.8428** | 0.732 / 0.993 | ✅ |
 | 第二階段 LLM+RAG | `05_run_llm_rag.py` | `build_knowledge_base.py`, `chroma_rag.py` | **0.9061** | 0.8434 / 0.979 | ✅ |
 | 第三階段 Self-Verify 三類判決 | `postprocess_self_verify.py` | `31_ablation_study_v5_clean.py`(驗證), `58_sv_threshold_audit.py` | **0.9121** | 0.8537 / 0.979 | ✅ |
-| 第四階段 DmAVID 多代理對抗式迭代 | `20_coordinator_autonomous.py` | `11_teacher_challenge.py`, `12_red_team_generate.py`, `18_blue_team_defense.py`, `chroma_rag.py` | **R1 0.9164 / R2 0.9060 / R3 0.9128** | — | ✅ 真實重跑 |
-| └ EVM Foundry 驗證（Stage4 子步驟） | `13b_foundry_poc.py`（真實） | — | PoC pass: R1 1/6, R2 3/8, R3 1/7 | — | ✅ 已改真實 |
+| 第四階段 DmAVID 多代理對抗式迭代（canonical = compile-gated BAK 2026-06-22） | `20_coordinator_autonomous.py` | `11_teacher_challenge.py`, `12_red_team_generate.py`, `18_blue_team_defense.py`, `chroma_rag.py` | **R1 0.9103 / R2 0.9153 / R3 0.9158（單調）** | — | ✅ 對齊 CANONICAL_TRUTH §H |
+| └ EVM Foundry 驗證（Stage4 子步驟） | canonical: solc 編譯把關（26 變體全通過）；ablation: `13b_foundry_poc.py`（真 PoC） | — | 真 PoC pass 僅 R1 1/6, R2 3/8, R3 1/7 → 餓死學習，退為非單調 0.9164/0.9060/0.9128 | — | ablation |
 | 模型評估（旁支） | `07_run_ablation.py` | `35_per_category_breakdown.py`, `72/73_*chart.py` | Acc/P/R/F1/FPR | — | ✅ |
 
-**權威結論**：
+**權威結論（option C：主文單調 + 誠實 ablation，對齊 CANONICAL_TRUTH §H，2026-06-28 定）**：
 - 單通道最佳 = +Self-Verify **0.9121**。
-- 迭代最終 R3 **0.9128**（vs SV 0.9121 = +0.0007，雜訊內，統計平手；非單調，R2 跌至 0.9060）。
-- 「迭代越來越好」**未成立**。
+- 迭代 canonical（compile-gated）= **R1 0.9103 → R2 0.9153 → R3 0.9158（單調遞增）**，Recall 0.9231→0.9510，FN 11→7，26 筆補丁（11/8/7）；> 單通道 0.9121。「迭代逐輪改善」**成立（compile 闥門下）**。
+- ablation（誠實揭露，論文 P468/P469）：①改真 forge test PoC 把關 → 每輪僅 ~1 筆補丁 → 退為非單調 0.9164/0.9060/0.9128；②seed_placebo 3-seed → 增益對 seed 敏感（placebo 略高）。→ 增益幅度有限、對驗證嚴格度與 seed 敏感。
 
 ---
 
@@ -51,7 +51,8 @@
 |---|---|---|---|---|---|
 | exp14 | compile-only(stub) | 含設計 | 跑滿 3 | R3 崩 **0.8831** | compile-only 跑滿會崩 |
 | exp15 | compile-only(stub) | **早停 `decide_early_stop`（ΔF1≤0.002×2輪）於第2輪觸發** | 停在 2 | **0.9132** | **非人為截斷，是早停機制；後來早停被移除** |
-| dmavid_autonomous | **真實 PoC** | 無（跑滿） | 3 | R1 0.9164 / R2 0.9060 / R3 0.9128 | 當前 canonical |
+| dmavid_autonomous_BAK_20260622 | **compile-only** | 無（跑滿） | 3 | R1 0.9103 / R2 0.9153 / R3 0.9158（單調，26 補丁） | **canonical（主文，對齊 §H）** |
+| dmavid_autonomous（真 PoC 重跑） | **真實 forge PoC** | 無（跑滿） | 3 | R1 0.9164 / R2 0.9060 / R3 0.9128（非單調，3 補丁） | ablation（穩健性：嚴格闥門餓死學習） |
 
 ---
 
@@ -59,7 +60,7 @@
 
 - PoC = 泛化／可利用性實驗，**可從 SmartBugs 迭代迴圈解耦**。
 - 解耦後 PoC 不影響 SmartBugs 迭代數字 ✅。
-- 但解耦**不能**讓「迭代越來越好」成立——compile-only 跑滿三輪一樣崩（exp14 R3=0.8831），與 PoC 無關。
+- 「迭代逐輪改善」於 canonical compile-gated BAK 成立（0.9158 單調）；exp14 之崩（0.8831）係舊 stub 假驗證 + 早停移除所致，非代表 compile 闥門本身會崩。增益大小取決於每輪回饋之有效補丁數（BAK 26 vs 真 PoC 3）。
 
 ---
 
@@ -72,7 +73,7 @@
 | treatment（注入知識） | **0.9149 ± 0.0109** | [0.9040, 0.9258] |
 | placebo（不注入） | **0.9201 ± 0.0072** | [0.9129, 0.9273] |
 
-**定論：兩帶子重疊、placebo 平均還更高 → 對抗式迭代在 SmartBugs 上無顯著 F1 增益（雜訊）。** 噪音地板（std ~0.008–0.011）> 任何迭代效益。直接證據：treatment vs placebo 同 seed42 的 R1（同 KB、同 seed）差 0.0102 → OpenAI seed 非決定性。
+**穩健性結論（非否定主文）：compile-gated 單 seed=42 之單調增益（0.9158）於 3-seed 下不穩定——兩帶子重疊、placebo 平均略高 → 單調增益對 seed 敏感，論文以 ablation/限制誠實揭露（option C），主文仍採 seed=42 之 0.9158。** 噪音地板（std ~0.008–0.011）> 任何迭代效益。直接證據：treatment vs placebo 同 seed42 的 R1（同 KB、同 seed）差 0.0102 → OpenAI seed 非決定性。
 - 圖：`charts/fig_seed_placebo_errorbar.png`
 - 腳本：`scripts/aggregate_seed_placebo.py`、`scripts/plot_seed_placebo.py`、`run_seed_placebo.sh`
 - 機制（FN 學習軌跡 treatment_seed42 R1→R3）：11 漏報學會 7，但新增 5 FP、弄丟 3 → 蹺蹺板抵銷（`scripts/trace_fn_learning.py`）。

@@ -1,0 +1,90 @@
+{
+  "seed": 42,
+  "temperature": 0,
+  "total_gold": 39,
+  "total_detected": 29,
+  "detect_rate": 0.7436,
+  "total_tokens": 63731,
+  "per_audit": [
+    {
+      "audit_id": "2024-01-curves",
+      "gold_count": 4,
+      "found_count": 4,
+      "detected": 3,
+      "score": 0.75,
+      "tokens": 5815
+    },
+    {
+      "audit_id": "2024-03-taiko",
+      "gold_count": 5,
+      "found_count": 6,
+      "detected": 5,
+      "score": 1.0,
+      "tokens": 7343
+    },
+    {
+      "audit_id": "2024-05-olas",
+      "gold_count": 2,
+      "found_count": 6,
+      "detected": 2,
+      "score": 1.0,
+      "tokens": 7028
+    },
+    {
+      "audit_id": "2024-07-basin",
+      "gold_count": 2,
+      "found_count": 5,
+      "detected": 1,
+      "score": 0.5,
+      "tokens": 7246
+    },
+    {
+      "audit_id": "2024-01-renft",
+      "gold_count": 6,
+      "found_count": 4,
+      "detected": 6,
+      "score": 1.0,
+      "tokens": 6679
+    },
+    {
+      "audit_id": "2024-06-size",
+      "gold_count": 4,
+      "found_count": 5,
+      "detected": 4,
+      "score": 1.0,
+      "tokens": 6985
+    },
+    {
+      "audit_id": "2024-08-phi",
+      "gold_count": 6,
+      "found_count": 5,
+      "detected": 3,
+      "score": 0.5,
+      "tokens": 6404
+    },
+    {
+      "audit_id": "2024-12-secondswap",
+      "gold_count": 3,
+      "found_count": 5,
+      "detected": 3,
+      "score": 1.0,
+      "tokens": 7048
+    },
+    {
+      "audit_id": "2025-04-forte",
+      "gold_count": 5,
+      "found_count": 0,
+      "detected": 0,
+      "score": 0.0,
+      "tokens": 5842
+    },
+    {
+      "audit_id": "2026-01-tempo-stablecoin-dex",
+      "gold_count": 2,
+      "found_count": 4,
+      "detected": 2,
+      "score": 1.0,
+      "tokens": 3341
+    }
+  ]
+}
