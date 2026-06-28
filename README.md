@@ -38,7 +38,7 @@ Stage 4: DmAVID 多代理迭代         → Teacher/Student/Red Team/Blue Team �
 | **RAG + Smart Preprocess（FINAL）** | **64.10%** | **25 / 39** |
 | Post-cutoff 泛化（8 審計，2025–2026） | 58.82% | 10 / 17 |
 
-> 數字鎖定於 `CANONICAL_TRUTH.md §H` / `CANONICAL_STATE.md`。**單通道穩健最佳 = +Self-Verify（F1=0.9121）**；**正式迭代管線（canonical）= 自主型 Coordinator（autonomous、ChromaDB 知識回饋閉環、compile-only 把關、T=0.1/seed=42、3 輪）**，三輪 F1 **單調遞增 0.9103→0.9153→0.9158**（Recall 0.9231→0.9510、FN 11→7、26 補丁；> 單通道 0.9121），支持 FN 課程學習設計理念。**採用此版本之缺點（誠實揭露）**：(1) 補丁僅 solc 編譯通過、未經 forge test PoC 攻擊重放驗證 → 0.9158 宜視為效能上界；(2) 改嚴格 PoC 把關則每輪有效補丁由 11/8/7 驟降至約 1、退為非單調 0.9164→0.9060→0.9128、僅與單通道相當（`experiments/dmavid_autonomous/`）；(3) multi-seed（42/7/123）+ placebo 顯示單調增益對 seed 敏感（placebo R3 0.9201 ≥ treatment 0.9149）、未達統計顯著。詳見 `experiments/dmavid_autonomous_BAK_precompile_20260626/`（**主，compile-only，F1=0.9158**）、`experiments/dmavid_autonomous/`（真 PoC 嚴格閘門對照，F1=0.9128）、`experiments/seed_placebo/`。
+> 數字鎖定於 `CANONICAL_TRUTH.md §H` / `CANONICAL_STATE.md`。**單通道穩健最佳 = +Self-Verify（F1=0.9121）**；**正式迭代管線（canonical）= 自主型 Coordinator（autonomous、ChromaDB 知識回饋閉環、compile-only 把關、T=0.1/seed=42、3 輪）**，三輪 F1 **單調遞增 0.9103→0.9153→0.9158**（Recall 0.9231→0.9510、FN 11→7、26 補丁；> 單通道 0.9121），支持 FN 課程學習設計理念。**採用此版本之缺點（誠實揭露）**：(1) 補丁僅 solc 編譯通過、未經 forge test PoC 攻擊重放驗證 → 0.9158 宜視為效能上界；(2) 改嚴格 forge test PoC 把關則該對照雖生成 30 變體（10/輪）、PoC 通過 17（7/4/6），但實際入庫補丁僅 1/輪=3（patterns_added 1/1/1，對比 compile-only 26），學習訊號驟稀 → 退為非單調 0.9164→0.9060→0.9128、僅與單通道相當（`experiments/dmavid_autonomous/`）；(3) multi-seed（42/7/123）+ placebo 顯示單調增益對 seed 敏感（placebo R3 0.9201 ≥ treatment 0.9149）、未達統計顯著。詳見 `experiments/dmavid_autonomous_BAK_precompile_20260626/`（**主，compile-only，F1=0.9158**）、`experiments/dmavid_autonomous/`（真 PoC 嚴格閘門對照，F1=0.9128）、`experiments/seed_placebo/`。
 
 ---
 
@@ -263,7 +263,7 @@ python scripts/31_postcutoff_validation.py      # Post-cutoff 8 audits (58.82%, 
 | 漏洞類型分布（143 合約） | 依 SmartBugs GitHub 原始標籤統計 | `data/dataset_1000.json（category 欄位）` |
 | 消融實驗管線 F1 | v5_clean 官方基準（LLM+RAG→Self-Verify） | `experiments/ablation/OFFICIAL_RESULTS_v5.md` |
 | autonomous BAK 迭代 canonical F1=0.9158 | compile-only 閘門，3 輪單調最終值 | `experiments/dmavid_autonomous_BAK_precompile_20260626/round_3_results.json` |
-| 真 PoC 嚴格閘門對照 F1=0.9128（非單調） | forge test PoC，每輪~1 補丁（採此版本之缺點佐證） | `experiments/dmavid_autonomous/autonomous_progression.json` |
+| 真 PoC 嚴格閘門對照 F1=0.9128（非單調） | forge test PoC：30 變體（10/輪）/ PoC 通過 17（7/4/6）/ 實際入庫補丁僅 3（1/輪，patterns_added 1/1/1）（採此版本之缺點佐證） | `experiments/dmavid_autonomous/autonomous_progression.json` |
 
 > **舊檔並存說明**：`experiments/traditional_ml/ml_baseline_results.json`（cv_f1=0.993）與 `experiments/defi_real_world/defi_results.json` 為 TF-IDF **未 Pipeline 化**之舊版實驗，已被 `*_fixed.json` 取代。論文所引用之所有數字均來自 `*_fixed.json`（leakage-fixed，70/30 stratified split）。
 
