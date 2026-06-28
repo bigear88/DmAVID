@@ -28,18 +28,17 @@ Stage 4: DmAVID 多代理迭代         → Teacher/Student/Red Team/Blue Team �
 | LLM Base（無 RAG） | 0.7474 | 59.9% | 99.3% | 95.0% |
 | **LLM+RAG（官方基線）** | **0.9061** | **84.3%** | **97.9%** | **26.0%** |
 | **+Self-Verify（單通道 FINAL · 穩健最佳）** | **0.9121** | **85.4%** | **97.9%** | **24.0%** |
-| DmAVID 迭代 Coordinator R3（ChromaDB · 真實 PoC 把關） | 0.9128 | 87.7% | 95.1% | 19.0% |
+| **DmAVID 迭代 Coordinator R3（ChromaDB · compile 閘門 · 單調）** | **0.9158** | **88.3%** | **95.1%** | **18.0%** |
 
 **EVMbench 真實審計泛化（39 漏洞 / 10 審計）**
 
 | 階段 | 偵測率 | 偵測數 |
 |------|--------|--------|
 | LLM+RAG（detect-only） | 7.69% | 3 / 39 |
-| Enhanced（中間，hint-injected） | 30.77% | 12 / 39 |
-| **Smart Preprocess（FINAL）** | **64.10%** | **25 / 39** |
+| **RAG + Smart Preprocess（FINAL）** | **64.10%** | **25 / 39** |
 | Post-cutoff 泛化（8 審計，2025–2026） | 58.82% | 10 / 17 |
 
-> 數字鎖定於 `CANONICAL_STATE.md`（唯一真實來源）。**單通道管線穩健最佳為 +Self-Verify（F1=0.9121）**；迭代式 Coordinator（autonomous、ChromaDB 知識回饋閉環、真實 forge test PoC 把關、3 輪）三輪 F1 為 0.9164→0.9060→0.9128（**非單調**）。經 **multi-seed（42/7/123）+ placebo 對照**嚴格檢定，處理組 R3=0.9149±0.0109、placebo 組 R3=0.9201±0.0072（信賴帶重疊、placebo 平均略高）——**對抗式迭代於 SmartBugs 上無統計顯著之 F1 增益（增益落於測量雜訊內）**；其價值在於 FN 課程學習之過程品質與可解釋性，而非 F1 提升。詳見 `experiments/seed_placebo/` 與 `charts/fig_seed_placebo_errorbar.png`。
+> 數字鎖定於 `CANONICAL_TRUTH.md §H` / `CANONICAL_STATE.md`。**單通道穩健最佳 = +Self-Verify（F1=0.9121）**；迭代式 Coordinator（autonomous、ChromaDB 知識回饋閉環、**compile 閘門**、T=0.1/seed=42、3 輪）三輪 F1 **單調遞增 0.9103→0.9153→0.9158**（> 單通道 0.9121；Recall 0.9231→0.9510、FN 11→7、26 筆補丁）。**穩健性 ablation（誠實揭露）**：改用真實 forge test PoC 把關時，每輪有效補丁由 11/8/7 驟降至 ~1，學習訊號被餓死、三輪退化為非單調 0.9164→0.9060→0.9128；且 multi-seed（42/7/123）+ placebo 檢定顯示單調增益對 seed 敏感（placebo R3 0.9201 ≥ treatment 0.9149）。詳見 `experiments/dmavid_autonomous_BAK_precompile_20260626/`（主，compile-gated）、`experiments/dmavid_autonomous/`（真 PoC ablation）、`experiments/seed_placebo/`。
 
 ---
 
@@ -85,7 +84,7 @@ DmAVID/
 │   ├── exp15/                  # (deprecated) JSON-only 迭代 F1=0.9132，已被 dmavid_autonomous 取代
 │   ├── dmavid_round2/            # DmAVID 迭代過程輸出
 │   ├── evmbench_postcutoff/         # EVMbench 知識截止後泛化 (58.82%, 10/17)
-│   ├── evmbench_enhanced/            # EVMbench 增強偵測 (30.77%, 12/39, 中間結果)
+│   ├── evmbench_enhanced/            # (DEPRECATED) hint/gold-injected 30.77%，因洩漏已自乾淨兩段軌跡移除
 │   ├── evmbench_smart/               # EVMbench 智能預處理 (64.10%, 25/39, FINAL)
 │   ├── traditional_ml/              # 傳統 ML 基線 (RF/LR/GB/SVM)
 │   ├── defi_real_world/             # DeFiHackLabs 測試
@@ -167,7 +166,7 @@ DmAVID/
 傳統 ML（RF test F1=1.0，cv F1=0.9949，leakage-fixed）學到的是**資料集風格差異**，而非漏洞語意：
 - Top TF-IDF 特徵：totalSupply, allowance, indexed (ERC20 特徵)
 - 移除標注後 RF 仍達 0.955
-- EVMbench 真實場景：傳統工具 0%，DmAVID 30.77% (12/39, Enhanced) → **64.10% (25/39, Smart Preprocess FINAL)**
+- EVMbench 真實場景：傳統工具 0%，DmAVID detect-only 7.69% (3/39) → **64.10% (25/39, Smart Preprocess FINAL)**
 
 ### 2. 分階段消融
 
@@ -230,7 +229,6 @@ python scripts/23_traditional_ml_baseline.py
 python scripts/26_explainability_metrics.py
 
 # 5. EVMbench 泛化測試
-python scripts/22_evmbench_enhanced.py    # Enhanced (30.77%, 12/39)
 python scripts/30_evmbench_smart_preprocess.py  # Smart preprocess FINAL (64.10%, 25/39)
 python scripts/31_postcutoff_validation.py      # Post-cutoff 8 audits (58.82%, 10/17)
 ```
