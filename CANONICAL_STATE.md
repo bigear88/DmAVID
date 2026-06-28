@@ -25,7 +25,7 @@
 | 第二階段 LLM+RAG | `05_run_llm_rag.py` | `build_knowledge_base.py`, `chroma_rag.py` | **0.9061** | 0.8434 / 0.979 | ✅ |
 | 第三階段 Self-Verify 三類判決 | `postprocess_self_verify.py` | `31_ablation_study_v5_clean.py`(驗證), `58_sv_threshold_audit.py` | **0.9121** | 0.8537 / 0.979 | ✅ |
 | 第四階段 DmAVID 多代理對抗式迭代（canonical = compile-only BAK dmavid_autonomous_BAK_precompile_20260626） | `20_coordinator_autonomous.py` | `11_teacher_challenge.py`, `12_red_team_generate.py`, `18_blue_team_defense.py`, `chroma_rag.py` | **R1 0.9103 / R2 0.9153 / R3 0.9158（單調，主文）；真 PoC 對照 0.9164→0.9060→0.9128（非單調，缺點佐證）** | — | ✅ 對齊 CANONICAL_TRUTH §H |
-| └ EVM Foundry 驗證（Stage4 子步驟） | canonical: solc 編譯把關（compile-only，26 變體全通過）；對照: `13b_foundry_poc.py`（真 forge test PoC 攻擊重放） | — | compile-only→26 補丁→單調 0.9158（主文，但補丁未經漏洞利用驗證=上界）；真 PoC pass 僅 R1 1/6, R2 3/8, R3 1/7 → 學習稀薄、非單調 0.9164/0.9060/0.9128 | — | canonical=compile-only |
+| └ EVM Foundry 驗證（Stage4 子步驟） | canonical: solc 編譯把關（compile-only，26 變體全通過）；對照: `13b_foundry_poc.py`（真 forge test PoC 攻擊重放） | — | compile-only→26 補丁（patterns_added 11/8/7）→單調 0.9158（主文，但補丁未經漏洞利用驗證=上界）；真 PoC：30 變體（10/輪）、forge PoC 通過 17（7/4/6），但實際入庫補丁僅 1/輪=3（patterns_added 1/1/1）→ 學習稀薄、非單調 0.9164/0.9060/0.9128 | — | canonical=compile-only |
 | 模型評估（旁支） | `07_run_ablation.py` | `35_per_category_breakdown.py`, `72/73_*chart.py` | Acc/P/R/F1/FPR | — | ✅ |
 
 **權威結論（主文 = compile-only BAK 單調 0.9158；real-PoC = 缺點佐證，2026-06-28 使用者定案，對齊 CANONICAL_TRUTH §H）**：
