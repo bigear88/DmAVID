@@ -71,8 +71,8 @@
 
 | 條件 | R3 mean±std | band |
 |---|---|---|
-| treatment（注入知識） | **0.9149 ± 0.0109** | [0.9040, 0.9258] |
-| placebo（不注入） | **0.9201 ± 0.0072** | [0.9129, 0.9273] |
+| treatment（注入知識） | **0.9149 ± 0.0133** | [0.9016, 0.9282] |
+| placebo（不注入） | **0.9201 ± 0.0088** | [0.9113, 0.9289] |
 
 **穩健性結論：compile-only 消融之單 seed=42 單調增益（0.9158）於 3-seed 下不穩定——兩帶子重疊、placebo 平均略高 → 單調增益對 seed 敏感，論文以消融/限制誠實揭露；主文 canonical 採真 PoC 驗證閘之 0.9128（非單調）。** 噪音地板（std ~0.008–0.011）> 任何迭代效益。直接證據：treatment vs placebo 同 seed42 的 R1（同 KB、同 seed）差 0.0102 → OpenAI seed 非決定性。
 - 圖：`charts/fig_seed_placebo_errorbar.png`
