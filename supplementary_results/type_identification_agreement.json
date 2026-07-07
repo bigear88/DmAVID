@@ -1,0 +1,153 @@
+{
+  "source": "experiments/baseline_gpt41mini/hybrid_results.json",
+  "note": "Type identification is open-ended; predicted free-text types are normalized to SmartBugs/DASP categories, then compared to ground-truth category. No experiment re-run.",
+  "n_true_positive_vulnerable": 142,
+  "set_agreement": {
+    "hits": 135,
+    "total": 142,
+    "rate": 0.9507,
+    "null_chance": 0.2222,
+    "binomial_p_value_one_sided": 2.275503061628976e-78
+  },
+  "top1_agreement": {
+    "hits": 119,
+    "total": 142,
+    "rate": 0.838,
+    "null_chance": 0.1111,
+    "binomial_p_value_one_sided": 3.55682102766418e-89
+  },
+  "avg_distinct_predicted_types": 1.592,
+  "per_category": {
+    "reentrancy": {
+      "hits": 31,
+      "total": 31,
+      "rate": 1.0
+    },
+    "arithmetic": {
+      "hits": 14,
+      "total": 14,
+      "rate": 1.0
+    },
+    "access_control": {
+      "hits": 18,
+      "total": 18,
+      "rate": 1.0
+    },
+    "unchecked_low_level_calls": {
+      "hits": 49,
+      "total": 52,
+      "rate": 0.9423
+    },
+    "denial_of_service": {
+      "hits": 6,
+      "total": 6,
+      "rate": 1.0
+    },
+    "bad_randomness": {
+      "hits": 7,
+      "total": 8,
+      "rate": 0.875
+    },
+    "front_running": {
+      "hits": 4,
+      "total": 4,
+      "rate": 1.0
+    },
+    "time_manipulation": {
+      "hits": 4,
+      "total": 5,
+      "rate": 0.8
+    },
+    "short_addresses": {
+      "hits": 0,
+      "total": 1,
+      "rate": 0.0
+    },
+    "other": {
+      "hits": 2,
+      "total": 3,
+      "rate": 0.6667
+    }
+  },
+  "misses": [
+    {
+      "contract_id": "curated_time_manipulation_governmental_survey.sol",
+      "ground_truth_category": "time_manipulation",
+      "predicted_raw": [
+        "denial_of_service"
+      ],
+      "predicted_normalized": [
+        "denial_of_service"
+      ]
+    },
+    {
+      "contract_id": "curated_bad_randomness_smart_billions.sol",
+      "ground_truth_category": "bad_randomness",
+      "predicted_raw": [
+        "integer_overflow",
+        "missing_access_control"
+      ],
+      "predicted_normalized": [
+        "access_control",
+        "arithmetic"
+      ]
+    },
+    {
+      "contract_id": "curated_short_addresses_short_address_example.sol",
+      "ground_truth_category": "short_addresses",
+      "predicted_raw": [
+        "integer_overflow"
+      ],
+      "predicted_normalized": [
+        "arithmetic"
+      ]
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0xb7c5c5aa4d42967efe906e1b66cb8df9cebf04f7.sol",
+      "ground_truth_category": "unchecked_low_level_calls",
+      "predicted_raw": [
+        "reentrancy"
+      ],
+      "predicted_normalized": [
+        "reentrancy"
+      ]
+    },
+    {
+      "contract_id": "curated_other_open_address_lottery.sol",
+      "ground_truth_category": "other",
+      "predicted_raw": [
+        "bad_randomness",
+        "access_control"
+      ],
+      "predicted_normalized": [
+        "access_control",
+        "bad_randomness"
+      ]
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x19cf8481ea15427a98ba3cdd6d9e14690011ab10.sol",
+      "ground_truth_category": "unchecked_low_level_calls",
+      "predicted_raw": [
+        "integer_overflow",
+        "front_running",
+        "access_control"
+      ],
+      "predicted_normalized": [
+        "access_control",
+        "arithmetic",
+        "front_running"
+      ]
+    },
+    {
+      "contract_id": "curated_unchecked_low_level_calls_0x663e4229142a27f00bafb5d087e1e730648314c3.sol",
+      "ground_truth_category": "unchecked_low_level_calls",
+      "predicted_raw": [
+        "Missing Two-Step Ownership Transfer",
+        "Missing Access Control on Critical Functions"
+      ],
+      "predicted_normalized": [
+        "access_control"
+      ]
+    }
+  ]
+}
