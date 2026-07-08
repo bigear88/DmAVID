@@ -1,0 +1,40 @@
+{
+  "source": "experiments/dmavid_autonomous_BAK_precompile_20260626 (compile-only canonical)",
+  "note": "Four independent convergence signals; no 4th round executed.",
+  "mcnemar_r2_vs_r3": {
+    "n_common": 243,
+    "both_correct": 213,
+    "r2_correct_r3_wrong": 5,
+    "r2_wrong_r3_correct": 5,
+    "both_wrong": 20,
+    "discordant": 10,
+    "exact_binomial_two_sided_p": 1.0,
+    "chi2_continuity": 0.1,
+    "distinguishable_at_0.05": false
+  },
+  "marginal_f1_decay": {
+    "delta_r1_r2": 0.005,
+    "delta_r2_r3": 0.0005,
+    "decay_ratio": 0.1,
+    "geometric_upper_bound_round4_onward": 6e-05,
+    "convergence_threshold": 0.01
+  },
+  "marginal_cost_benefit": {
+    "delta_tp_r2_r3": 1,
+    "delta_fp_r2_r3": 1,
+    "delta_fn_r2_r3": -1,
+    "fpr": {
+      "r1": 0.15,
+      "r2": 0.17,
+      "r3": 0.18
+    }
+  },
+  "knowledge_saturation": {
+    "patches_per_round": {
+      "1": 11,
+      "2": 8,
+      "3": 7
+    }
+  },
+  "conclusion": "R2 and R3 statistically indistinguishable (p=1.000); remaining achievable gain <= 0.00006 (< threshold/100); marginal recall gain offset by precision loss; knowledge signal saturating -> 3 rounds sufficient, round 4 unnecessary."
+}
